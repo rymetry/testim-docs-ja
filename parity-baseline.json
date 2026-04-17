@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-17T11:07:11.798Z",
-  "generatedFromRunId": "2026-04-17T11:07:11.798Z#parity-check-status",
-  "rationale": "§5.3.7 rework: CJK_RE /g flag fix + allowlist removal + content-level JA translation for cascade (no allowlist, no baseline additions, net delta=0 vs origin/main)",
+  "generatedAt": "2026-04-17T12:01:51.958Z",
+  "generatedFromRunId": "2026-04-17T12:01:51.958Z#parity-check-status",
+  "rationale": "§5.3.7 rework v2 (architect reviewer 2): English UI term restoration + GLOSSARY additions for Testim/vendor proper-noun labels; baseline -2 (additional orphan cleanup)",
   "entries": [
     {
       "slug": "administration/encrypted-credentials",
@@ -227,7 +227,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:00cd123c4a4f18c23b913e8d1a3a78611465fa8d8ac667d4dcd93cf8545d35cc",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/loops#using-the-loop-iterator-parameter"],
+      "missingTokens": [
+        "/docs/loops#using-the-loop-iterator-parameter"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -284,7 +286,10 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:7ddea9637ffeb0d2db131b5000dbe2a685e08d167b8b80889fa5eb9bc9a8a788",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/exports-parameters", "/docs/index"],
+      "missingTokens": [
+        "/docs/exports-parameters",
+        "/docs/index"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -303,7 +308,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:f9a448b3b53ffcdabe669ce352276b1aff2c78f8d7f20ba67b90de57ccd297e5",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/index"],
+      "missingTokens": [
+        "/docs/index"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -781,7 +788,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:fc34d167c39974716c99cdda2452dd46a6c8e61c4e5e54da35e5ee5571f88c13",
       "jaSourceFingerprint": null,
-      "missingTokens": ["-variable"],
+      "missingTokens": [
+        "-variable"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -819,7 +828,11 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:2839eee7ba05b6b06eb2b155ec609cc8a9de7c416e676ad5c70980e8f8a995a7",
       "jaSourceFingerprint": null,
-      "missingTokens": ["exports.bestTestingTool", "exports.myVar", "step.This"],
+      "missingTokens": [
+        "exports.bestTestingTool",
+        "exports.myVar",
+        "step.This"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -1180,7 +1193,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:ed17b11a81973342ed95fee35ec729fd066a562e5f30cf32b18075a7ae424fc7",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/mobile-apps/mobile-apps"],
+      "missingTokens": [
+        "/docs/mobile-apps/mobile-apps"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -1446,7 +1461,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:dcb977fa44e5cf064a8c95fd8b623deda50c21afcd8f4294251e16dd85a77b7d",
       "jaSourceFingerprint": null,
-      "missingTokens": ["http://testim.io/"],
+      "missingTokens": [
+        "http://testim.io/"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -1617,7 +1634,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:ec5317470d5fffb0a362ff4003a21576db7915a18277a33781969d01fcef2f34",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/mobile-apps/mobile-apps"],
+      "missingTokens": [
+        "/docs/mobile-apps/mobile-apps"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -1655,44 +1674,6 @@
       "jaSegmentIndex": 1,
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:b42da0f2811266e0540e67b4c15a312888975b8cd3c0310c7d9ebf6b1b0b17c6",
-      "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "results/test-results/network-logs-copy",
-      "issueType": "segment-untranslated",
-      "snapshotFingerprint": "sha256:3b48f9a71c30c03ee586fc3427e721c4f54e10d49cfc8d0e7b8573219fc9ffa3",
-      "reviewAfter": "2026-11-22",
-      "sectionPath": "Viewing the console logs at the step level",
-      "segmentKind": "ordered-list-item",
-      "enSegmentIndex": null,
-      "jaSegmentIndex": 6,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:fbf273c616c794e400e6ada6f729aea2ddd82ad220e4939922aff0182666c70d",
-      "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "results/test-results/network-logs-copy",
-      "issueType": "segment-untranslated",
-      "snapshotFingerprint": "sha256:3b48f9a71c30c03ee586fc3427e721c4f54e10d49cfc8d0e7b8573219fc9ffa3",
-      "reviewAfter": "2026-11-22",
-      "sectionPath": "Viewing the console logs at the test level",
-      "segmentKind": "ordered-list-item",
-      "enSegmentIndex": null,
-      "jaSegmentIndex": 5,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": "sha256:fbf273c616c794e400e6ada6f729aea2ddd82ad220e4939922aff0182666c70d",
       "missingTokens": null,
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
@@ -2092,7 +2073,10 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:ccb6f4638ad5a4048ff69ad1291864635fd789a2d6f9ee375b6b6c3894d17daf",
       "jaSourceFingerprint": null,
-      "missingTokens": ["--chrome-extra-args", "/docs/index"],
+      "missingTokens": [
+        "--chrome-extra-args",
+        "/docs/index"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2225,7 +2209,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:4acdc583d9cc91a18e7a5c9643c2a4db46bde7fcd642d90a8dc5a27d6668c162",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/exports-parameters#exporting-a-parameter"],
+      "missingTokens": [
+        "/docs/exports-parameters#exporting-a-parameter"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2282,7 +2268,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:0623418fe615319c37dc5cbb6044351c5cce2f19fb87ea64e5bad482e8277e91",
       "jaSourceFingerprint": null,
-      "missingTokens": ["-this"],
+      "missingTokens": [
+        "-this"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2339,7 +2327,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:0623418fe615319c37dc5cbb6044351c5cce2f19fb87ea64e5bad482e8277e91",
       "jaSourceFingerprint": null,
-      "missingTokens": ["-this"],
+      "missingTokens": [
+        "-this"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2358,7 +2348,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:0623418fe615319c37dc5cbb6044351c5cce2f19fb87ea64e5bad482e8277e91",
       "jaSourceFingerprint": null,
-      "missingTokens": ["-this"],
+      "missingTokens": [
+        "-this"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2377,7 +2369,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:0623418fe615319c37dc5cbb6044351c5cce2f19fb87ea64e5bad482e8277e91",
       "jaSourceFingerprint": null,
-      "missingTokens": ["-this"],
+      "missingTokens": [
+        "-this"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2434,7 +2428,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:68d572527f7b9a21cbd60952f6147a2c5abfcaa851b444aefbda489ab835ea51",
       "jaSourceFingerprint": null,
-      "missingTokens": ["/docs/salesforce-testing/record-tests-with-salesforce"],
+      "missingTokens": [
+        "/docs/salesforce-testing/record-tests-with-salesforce"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -2491,7 +2487,9 @@
       "jaSegmentIndex": null,
       "enSourceFingerprint": "sha256:0623418fe615319c37dc5cbb6044351c5cce2f19fb87ea64e5bad482e8277e91",
       "jaSourceFingerprint": null,
-      "missingTokens": ["-this"],
+      "missingTokens": [
+        "-this"
+      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
