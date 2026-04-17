@@ -443,6 +443,22 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   pattern の再利用、新 mechanical exception / §5.3.N carve-out なし。4 entry
   //   (section-structure-mismatch ×2, segment-extra ×2) → 0。
   'administration/project-and-user-management',
+  // M2 Tier B Wave 2 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1 / §5.2
+  //   mechanical exception #2) のみで構成される Tier B 展開 sentinel。EN
+  //   `<p>Context. → <strong>To X:</strong></p>` 単一段落 (Filtering the Test
+  //   Library / Allowing Auto Improve on a Master Read Only Branch の 2 section)
+  //   に対し、JA が context 段落と `**Xするには:**` 段落を空行で分離していた
+  //   drift を `。\n→ **Xするには:**` soft-break 融合で mirror して zero-drift
+  //   化。canonical sentinel `editing-target-element-properties` (Wave 2) /
+  //   `results/stop-pause-debug-tests` / `editing-tests/groups` /
+  //   `administration/project-and-user-management` (Tier B Wave 1) と同一
+  //   mechanism の Tier B 展開。他 section (Revision History / Locators /
+  //   Test Library Screen) は EN 側にも arrow paragraph が無く既に 0 drift
+  //   だったため影響なし。4 entry (section-structure-mismatch ×2,
+  //   segment-extra paragraph ×2) → 0。新 mechanical exception / §5.3.N
+  //   carve-out なし。Testim UI 用語 (Locators / Smart Locators / Auto Improve
+  //   / Test Library / Filter Test 等) は英語維持。
+  'test-management/locators-auto-improve',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
