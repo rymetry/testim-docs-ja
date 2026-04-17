@@ -435,44 +435,123 @@ export function isUntranslatedCell(cell) {
   return letters.length / stripped.length > 0.6;
 }
 
+// GFM §tables-extension: 行頭 (trim 後) の `|` のみが cell 区切りとして機能し、
+// `\|` (backslash-escaped) は literal pipe として cell 内容になる。さらに、pipe
+// table は直後に separator 行 (`| --- |` / `| :--- |` / `| :---: |`) を必要と
+// する — separator 無しの単独 `| ... |` 行は GFM 上では table ではなく段落。
+//
+// WRITING_GUIDE §5 「broken-table-row paragraph mirror」では、EN MadCap Flare の
+// 壊れた table row を JA 側で `\| ... \|` (backslash-escape) として render して、
+// 意図的に paragraph に戻す pattern を採用する (salesforce Wave 2 sentinel
+// `use-agentic-test-automation-for-salesforce`)。この pattern が table-shape-
+// mismatch の false-positive を誘発しないよう、(1) 行頭 backslash-pipe で
+// 始まる行は table 扱いしない、(2) cell split は unescaped pipe のみで行い、
+// (3) separator 行の存在を要求する。
+//
+// 参考: https://github.github.com/gfm/#tables-extension-
+const GFM_TABLE_SEPARATOR_RE =
+  /^\|(?:\s*:?-{1,}:?\s*\|)+$/;
+// cell split: backslash-escaped pipe (\|) は文字として扱い、unescaped pipe のみで
+// 区切る。JS 正規表現は可変長 lookbehind をサポートするため `(?<!\\)` で十分。
+const UNESCAPED_PIPE_SPLIT_RE = /(?<!\\)\|/;
+
+function isGfmTableCandidateLine(trimmed) {
+  // 先頭が backslash-pipe (`\|...`) の行は GFM 的に table row ではない。
+  // trimmed[0] === '|' かつ末尾が unescaped `|` で終わることを要求する。
+  if (!trimmed.startsWith('|')) return false;
+  if (!/(?<!\\)\|\s*$/.test(trimmed)) return false;
+  // 内容部 (先頭末尾の `|` を除く) が空の場合も table ではない。
+  const inner = trimmed.slice(1, trimmed.lastIndexOf('|'));
+  return inner.trim().length > 0;
+}
+
+function splitGfmTableCells(trimmed) {
+  // 先頭 `|` と末尾 unescaped `|` を削ぎ、unescaped pipe で split する。
+  const lastPipeIndex = trimmed.lastIndexOf('|');
+  const inner = trimmed.slice(1, lastPipeIndex);
+  return inner
+    .split(UNESCAPED_PIPE_SPLIT_RE)
+    .map((cell) => cell.trim().replace(/\\\|/g, '|'));
+}
+
 export function extractMarkdownTables(body) {
   const lines = body.split('\n');
   const tables = [];
-  let currentTable = null;
   let inCodeBlock = false;
+
+  // pending candidate rows を蓄積し、separator 行を検出した時点で確定する。
+  // separator に到達しないまま候補行が途切れたら (非候補行が来たら) 破棄する。
+  let pendingRows = null; // { rows: [{cells}], startIndex: number }
+
+  function flushPending() {
+    pendingRows = null;
+  }
+
+  function finalizePendingAsTable() {
+    if (!pendingRows) return;
+    tables.push({ rows: pendingRows.rows, line: pendingRows.startIndex + 1 });
+    pendingRows = null;
+  }
+
+  let confirmedTable = null; // 既に separator 確定済みの table (後続 body row を追加)
+
+  function closeConfirmedTable() {
+    if (!confirmedTable) return;
+    tables.push(confirmedTable);
+    confirmedTable = null;
+  }
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
     if (FENCE_LINE_RE.test(line)) {
       inCodeBlock = !inCodeBlock;
-      if (currentTable) {
-        tables.push(currentTable);
-        currentTable = null;
-      }
+      flushPending();
+      closeConfirmedTable();
       continue;
     }
     if (inCodeBlock) continue;
 
     const trimmed = line.trim();
-    if (/^\|(.+)\|$/.test(trimmed)) {
-      const isSeparator = /^\|[\s:|-]+\|$/.test(trimmed);
-      const cells = trimmed
-        .slice(1, -1)
-        .split('|')
-        .map((cell) => cell.trim());
 
-      if (!currentTable) currentTable = { rows: [], line: index + 1 };
-      if (!isSeparator) currentTable.rows.push(cells);
+    // separator 行の検出 (確定待ちの header 行を table として固定する)
+    if (GFM_TABLE_SEPARATOR_RE.test(trimmed)) {
+      if (pendingRows && pendingRows.rows.length >= 1) {
+        confirmedTable = {
+          rows: pendingRows.rows.slice(),
+          line: pendingRows.startIndex + 1,
+        };
+        pendingRows = null;
+      } else {
+        // separator だけで先行の header が無い場合は無視 (broken markdown)。
+        flushPending();
+      }
       continue;
     }
 
-    if (currentTable) {
-      tables.push(currentTable);
-      currentTable = null;
+    if (isGfmTableCandidateLine(trimmed)) {
+      const cells = splitGfmTableCells(trimmed);
+      if (confirmedTable) {
+        // separator 確定後の body row として追加。
+        confirmedTable.rows.push(cells);
+        continue;
+      }
+      if (!pendingRows) {
+        pendingRows = { rows: [], startIndex: index };
+      }
+      pendingRows.rows.push(cells);
+      continue;
     }
+
+    // 候補行が途切れた: separator 未到達の pending は GFM 上 table では
+    // ないため破棄。separator 確定済みの table は確定保存。
+    flushPending();
+    closeConfirmedTable();
   }
 
-  if (currentTable) tables.push(currentTable);
+  // 末尾処理 — pending は separator 未到達のため破棄、confirmed は保存。
+  flushPending();
+  closeConfirmedTable();
+
   return tables;
 }
 
