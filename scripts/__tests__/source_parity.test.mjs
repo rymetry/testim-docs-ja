@@ -18,6 +18,7 @@ let stripMarkdown;
 let isUntranslatedCell;
 let extractInvariantTokens;
 let normalizeEnArtifacts;
+let normalizeNumericPeriodSpacing;
 let extractHeadingSequence;
 let classifyLine;
 let checkSourcePageMissingLocal;
@@ -44,6 +45,7 @@ before(async () => {
     isUntranslatedCell,
     extractInvariantTokens,
     normalizeEnArtifacts,
+    normalizeNumericPeriodSpacing,
     extractHeadingSequence,
     classifyLine,
     checkSourcePageMissingLocal,
@@ -1203,6 +1205,111 @@ describe('normalizeEnArtifacts', () => {
     const issues = compareSnapshotStructure(en, ja);
     const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
     assert.equal(paraIssues.length, 0, 'zero-width space paragraphs should not count');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// normalizeNumericPeriodSpacing tests (§5.3.5: EN/JA symmetric normalization)
+// ---------------------------------------------------------------------------
+
+describe('normalizeNumericPeriodSpacing', () => {
+  it('inserts a space after an ordered-list-item period glued to text', () => {
+    const body = '1.Abc\n2.Foo bar\n';
+    const result = normalizeNumericPeriodSpacing(body);
+    assert.ok(result.includes('1. Abc'), 'should insert space after 1.');
+    assert.ok(result.includes('2. Foo bar'), 'should insert space after 2.');
+  });
+
+  it('leaves already-spaced ordered-list items unchanged', () => {
+    const body = '1. Abc\n2. Foo bar\n';
+    const result = normalizeNumericPeriodSpacing(body);
+    assert.equal(result, body, 'spaced items should be unchanged');
+  });
+
+  it('does not split decimal numbers like 1.0 or 3.14', () => {
+    // These are plain paragraph text, not ordered-list items. The function
+    // only triggers when the first char after the period is a non-digit
+    // non-space, so a trailing digit leaves them untouched.
+    const body = 'Version 1.0 is released\nPi is 3.14\n';
+    const result = normalizeNumericPeriodSpacing(body);
+    assert.equal(result, body, 'decimals should be unchanged');
+  });
+
+  it('does not split IP-like strings such as 1.2.3.4', () => {
+    // The `1.2.3.4` case matters only if the entire line starts with digits
+    // (which would match `^\d+\.(\S)`). The sub-step guard `^\d+\.\d+\.` also
+    // blocks this case because the second segment starts with a digit.
+    const body = '1.2.3.4 is an IP\nLocal is 10.0.0.1\n';
+    const result = normalizeNumericPeriodSpacing(body);
+    assert.equal(result, body, 'IP-like strings should be unchanged');
+  });
+
+  it('preserves sub-step numbering such as 1.1. and 2.3.', () => {
+    const body = '1.1. Sub step A\n2.3. Sub step B\n';
+    const result = normalizeNumericPeriodSpacing(body);
+    assert.equal(result, body, 'sub-step numbering should be unchanged');
+  });
+
+  it('does not trim trailing newline', () => {
+    const body = '1.Abc\n';
+    const result = normalizeNumericPeriodSpacing(body);
+    assert.ok(result.endsWith('\n'), 'trailing newline should be preserved');
+  });
+
+  it('returns input unchanged for non-string input', () => {
+    assert.equal(normalizeNumericPeriodSpacing(null), null);
+    assert.equal(normalizeNumericPeriodSpacing(undefined), undefined);
+  });
+
+  it('is symmetric: EN "1.Abc" and JA "1.Abc" normalize identically', () => {
+    const en = '1.Abc\n2.Def\n';
+    const ja = '1.Abc\n2.Def\n';
+    assert.equal(
+      normalizeNumericPeriodSpacing(en),
+      normalizeNumericPeriodSpacing(ja),
+      'EN and JA with same pattern should normalize to same result',
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// §5.3.5 regression: compareSnapshotStructure with glued numeric-period on
+// both sides should NOT emit paragraph-count / step-count audit signals.
+// ---------------------------------------------------------------------------
+
+describe('compareSnapshotStructure §5.3.5 numeric-period symmetry', () => {
+  it('does not flag paragraph-count-mismatch when both sides have "1.Abc" style items', () => {
+    // Both EN and JA expose the `\d+\.(\S)` pattern — historically only the
+    // EN side was normalized, causing EN=2 paragraphs vs JA=1 after split.
+    // With symmetric normalization the counts match.
+    const en = '# Title\n## Section\n1.First item\n2.Second item\n';
+    const ja = '## セクション\n1.最初の項目\n2.二番目の項目\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(paraIssues.length, 0, 'symmetric normalize should clear paragraph-count noise');
+    assert.equal(stepIssues.length, 0, 'symmetric normalize should clear step-count noise');
+  });
+
+  it('still flags genuine step-count mismatch when JA omits a step', () => {
+    // Sanity check: the symmetric normalize must not mask real drift.
+    // EN has 3 steps, JA has 2. After normalize both sides still show the
+    // step-count gap.
+    const en = '# Title\n## Section\n1.Step one\n2.Step two\n3.Step three\n';
+    const ja = '## セクション\n1.ステップ 1\n2.ステップ 2\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.ok(stepIssues.length > 0, 'real step-count drift should still be flagged');
+  });
+
+  it('leaves already-spaced content untouched on both sides (no regression)', () => {
+    const en = '# Title\n## Section\n1. First\n2. Second\n';
+    const ja = '## セクション\n1. 最初\n2. 二番目\n';
+    const issues = compareSnapshotStructure(en, ja);
+    const paraIssues = issues.filter((i) => i.type === 'paragraph-count-mismatch');
+    const stepIssues = issues.filter((i) => i.type === 'step-count-mismatch');
+    assert.equal(paraIssues.length, 0, 'already-spaced content should stay clean');
+    assert.equal(stepIssues.length, 0, 'already-spaced content should stay clean');
   });
 });
 
@@ -2381,6 +2488,7 @@ describe('source_parity.mjs facade completeness', () => {
       'extractStepCounts',
       'stripTitleH1',
       'normalizeEnArtifacts',
+      'normalizeNumericPeriodSpacing',
       'extractBulletCounts',
       'classifyLine',
       'extractParagraphCounts',
