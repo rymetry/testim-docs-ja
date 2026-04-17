@@ -97,6 +97,9 @@ const RESOLVED_PAGES = Object.freeze([
   'advanced-editing/custom-action-step-mobile',
   'salesforce-testing/faq',
   'advanced-editing/validations/email-validation',
+  // M2 Tier B Wave 1: arrow-fusion burn-down で 4→0 (section-structure-mismatch ×2,
+  //   segment-extra ×2) に clean 化 — RESIDUAL から移動
+  'administration/project-and-user-management',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -107,12 +110,10 @@ const RESOLVED_PAGES = Object.freeze([
 const RESIDUAL_PAGES = Object.freeze([
   { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
   { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
-  // T15: section-structure-mismatch / segment-extra も代表 pin として追加
-  // (PR #287/#288 で副作用増加した surface。plan §3.2)
-  {
-    slug: 'administration/project-and-user-management',
-    requiredBaselinedTypes: ['section-structure-mismatch', 'segment-extra'],
-  },
+  // T15 pin は M2 Tier B Wave 1 で `administration/project-and-user-management`
+  // を 4→0 に clean 化して解消。RESOLVED に移動済み。他の
+  // section-structure-mismatch / segment-extra 代表 pin が必要になったら
+  // 別 slug で再追加する。
 ]);
 
 // ---------------------------------------------------------------------------
