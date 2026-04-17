@@ -209,6 +209,38 @@ P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCa
 - **follow-up mechanism PR**: `scripts/lib/parity_artifact_registry.mjs` `/docs/index` entry の `slugs[]` に新 slug を追加 (2026-04-17 PR #304 で処理)、同時に `scripts/__tests__/parity_artifact_registry.test.mjs` の hardcoded 件数 (5 slugs → 6 slugs) を更新。**registry + test の 2 files 更新**が必要 (架空の "1-line diff" ではない)。
 - **scope lock**: 本 §5.3.2 entry は **`/docs/index` token の既存 artifact entry 再利用のみ** 対象。別 token (`http://google.com`、`http://example.com` 等) に対する新規 registry 登録は独立 §5.3.N として別途 security L2 gate を経由する。
 
+#### 5.3.4 `extractMarkdownTables` GFM strict-check (backslash-pipe paragraph false-positive)
+
+PR #312 audit-signals-triage で initially 検知、本 mechanism PR で解消。`scripts/lib/source_parity_extract.mjs` の `extractMarkdownTables` は従来、`^\|(.+)\|$` / `^\|[\s:|-]+\|$` の緩い regex + naïve `.split('|')` によって以下の 2 種 false-positive を誘発していた:
+
+1. **Separator-less pipe block**: GFM §tables-extension は pipe table に separator 行 (`| --- |` / `| :---: |`) を必須とするが、現行実装はこの要件を満たさない連続した `| cell |` 行列も table として認識していた。turndown が EN HTML の `<p>|...|</p>` orphan broken-table-row を「separator-less pipe row」として吐くため、EN 側 table count が実態より過剰にカウントされ `table-shape-mismatch` (signal) が誤発火していた (EN=2 / JA=1 等)。
+2. **Escaped-pipe cell split**: cell split が `.split('|')` で行われていたため、WRITING_GUIDE §5 「broken-table-row paragraph mirror」で採用する `\|` (backslash-escape) が cell 区切りとして解釈され、`| A \| B | C |` のような正当な GFM row でも 3 cell (`["A \\", "B", "C"]`) に誤分解される。salesforce Wave 2 sentinel `use-agentic-test-automation-for-salesforce` で定義された backslash-pipe paragraph pattern は、JA 側では既に `\|` 行頭で paragraph に落ちるため直接の false-positive は避けられていたが、EN turndown 側の broken-table-row 誤認知と組み合わさって per-slug 1 件ずつの `table-shape-mismatch` を誘発していた (4 slug × 1 件 = 4 signal)。
+
+**修正方針 (Option A: regex strict-check)**:
+
+- 行頭が `\|` で始まる行は candidate から除外 (`isGfmTableCandidateLine` で `trimmed.startsWith('|')` を要求、かつ末尾が unescaped `|` であることを `(?<!\\)\|\s*$` で要求)。
+- cell split は `UNESCAPED_PIPE_SPLIT_RE = /(?<!\\)\|/` で負 lookbehind により unescaped pipe のみを区切りとし、cell 内の `\|` は literal `|` に復元する (`cell.replace(/\\\|/g, '|')`)。
+- separator 行 (`GFM_TABLE_SEPARATOR_RE = /^\|(?:\s*:?-{1,}:?\s*\|)+$/`) を明示的に要求し、separator に到達しない pending row 列は全て破棄 (pipe-row-only の segment は GFM 上 table ではなく段落として扱う)。
+
+**scope lock (§5.3.4)**: 本修正は `extractMarkdownTables` のみを対象とし、`extractHtmlTables` / `extractTableStructure` / `classifyLine` / `compareTableStructure` には手を入れない。`classifyLine` は `/^\|/` (trimmed) で `markdown-table` kind を返すが、これは structure fingerprint 用途で既に backslash-pipe paragraph を `paragraph-start` に分類する挙動を持つため変更不要。
+
+**regression ガード**:
+
+- `scripts/__tests__/source_parity.test.mjs` の `extractMarkdownTables` describe block に 5 テストを追加 (backslash paragraph rejection / separator 要求 / escaped-pipe cell preservation / 混在 pattern / trailing escaped-pipe rejection)。
+- salesforce sentinel `use-agentic-test-automation-for-salesforce` は `source_parity_clean_page_fixtures.test.mjs` の canonical regression gate として既存 (本 PR でも totalIssues=0 を維持)。
+
+**parity diff (BEFORE / AFTER)**:
+
+| metric                       | BEFORE | AFTER | delta |
+| --- | --- | --- | --- |
+| `totalIssues`                | 223    | 219   | -4    |
+| `baselinedIssues` (frozen)   | 183    | 183   | ±0    |
+| `issuesByType.table-shape-mismatch` | 4 | 0 | -4 |
+| `signalFiles`                | 7      | 6     | -1    |
+| `activeFiles`                | 26     | 25    | -1    |
+
+baseline は完全不変 (183 固定)、active/signal 側で false-positive 4 件が消滅、他の issue type は全て同値。
+
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)

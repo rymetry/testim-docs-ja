@@ -219,6 +219,17 @@ node scripts/generate_parity_baseline.mjs --slug=advanced-editing/loops
 - **Prettier 注意**: `npm run format` はリポジトリ全体を変更する。PR 対象ファイルのみに限定する
 - **新 §5.3.N carve-out の提案手順**: エージェントが未知 pattern の mechanism-pending residual を発見した場合、**plan に §5.3.N として直接書き込まず**、PR description / コミット message に `[PENDING REVIEWER APPROVAL — §5.3.N proposal]` マーカーを付与して提案する。driver + 4-reviewer gate (architect / security 重点) の承認を経て初めて plan に確定登録する。自主宣言 (agent が承認前に plan に書き込む) は §5.3 Scope preamble で禁止されている。既存 `/docs/index` artifact への slug-scope extension など、明らかな "既存 mechanism の scope 拡張" については §5.3.2 のような先行実績があるが、それも reviewer 承認を前提とする (retroactive approval を回避するためにマーカー運用する)。
 
+### §5.3.4 `extractMarkdownTables` GFM strict-check (2026-04-17 mechanism PR)
+
+Wave 2 pattern catalog row 5 (broken-table-row paragraph mirror) の canonical sentinel `use-agentic-test-automation-for-salesforce` で定義された `\|...\|` paragraph を、`scripts/lib/source_parity_extract.mjs::extractMarkdownTables` が誤って table として認識し得る緩い regex を GFM §tables-extension に忠実な strict-check に置換した。具体的には:
+
+- **separator 行を必須化**: `GFM_TABLE_SEPARATOR_RE = /^\|(?:\s*:?-{1,}:?\s*\|)+$/` にマッチする separator を header の直後に要求する。separator に到達しない pending row 列は破棄し、pipe-only segment は段落として扱う。
+- **backslash-pipe を cell 区切りから除外**: cell split に `UNESCAPED_PIPE_SPLIT_RE = /(?<!\\)\|/` (負 lookbehind) を使い、cell 内の `\|` は literal `|` として復元する (`cell.replace(/\\\|/g, '|')`)。行頭が `\|` で始まる行、または末尾の閉じ `|` が `\|` (escaped) の行は candidate から除外 (`isGfmTableCandidateLine`)。
+
+**影響範囲**: `table-shape-mismatch` (signal severity) の false-positive を 4 件 → 0 件に削減。`baselinedIssues` は完全不変 (183 固定)。本修正は `extractMarkdownTables` のみを touch し、`extractHtmlTables` / `classifyLine` / `compareTableStructure` には介入しない。regression gate として `scripts/__tests__/source_parity.test.mjs` に 5 テスト追加、salesforce sentinel (`source_parity_clean_page_fixtures.test.mjs`) は引き続き totalIssues=0 を維持。
+
+詳細は plan `2026-04-16-m2-parity-burndown.md §5.3.4` を参照。
+
 ## Bug backlog の返済優先順位
 
 Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 以降で以下の優先順位で返済する:
