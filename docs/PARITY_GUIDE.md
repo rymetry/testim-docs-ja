@@ -186,9 +186,41 @@ EN upstream に由来する artifact の扱い（Phase 0 以降の契約）:
 | URL / link token の差異 | `scripts/lib/parity_normalize.mjs` (URL rewrite ルール) | `help.testim.io/docs/X` ↔ `/docs/X` |
 | 英語 UI 用語・機能名 | `docs/GLOSSARY.md` + `parity_glossary_mask.mjs` | `Visual Editor`, `Pre-run hook` |
 | 英語 invariant pattern (CLI flag、キーボードショートカット等) | `docs/INVARIANT_TOKENS.md` + `parity_glossary_mask.mjs` | `--project-id`, `Shift+S` |
+| EN HTML 内の segment-level 具体 defect (typo, href miswire 等) | `scripts/lib/en_source_patches.mjs` (slug-scope literal find→replace at `preprocessEnHtml` boundary) | Salesforce `-this` typo (UD-001), Log out href miswire (UD-002) |
 | EN-only の壊れた token (display text と href 不一致等)、小規模 artifact | 現時点では baseline に残る (Phase 0 後に件数を見て micro-exclusion 層の必要性を判断) | `creating-your-first-codeless-test` の google.com |
 
-**重要**: baseline は「未解決 issue の凍結」のみ。上記 normalize / mask / page-level exclusion で吸収される artifact は baseline の対象ではない。blanket に "方針だから baseline に入れる" は禁止。
+**重要**: baseline は「未解決 issue の凍結」のみ。上記 normalize / mask / page-level exclusion / patches で吸収される artifact は baseline の対象ではない。blanket に "方針だから baseline に入れる" は禁止。
+
+### EN source patches layer (Route W, 2026-04-17)
+
+`scripts/lib/en_source_patches.mjs` は **broken upstream defect の HTML 境界 patch 層**。`preprocessEnHtml(html, { slug, patchCoverage })` が canonical EN HTML を生成する際に slug-scope で literal `find → replace` を適用する。JA markdown 側で workaround を埋め込むことは禁止 (plan §1.1 absolute principle)。
+
+**特徴**:
+
+- 4 enum `defectClass` (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) 以外は登録不可
+- 各 entry は `linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-NNN'` で upstream tracker へ結線される
+- Idempotent (`replace` は `find` を含まない)、Order-independent (slug-scope disjoint)
+- `parity-check-status.json.debug.patchCoverage` で hit / mismatch を可視化
+- `reviewAfter` 日付 (通常 addedAt + 6mo) で upstream 修正確認サイクルを回す
+
+**設計 / SOP**: `docs/superpowers/plans/2026-04-17-en-source-patches-layer.md`、entry 追加手順は `docs/superpowers/specs/upstream-defect-tracker.md#adding-a-new-defect`。
+
+### Baseline regen PR 説明 template
+
+patch layer / allowlist に変更を入れた PR の description には必ず以下を明記する (baseline net delta の透明化):
+
+```text
+Baseline delta: {before} → {after} ({net})
+  - orphan 除去: {removed} entries
+  - 新規追加:   {added} entries  (binary gate: must be 0)
+  - 正味:       {net}
+
+patchCoverage snapshot:
+  - matchedHits: {N}
+  - mismatches:  {M}  (should be 0; 非ゼロなら diagnose)
+```
+
+新規追加 `> 0` は即 PR block。`parity_artifact_registry` / `SOURCE_SYNC_EXCLUSIONS` / `en_source_patches` の新規 entry 追加は `[PENDING REVIEWER APPROVAL]` マーカー必須。
 
 ## 修正ワークフロー
 

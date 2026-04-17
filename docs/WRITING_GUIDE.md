@@ -185,6 +185,7 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
 - **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
 - 段落境界・リスト境界・見出し境界は原文に完全に一致させる（1 段落→2 段落分割、1 callout→2 callout 分割等は禁止）
+- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `scripts/lib/en_source_patches.mjs` の slug-scope patch layer (literal find→replace at `preprocessEnHtml` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer-route-w-2026-04-17) と [`docs/superpowers/specs/upstream-defect-tracker.md`](./superpowers/specs/upstream-defect-tracker.md) を参照
 
 ### 唯一の許容差分（HEREだけ）
 

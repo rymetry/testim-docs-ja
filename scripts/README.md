@@ -164,6 +164,16 @@ acknowledgement の対象外:
 
 ---
 
+### EN source patches (Route W, 2026-04-17 以降)
+
+- `scripts/lib/en_source_patches.mjs`: broken EN HTML snapshot を `preprocessEnHtml` 境界で修復する slug-scope literal find→replace patch 層
+- `preprocessEnHtml(html, { slug, patchCoverage })` が optional 第 2 引数で patch application + coverage 集計を driver。slug 未指定時は no-op (backward-compat)
+- `scripts/check_source_parity.mjs` は run 単位 `createEnSourcePatchCoverage()` で集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
+- 4 enum (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) 以外は登録不可、各 entry は `docs/superpowers/specs/upstream-defect-tracker.md#UD-NNN` の anchor へ結線必須
+- 設計計画: `docs/superpowers/plans/2026-04-17-en-source-patches-layer.md`、運用 SOP: `docs/superpowers/specs/upstream-defect-tracker.md`
+
+---
+
 ### find_untranslated.mjs — baseline 残債の個別スキャン (診断系)
 
 baseline に `segment-untranslated` として凍結された各ページを開いて、未翻訳ブロック単位で行番号と residue (英語残差) を報告する診断ツール。
