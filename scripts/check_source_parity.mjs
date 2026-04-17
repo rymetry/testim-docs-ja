@@ -51,6 +51,7 @@ import { buildRunScope, validateRunLinkage } from './lib/source_sync_health.mjs'
 import { createMaskCoverage, maskSegmentText } from './lib/parity_glossary_mask.mjs';
 import { createArtifactCoverage } from './lib/parity_artifact_registry.mjs';
 import { createOmissionCoverage } from './lib/ja_omission_policy_registry.mjs';
+import { createEnSourcePatchCoverage } from './lib/en_source_patches.mjs';
 export { buildRunScope };
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
@@ -388,6 +389,11 @@ export async function checkSourceParity({
   // quota-based 抑止 hit を記録する。
   const omissionCoverage = createOmissionCoverage();
 
+  // debug.patchCoverage: EN source patches (Route W, 2026-04-17) の hit /
+  // mismatch を集計する run 単位 aggregator。preprocessEnHtml 経由で
+  // slug-scope の literal find→replace patch を適用した記録を保持する。
+  const patchCoverage = createEnSourcePatchCoverage();
+
   for (const filePath of allFiles) {
     const fileSlug = filePathToSlug(filePath);
     if (resolvedSlug && fileSlug !== resolvedSlug) {
@@ -428,7 +434,11 @@ export async function checkSourceParity({
       let enBody;
       let enHtml;
       try {
-        enHtml = preprocessEnHtml(rawEnHtml);
+        // Outer layer canonicalizes EN HTML once per page and feeds the same
+        // canonical HTML to all downstream consumers (Option I per plan §2.1).
+        // slug は patch layer が literal find→replace を slug-scope で適用する
+        // ために渡す。patchCoverage には hit / mismatch が run 単位で集計される。
+        enHtml = preprocessEnHtml(rawEnHtml, { slug: fileSlug, patchCoverage });
       } catch (e) {
         console.error(
           `preprocessEnHtml failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`
@@ -441,7 +451,9 @@ export async function checkSourceParity({
       }
       if (enHtml != null) {
         try {
-          enBody = convertEnHtmlToMd(rawEnHtml);
+          // canonical HTML を渡す。内部 preprocessEnHtml は slug なしで idempotent に
+          // no-op 相当になるため、patch が 2 重適用されない (plan §2.1 Option I).
+          enBody = convertEnHtmlToMd(enHtml);
         } catch (e) {
           console.error(
             `turndown failed for ${fileSlug}: ${e.message}. Skipping snapshot comparison.`
@@ -462,7 +474,9 @@ export async function checkSourceParity({
         let jaSegments = [];
         let extractError = null;
         try {
-          enSegments = extractSegmentsFromHtml(rawEnHtml, {
+          // canonical HTML (enHtml) を渡す。内部 preprocessEnHtml は slug なしで
+          // no-op 相当に冪等、patch の double-apply なし (plan §2.1 Option I).
+          enSegments = extractSegmentsFromHtml(enHtml, {
             slug: fileSlug,
             calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS,
           });
@@ -753,6 +767,7 @@ export async function checkSourceParity({
       maskCoverage: maskCoverage.toJSON(),
       artifactCoverage: artifactCoverage.snapshot(),
       omissionCoverage: omissionCoverage.snapshot(),
+      patchCoverage: patchCoverage.snapshot(),
     },
   };
 
