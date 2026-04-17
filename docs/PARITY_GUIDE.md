@@ -255,6 +255,44 @@ Wave 2 pattern catalog row 5 (broken-table-row paragraph mirror) の canonical s
 
 詳細は plan `2026-04-16-m2-parity-burndown.md §5.3.4` を参照。
 
+### §5.3.7 `classifySegment` CJK_RE g-flag + tech-vocabulary residue allowlist (2026-04-17 mechanism PR)
+
+PR #309 reviewer agent 73 / PR #324 §5.3.6 agent の継続調査で確定した `parity_glossary_mask.classifySegment` の 2 つ目の latent bug (CJK_RE に `g` flag が欠落) を解消する mechanism PR。詳細: plan `2026-04-16-m2-parity-burndown.md §5.3.7`。
+
+#### allowlist 追加の判断原則 (agent 向け)
+
+新規 tech token を `TECH_TOKEN_ALLOWLIST` に追加する場合:
+
+1. **L2 gate**: 追加前に reviewer 承認 + plan §5.3.7 への明示登録を経由する (本 §5.3.7 は Testim UI enum / 技術仕様 vocabulary に scope lock)。
+2. **category 分類**: 既存 10 category (HTTP request type / accessibility severity / visual match level / log level / file format / release channel / salesforce edition / HTML attribute / status enum / keyboard key word / API component) のいずれかに収まるか確認。新 category が必要な場合は plan §5.3.7 の allowlist 節に新 category を追記する。
+3. **source slug を document**: 追加 token の出現元 slug を comment で残す (将来の不要化判定のため)。
+4. **regression test pin**: `parity_glossary_mask.test.mjs §5.3.7 CJK_RE g-flag + tech-vocabulary residue allowlist` describe block に新 category の positive test + negative boundary (pure-EN segment で flagged) を追加する。
+5. **GLOSSARY との競合確認**: token が GLOSSARY の common-word guard (Enter/Tab/Approve 等) と衝突する場合は hasCjk gate が機能しているかを確認 — pure EN segment では allowlist が bypass される設計。
+
+#### hasCjk gate の保全
+
+`TECH_TOKEN_ALLOWLIST` は **ORIGINAL text が CJK を 1 つも含まない segment には適用しない** (classifier 内 `hasCjk` early-return)。これにより:
+
+- 純 EN segment (`Press Enter key` / `Click the Approve button`) は旧来の RESIDUE_MIN_WORDS=3 判定を維持し、untranslated English prose として flag される
+- 混在 JA/EN segment (`（enter、tab、esc、page up、page down など）`) のみが allowlist 対象となる
+- Spec Invariant 5 (`GLOSSARY common-word false-negative regression`) / plan §3.2 T4 regression guard が完全保全される
+
+allowlist 拡張時は本 gate を回避する design 変更を行わないこと (Category B false-positive suppression は hasCjk gate を前提条件とする)。
+
+#### Category A / B 判別表
+
+§5.3.7 mechanism fix で cascade として surface した segment は:
+
+| category | 定義 | 解消手段 |
+| --- | --- | --- |
+| **B** (mechanism-absorbable) | CJK 句読点区切りで enum / 技術 token が並んでいる。prose 構造を持たない | tech-vocabulary allowlist で吸収 |
+| **A** (content-level) | 例値 / ブランド名 / UI nav / EN UI label / 外部参照 title。prose 構造を持つが真正 EN 残留 | baseline 登録 (source-first policy per WRITING_GUIDE §33) |
+
+新 slug で同様の cascade 発生時は、まず residue の structure を見る:
+
+- residue word が全て短 enum token → Category B → allowlist 追加を検討 (L2 gate)
+- residue が prose-like → Category A → baseline 追加 (`--slug=<slug>` で partial regen)
+
 ## Bug backlog の返済優先順位
 
 Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 以降で以下の優先順位で返済する:

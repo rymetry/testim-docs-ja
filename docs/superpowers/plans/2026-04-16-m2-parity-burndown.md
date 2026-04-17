@@ -337,6 +337,83 @@ PR #309 agent 73 reviewer 検出の classifier latent bug。本 §5.3.6 は §5.
 
 repo 内に GFM double-backtick content (``` ``...`` ```) が実在しないため本修正の production impact は **0 件** (latent bug fix)。
 
+#### 5.3.7 CJK_RE global flag + technical-vocabulary residue allowlist (§5.4 item 2 Bug 2 からの昇格)
+
+§5.4 item 2 Bug 2 (`CJK_RE.replace(...)` missing `g` flag) の mechanism 完了 PR。§5.3.6 では scope lock のため除外していたが、本 §5.3.7 で **CJK_RE g-flag fix + cascade 吸収機構** を一括で registration する。
+
+**bug 実体 (Bug 2)**: `classifySegment` 内の `residue.replace(CJK_RE, ' ')` は CJK_RE が `g` flag なしで宣言されていたため、**最初の 1 match のみ** を置換していた。複数 CJK 文字を含む長文 paragraph では JA 文字が englishPortion に混入し、`/\s+/.split()` で単一ノイズ word に collapse して RESIDUE_MIN_WORDS=3 threshold を silent に bypass していた (false negative)。
+
+**g-flag 単独 fix の副作用**: 上記 bug の修正 (CJK_RE に `g` flag 追加) は、JA segments で CJK 句読点 (`、` / `。`) 区切りの enum / 技術トークン列挙が可視化され、**38 件の segment-untranslated false-positive を 28 slug に surface** する。これらの residue は全て以下いずれかのパターン:
+
+- HTTP request type enum (`xhr、js、css、img、media、font、doc、ws、manifest`)
+- accessibility severity enum (`critical、serious、moderate、minor`)
+- visual match level enum (`exact、strict、content、layout`)
+- log level enum (`verbose、error、warning、info`)
+- file format token enum (`csv、jpg、ppt、pdf、xls、image、doc`)
+- release channel enum (`beta、dev、canary、stable`)
+- salesforce edition enum (`enterprise、performance、unlimited、developer、professional、essentials`)
+- HTML attribute name (`src、alt、href、title、disabled`)
+- status enum (`passed、failed、skipped、blocked`)
+- keyboard key word list (`enter、tab、esc、page up、page down`)
+- API component (`body、header、status、code`)
+- punctuation-derived single-char residue (`— x — x — v` / `a. b. c.` enumeration markers)
+
+これらは全て Testim UI / 技術仕様の **決定論的な enum / technical vocabulary** であり、翻訳対象ではない。
+
+**§5.3.7 mechanism 設計** (2 層):
+
+1. **CJK_RE `/g` flag**: `const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/g` — Bug 2 の primary fix。
+
+2. **technical-vocabulary residue allowlist + single-alpha-char filter** (新 mechanism):
+   - `TECH_TOKEN_ALLOWLIST` (Set<string>) を `scripts/lib/parity_glossary_mask.mjs` に定義
+   - 10 category (上記 bullet 列挙) の短 tech token を収録
+   - residue word-count pass で **非 allowlist / 非単一 alpha-char word** のみを prose-word として計上
+   - prose-word 数が `RESIDUE_MIN_WORDS=3` 未満なら isFullyMasked=true 判定
+
+**hasCjk gate (critical)**: 本 allowlist mechanism は **ORIGINAL text が CJK を含む場合のみ** 発火する。pure EN segment (`Press Enter key` 等) では allowlist を bypass し、旧来の RESIDUE_MIN_WORDS=3 判定を維持する。これにより Spec Invariant 5 の `GLOSSARY common-word false-negative regression` guard (`enter` / `tab` を GLOSSARY 追加すると 3-word 全英文 segment を silent bypass する) が保全される。
+
+**scope lock (§5.3.7)**: 本修正は `classifySegment` 内 2 点のみを対象とする:
+
+- `CJK_RE` 宣言に `g` flag 追加 (1 文字)
+- 新 `TECH_TOKEN_ALLOWLIST` / `isTechVocabularyResidue` 定義 + residue 計上 path に proseWords filter 1 段追加
+
+以下は不変:
+
+- `maskSegmentText` (glossary + invariant masking 本体) 無変更
+- URL strip pass (bare URL / GFM autolink / markdown link / `/docs` link) の順序・regex 完全保全 (PR #293 URL-before-mask ordering 契約)
+- §5.3.6 preStrip backtick regex 完全保全
+- `RESIDUE_MIN_WORDS=3` / `RESIDUE_MIN_LENGTH=15` threshold 定数 無変更
+- allowlist は `maskSegmentText` 出力 / `debug.maskCoverage` shape に影響しない (classifier-local filter)
+
+**cascade 解消結果** (38 items × 28 slugs):
+
+- **24 件 / 11 slugs**: tech-vocabulary allowlist で mechanism-level 吸収 (Category B)
+- **9 件 / 9 slugs**: 既存 baseline entry にマッチ (sectionPath + jaSourceFingerprint で frozen 済、表面化しない)
+- **5 件 / 5 slugs**: Category A (content-level 真正 EN 残留: 例値 / ブランド名 / UI nav / EN UI label 例) → baseline 追加登録 (source-first policy per WRITING_GUIDE §33 準拠)
+  - `editing-tests/editing-your-tests/editing-a-steps-properties` (user47/user65/user32 例値)
+  - `guides/generate-random-data-with-js` (@yourapp.io / passw0rd! 例値)
+  - `recording-tests/how-to-record-a-test/multi-windows-recording` (youtube/twitter/linkedin/facebook ブランド名)
+  - `salesforce-testing/create-a-persona-and-add-users` (personas / add persona UI nav)
+  - `test-management/labels` (sanity / nightly / monitor ラベル名例)
+
+**副次効果 — RESIDUAL → RESOLVED 昇格**: `results/test-runs` は §5.3.7 の single-alpha-char filter により status-symbol residue (`— x — x — v`) が fully-masked 化し、既存 baselined segment-untranslated entry が runtime で不要となる (orphan 扱い)。`scripts/__tests__/source_parity_representative_summary.test.mjs` の RESIDUAL_PAGES から RESOLVED_PAGES へ昇格し、対応する 1 baseline entry を削除。
+
+**regression ガード**:
+
+- `scripts/__tests__/parity_glossary_mask.test.mjs` に `classifySegment — §5.3.7 CJK_RE g-flag + tech-vocabulary residue allowlist` describe block を追加し 15 test (primary CJK g-flag / 8 allowlist category / 2 single-alpha-char / 3 negative boundary / 2 regression guard) を pin。
+- 既存 `§5.3.6 preStrip backtick fix` describe block (7 test) + `URL/link stripping order (M2-P2-1 pilot regression)` describe block (11 test) は全て byte-identical に pass、PR #293 / §5.3.6 contract の完全保全を confirm。
+
+**parity diff (BEFORE / AFTER)**:
+
+| metric | BEFORE (§5.3.6) | AFTER (§5.3.7) | delta |
+| --- | --- | --- | --- |
+| `totalIssues` | 229 | 225 | -4 |
+| `baselinedIssues` (frozen) | 173 | 169 | -4 |
+| `issuesByType.segment-untranslated` | 18 | 14 | -4 |
+| `activeFiles` | 39 | 39 | ±0 |
+
+`totalIssues` 減は RESOLVED 昇格 1 件 (test-runs) + §5.3.7 allowlist 吸収で既存 baselined 2 件が再判定→削除された結果。`activeFiles` は前後で同値で active/signal 領域への regression は 0。
+
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
 
 M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:
@@ -367,10 +444,10 @@ Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 repor
   - `preStrip` pass で backtick (``` ` ```) 除去を試みているが実際には no-op になっており、backtick inline が masking 前に strip されないケースがある
   - `CJK_RE.replace(...)` 呼出で global flag (`g`) が欠落。最初の 1 match のみが置換される設計バグ。複数 CJK segment を含む長文 paragraph の classification 精度に影響
 - **影響範囲**: classifier 精度低下による false-positive / false-negative の僅かな揺れ。現状 PR #293 で導入した "URL-before-mask ordering" の regression は無く、Tier 2 merge までの counter には悪影響なし
-- **対応 (partial)**:
+- **対応 (全完了)**:
   - **Bug 1 (preStrip backtick no-op)** → `[Resolved via §5.3.6 (PR #324)]` GFM double-backtick code-span に対する pre-strip regex の拡張で解消。§5.3.6 参照
-  - **Bug 2 (`CJK_RE` missing `g` flag)** → `[DEFERRED — out of §5.3.6 scope]` **mechanism fix を試行した結果、classifier の word-count 設計 (RESIDUE_MIN_WORDS=3 threshold) が CJK-delimited 短 tech token (例: `img media font` 等の filter type 名) に対して false-positive を発生させる pre-existing latent design limit を露出する** ため、§5.3.6 scope lock (single bug mechanism PR) の範囲外と判定。`g` flag 追加のみの fix は 20 件の新 segment-untranslated false-positive を surface し (15 slug / clean-page sentinel + RESOLVED_PAGES への副次 assertion failure)、classifier threshold 再設計 (word-count vs char-count / ASCII-only word 計上 / short-token allow-list 等) を伴う別 PR (§5.3.7 相当) として分離する必要がある。単独 PR では welcome side effect とならず、baseline 増加 + sentinel 改訂の policy 判断が必要なため留保。
-- **Sev**: 3 (accuracy / hidden latent bug) — Bug 1 解消済、Bug 2 は Sev 3 維持 (classifier design work を伴う)
+  - **Bug 2 (`CJK_RE` missing `g` flag)** → `[Resolved via §5.3.7 (PR #325)]` CJK_RE `/g` flag 追加 + technical-vocabulary residue allowlist + single-alpha-char filter 機構で解消。cascade 38 件 / 28 slug は tech-vocab allowlist で 24 件吸収 / 既存 baseline match で 9 件 / 残 5 件を baseline 追加。RESIDUAL_PAGES `results/test-runs` は RESOLVED 昇格。§5.3.7 参照
+- **Sev**: 3 (accuracy / hidden latent bug) — **両 Bug 解消済**
 
 **(3) EN upstream: Smart Locators anchor broken at `salesforce-testing/core-concepts#smart-locators`**
 
