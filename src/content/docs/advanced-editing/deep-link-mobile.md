@@ -28,7 +28,7 @@ keywords:
 
 ## Deep Link ステップを追加する
 
-→**Deep Link ステップを追加するには:**
+**Deep Link ステップを追加するには:**
 
 1. Deep Link ステップを追加したい位置の（矢印記号）にカーソルを合わせます。アクションオプションが表示されます。
 2. "**M**"（Testim predefined steps）をクリックします。**Predefined steps** メニューが開きます。

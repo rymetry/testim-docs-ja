@@ -23,7 +23,7 @@ keywords:
 ステップ自体はレコードにナビゲートしないため、テストの実行中に特定のレコードにシステムがナビゲートする必要があります。これにより、レコードが Salesforce に表示されたときに指定されたステップが実行されます。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 :::
 
-→**編集ステップを追加するには:**
+**編集ステップを追加するには:**
 
 1. テストで、**編集**ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 

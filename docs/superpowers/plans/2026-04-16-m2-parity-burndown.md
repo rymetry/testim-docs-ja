@@ -482,7 +482,7 @@ repo 内に GFM double-backtick content (` ``...`` `) が実在しないため�
 M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:
 
 1. **flat リスト (`<ol>` / `<ul>` / 両者 interleave) の複数分割**: EN の単一 `<ol>` / `<ul>`、もしくは `<ol>` / `<ul>` + orphan `<p>` の interleave に non-`<li>` sibling (`<img>`/`<p>`/`<div class="note">`) が混在する場合、JA はリストを複数に分割して sibling をリスト外に出してよい。`<li value="N">` 属性に対応する番号は手動指定。(P2-1 pilot `deep-link-mobile` で `<ol>` pattern を pin、P2-2 Wave 1 `generating-a-random-value` で `<ul>` + `<ol>`/`<ul>` interleave pattern を pin。いずれも kind-multiset fingerprint で同値)
-2. **`:fa-arrow-right:` 段落融合**: EN の矢印 `→` プレフィックス段落は JA で `→**...するには:**` に変換するだけで段落は分離しない (PARITY_GUIDE §頻出パターン 2 で既定義)
+2. **`:fa-arrow-right:` 段落融合**: EN の矢印 `→` プレフィックス段落は JA で `**...するには:**` に変換するだけで段落は分離しない (PARITY_GUIDE §頻出パターン 2 / WRITING_GUIDE §313 で既定義。WRITING_GUIDE が authoritative: JA 側には先頭 `→` glyph を付けない)
 
 exception 追加は **reviewer 承認 + plan への明示登録** を条件とし、個別 PR の自由裁量では追加しない (security L2 gate)
 
