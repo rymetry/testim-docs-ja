@@ -152,7 +152,169 @@ export function maskSegmentText(text) {
 
 const RESIDUE_MIN_WORDS = 3;
 const RESIDUE_MIN_LENGTH = 15;
-const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/;
+const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/g;
+
+/**
+ * §5.3.7: technical-vocabulary residue allowlist.
+ *
+ * After the §5.3.6 preStrip backtick fix and §5.3.7 CJK_RE `g`-flag fix, the
+ * classifier correctly strips CJK globally instead of only the first match.
+ * That fix surfaced 30+ latent false-positives across 15 slugs where JA
+ * textNorm contains short enum / technical-token lists separated by CJK
+ * punctuation (e.g. `xhr、js、css、img、media、font、doc、ws、manifest`). After
+ * CJK strip these collapse into residues like `xhr js css img media font doc
+ * ws manifest` (9 English "words") that trigger the `RESIDUE_MIN_WORDS=3`
+ * threshold despite being legitimate untranslatable technical vocabulary
+ * (HTTP request types, accessibility severity levels, visual match levels,
+ * etc.).
+ *
+ * Resolution (§5.3.7): define a deterministic allowlist of short technical
+ * tokens that appear in Testim docs as invariant enum values. During residue
+ * word-counting, classify each word as either "allowlisted tech token" or
+ * "potential English prose". The `RESIDUE_MIN_WORDS` threshold is then
+ * applied to the NON-allowlisted count, so enum-only residues are absorbed
+ * while genuine untranslated prose ("choose integrate any other application
+ * you don't find in the gallery ...") still crosses the threshold.
+ *
+ * Allowlist categories (each category documents its source/justification):
+ *
+ *  - **http-request-type**: filter types in DevTools Network panel — matches
+ *    the exact enum options shown in Testim's network-logs UI
+ *    (`XHR|JS|CSS|Img|Media|Font|Doc|WS|Manifest`). See
+ *    `src/content/docs/results/test-results/network-logs.md`.
+ *  - **accessibility-severity**: axe-core severity levels
+ *    (`critical|serious|moderate|minor`). See
+ *    `src/content/docs/advanced-editing/validations/accessibility-validations.md`.
+ *  - **visual-match-level**: Applitools Eyes visual comparison levels
+ *    (`exact|strict|content|layout`). See
+ *    `src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md`.
+ *  - **log-level**: console/log levels (`verbose|info|warning|error`). See
+ *    `src/content/docs/debugging-tests/debug-helper-panels.md`.
+ *  - **file-format-token**: common document file formats
+ *    (`csv|jpg|ppt|pdf|xls|image|doc`). See
+ *    `src/content/docs/advanced-editing/validations/validate-download.md`.
+ *  - **release-channel**: browser/product release channel names
+ *    (`beta|dev|canary|stable`). See
+ *    `src/content/docs/recording-tests/how-to-record-a-test.md`.
+ *  - **salesforce-edition**: Salesforce license editions
+ *    (`enterprise|performance|unlimited|developer|professional|essentials`).
+ *    See `src/content/docs/salesforce-testing/troubleshoot.md`.
+ *  - **html-attribute-name**: common HTML attribute names as cited in
+ *    attribute-validation docs (`src|alt|href|title|disabled`). See
+ *    `src/content/docs/advanced-editing/validations/html-attribute-validation.md`.
+ *  - **status-enum**: test status enum values from qtest / test-runs UI
+ *    (`passed|failed|skipped|blocked`). See
+ *    `src/content/docs/integrations/test-management-integrations/qtest-integration.md`,
+ *    `src/content/docs/results/test-runs.md`.
+ *  - **keyboard-key-word**: keyboard key names appearing as a **list** outside
+ *    the `keyboard-shortcut` invariant pattern (which requires `+` composition)
+ *    (`enter|tab|esc|page|up|down`). See
+ *    `src/content/docs/editing-tests/steps.md`.
+ *  - **api-component**: generic API request component names
+ *    (`body|header|status|code`). See
+ *    `src/content/docs/advanced-editing/api-testing.md`.
+ *
+ * Scope lock (§5.3.7):
+ * - Allowlist ONLY masks words when evaluating the
+ *   `RESIDUE_MIN_WORDS` threshold; it does NOT mask them in `maskSegmentText`
+ *   output (no impact on `debug.maskCoverage` shape).
+ * - Allowlist does NOT interact with URL-before-mask ordering (PR #293)
+ *   or preStrip backtick handling (§5.3.6).
+ * - Adding new tokens is L2-gated via `docs/PARITY_GUIDE.md §5.3.7`:
+ *   document the source slug and enum domain before adding.
+ * - Single-character noise (punctuation artifacts like lone `x` / `v`) is
+ *   also filtered here: words with length < 2 are not counted as English
+ *   prose (they're almost always CJK-strip aftermath).
+ */
+const TECH_TOKEN_ALLOWLIST = new Set([
+  // http-request-type (Testim network-logs filter enum)
+  'xhr',
+  'js',
+  'css',
+  'img',
+  'media',
+  'font',
+  'doc',
+  'ws',
+  'manifest',
+  // accessibility-severity (axe-core)
+  'critical',
+  'serious',
+  'moderate',
+  'minor',
+  // visual-match-level (Applitools Eyes)
+  'exact',
+  'strict',
+  'content',
+  'layout',
+  // log-level
+  'verbose',
+  'info',
+  'warning',
+  'error',
+  // file-format-token
+  'csv',
+  'jpg',
+  'ppt',
+  'pdf',
+  'xls',
+  'image',
+  // 'doc' already in http-request-type
+  // release-channel
+  'beta',
+  'dev',
+  'canary',
+  'stable',
+  // salesforce-edition
+  'enterprise',
+  'performance',
+  'unlimited',
+  'developer',
+  'professional',
+  'essentials',
+  // html-attribute-name
+  'src',
+  'alt',
+  'href',
+  'title',
+  'disabled',
+  // status-enum
+  'passed',
+  'failed',
+  'skipped',
+  'blocked',
+  // keyboard-key-word (list-context, not keyboard-shortcut invariant)
+  'enter',
+  'tab',
+  'esc',
+  'page',
+  'up',
+  'down',
+  // api-component
+  'body',
+  'header',
+  'status',
+  'code',
+]);
+
+/**
+ * @param {string} word lowercase residue word (already CJK-stripped)
+ * @returns {boolean} true if the word is either a single-char/punctuation
+ *   artifact OR a known technical-vocabulary token (does not count toward
+ *   prose threshold).
+ *
+ * Single-alpha-char artifacts include enumeration markers `a.` / `b.` / `c.`
+ * and single letters like `x` / `v` used as status symbols in tables. Real
+ * English prose words contain ≥2 alphabetic characters (even 2-letter
+ * function words like `is` / `to` / `of` / `in` / `at` qualify, allowing
+ * genuine untranslated prose detection to remain sensitive).
+ */
+function isTechVocabularyResidue(word) {
+  // Strip leading/trailing non-alpha punctuation (e.g. "a." -> "a").
+  const alphaOnly = word.replace(/[^a-z]/gi, '');
+  if (alphaOnly.length < 2) return true;
+  return TECH_TOKEN_ALLOWLIST.has(word) || TECH_TOKEN_ALLOWLIST.has(alphaOnly.toLowerCase());
+}
 
 /**
  * After masking, decide whether the remaining text is (a) fully covered
@@ -209,6 +371,32 @@ export function classifySegment(text) {
   }
   const words = englishPortion.split(/\s+/).filter((w) => /[a-z]/i.test(w));
   if (words.length < RESIDUE_MIN_WORDS) {
+    return { isFullyMasked: true, residue: '' };
+  }
+
+  // §5.3.7: if the ORIGINAL text contains no CJK characters, the segment is
+  // (by construction) pure English — apply the classic threshold without the
+  // tech-vocabulary allowlist. A pure-EN segment like "Press Enter key" must
+  // still be flagged as untranslated so that `enter` / `tab` appearing in
+  // the allowlist does not silently bypass the Spec Invariant 5 guard
+  // (`GLOSSARY common-word false-negative regression` — see plan §3.2 T4).
+  // The allowlist mechanism is ONLY relevant for mixed JA+EN segments where
+  // the residue after CJK strip consists of enum/tech-token lists embedded
+  // in otherwise-translated prose.
+  const hasCjk = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/.test(
+    text,
+  );
+  if (!hasCjk) {
+    return { isFullyMasked: false, residue: englishPortion };
+  }
+
+  // §5.3.7: filter out single-char noise and technical-vocabulary allowlist
+  // tokens before applying the prose-threshold. Words that pass through this
+  // filter are candidate "English prose" words — if fewer than
+  // RESIDUE_MIN_WORDS remain, the segment is considered fully masked.
+  // See TECH_TOKEN_ALLOWLIST comment above for rationale.
+  const proseWords = words.filter((w) => !isTechVocabularyResidue(w.toLowerCase()));
+  if (proseWords.length < RESIDUE_MIN_WORDS) {
     return { isFullyMasked: true, residue: '' };
   }
 
