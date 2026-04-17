@@ -201,12 +201,13 @@ P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span 
 
 #### 5.3.2 EN `index.htm/#/` self-link artifact (slug-scope registry extension)
 
-P2-2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN HTML の `<a href="index.htm/#/">` は MadCap Flare の壊れた self-link で、EN 抽出側では `normalizeUrlToken` 経由で `/docs/index` token に正規化される (page 内 `index.htm` → slug `index` → `/docs/index`)。JA が source-first で「EN の broken self-link を踏襲して意味的に正しいリンクを削除」(=プレーンテキスト化) した場合、alignSegments は tokenless cross-language 経路でペアリングするが、直後の token-gap 検査で EN の `/docs/index` token が JA 側に欠けるため `segment-token-gap` が発火する。`scripts/lib/parity_artifact_registry.mjs` には既に `/docs/index` artifact が 5 slug (`editing-tests/conditions/advanced-conditions-settings`, `integrations/visual-validation/visual_validation_index`, `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`, `salesforce-testing/salesforce-steps/sfdc-step-login`, `testops/insights/dashboard`) に対して登録済。本 slug を同 entry の `slugs[]` に追加する mechanism PR で解消可能 (= 既存 artifact の slug-scope 拡張であり、新規 mechanism pattern ではない。登録後は runtime で `isArtifactExcluded` が hit して token-gap を抑止する)。`scripts/lib/parity_artifact_registry.mjs` への純粋な slug 追加のため、M3 PR Z 前に低リスクで反映可能。
+P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCap Flare が出力する self-link `<a href="index.htm/#/">` / `<a href="index.htm">` は `normalizeUrlToken` (`scripts/lib/source_parity_extract.mjs`) が `/docs/index` token に変換する。この token は **既存 `ARTIFACT_REGISTRY` entry (`reason: en-side-self-index-link-artifact`)** として 5 slug で登録済み。`salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` は 6 番目の slug として同 entry の `slugs[]` に追加する slug-scope extension。新規 mechanism pattern ではなく、既存 mechanism の scope 拡張。
 
-- **symptom pattern**: EN の preface / ordered-list-item で `<a href="index.htm/#/">` または `<a href="index.htm">` を含むページ (MadCap Flare の壊れた page 内 self-link artifact)
-- **per-slug cap**: ≤ 2 件 (preface paragraph / body ordered-list-item で `/docs/index` token を持つ segment のペア)
-- **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: docs-index-self-link-artifact` ラベルを記載。JA 側の link は source-first に従い除去し、token-gap のみ残す (disjoint-token による segment-missing/extra ペア化を避けるため)
-- **follow-up mechanism PR**: `parity_artifact_registry.mjs` の既存 `/docs/index` entry の `slugs[]` に本 slug を追加 (1 行 diff、alignSegments 挙動は slug-scope 限定で既存 5 slug と等価)
+- **symptom pattern**: EN ページ内 self-link `<a href="index.htm[/#/]">` が含まれる salesforce / integration / conditions / mobile recording / testops ページ
+- **per-slug cap**: ≤ 2 件 (`segment-token-gap` with `missingTokens: ["/docs/index"]`)
+- **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: docs-index-self-link-artifact` ラベルを記載
+- **follow-up mechanism PR**: `scripts/lib/parity_artifact_registry.mjs` `/docs/index` entry の `slugs[]` に新 slug を追加 (2026-04-17 PR #304 で処理)、同時に `scripts/__tests__/parity_artifact_registry.test.mjs` の hardcoded 件数 (5 slugs → 6 slugs) を更新。**registry + test の 2 files 更新**が必要 (架空の "1-line diff" ではない)。
+- **scope lock**: 本 §5.3.2 entry は **`/docs/index` token の既存 artifact entry 再利用のみ** 対象。別 token (`http://google.com`、`http://example.com` 等) に対する新規 registry 登録は独立 §5.3.N として別途 security L2 gate を経由する。
 
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
@@ -214,7 +215,7 @@ exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan へ
 
 M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:
 
-1. **flat `<ol>` の複数分割**: EN の単一 `<ol>` に non-`<li>` sibling (`<img>`/`<p>`/`<div class="note">`) が混在する場合、JA は ol を複数に分割して sibling を ol 外に出してよい。`<li value="N">` 属性に対応する番号は手動指定。(P2-1 pilot で初実施、kind-multiset fingerprint で同値)
+1. **flat リスト (`<ol>` / `<ul>` / 両者 interleave) の複数分割**: EN の単一 `<ol>` / `<ul>`、もしくは `<ol>` / `<ul>` + orphan `<p>` の interleave に non-`<li>` sibling (`<img>`/`<p>`/`<div class="note">`) が混在する場合、JA はリストを複数に分割して sibling をリスト外に出してよい。`<li value="N">` 属性に対応する番号は手動指定。(P2-1 pilot `deep-link-mobile` で `<ol>` pattern を pin、P2-2 Wave 1 `generating-a-random-value` で `<ul>` + `<ol>`/`<ul>` interleave pattern を pin。いずれも kind-multiset fingerprint で同値)
 2. **`:fa-arrow-right:` 段落融合**: EN の矢印 `→` プレフィックス段落は JA で `→**...するには:**` に変換するだけで段落は分離しない (PARITY_GUIDE §頻出パターン 2 で既定義)
 
 exception 追加は **reviewer 承認 + plan への明示登録** を条件とし、個別 PR の自由裁量では追加しない (security L2 gate)
