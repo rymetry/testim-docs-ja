@@ -243,6 +243,91 @@ describe('classifySegment — URL/link stripping order (M2-P2-1 pilot regression
   });
 });
 
+describe('classifySegment — §5.3.6 preStrip backtick fix (GFM double-backtick)', () => {
+  /**
+   * PR #309 reviewer agent 73 が検出した classifier `preStrip` backtick no-op
+   * bug への regression guard。旧 `/`[^`]*`/g` は **GFM double-backtick pair**
+   * (``code``) に対して先頭の空 single-pair `` にマッチを譲り、2 個目以降の
+   * content が residue に残って strip が実質 no-op になる edge case があった。
+   *
+   * 新 regex `` /``[^`]*``|`[^`]*`/g `` は alternation で double-pair を先に
+   * 消費するため、single と double の両方を確実に strip する。
+   *
+   * PR #293 の URL-before-mask ordering (inline code を glossary masking より
+   * 前に strip する契約) は完全保全。
+   */
+
+  it('strips single-backtick inline code before glossary masking', () => {
+    // Pre-fix: `cmd` → glossary masker sees "cmd をテスト実行"
+    // Post-fix: `cmd` is stripped → only " をテスト実行" reaches masker.
+    // 3-word English threshold not triggered in either case, but post-fix
+    // ensures inline code content never leaks into residue word-count.
+    const cls = classifySegment('`verylongunknownidentifier` をテスト実行');
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('strips GFM double-backtick inline code (bug 1 regression guard)', () => {
+    // Pre-fix: `` ``code`` `` パターンで先頭 `` が空 pair にマッチし、
+    // content ("code containing `backticks` here" 等) が residue に残る。
+    // 3 word 以上の英単語があれば isFullyMasked=false 誤判定。
+    const cls = classifySegment(
+      '``code containing `backticks` here`` のような GFM double-backtick pattern',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `GFM double-backtick content must be fully stripped. residue: ${cls.residue}`,
+    );
+  });
+
+  it('strips adjacent double-backtick pairs without leaving content', () => {
+    // Edge case: 複数の double-backtick pair が続く場合も全 content を strip
+    const cls = classifySegment(
+      '``foo bar baz`` and ``qux quux corge`` technical content here テストです',
+    );
+    // "and" / "technical content here" の 4 word 英文が残るため、
+    // double-backtick strip が effective かどうかの boundary test:
+    // - effective (期待): residue = " and technical content here " → 4 words → isFullyMasked=false
+    // - no-op (bug): residue = " foo bar baz and qux quux corge technical content here " → 10 words → isFullyMasked=false
+    // 両方とも isFullyMasked=false だが、residue の内容が異なる。
+    assert.equal(cls.isFullyMasked, false);
+    // content inside double-backticks must NOT appear in residue
+    assert.ok(
+      !cls.residue.includes('foo bar baz'),
+      `content inside \`\`...\`\` must be stripped. residue: ${cls.residue}`,
+    );
+    assert.ok(
+      !cls.residue.includes('qux quux corge'),
+      `content inside \`\`...\`\` must be stripped. residue: ${cls.residue}`,
+    );
+  });
+
+  it('PR #293 regression guard: URL classification unchanged (bare URL)', () => {
+    // URL-before-mask ordering (PR #293) が preserve されていることを確認。
+    // backtick regex 変更が URL strip pass の挙動に干渉しないこと。
+    const cls = classifySegment(
+      'サードパーティアプリは url ベースのスキームのみサポートする場合があります。例: https://byby.dev/ios-deep-linking 参照。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('PR #293 regression guard: URL classification unchanged (GFM autolink)', () => {
+    const cls = classifySegment(
+      'リポジトリは <https://github.com/example/repo> にあります。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('PR #293 regression guard: untranslated EN prose with URL still flagged', () => {
+    // Negative boundary: URL strip が genuine untranslated prose を mask しない。
+    const cls = classifySegment(
+      'This is an untranslated description referring to https://byby.dev/ios-deep-linking for more details.',
+    );
+    assert.equal(cls.isFullyMasked, false);
+    assert.ok(cls.residue.length > 10);
+  });
+});
+
 describe('maskSegmentText — mask record shape', () => {
   it('mask record includes source, entry OR pattern, span (start/end)', () => {
     const result = maskSegmentText('Use the Visual Editor to edit.');

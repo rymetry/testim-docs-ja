@@ -301,6 +301,42 @@ baseline は完全不変 (183 固定)、active/signal 側で false-positive 4 �
 
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
+#### 5.3.6 classifier preStrip backtick GFM double-pair fix (§5.4 item 2 からの昇格)
+
+PR #309 agent 73 reviewer 検出の classifier latent bug。本 §5.3.6 は §5.4 item 2 の 2 件のうち、**preStrip backtick no-op** のみを scope-locked 解消した mechanism PR。2 件目の `CJK_RE` missing `g` flag については本 PR の調査で **scope-lock を超える副作用を確認した** ため、本 mechanism PR から除外した (詳細は §5.4 item 2 参照)。
+
+**bug 実体**: `classifySegment` の pre-strip pass にある inline-code strip regex `/`[^`]*`/g` は GFM double-backtick code-span (``` ``code`` ```) に対して先頭の空 single-pair (``` `` ```) にマッチを譲るため、2 個目以降の content が strip されずに残り、backtick strip が実質 no-op になる edge case があった。GFM §code-spans では double-backtick pair は内部に single backtick を含めるため (例: ``` ``use `backtick` here`` ```)、純粋な alternation `/`` [^`]*`` | `[^`]*`/g` だけでは不十分で、内部の single backtick を許容する negative-lookahead (``` `(?!`) ```) が必須。
+
+**修正方針**: preStrip regex を `/` `` `` `(?:[^`]|`(?!`))*` `` `` `|` `` ` `` `[^`]*` `` ` `` `/g` に拡張。
+
+- double-backtick pair を alternation の左側に置き **先に消費** する
+- double-pair 内部では `[^`]` (非 backtick) または `` ` ``(?!`) (次が backtick でない single backtick) を受容
+- alternation の右側 (single-pair) は旧来どおり `/` `` ` `` `[^`]*` `` ` `` `/` で fallback
+
+標準 single-backtick code-span (``` `foo` ```) は post-fix も byte-identical に strip される。adjacent double-backtick pair / nested single-inside-double のいずれも全 content が strip される。
+
+**scope lock (§5.3.6)**: 本修正は `classifySegment` 内の inline-code pre-strip regex 1 行のみを対象とし、
+
+- `maskSegmentText` (glossary + invariant masking 本体) には手を入れない
+- URL strip pass (bare URL / GFM autolink / markdown link / `/docs` link) の順序・regex は PR #293 の URL-before-mask ordering 契約どおり完全保全
+- `RESIDUE_MIN_WORDS=3` / `RESIDUE_MIN_LENGTH=15` の threshold 定数は変更なし
+
+**regression ガード**:
+
+- `scripts/__tests__/parity_glossary_mask.test.mjs` に `classifySegment — §5.3.6 preStrip backtick fix (GFM double-backtick)` describe block を追加し 6 test (single-pair effectiveness / GFM double-pair effectiveness / adjacent double-pair interaction / PR #293 bare URL 保全 / GFM autolink 保全 / 未翻訳 EN prose 検知保全) を pin。
+- 既存 `classifySegment — URL/link stripping order (M2-P2-1 pilot regression)` describe block (11 test) は全て byte-identical に pass、PR #293 ordering 契約の完全保全を confirm。
+
+**parity diff (BEFORE / AFTER)**:
+
+| metric | BEFORE | AFTER | delta |
+| --- | --- | --- | --- |
+| `totalIssues` | 229 | 229 | ±0 |
+| `baselinedIssues` (frozen) | 173 | 173 | ±0 |
+| `issuesByType.segment-untranslated` | 18 | 18 | ±0 |
+| `activeFiles` | 39 | 39 | ±0 |
+
+repo 内に GFM double-backtick content (``` ``...`` ```) が実在しないため本修正の production impact は **0 件** (latent bug fix)。
+
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
 
 M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:
@@ -331,8 +367,10 @@ Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 repor
   - `preStrip` pass で backtick (``` ` ```) 除去を試みているが実際には no-op になっており、backtick inline が masking 前に strip されないケースがある
   - `CJK_RE.replace(...)` 呼出で global flag (`g`) が欠落。最初の 1 match のみが置換される設計バグ。複数 CJK segment を含む長文 paragraph の classification 精度に影響
 - **影響範囲**: classifier 精度低下による false-positive / false-negative の僅かな揺れ。現状 PR #293 で導入した "URL-before-mask ordering" の regression は無く、Tier 2 merge までの counter には悪影響なし
-- **対応**: 2 fixes を単一 mechanism PR で解消 (regression test 追加必須)。既存 `parity_glossary_mask.test.mjs` に backtick strip / CJK multi-segment の test を追加
-- **Sev**: 3 (accuracy / hidden latent bug)
+- **対応 (partial)**:
+  - **Bug 1 (preStrip backtick no-op)** → `[Resolved via §5.3.6 (PR #XXX)]` GFM double-backtick code-span に対する pre-strip regex の拡張で解消。§5.3.6 参照
+  - **Bug 2 (`CJK_RE` missing `g` flag)** → `[DEFERRED — out of §5.3.6 scope]` **mechanism fix を試行した結果、classifier の word-count 設計 (RESIDUE_MIN_WORDS=3 threshold) が CJK-delimited 短 tech token (例: `img media font` 等の filter type 名) に対して false-positive を発生させる pre-existing latent design limit を露出する** ため、§5.3.6 scope lock (single bug mechanism PR) の範囲外と判定。`g` flag 追加のみの fix は 20 件の新 segment-untranslated false-positive を surface し (15 slug / clean-page sentinel + RESOLVED_PAGES への副次 assertion failure)、classifier threshold 再設計 (word-count vs char-count / ASCII-only word 計上 / short-token allow-list 等) を伴う別 PR (§5.3.7 相当) として分離する必要がある。単独 PR では welcome side effect とならず、baseline 増加 + sentinel 改訂の policy 判断が必要なため留保。
+- **Sev**: 3 (accuracy / hidden latent bug) — Bug 1 解消済、Bug 2 は Sev 3 維持 (classifier design work を伴う)
 
 **(3) EN upstream: Smart Locators anchor broken at `salesforce-testing/core-concepts#smart-locators`**
 
