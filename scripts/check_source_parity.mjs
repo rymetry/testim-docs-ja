@@ -50,6 +50,7 @@ import { checkPageCoverage, checkSinglePageSnapshot } from './lib/source_parity_
 import { buildRunScope, validateRunLinkage } from './lib/source_sync_health.mjs';
 import { createMaskCoverage, maskSegmentText } from './lib/parity_glossary_mask.mjs';
 import { createArtifactCoverage } from './lib/parity_artifact_registry.mjs';
+import { createOmissionCoverage } from './lib/ja_omission_policy_registry.mjs';
 export { buildRunScope };
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
@@ -382,6 +383,11 @@ export async function checkSourceParity({
   // 集計する run 単位 aggregator。Phase 4 で新設。
   const artifactCoverage = createArtifactCoverage();
 
+  // debug.omissionCoverage: §5.3.3 JA-side intentional-omission policy 抑止を
+  // 集計する run 単位 aggregator。`ja_omission_policy_registry` と照合した
+  // quota-based 抑止 hit を記録する。
+  const omissionCoverage = createOmissionCoverage();
+
   for (const filePath of allFiles) {
     const fileSlug = filePathToSlug(filePath);
     if (resolvedSlug && fileSlug !== resolvedSlug) {
@@ -511,6 +517,7 @@ export async function checkSourceParity({
             alignment = alignSegments(enSegments, jaSegments, {
               slug: fileSlug,
               coverage: artifactCoverage,
+              omissionCoverage,
             });
           } catch (e) {
             console.error(
@@ -745,6 +752,7 @@ export async function checkSourceParity({
     debug: {
       maskCoverage: maskCoverage.toJSON(),
       artifactCoverage: artifactCoverage.snapshot(),
+      omissionCoverage: omissionCoverage.snapshot(),
     },
   };
 

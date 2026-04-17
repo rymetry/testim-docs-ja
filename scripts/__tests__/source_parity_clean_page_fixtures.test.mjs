@@ -218,6 +218,82 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   sibling `validate-element-text` (6 entry) も同じ a./b./c. classifier
   //   pattern を共有する可能性があり Wave 4 で再利用予定。
   'advanced-editing/validations/validate-download',
+  // M2 P2-2 Wave 3 Batch 2 追加 — flat-ol-split §5.2 #1 の EN `<ol>` 内
+  //   orphan paragraph variant の sentinel。EN MadCap 出力で単一 `<ol>` の
+  //   内部に `<li value="1">` (item A) + orphan `<p>​2. ...</p>` + orphan
+  //   `<p>​3. ...</p>` + `<li value="2">..<li value="11">` が interleave し、
+  //   EN extractor は orphan `<p>` を `paragraph` segment、`<li>` を
+  //   `ordered-list-item` segment として分離 emit するため、structure
+  //   comparator は EN を `ol → p → p → ol → p → ol → p → ol → p` と解釈
+  //   する。JA は当初 orphan paragraphs も `<li>` として render していた
+  //   ため JA 側が `ol → p → ol → p → ol` となり kind-multiset が不一致。
+  //   修正方針: JA の該当 2 項目を ZWSP (`\u200b`) prefix 付き "2. ..."
+  //   / "3. ..." 段落に変換し、後続 ol を EN の `<li value="N">` (2〜11)
+  //   に揃えて renumber、さらに EN 末尾の `<p>​ ​<br /> ​</p>` 空段落を
+  //   JA でも単独 `\u200b` 行として mirror。ZWSP prefix はブラウザ表示
+  //   上は不可視だが、markdown parser (`2.` prefix の自動 ol 認識) を
+  //   回避し、`extractSegmentsFromMarkdown` でも textNorm が
+  //   `"2. 新しいビルドを作成します"` になるため EN の
+  //   `textNorm="2. create a new build"` と scoreSegmentMatch が成立する
+  //   (CJK 混在 + 数字 prefix 一致で same-language penalty を回避)。
+  //   deep-link-mobile §5.2 #1 と同じ mechanical exception pattern の拡張
+  //   であり、新 carve-out 不要。6 entry (section-structure-mismatch ×1,
+  //   segment-missing ×3, segment-extra ×2) → 0。
+  'integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration',
+  // M2 P2-2 Wave 3 Batch 2 追加 — sibling (#308 validate-download) の 2 pattern
+  //   を再検証した結果、本 slug では EN 側に a./b./c. enumeration も broken-
+  //   table-row paragraph も実在せず、代わりに MadCap 出力の orphan
+  //   `<p>&lt;/Image&gt;</p>` artifact paragraph (3 箇所のうち 2 箇所は
+  //   stand-alone paragraph、残り 1 箇所は次段落と結合) が Parameter only
+  //   section の block structure を EN=14 / JA=12 に崩していた
+  //   (section-structure-mismatch + segment-missing×2 paragraph)。JA は
+  //   `</Image>` を emit していなかったため、sibling の broken-table-row と
+  //   同じ inline-code mirror 技法 (`` `</Image>` ``) を適用して
+  //   SCORE_TEXTNORM_MATCH=500 で一致させる (素の `</Image>` だと Astro /
+  //   MDX 系 parser が component 扱いして build warning を出し得るため
+  //   inline-code で safe escape するのが sibling と同じ戦略)。併せて JA が
+  //   EN の `../data-driven-testing/index.htm#section-...` anchor を smart-
+  //   resolve で別 sub-page URL に展開していた 2 箇所を、`extractInvariant
+  //   Tokens` が fragment を落として `/docs/advanced-editing/data-driven-
+  //   testing` に正規化する挙動に合わせて path-only URL に restore
+  //   (sibling `passing-parameters-from-excel-file` と同じ invariant token
+  //   disjoint 解消 pattern)。6 entry を content-level で解消、新 mechanical
+  //   exception なし。#308 の sibling hint は 2 pattern のうち a./b./c. は
+  //   non-applicable だったが、broken-table-row の inline-code mirror 技法
+  //   自体は同じ mechanism (textNorm 一致で SCORE_TEXTNORM_MATCH を稼ぐ) で
+  //   `</Image>` MadCap artifact にも転用できた。
+  'advanced-editing/validations/validate-element-text',
+  // M2 P2-2 Wave 3 Batch 2 追加 — segment-token-gap (bold wrapping) +
+  //   classifier residue word-count (>=3) pattern の複合 sentinel。
+  //   (1) EN `<p>...: <strong>--sauce-options ...</strong></p>` の bold 内
+  //   CLI flag を JA も bold 維持したまま、flagRe `(?:^|\s)(--?[a-zA-Z]...)`
+  //   の `(?:^|\s)` 前提を満たすよう `**` と `--` の間に inline code fence
+  //   ``**`--sauce-options`** `` を挟んで token 抽出を復活させる (同 pattern
+  //   を SauceLabs/Browserstack web セクションの `--sauce-options` /
+  //   `--browserstack-options` へも適用)。bold は WRITING_GUIDE の Testim UI
+  //   見出し強調として EN と mirror される必要があり、inline code で飾り直す
+  //   のは source-first を維持したままの書式調整。
+  //   (2) JA heading `## capability の override rule (mobile)` と EN `<h2>
+  //   Override rules for a capability (mobile)</h2>` の見出し文字列を mirror
+  //   (`## Override rules for a capability (mobile)`)。同様に JA
+  //   `## BrowserStack` を EN `<h2>Browserstack</h2>` に mirror。callout /
+  //   uli を EN section index と同位置に置くため見出し文字列を揃える。
+  //   (3) `classifier RESIDUE_MIN_WORDS=3` 制約により、JA prose に残る
+  //   standalone camelCase 識別子 (`platformVersion`, `osVersion`,
+  //   `capabilities`) と汎用語 (`build`, `project`, `capabilities`) が
+  //   同一 segment 内で 3 個以上残ると segment-untranslated が誤発火する。
+  //   本 slug では (a) Override rules callout-body で `platformVersion` ×2
+  //   + `osVersion` ×1 が 3 語 fail を誘発 → GLOSSARY Tier C に
+  //   W3C/Appium spec 識別子として `platformVersion` / `osVersion` を登録
+  //   して mask 対象化 (chore(glossary) as per hint)、(b) preface uli と
+  //   Browserstack uli でそれぞれ `build`/`project` と `capabilities` ×2
+  //   が 3 語に達していた箇所を、inline-code fence + `と` 日本語接続 /
+  //   `capabilities` の一つを削って 2 語に減らす content-level 回避で解消。
+  //   6 entry (segment-token-gap ×3, segment-untranslated ×3) → 0。新
+  //   mechanical exception / §5.3.N carve-out なし、§5.4 許容範囲内の
+  //   Tier C 追加 2 件のみ。Wave 2 sibling `integrations/grid-management`
+  //   (generic-English-residue pattern 8) の同一 folder 派生 sentinel。
+  'integrations/grid-management/saucelabs-browserstack-options',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {

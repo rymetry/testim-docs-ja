@@ -1440,6 +1440,93 @@ describe('extractMarkdownTables', () => {
     const tables = extractMarkdownTables(body);
     assert.equal(tables.length, 0);
   });
+
+  // -------------------------------------------------------------------------
+  // §5.3.4 GFM strict-check: backslash-escaped pipe handling
+  //
+  // WRITING_GUIDE §5 `broken-table-row paragraph mirror` (salesforce Wave 2
+  // sentinel `use-agentic-test-automation-for-salesforce`) は意図的に
+  // `\| ... \|` として render され、GFM table ではなく段落として扱われる
+  // べきである。table-shape-mismatch の false-positive を誘発しないよう
+  // 以下の strict-check を pin する。
+  // -------------------------------------------------------------------------
+  it('does NOT detect backslash-escaped pipe paragraph as table', () => {
+    // salesforce Wave 2 sentinel `\| ... \|` pattern (broken-table-row
+    // paragraph mirror). backslash-escape によって行頭が `\|` となり、
+    // GFM 上は pipe table ではなく段落として扱われる。
+    const body =
+      '## Section\n\n\\| Row A \\| Row B \\| Row C \\|\n\nSome text after.\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(
+      tables.length,
+      0,
+      'backslash-escaped pipe line must not be treated as a table row',
+    );
+  });
+
+  it('requires a GFM separator row to recognize a pipe table', () => {
+    // GFM §tables-extension: pipe table は separator 行 (`| --- |`) が必須。
+    // separator が無い単独 `| ... |` 行は段落 (false-positive 予防)。
+    const body = '| A | B |\n| 1 | 2 |\n\nparagraph after.\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(
+      tables.length,
+      0,
+      'pipe-only rows without a separator must not be detected as a table',
+    );
+  });
+
+  it('preserves backslash-escaped pipes within real table cells', () => {
+    // GFM §tables-extension: cell 内の `\|` は literal pipe として扱われ、
+    // cell 区切りにはならない。unescaped pipe のみが separator。
+    const body =
+      '| A \\| B | C |\n| --- | --- |\n| val1\\|val2 | val3 |\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 1);
+    assert.equal(tables[0].rows.length, 2); // header + 1 data row
+    assert.deepEqual(
+      tables[0].rows[0],
+      ['A | B', 'C'],
+      'header cell must contain literal pipe, not split into 3 cells',
+    );
+    assert.deepEqual(
+      tables[0].rows[1],
+      ['val1|val2', 'val3'],
+      'data cell must contain literal pipe, not split into 3 cells',
+    );
+  });
+
+  it('does NOT detect isolated backslash-pipe segment mixed with real table', () => {
+    // 混在 pattern: 同じページに real GFM table と backslash-pipe paragraph が
+    // 併存する場合も、backslash-pipe 行は table として誤検知されない。
+    const body = [
+      '## Real',
+      '',
+      '| A | B |',
+      '| --- | --- |',
+      '| 1 | 2 |',
+      '',
+      '## Paragraph Mirror',
+      '',
+      '\\| col1 \\| col2 \\|',
+      '',
+    ].join('\n');
+    const tables = extractMarkdownTables(body);
+    assert.equal(tables.length, 1);
+    assert.deepEqual(tables[0].rows[0], ['A', 'B']);
+  });
+
+  it('rejects pipe-row candidate lines with only a trailing backslash-pipe', () => {
+    // 末尾が `\|` (escaped) の行は unescaped closing pipe が無いため、
+    // table candidate ではない (負 lookbehind で `(?<!\\)\|\s*$` が false)。
+    const body = '| A | B \\|\n| --- | --- |\n| 1 | 2 |\n';
+    const tables = extractMarkdownTables(body);
+    assert.equal(
+      tables.length,
+      0,
+      'row ending in escaped pipe is not a valid GFM pipe table header',
+    );
+  });
 });
 
 describe('extractHtmlTables', () => {

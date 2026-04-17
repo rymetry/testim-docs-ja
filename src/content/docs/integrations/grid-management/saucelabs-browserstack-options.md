@@ -27,7 +27,7 @@ keywords:
 }
 ```
 
-2. CLI では次を追加します: **--sauce-options "\<aboveConfigFileName>.json"**
+2. CLI では次を追加します: **`--sauce-options` "\<aboveConfigFileName>.json"**
 
 capabilities は次のような用途に利用できます。
 
@@ -37,10 +37,10 @@ capabilities は次のような用途に利用できます。
 - Grid 側で取得するデータの制御
 - 動画キャプチャーの無効化
 - ネットワークログの無効化
-- build / project オプションの capabilities を使ったテスト結果マッピングのカスタマイズ
+- `build` と `project` オプションによるテスト結果マッピングのカスタマイズ
 - リセット戦略の制御
 
-## capability の override rule (mobile)
+## Override rules for a capability (mobile)
 
 JSON capabilities ファイルの設定は、次の設定を上書きします。
 
@@ -56,7 +56,7 @@ JSON capabilities ファイルの設定は、次の設定を上書きします�
 
 **Web の場合:**
 
-CLI に次を追加します: **--sauce-options "config_saucelabs.json"** ファイルの例:
+CLI に次を追加します: **`--sauce-options` "config_saucelabs.json"** ファイルの例:
 
 ```json
 {
@@ -95,11 +95,11 @@ CLI に次を追加します: **--sauce-options "config_saucelabs.json"** ファ
 }
 ```
 
-## BrowserStack
+## Browserstack
 
 **Web の場合:**
 
-CLI に次を追加します: **--browserstack-options "config_browserstack.json"** 次はサポートされる代表的な上書きパラメーターの例です。
+CLI に次を追加します: **`--browserstack-options` "config_browserstack.json"** 次はサポートされる代表的な上書きパラメーターの例です。
 
 ```json
 {
@@ -122,7 +122,7 @@ CLI に次を追加します: **--browserstack-options "config_browserstack.json
 
 **Mobile の場合:**
 
-- Appium の capabilities には、プレフィックスなしの W3C capabilities 形式を使用します。
+- Appium の capabilities にはプレフィックスなしの W3C 形式を使用します。
 - BrowserStack の capabilities には、レガシー (Wire JSON) 形式を使用します。
 
 [Appium caps](https://www.browserstack.com/docs/app-automate/appium/debug-failed-tests/appium-logs)
