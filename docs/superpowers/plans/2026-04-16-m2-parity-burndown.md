@@ -165,6 +165,40 @@ Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高
 - auditSignalIssues **= 0**
 - → PR Z (M3) entry 成立
 
+### P2-6: 退避 registry 最終検証 (final phase evacuation audit)
+
+**System 原則** (2026-04-17 user 確認): 許容機構 (registry / exclusion) は **「壊れている EN snapshot の退避」の ONE purpose ONLY**。それ以外の「許容」は classifier 検知精度を dilute する設計違反。
+
+M2 exit 直前の本 phase で、既存 **全退避 entry を再検証**する。各 entry について以下 3 点を確認し、「解決できないか？」を審査する:
+
+1. **broken EN の実在確認**: EN upstream (docs.tricentis.com/testim) で当該 symptom が依然発生しているか? 既に upstream が修正した場合 → registry から entry 削除、通常 parity check に復帰
+2. **代替解決手段の有無**: parser / extractor 側の mechanism 改善 (§5.3.N 相当) で EN broken pattern を吸収できないか? 可能なら mechanism PR 優先で registry entry を段階的に削除
+3. **退避の必要性**: 退避無しだと detection が本当に動かないのか? false-negative 容認ではなく genuine 不可能ケースか?
+
+**対象 registry**:
+
+| registry | 現行 entry 数 | 対象 slug |
+|---|---:|---|
+| `scripts/lib/source_sync_exclusions.mjs` (`SOURCE_SYNC_EXCLUSIONS`) | 1 | `testops/testops-version-control/pull-requests` |
+| `scripts/lib/parity_artifact_registry.mjs` — `/docs/index` self-link | 7 | `editing-tests/conditions/advanced-conditions-settings`, `integrations/visual-validation/visual_validation_index`, `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`, `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`, `salesforce-testing/salesforce-steps/sfdc-step-login`, `testops/insights/dashboard`, `testops/insights/reports` |
+| `scripts/lib/parity_artifact_registry.mjs` — `http://google.com` demo link | 1 | `getting-started/creating-your-first-codeless-test` |
+| `scripts/lib/ja_omission_policy_registry.mjs` (§5.3.3) | 4 (quota=5) | `overview/testim-overview` |
+
+**運用 (P2-6)**:
+
+- 各 entry × 3 審査項目 = 全 13 entry × 3 項目 = 39 チェック
+- 1 agent が audit、reviewer (architect) が approve/reject per-entry
+- 解決可能な entry → 対応する mechanism PR or content PR を起票 → registry から段階削除
+- 真に解決不能な entry → plan に「永続退避根拠」を明記 (upstream 本体修正待ちの broken-EN など)
+- `ja_omission_policy_registry` は broken EN ではなく Tricentis legal policy (pricing/changelog/testim.io 除外) のため、**別枠の policy-driven registry** として継続するか、legal 確認して段階的に解除するか、user と協議
+
+**Exit (P2-6 = 真の M2 完了)**:
+
+- 各 registry の entry について「upstream broken 確認済 ∧ mechanism 解決不能」が全 entry で成立
+- 解決可能な entry は全て PR 化済 (P2-5 / P2-6 並行で段階的 burn-down)
+- plan に各 entry の「退避根拠」sub-section が存在
+- → 本 P2-6 完了を以て PR Z (M3) entry の **pre-condition** とする
+
 ## 4. PR cadence & branching
 
 - **base branch**: 各 phase で `origin/main` から新 branch を切る (`claude/m2-p2-1-pilot`, `claude/m2-p2-2-*`, …)
