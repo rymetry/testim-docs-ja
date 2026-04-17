@@ -303,7 +303,7 @@ exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan へ
 
 #### 5.3.5 `normalizeEnArtifacts` EN/JA symmetric `\d+\.(\S)` normalization
 
-§5.4 item 1 (2026-04-17 PR #312 agent 77 reviewer discovery) を §5.3.N mechanism として昇格。`scripts/lib/source_parity_extract.mjs` の `normalizeEnArtifacts` は `\d+\.(\S)` (番号+ピリオド+非空白 non-digit) パターンに対してスペースを挿入する正規化を行うが、`compareSnapshotStructure` 内で **EN 側のみ** 呼ばれており、JA 側は未正規化の素で比較されていた。結果、EN=「1.foo」→「1. foo」(ordered-list + 後続段落に分割)、JA=「1.foo」(単一行) という非対称な paragraph 分割が発生し、turndown 出力 / 直書き markdown で両言語に同形パターンが存在する場合に `paragraph-count-mismatch` / `step-count-mismatch` の audit noise が誤発火していた。
+§5.4 item 1 (2026-04-17 PR #312 agent 77 reviewer discovery) を §5.3.N mechanism として昇格 (PR #322)。`scripts/lib/source_parity_extract.mjs` の `normalizeEnArtifacts` は `\d+\.(\S)` (番号+ピリオド+非空白 non-digit) パターンに対してスペースを挿入する正規化を行うが、`compareSnapshotStructure` 内で **EN 側のみ** 呼ばれており、JA 側は未正規化の素で比較されていた。結果、EN=「1.foo」→「1. foo」(ordered-list + 後続段落に分割)、JA=「1.foo」(単一行) という非対称な paragraph 分割が発生し、turndown 出力 / 直書き markdown で両言語に同形パターンが存在する場合に `paragraph-count-mismatch` / `step-count-mismatch` の audit noise が誤発火していた。
 
 **修正方針 (Option A: 対称適用)**:
 
@@ -334,7 +334,7 @@ exception 追加は **reviewer 承認 + plan への明示登録** を条件と�
 
 Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 reports) 4-reviewer gate で発見された高温度 Sev 3。M2 cutover をブロックしないが将来 mechanism PR で個別解消すべき 3 件。
 
-**(1) `normalizeEnArtifacts` EN-only `\d+\.(\S)` space-insertion asymmetry** (audit noise root cause) — **[Resolved via §5.3.5]**
+**(1) `normalizeEnArtifacts` EN-only `\d+\.(\S)` space-insertion asymmetry** (audit noise root cause) — **[Resolved via §5.3.5 (PR #322)]**
 
 - **発見**: PR #312 agent 77 reviewer
 - **所在**: `scripts/lib/source_parity_extract.mjs` (EN-side normalize pass), `scripts/lib/source_parity_checks.mjs` (`compareSnapshotStructure` call site)
