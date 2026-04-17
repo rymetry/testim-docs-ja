@@ -219,6 +219,42 @@ node scripts/generate_parity_baseline.mjs --slug=advanced-editing/loops
 - **Prettier 注意**: `npm run format` はリポジトリ全体を変更する。PR 対象ファイルのみに限定する
 - **新 §5.3.N carve-out の提案手順**: エージェントが未知 pattern の mechanism-pending residual を発見した場合、**plan に §5.3.N として直接書き込まず**、PR description / コミット message に `[PENDING REVIEWER APPROVAL — §5.3.N proposal]` マーカーを付与して提案する。driver + 4-reviewer gate (architect / security 重点) の承認を経て初めて plan に確定登録する。自主宣言 (agent が承認前に plan に書き込む) は §5.3 Scope preamble で禁止されている。既存 `/docs/index` artifact への slug-scope extension など、明らかな "既存 mechanism の scope 拡張" については §5.3.2 のような先行実績があるが、それも reviewer 承認を前提とする (retroactive approval を回避するためにマーカー運用する)。
 
+## §5.3.1 FileOrFilePath carve-out coverage (audit-signal 拡張 2026-04-17)
+
+`2026-04-16-m2-parity-burndown.md` §5.3.1 の FileOrFilePath mechanism-pending carve-out は、当初 gate-blocking な `section-structure-mismatch` / `segment-missing` / `segment-extra` のみを scope としていたが、2026-04-17 に **`paragraph-count-mismatch` audit signal** を同 root cause 由来の副作用として §5.3.1 scope に追加する (詳細は plan §5.3.1.a)。
+
+### 分類境界
+
+| 対象 slug / section | issue type | gate 扱い | 対処 |
+| --- | --- | --- | --- |
+| `configure-tricentis-mobile-agent` §19 WDA Errors | `section-structure-mismatch` | baseline 登録済 / gate-blocking | §5.3.1 既存 carve-out |
+| `configure-tricentis-mobile-agent` §19 WDA Errors | `segment-missing` / `segment-extra` | baseline 登録済 / gate-blocking | §5.3.1 既存 carve-out |
+| `configure-tricentis-mobile-agent` §19 WDA Errors | `paragraph-count-mismatch` | `COARSE_SIGNAL_TYPES` / audit-only | §5.3.1.a 拡張 (本追加) |
+
+### 運用上の注意 (agent 向け)
+
+- `configure-tricentis-mobile-agent.md` で `paragraph-count-mismatch` (EN=5 / JA=4) を検知した場合、**content 修正を試みない** (JA 独自段落追加 = source-first policy 違反)
+- §5.3.1 の symptom (FileOrFilePath + code-fence) に一致するかを確認し、一致する場合は carve-out 済として skip
+- 同 slug の audit signal は agent の個別判断で baseline 追加 / ack / content 修正せず、本 §5.3.1.a 枠組み下で EN mechanism fix (M2 範囲外) を待つ
+- 他 slug で同 `paragraph-count-mismatch` + FileOrFilePath pattern が新規発現した場合は **§5.3.N proposal marker protocol に従って提案する** (自動 scope 拡張禁止)
+
+### 関連参照
+
+- 詳細: `docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §5.3.1.a
+- Root cause analysis: `docs/superpowers/analyses/2026-04-17-audit-signals-triage.md` (PR #312) §3.1 entry #18 / §5.4 Proposal A
+- 実装参照: `scripts/lib/source_parity_types.mjs` `COARSE_SIGNAL_TYPES` (= audit-only allowlist)、`scripts/lib/source_parity_extract.mjs` `extractParagraphCounts` / `normalizeEnArtifacts`、`scripts/lib/source_parity_segments_en.mjs` `INLINE_JOIN_TAGS`
+
+### §5.3.4 `extractMarkdownTables` GFM strict-check (2026-04-17 mechanism PR)
+
+Wave 2 pattern catalog row 5 (broken-table-row paragraph mirror) の canonical sentinel `use-agentic-test-automation-for-salesforce` で定義された `\|...\|` paragraph を、`scripts/lib/source_parity_extract.mjs::extractMarkdownTables` が誤って table として認識し得る緩い regex を GFM §tables-extension に忠実な strict-check に置換した。具体的には:
+
+- **separator 行を必須化**: `GFM_TABLE_SEPARATOR_RE = /^\|(?:\s*:?-{1,}:?\s*\|)+$/` にマッチする separator を header の直後に要求する。separator に到達しない pending row 列は破棄し、pipe-only segment は段落として扱う。
+- **backslash-pipe を cell 区切りから除外**: cell split に `UNESCAPED_PIPE_SPLIT_RE = /(?<!\\)\|/` (負 lookbehind) を使い、cell 内の `\|` は literal `|` として復元する (`cell.replace(/\\\|/g, '|')`)。行頭が `\|` で始まる行、または末尾の閉じ `|` が `\|` (escaped) の行は candidate から除外 (`isGfmTableCandidateLine`)。
+
+**影響範囲**: `table-shape-mismatch` (signal severity) の false-positive を 4 件 → 0 件に削減。`baselinedIssues` は完全不変 (183 固定)。本修正は `extractMarkdownTables` のみを touch し、`extractHtmlTables` / `classifyLine` / `compareTableStructure` には介入しない。regression gate として `scripts/__tests__/source_parity.test.mjs` に 5 テスト追加、salesforce sentinel (`source_parity_clean_page_fixtures.test.mjs`) は引き続き totalIssues=0 を維持。
+
+詳細は plan `2026-04-16-m2-parity-burndown.md §5.3.4` を参照。
+
 ## Bug backlog の返済優先順位
 
 Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 以降で以下の優先順位で返済する:
@@ -233,3 +269,48 @@ Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 �
 | segment-inconclusive | tokenless-near-tie 等。自動判定の限界。手動確認 | 高 |
 
 Top 2 大物ファイルとロングテール (1-3 件ファイル 69 ファイル) はバッチ処理で返済する。
+
+## §5.3.3 JA-side intentional-omission policy (Tricentis removal-request registry)
+
+`[PENDING REVIEWER APPROVAL — §5.3.3 L2 gate]` — plan `docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §5.3.3 登録と対応。
+
+### 何に使うか
+
+`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis からの削除依頼 policy** により、EN 原文にある特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL 等) を JA 側で意図的に削除している slug の drift を quota-based で抑止する。
+
+既存 3 mechanism との棲み分け:
+
+| mechanism | 対象 | §5.3.3 との差異 |
+| --- | --- | --- |
+| `scripts/lib/source_sync_exclusions.mjs` | page-level EN-broken | JA 側意図的削除は対象外 (本 slug の EN は正常) |
+| `scripts/lib/parity_artifact_registry.mjs` (§5.3.2) | EN-side artifact token (`/docs/index` 等) | EN 側 artifact のみ。JA 削除は対象外 |
+| §5.3.1 FileOrFilePath | EN 抽出側 kind-mismatch | パーサ側問題。削除 policy は対象外 |
+| **§5.3.3 `ja_omission_policy_registry`** | **JA 側の意図的削除 (Tricentis removal-request policy)** | **新規** |
+
+### runtime 契約
+
+- `scripts/lib/ja_omission_policy_registry.mjs` が registry + `matchPolicy` + `createOmissionCoverage` + `NOOP_OMISSION_COVERAGE` を export する
+- `alignSegments(enSegments, jaSegments, { slug, coverage, omissionCoverage })` は diffs 生成後に `suppressJaOmissionDiffs` を呼び、registry と照合した上で quota 範囲内の diff を 1 件ずつ drop する
+- `check_source_parity.mjs` は run 単位で `createOmissionCoverage()` を 1 個生成し、全 slug の alignSegments に共有。最終的な `parity-check-status.json` の `debug.omissionCoverage` に snapshot を格納する
+
+### quota-based disambiguator の理由
+
+`overview/testim-overview` では 1 slug × `callout-body segment-missing` が 2 件出る (pricing + changelog)。同一 `(slug, issueType, segmentKind)` での複数 diff を個別に指すために、以下 3 候補から **quota-based** を採用:
+
+| 案 | 利点 | 欠点 | 採否 |
+| --- | --- | --- | --- |
+| (a) quota-based | 登録データが最小。EN 文面が変わっても安定 | 同種 drift の 3 件目が別原因で発生すると quota 内で誤抑止され得る (現実的には低確率) | **採用** |
+| (b) fingerprint-based | 厳密 | EN 文面更新で sha-256 変化。policy 意図 ("EN がどうなっても JA は出さない") と相反 | 不採用 |
+| (c) content-prefix match | 部分柔軟 | brittle / 監査しづらい / policy drift を許す | 不採用 |
+
+(a) の副作用 (同種 3 件目の誤抑止) は quota が尽きた時点で次の diff が通常通り surface するため、reviewer が気付いて registry entry を分割する運用で受容する。coverage snapshot の `exhaustedEntries` を監視対象にする。
+
+### entry 追加手順
+
+新 slug を追加する場合は `docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` 表の更新を先行条件とし、その上で以下を行う:
+
+1. `scripts/lib/ja_omission_policy_registry.mjs` の `JA_OMISSION_POLICY_REGISTRY` に entry を追加 (`slugs[]` / `issueTypes[]` / `segmentKinds` / `missingToken?` / `quota` / `reason` / `note` / `policySource` / `addedAt`)
+2. `scripts/__tests__/ja_omission_policy_registry.test.mjs` の inventory describe block に新 slug 用 assertion を追加
+3. plan §5.3.3 の initial inventory 行を更新
+
+registry 新規 token 追加は `§5.3.N` 新規 carve-out として reviewer L2 gate を経由する (本 §5.3.3 は Tricentis removal-request policy に scope lock)。
