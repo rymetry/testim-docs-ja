@@ -443,7 +443,12 @@ describe('pin slug content-correctness + fallback (T12)', () => {
     //       (section-structure-mismatch / segment-extra / segment-token-gap) を
     //       持つ `integrations/grid-management/virtual-mobile-grid` (3 baseline
     //       entry) へ再 pin。
-    const fallbackSlug = 'integrations/grid-management/virtual-mobile-grid';
+    // NOTE: 2026-04-17 に `integrations/grid-management/virtual-mobile-grid` も
+    //       Tier B Wave 3 Bundle 2 (Integrations) で burn-down 対象となり 0
+    //       entry になる見込みのため、Bundle 2/3/4 即時計画対象外かつ multi-type
+    //       (segment-extra / segment-missing) を持つ
+    //       `administration/encrypted-credentials` (2 baseline entry) へ再 pin。
+    const fallbackSlug = 'administration/encrypted-credentials';
     const baselinePath = join(ROOT, 'parity-baseline.json');
     const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
     const count = baseline.entries.filter((e) => e.slug === fallbackSlug).length;
