@@ -156,6 +156,15 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   (tokensInvariant 合致)。8 entry 解消、新 mechanical exception なし、
   //   content-level source-first mirror のみ。
   'integrations/visual-validation/lambdatest_integration',
+  // M2 P2-2 Wave 2 追加 — §5.3.2 `/docs/index` artifact registry extension +
+  //   EN broken-table-row paragraph mirror + JA navigation link removal の複合
+  //   sentinel。EN MadCap Flare の `<table>` 外 orphan `<p>|...|High|</p>` を
+  //   JA も backslash-escaped paragraph (`\| ... \| 高 \|`) で mirror し、EN
+  //   `<a href="index.htm[/#/]">` self-link artifact を JA link 除去で mirror
+  //   (tokensInvariant の `/docs/index` disjoint を解消)。7 entry を content-
+  //   level で解消 + 2 entry を §5.3.2 runtime suppress (PR #304 registry 拡張
+  //   で有効化、PARITY_GUIDE marker protocol 参照)。
+  'salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
