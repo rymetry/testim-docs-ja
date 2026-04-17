@@ -120,17 +120,41 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
-  // M2 P2-2 Wave 2 追加 — ASCII-only list item の textNorm-match 回復 pattern。
-  //   EN `<li><p>Username.</p></li>` 等の Testim UI 用語は英語維持のため
-  //   両側 ASCII-only となり、`scoreSegmentMatch` の same-language penalty
-  //   (score 0) により weighted LCS で match 候補から外れていた。JA 側に
-  //   EN と同一の trailing punctuation (`.`) を付与すると textNorm が完全
-  //   一致し、score 500 で確実に matching される (content-level 1:1 mirror)。
-  //   併せて EN 側の `https://www.testmuai.com/...` URL を JA が canonical
-  //   `lambdatest.com` に置き換えていた drift を EN verbatim にリストアし、
-  //   token overlap を回復。両 fix とも source-first の範囲内 (新 exception
-  //   ではない)。Tier A bulk で同 pattern (ASCII UI 用語 list + EN token URL
-  //   mirror) の slug が増える前の regression pin として固定。
+  // M2 P2-2 Wave 2 追加 — arrow-fusion pattern P1 の 4-section 集中型 sentinel。
+  //   Wave 2 briefing pattern 1 の pure P1 (`<br />` なし) のみで成立する
+  //   slug で、EN `<p>Context. → <strong>To X:</strong></p>` 単一段落を
+  //   JA が context 段落 + `**Xするには:**` 段落に分離していた drift を
+  //   `。\n→ **Xするには:**` soft-break 融合で 4 section × 2 entry = 8 entry
+  //   を消化。同 pattern の regression を Tier A bulk 以降で広く検知するため
+  //   pin する (mobile variant `editing-target-element-properties-mobile`
+  //   は元々 0-drift のため追加不要)。
+  'editing-tests/editing-your-tests/editing-target-element-properties',
+  // M2 P2-2 Wave 2 追加 — 複合 sentinel (flat-ol-split §5.2 #1 + callout-bullet-to-paragraph
+  //   + callout-to-blockquote)。Setting up TTM for Jira Integration セクションで EN の
+  //   `<ol>` に orphan `<p>modules.</p>` が挟まる flat-ol-split pattern、Bulk Create
+  //   セクションで EN callout 内 single `<p>` を JA が bullet split していた drift、
+  //   Upon Testim test run execution end セクションで EN `<blockquote>` (paragraph kind に
+  //   展開) に JA `:::warning` が合致しないため `> ` blockquote に置換。9 entry を
+  //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
+  //   first callout 修正の組み合わせ。
+  'integrations/test-management-integrations/ttm-for-jira-integration',
+  // M2 P2-2 Wave 2 追加 — 初の純 content-level segment-untranslated sentinel。
+  //   arrow-fusion / ol-split / table 等の構造 pattern は不使用、generic-
+  //   English-residue (browser version, shared/dedicated device, hover,
+  //   geolocation, site-to-site, executive 等) のみが drift 原因だった
+  //   slug。Testim UI / vendor name (Grid, Editor, VPN, IP, CLI, SauceLabs,
+  //   BrowserStack 等) は英語維持、generic 語のみ JA 化で 7 entry を解消。
+  //   後続の Tier A bulk で同 pattern の slug が多発する前の regression pin。
+  'integrations/grid-management',
+  // M2 P2-2 Wave 2 追加 — ASCII-only UI-term punctuation mirror + EN token URL
+  //   verbatim mirror の複合 sentinel。EN `<li>Username.</li>` / `<li>Access key.</li>`
+  //   / `<li>Project token.</li>` の trailing `.` を JA が欠落していた drift を
+  //   復元 (scoreSegmentMatch の same-language penalty が ASCII-only term で
+  //   score 0 に落ちる挙動を回避)。また EN `https://www.testmuai.com/...`
+  //   (MadCap redirect domain, curl で 200 OK verified) を JA が canonical
+  //   `lambdatest.com` に置換していた drift を verbatim mirror に restore
+  //   (tokensInvariant 合致)。8 entry 解消、新 mechanical exception なし、
+  //   content-level source-first mirror のみ。
   'integrations/visual-validation/lambdatest_integration',
 ]);
 
