@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "meanStabilityScore": 0.993076109936575,
+  "meanStabilityScore": 0.9977272727272727,
   "pages": [
     {
       "slug": "running-tests/the-command-line-cli",
@@ -47,7 +47,7 @@
     {
       "slug": "advanced-editing/coding-assistant",
       "enTotal": 39,
-      "jaTotal": 43,
+      "jaTotal": 39,
       "enCounts": {
         "paragraph": 9,
         "unordered-list-item": 11,
@@ -58,10 +58,9 @@
         "paragraph": 9,
         "unordered-list-item": 11,
         "ordered-list-item": 18,
-        "heading": 1,
-        "details-summary": 4
+        "heading": 1
       },
-      "stabilityScore": 0.9534883720930233
+      "stabilityScore": 1
     },
     {
       "slug": "advanced-editing/loops",

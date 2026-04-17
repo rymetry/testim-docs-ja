@@ -98,36 +98,20 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 ## 使用例
 
-利用できるプロンプト例:
-
-<details>
-<summary><b>ページ URL を検証するコードを生成</b></summary>
+利用できるプロンプト例: **ページ URL を検証するコードを生成**
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/485092a-1.png)
 
-ページ URL が指定の正規表現に一致するか検証する [Add Custom Validation](/docs/advanced-editing/validations/custom-code) ステップで使用します。
-</details>
-
-<details>
-<summary><b>チェックボックス選択を検証するコードを生成</b></summary>
+ページ URL が指定の正規表現に一致するか検証する [Add Custom Validation](/docs/advanced-editing/validations/custom-code) ステップで使用します。**チェックボックス選択を検証するコードを生成**
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/95f3895-2.png)
 
-特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/editing-tests/conditions#custom-条件の設定) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。
-</details>
-
-<details>
-<summary><b>リッチテキストエディターに文字入力するコードを生成</b></summary>
+特定のチェックボックスが選択済みか判定する [Custom Condition](/docs/editing-tests/conditions#custom-条件の設定) で使用します。クリックステップでチェックボックスを選択する際に、事前に未選択であることを確認する用途などがあります。**リッチテキストエディターに文字入力するコードを生成**
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/c28ca84-image.png)
 
-Set text ステップで入力できないリッチテキストエディター要素へ文字列を入力するためのコードです。カスタム検証ステップのコードにより、実行時にリッチテキストエディター要素にテキストを入力します。
-</details>
-
-<details>
-<summary><b>3 つのパラメーター値を比較するコードを生成</b></summary>
+Set text ステップで入力できないリッチテキストエディター要素へ文字列を入力するためのコードです。カスタム検証ステップのコードにより、実行時にリッチテキストエディター要素にテキストを入力します。**3 つのパラメーター値を比較するコードを生成**
 
 ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/417615e-image_1.png)
 
 テスト内で使用した複数パラメーターの値が同一であることを確認するカスタム条件やカスタム検証ステップで使用します。
-</details>

@@ -12,6 +12,7 @@ import {
   extractTableStructure,
   isUntranslatedCell,
   normalizeEnArtifacts,
+  normalizeNumericPeriodSpacing,
   stripMarkdown,
   stripTitleH1,
 } from './source_parity_extract.mjs';
@@ -319,6 +320,13 @@ export function compareSnapshotStructure(enBody, jaBody) {
   issues.push(...compareTableStructure(enBody, jaBody));
 
   const normalizedEnBody = normalizeEnArtifacts(stripTitleH1(enBody));
+  // §5.3.5: Apply the same `\d+\.(\S)` space-insertion to the JA body that
+  // `normalizeEnArtifacts` applies to EN. Without this, EN `1.foo` becomes
+  // `1. foo` (an ordered-list item with following paragraph) while JA
+  // `1.foo` stays as a single line, producing asymmetric paragraph /
+  // step counts purely from normalization — not from real structural
+  // drift. Symmetric application removes that audit-signal noise.
+  const normalizedJaBody = normalizeNumericPeriodSpacing(jaBody);
   const countSectionHeadings = (body) => {
     let count = 0;
     let inCode = false;
@@ -333,7 +341,7 @@ export function compareSnapshotStructure(enBody, jaBody) {
   };
 
   const enSectionCount = countSectionHeadings(normalizedEnBody);
-  const jaSectionCount = countSectionHeadings(jaBody);
+  const jaSectionCount = countSectionHeadings(normalizedJaBody);
   if (enSectionCount > 0 && enSectionCount !== jaSectionCount) {
     issues.push(
       withSeverity({
@@ -344,7 +352,7 @@ export function compareSnapshotStructure(enBody, jaBody) {
   }
 
   const enHeadings = extractHeadingSequence(normalizedEnBody);
-  const jaHeadings = extractHeadingSequence(jaBody);
+  const jaHeadings = extractHeadingSequence(normalizedJaBody);
   const headingCompareLength = Math.min(enHeadings.length, jaHeadings.length);
   if (headingCompareLength > 0) {
     const mismatches = [];
@@ -370,11 +378,11 @@ export function compareSnapshotStructure(enBody, jaBody) {
   }
 
   const enSteps = extractStepCounts(normalizedEnBody);
-  const jaSteps = extractStepCounts(jaBody);
+  const jaSteps = extractStepCounts(normalizedJaBody);
   const enBullets = extractBulletCounts(normalizedEnBody);
-  const jaBullets = extractBulletCounts(jaBody);
+  const jaBullets = extractBulletCounts(normalizedJaBody);
   const enParagraphs = extractParagraphCounts(normalizedEnBody);
-  const jaParagraphs = extractParagraphCounts(jaBody);
+  const jaParagraphs = extractParagraphCounts(normalizedJaBody);
 
   const enStepTotal = [...enSteps.values()].reduce((sum, value) => sum + value, 0);
   const jaStepTotal = [...jaSteps.values()].reduce((sum, value) => sum + value, 0);

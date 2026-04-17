@@ -96,6 +96,21 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   // callout-heavy: callout-body が 3 件の長文ページ。mobile-apps セクションの
   //   代表 zero-drift sentinel。
   'mobile-apps/mobile-apps',
+  // M2 P2-2 Wave 4 追加 — escaped-details-residue broken EN shape に対する
+  //   content-level source-first mirror sentinel。EN snapshot の Examples
+  //   section が MadCap Flare 由来で `&lt;details&gt;` / `&lt;summary&gt;`
+  //   が paragraph 内に entity-escape された状態 (normalizeEscapedFaqDetails
+  //   discriminator で「prose 先行」と判定されて rewrite されない balanced
+  //   ケース) になっており、comparator は `p → p → p → p → p` の 5 paragraph
+  //   kind-multiset を取る。JA 側が `<details>/<summary>` widget で wrap して
+  //   いた 4 段の accordion を、EN と同じ 5 paragraph + 4 image (intro +
+  //   body ×4) 構造に flatten し、各 section のタイトルを **bold** inline
+  //   として直前の paragraph 末尾に embed することで zero-drift 化。
+  //   EN upstream 固有の "prose-prefixed escaped details" shape は本 slug
+  //   のみで発現 (faq は prose 無しで normalizeEscapedFaqDetails の rewrite
+  //   対象となる) のため、sentinel 登録は content-level mirroring の範囲
+  //   (mechanical exception ではない)。
+  'advanced-editing/coding-assistant',
   // M2 P2-1 pilot 追加 — flat ol 分割 (source-first mechanical exception
   //   per plan §5.2) + classifier URL-before-mask fix の regression pin。
   //   EN の single <ol> with <li value="1"..value="15"> + img/note sibling
@@ -145,6 +160,21 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
   //   first callout 修正の組み合わせ。
   'integrations/test-management-integrations/ttm-for-jira-integration',
+  // M2 P2-2 Wave 4 追加 — sibling `ttm-for-jira-integration` (Wave 2) と同じ
+  //   複合 pattern (flat-ol-split §5.2 #1 + callout-to-blockquote) の sentinel。
+  //   Setting up Xray integration セクションで EN `<ol>` 内 `<li value="1">` が
+  //   `various integration<br />` + orphan `<p>modules.</p>` に分岐する
+  //   MadCap broken-`<br />` artifact を、JA 側で ol item 1 の末尾を
+  //   「様々な統合」で止めて空行 + orphan paragraph「モジュールがあります。」
+  //   を挟み、`2.` で ol を継続する形に分割して mirror (sibling
+  //   ttm-for-jira と同じ handling)。Running a test セクションで EN
+  //   `<blockquote><p>Changing these statuses...</p></blockquote>` (warning-like
+  //   lead word が無く allow list 非対象なので paragraph kind に展開される) に
+  //   JA `:::warning` callout-body が合致しない drift を `> ...` blockquote に
+  //   置換して kind 一致させた。5 entry (section-structure-mismatch ×2,
+  //   segment-missing ×2, segment-extra ×1) → 0 を content-level で解消、
+  //   新 mechanical exception / carve-out なし。
+  'integrations/test-management-integrations/xray-integration',
   // M2 P2-2 Wave 2 追加 — 初の純 content-level segment-untranslated sentinel。
   //   arrow-fusion / ol-split / table 等の構造 pattern は不使用、generic-
   //   English-residue (browser version, shared/dedicated device, hover,
@@ -367,6 +397,21 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   untranslated ×1) を content-level fixes + 既存 mechanism (§5.3.2
   //   registry) slug-scope extension で 0 化。
   'testops/insights/reports',
+  // M2 P2-2 Wave 4 追加 — broken-table-row paragraph mirror (Wave 2 pattern #5)
+  //   の Tier A 展開 sentinel。EN MadCap Flare の `<table>` 外 orphan `<p>| ...
+  //   Scheduler ... | Web & Mobile | Yes |</p>` paragraph (pipe table row が
+  //   `</tbody>` の外側に漏れた出力) を、JA が当初 markdown pipe-table row
+  //   (`| **スケジューラ** から... | Web &amp; モバイル | はい |`) として書いて
+  //   いたため、JA 側で orphan 3-cell table が発生して EN の `table → paragraph`
+  //   vs JA の `table` block mismatch と segment-extra table-cell ×3 を誘発
+  //   していた drift を、Wave 2 canonical sentinel (`use-agentic-test-automation-
+  //   for-salesforce`) と同じ backslash-escaped paragraph (`\| ... \|`) で
+  //   mirror して解消。CJK (`スケジューラ`, `モバイル`) と ASCII (`Web`) が
+  //   混在する row のため same-language penalty を回避できる、Wave 2 `\|`
+  //   派生 (Wave 3 `validate-download` の inline-code 変種ではなく原型) に
+  //   該当。5 entry (section-structure-mismatch ×1, segment-missing ×1,
+  //   segment-extra ×3) → 0。新 mechanical exception / §5.3.N carve-out なし。
+  'administration/subscription-plans',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
