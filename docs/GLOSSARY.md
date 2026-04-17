@@ -2900,3 +2900,56 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | Your Team's Activity | Reports のチーム活動セクション見出し |
 | zip | ZIP の小文字バリアント |
 | ZIP | ZIP ファイル形式名 |
+
+## [Tier B] §5.3.7 rework — Testim UI labels + third-party vendor proper nouns (English-retained)
+
+PR #325 §5.3.7 rework v2 (2026-04-17 architect reviewer 2 指摘) で **content-level 英語 UI term 復元** 方針に転換した際に追加した Testim UI label + 第三者ベンダー固有名詞。いずれも WRITING_GUIDE §33 の「英語維持」対象 (Testim UI / vendor 固有名詞 / SNS ブランド / 例示値)。
+
+**Spec Invariant 5 compliance**: 以下の語は全て **固有名詞** もしくは **Testim/vendor 固有 UI label** (大文字始まり / vendor-specific abbreviation / brand name / example value) である。一般英語 prose で 3-word all-English segment を silent bypass させる経路は存在しない。禁止語 (`Enter` / `Tab` / `Page Up` / `Page Down` / `Approve`) は含まれていない。`parity_glossary_mask.test.mjs` の `GLOSSARY common-word false-negative regression` suite は継続 pass する。
+
+**allowlist 再導入との差異**: 本登録は `TECH_TOKEN_ALLOWLIST` の residue-word-count filter とは **別経路** (`maskSegmentText` による text replacement)。classifier の `RESIDUE_MIN_WORDS=3` threshold は維持され、設計原則 (§5.3.7 の allowlist 禁止: 許容機構は broken EN snapshot 退避のみ) との衝突は無い — GLOSSARY は「固有用語の英語維持」を masking で実現する正規チャネル。
+
+| 用語 | 備考 |
+| --- | --- |
+| Img | Testim network-logs UI リクエストタイプフィルター (`results/test-results/network-logs`) |
+| Media | Testim network-logs UI リクエストタイプフィルター |
+| Font | Testim network-logs UI リクエストタイプフィルター |
+| WS | Testim network-logs UI リクエストタイプフィルター (WebSocket 略記) |
+| Manifest | Testim network-logs UI リクエストタイプフィルター |
+| src | HTML 仕様の属性名 (html-attribute-validation UI) |
+| alt | HTML 仕様の属性名 |
+| disabled | HTML 仕様の属性名 (html-attribute-validation の「disabled」属性サポート項) |
+| jpg | ファイル拡張子 (validate-download UI のファイル形式名) |
+| ppt | ファイル拡張子 (PowerPoint 旧形式) |
+| xls | ファイル拡張子 (Excel 旧形式) |
+| warning | Chrome DevTools console ログレベル識別子 (`error` と同じ慣例で JA 内の console 表記に英語維持) |
+| info | Chrome DevTools console ログレベル識別子 |
+| verbose | Chrome DevTools console ログレベル識別子 |
+| sanity | Testim ドキュメント内の例示ラベル名 (test-management/labels の「sanity」ラベル — 各コード変更時に実行するテストへの分類) |
+| nightly | Testim ドキュメント内の例示ラベル名 (各デプロイ後に実行するテストへの分類) |
+| monitor | Testim ドキュメント内の例示ラベル名 (本番稼働監視テストへの分類) |
+| Critical | axe-core 影響レベル enum (Testim accessibility validation UI の dropdown 値として表示) |
+| Serious | axe-core 影響レベル enum |
+| Moderate | axe-core 影響レベル enum |
+| Minor | axe-core 影響レベル enum / デフォルト値 |
+| Exact | Applitools Eyes マッチレベル enum (Testim pixel validation UI の dropdown 値) |
+| Strict | Applitools Eyes マッチレベル enum (デフォルト) |
+| Layout | Applitools Eyes マッチレベル enum |
+| Enterprise | Salesforce Edition 名 (Testim for Salesforce 接続要件) |
+| Performance | Salesforce Edition 名 |
+| Unlimited | Salesforce Edition 名 |
+| Professional | Salesforce Edition 名 |
+| Essentials | Salesforce Edition 名 |
+| Beta | ブラウザリリースチャンネル名 (Chrome/Firefox 等の先行配信版) |
+| Canary | ブラウザリリースチャンネル名 (Chrome Canary 等) |
+| YouTube | ソーシャルメディアサービス名 (multi-windows-recording の例示 SNS) |
+| Twitter | ソーシャルメディアサービス名 |
+| LinkedIn | ソーシャルメディアサービス名 |
+| Facebook | ソーシャルメディアサービス名 |
+| Personas | Testim for Salesforce ナビゲーションメニュー (Settings > Salesforce > Personas) |
+| Add Persona | Testim for Salesforce UI ボタン名 |
+| user47 | generate-random-value プレフィックス例示値 (editing-a-steps-properties) |
+| user65 | generate-random-value プレフィックス例示値 |
+| user32 | generate-random-value プレフィックス例示値 |
+| passw0rd! | generate-random-data-with-js パスワード例示値 |
+| john@yourapp.io | generate-random-data-with-js メールアドレス例示値 |
