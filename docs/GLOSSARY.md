@@ -8,6 +8,15 @@
 - Testim / Tricentis の固有名詞（製品名・機能名・画面名）
 - 広く通用する英語 UI ラベルで、日本語化すると逆に混乱を招くもの
 - CLI コマンド名・設定キー名
+- **日本エンジニアリング慣用英語** (2026-04-17 §5.3.7 rework v2 で追加): 詳細判定基準は [WRITING_GUIDE §日本エンジニアリング慣用英語の判定基準](./WRITING_GUIDE.md#日本エンジニアリング慣用英語の判定基準-2026-04-17-537-rework-v2) 参照
+
+## 許容機構原則 (§5.3.7 absolute principle, 2026-04-17)
+
+本 GLOSSARY は `maskSegmentText` の正規チャネルであり、**WRITING_GUIDE で policy 化された term のみ text replacement で mask** する仕組み。設計原則:
+
+1. **GLOSSARY ≠ classifier allowlist**: 削除済の `TECH_TOKEN_ALLOWLIST` (residue-word-count filter) とは別経路。本 GLOSSARY の term は WRITING_GUIDE authoritative な英語維持 policy に紐付く
+2. **broken EN snapshot 退避のみ別機構**: `source_sync_exclusions.mjs` / `parity_artifact_registry.mjs` は EN 上流 broken 限定で、GLOSSARY とは別目的
+3. **新規追加は reviewer 承認**: 安易な追加は classifier 検知精度 dilution (将来 untranslated 見逃し)。WRITING_GUIDE 3 条件 (dev tools 標準 / JA エンジニア慣用 / 翻訳で情報損失) 全て満たさないと登録不可
 
 ## 3-tier 分類（M4 実施 / 2026-04-16）
 
