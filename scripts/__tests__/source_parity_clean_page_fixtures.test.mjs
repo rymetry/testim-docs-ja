@@ -120,16 +120,24 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
-  // M2 P2-2 Wave 2 追加 — 純 content-level segment-untranslated pattern の
-  //   sentinel。EN 側に Testim UI 用語 (Grid / Editor / VPN / IP / CLI) と
-  //   vendor 名 (SauceLabs / BrowserStack / HeadSpin / LambdaTest) が多く
-  //   混在する Grid management 記事で、JA が "version" / "address" / "hover"
-  //   / "shared device" / "dedicated device" / "executive" 等の generic な
-  //   英単語を未翻訳で残していた drift を「Testim UI 用語 + vendor 名のみ
-  //   英語維持、generic 語は和訳」の運用原則に基づき 7 entry を消化。
-  //   arrow-fusion / ol-split / table 等の構造 pattern は不使用の純翻訳系
-  //   sentinel として Wave 2 以降の同系 slug 向け regression pin とする。
-  'integrations/grid-management',
+  // M2 P2-2 Wave 2 追加 — arrow-fusion pattern P1 の 4-section 集中型 sentinel。
+  //   Wave 2 briefing pattern 1 の pure P1 (`<br />` なし) のみで成立する
+  //   slug で、EN `<p>Context. → <strong>To X:</strong></p>` 単一段落を
+  //   JA が context 段落 + `**Xするには:**` 段落に分離していた drift を
+  //   `。\n→ **Xするには:**` soft-break 融合で 4 section × 2 entry = 8 entry
+  //   を消化。同 pattern の regression を Tier A bulk 以降で広く検知するため
+  //   pin する (mobile variant `editing-target-element-properties-mobile`
+  //   は元々 0-drift のため追加不要)。
+  'editing-tests/editing-your-tests/editing-target-element-properties',
+  // M2 P2-2 Wave 2 追加 — 複合 sentinel (flat-ol-split §5.2 #1 + callout-bullet-to-paragraph
+  //   + callout-to-blockquote)。Setting up TTM for Jira Integration セクションで EN の
+  //   `<ol>` に orphan `<p>modules.</p>` が挟まる flat-ol-split pattern、Bulk Create
+  //   セクションで EN callout 内 single `<p>` を JA が bullet split していた drift、
+  //   Upon Testim test run execution end セクションで EN `<blockquote>` (paragraph kind に
+  //   展開) に JA `:::warning` が合致しないため `> ` blockquote に置換。9 entry を
+  //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
+  //   first callout 修正の組み合わせ。
+  'integrations/test-management-integrations/ttm-for-jira-integration',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
