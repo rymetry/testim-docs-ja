@@ -150,6 +150,14 @@ export function applyEnSourcePatches(html, slug, coverage = NOOP_PATCH_COVERAGE)
         patchId: patch.id,
         reason: 'find-not-found',
       });
+      // Operational signal: emit a non-blocking warning to surface when
+      // upstream EN HTML has changed shape (e.g., the defect was fixed
+      // upstream or the surrounding markup was reflowed). Do NOT throw —
+      // continue with the next patch. Coverage is the authoritative record;
+      // this warning is for human log-scan visibility.
+      console.warn(
+        `[en_source_patches] find-not-found for patch=${patch.id} slug=${slug} (upstream may have fixed the defect or HTML shape changed)`,
+      );
       continue;
     }
     // literal string replace (no regex escape needed)

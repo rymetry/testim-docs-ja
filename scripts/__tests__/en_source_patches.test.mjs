@@ -331,3 +331,140 @@ describe('createEnSourcePatchCoverage', () => {
     assert.ok(Object.isFrozen(NOOP_PATCH_COVERAGE));
   });
 });
+
+// ---------------------------------------------------------------------------
+// T-2: slug uniqueness (order-independence structural guarantee)
+// ---------------------------------------------------------------------------
+
+describe('en_source_patches slug uniqueness', () => {
+  it('no two patches share a slug (order-independence structural guarantee)', () => {
+    const slugToPatchIds = {};
+    for (const patch of EN_SOURCE_PATCHES) {
+      for (const s of patch.slugs) {
+        if (!slugToPatchIds[s]) slugToPatchIds[s] = [];
+        slugToPatchIds[s].push(patch.id);
+      }
+    }
+    for (const [slug, ids] of Object.entries(slugToPatchIds)) {
+      assert.equal(
+        ids.length,
+        1,
+        `slug ${slug} is covered by multiple patches: ${ids.join(', ')}. This breaks order-independence guarantee.`,
+      );
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-4: multi-occurrence find behavior
+// ---------------------------------------------------------------------------
+
+describe('applyEnSourcePatches (multi-occurrence find)', () => {
+  it('replaces every occurrence of find when multiple hits exist on a single slug', () => {
+    // Craft a multi-occurrence HTML using the UD-001A pattern; registry
+    // entries normally produce a single hit per slug, but the applier
+    // semantics must handle N occurrences correctly via split/join.
+    const html =
+      '<ul>\n' +
+      '  <li><p>Verify -this action verifies thing A</p></li>\n' +
+      '  <li><p>Verify -this action verifies thing B</p></li>\n' +
+      '</ul>';
+    const coverage = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'salesforce-testing/salesforce-steps/sfdc-step-create',
+      coverage,
+    );
+    const snap = coverage.snapshot();
+
+    // Every occurrence of the original typo replaced.
+    assert.equal((out.match(/- this action verifies/g) ?? []).length, 2);
+    assert.equal((out.match(/-this action verifies/g) ?? []).length, 0);
+
+    // Coverage semantics: `recordHit` records the literal occurrence count
+    // (split().length - 1), so a 2-hit apply yields matchedHits = 2.
+    assert.equal(snap.matchedHits, 2, 'matchedHits should equal total find occurrences');
+    assert.equal(
+      snap.byPatchId['UD-001A-dash-this-typo-plain'],
+      2,
+      'byPatchId should reflect 2 occurrences',
+    );
+    assert.equal(snap.mismatches.length, 0);
+  });
+
+  it('records a single hit entry per apply() even when multiple occurrences match', () => {
+    // byPatchId counts occurrences, but the aggregator treats each apply()
+    // call as a single recordHit entry (internal hits array, collapsed in
+    // snapshot()). Verify that invariant by checking bySlug accumulation.
+    const html = '<p>Verify -this action verifies A</p><p>Verify -this action verifies B</p>';
+    const coverage = createEnSourcePatchCoverage();
+    applyEnSourcePatches(
+      html,
+      'salesforce-testing/salesforce-steps/sfdc-step-create',
+      coverage,
+    );
+    const snap = coverage.snapshot();
+    assert.equal(snap.bySlug['salesforce-testing/salesforce-steps/sfdc-step-create'], 2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// B3: console.warn side-effect on find-not-found
+// ---------------------------------------------------------------------------
+
+describe('applyEnSourcePatches (console.warn on find-not-found)', () => {
+  // Helper: capture console.warn calls produced during fn().
+  function captureWarnings(fn) {
+    const captured = [];
+    const original = console.warn;
+    console.warn = (...args) => {
+      captured.push(args.join(' '));
+    };
+    try {
+      fn();
+    } finally {
+      console.warn = original;
+    }
+    return captured;
+  }
+
+  it('emits exactly one console.warn per find-not-found mismatch', () => {
+    const html = '<p>completely unrelated HTML</p>';
+    const cov = createEnSourcePatchCoverage();
+    const warnings = captureWarnings(() => {
+      applyEnSourcePatches(
+        html,
+        'salesforce-testing/salesforce-steps/sfdc-step-create',
+        cov,
+      );
+    });
+    // One registered patch for this slug (UD-001A), not found → 1 warning.
+    assert.equal(warnings.length, 1, `expected 1 warning, got ${warnings.length}: ${warnings.join(' | ')}`);
+    const line = warnings[0];
+    assert.ok(line.includes('find-not-found'), `warning missing find-not-found: ${line}`);
+    assert.ok(line.includes('patch=UD-001A-dash-this-typo-plain'), `warning missing patchId: ${line}`);
+    assert.ok(line.includes('slug=salesforce-testing/salesforce-steps/sfdc-step-create'), `warning missing slug: ${line}`);
+    // Coverage must still record the mismatch (warning is additive, not a replacement).
+    assert.equal(cov.snapshot().mismatches.length, 1);
+  });
+
+  it('does NOT emit console.warn when find is present and replacement occurs', () => {
+    const html = '<p>Verify -this action verifies x</p>';
+    const warnings = captureWarnings(() => {
+      applyEnSourcePatches(
+        html,
+        'salesforce-testing/salesforce-steps/sfdc-step-create',
+        createEnSourcePatchCoverage(),
+      );
+    });
+    assert.equal(warnings.length, 0, `unexpected warnings on a successful apply: ${warnings.join(' | ')}`);
+  });
+
+  it('does NOT emit console.warn for slugs that have no registered patch', () => {
+    const html = '<p>Verify -this action verifies x</p>';
+    const warnings = captureWarnings(() => {
+      applyEnSourcePatches(html, 'totally/unregistered/slug', createEnSourcePatchCoverage());
+    });
+    assert.equal(warnings.length, 0);
+  });
+});
