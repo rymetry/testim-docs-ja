@@ -178,6 +178,26 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   整合 pattern は Wave 2 未出で、本 sentinel で pin する。6 entry
   //   (section-structure-mismatch ×1, segment-missing ×2, segment-extra ×3) → 0。
   'administration/secrets',
+  // M2 P2-2 Wave 3 追加 — `<!-- -->` sibling-break + EN URL path mirror + Excel
+  //   glossary 登録の複合 sentinel。EN は `<p>intro</p>` の後に single-`<li>` を
+  //   持つ `<ul>` が 2 連続する構造で、同種 segment が collapse されて
+  //   `paragraph → unordered-list` の 2 block に畳まれる。JA は list 間の
+  //   `<!-- -->` HTML comment が `paragraph` segment として emit されて
+  //   `paragraph → ul → paragraph → ul` に崩れていた section-structure-mismatch
+  //   を、コメント行を削除して block 列を EN に追従させた (collapse 仕様は
+  //   `source_parity_structure.mjs` `collapseBodyToBlocks`)。併せて JA が EN の
+  //   `../data-driven-testing/index.htm#section-...` (anchor は EN 側でも heading
+  //   に解決しない MadCap artifact) を smart-resolve で別 sub-page URL に差し
+  //   替えていた drift を、`extractInvariantTokens` が fragment を落として
+  //   `/docs/advanced-editing/data-driven-testing` に正規化する挙動に合わせて
+  //   JA も同 path-only URL に restore し tokensInvariant disjoint を解消
+  //   (broken anchor を verbatim mirror すると `lint_docs` が
+  //   `link-fragment-missing` を warn するため anchor は削除、path だけを mirror)。
+  //   さらに Microsoft Excel (19 ファイル使用) が GLOSSARY 未登録で
+  //   `segment-untranslated` を誘発していたため、Tier A 外部製品 section に
+  //   `Excel` を追加して mask 対象化。6 entry を content-level + glossary 登録
+  //   で解消、新 mechanical exception なし。
+  'advanced-editing/parameters/passing-parameters-from-excel-file',
   // M2 P2-2 Wave 3 追加 — broken-table-row paragraph mirror (inline-code 版) +
   //   classifier a./b./c. 回避 pattern の複合 sentinel。EN PDF テーブル外
   //   orphan `<p>| expectedText | JavaScript | 'A Simple PDF File' |</p>`
