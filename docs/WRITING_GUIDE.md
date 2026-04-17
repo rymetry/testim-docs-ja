@@ -412,6 +412,63 @@ Testim の固有名詞は英語のまま維持してください。日本語に�
 - `Visual Editor`
 - `Agentic Test Automation`
 
+### 日本エンジニアリング慣用英語の判定基準 (2026-04-17 §5.3.7 rework v2)
+
+Testim 固有名詞に加えて、**日本のエンジニアリング現場で慣用的に英語のまま使われる技術用語**は JA 文中にそのまま残します。直訳すると可読性が下がり、UI / dev tools との cross-reference 性が損なわれるためです (例: `warning ログ` は自然、`警告ログ` は stiff)。
+
+**以下 3 条件全てを満たす場合のみ英語維持 (GLOSSARY 登録可)**:
+
+1. **Dev tools 標準用語**: Chrome DevTools / git / HTTP / 主要言語・フレームワーク の実装 / UI に同一表記で存在する
+2. **JA エンジニア慣用**: 実際の JA 技術記事 / Slack / 社内 Wiki 等で英語のまま使用される慣習が確立している
+3. **翻訳で情報損失 or 曖昧化**: 直訳すると技術的精度が下がる、または複数の訳が成立してしまう (固有名詞性の喪失を含む)
+
+**明確に許容される例**:
+
+| カテゴリ                 | 例                                                            |
+| ------------------------ | ------------------------------------------------------------- |
+| Log levels               | `debug` / `info` / `warning` / `error` / `verbose`            |
+| HTTP method / status     | `GET` / `POST` / `PUT` / `DELETE` / `401` / `500`             |
+| File formats             | `csv` / `json` / `yaml` / `xml` / `pdf` / `jpg`               |
+| Test lifecycle labels    | `sanity` / `nightly` / `monitor` / `smoke` / `e2e`            |
+| DevTools / network       | `XHR` / `JS` / `CSS` / `WS` / `Manifest`                      |
+| HTML 仕様 keyword / 属性 | `href` / `src` / `alt` / `disabled` / `title`                 |
+| Third-party vendor enum  | axe-core 影響度 / Applitools match level / Salesforce Edition |
+| Browser release channels | `Beta` / `Canary` / `Dev` / `Stable`                          |
+| Brand / service 固有名詞 | `YouTube` / `Twitter` / `LinkedIn` / `Facebook` 等            |
+
+**許容されない例 (普通に JA 訳)**:
+
+| 例                    | 理由                                                |
+| --------------------- | --------------------------------------------------- |
+| `button` → ボタン     | 一般英語、曖昧化なし、JA 自然                       |
+| `page` → ページ       | 同上                                                |
+| `menu` → メニュー     | 同上                                                |
+| `click` → クリック    | カタカナ定着                                        |
+| `save` → 保存         | 自然な JA、UI label でない限り翻訳                  |
+
+### JA 文中での埋め込み方 (recommended pattern)
+
+classifier を silent にしつつ自然な JA を実現する書き方:
+
+```markdown
+# ❌ 避ける: 英語のみ列挙 (classifier が untranslated と誤検知)
+オプション: Critical、Serious、Moderate、Minor。デフォルト = Minor。
+
+# ✅ 推奨: JA 文脈で英語 term を囲む
+Critical / Serious / Moderate / Minor の 4 段階から最小失敗レベルを選択します
+（それぞれ重大、深刻、中程度、軽微 に相当）。デフォルト値は Minor です。
+```
+
+### 「許容機構」原則との関係
+
+GLOSSARY 登録は `maskSegmentText` の正規チャネルであり、`§5.3.7 絶対原則` で禁止される「allowlist / registry / exclusion」とは **別経路**:
+
+- **GLOSSARY** (許容): WRITING_GUIDE で「英語維持」が policy 化された term のみ、text replacement で mask
+- **TECH_TOKEN_ALLOWLIST** (禁止): 設計原則違反、§5.3.7 で完全撤廃済
+- **broken EN snapshot evacuation** (SOURCE_SYNC_EXCLUSIONS / ARTIFACT_REGISTRY): EN 上流 broken 限定、`§5.3.7 絶対原則` で唯一正当化される許容機構
+
+新規 GLOSSARY 追加は **上記 3 条件 + reviewer 承認** を要する。安易な追加は classifier 検知精度 dilution のため避ける。
+
 ---
 
 ## 📏 表記統一ルール
