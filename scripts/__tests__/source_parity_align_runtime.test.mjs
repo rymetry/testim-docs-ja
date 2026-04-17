@@ -425,7 +425,10 @@ describe('pin slug content-correctness + fallback (T12)', () => {
   it('fallback pin slug is still baseline-covered (fixture 2-page pin / fragility fallback)', () => {
     // 1 ページ破綻時に fallback として検証可能な 2nd pin。baseline 上に entry が
     // 存在することを jq で 1 度だけ確認する (実測再評価は T11 側で別途 pin 済)。
-    const fallbackSlug = 'editing-tests/groups';
+    // NOTE: 2026-04-17 に旧 fallback `editing-tests/groups` が PR #328 で burn-down
+    //       され 0 entry になったため、より安定した `debugging-tests/recording-
+    //       additional-steps-to-fix-bugs` (4 baseline entry / 恒常残留) へ移行。
+    const fallbackSlug = 'debugging-tests/recording-additional-steps-to-fix-bugs';
     const baselinePath = join(ROOT, 'parity-baseline.json');
     const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
     const count = baseline.entries.filter((e) => e.slug === fallbackSlug).length;
