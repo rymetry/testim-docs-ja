@@ -339,6 +339,34 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   (`ja_omission_policy_registry.test.mjs` は registry 単体契約を pin するが
   //   本 sentinel は EN snapshot + JA content の end-to-end 経路を pin する。)
   'overview/testim-overview',
+  // M2 P2-2 Wave 3 Batch 2 追加 — §5.3.2 `/docs/index` registry slug-scope
+  //   extension (PR #317 で承認 merge 済み) + URL token restore + GLOSSARY
+  //   `?`-less alias 追加 + JA nav link 除去 の複合 sentinel。EN の preface
+  //   冒頭段落が `<a href="index.htm#selecting-a-branch">Selecting a Branch</a>`
+  //   (MadCap self-link artifact で `/docs/index` token 化) を持つ一方で JA が
+  //   `/docs/testops/insights#ブランチの選択` (無効 anchor) にリンクしていた
+  //   ため tokensInvariant disjoint で hard non-match (score=0) になり segment-
+  //   missing + segment-extra pair が発生していた drift を、JA 側のリンクを
+  //   除去して plain text mention に戻し、§5.3.2 registry に `testops/insights/reports`
+  //   を追加 (PR #317 で main に merge 済み) して `/docs/index` token の
+  //   token-gap を runtime suppress することで解消 (Wave 2 `use-agentic-
+  //   test-automation-for-salesforce` と同 pattern)。また Testim's Activity
+  //   セクションで JA が `https://help.testim.io/docs/smart-locators`
+  //   (legacy host、redirect 先と URL path 不一致) にリンクしていた drift を、
+  //   EN の `../../salesforce-testing/core-concepts.htm#smart-locators` が
+  //   `normalizeUrlToken` で `/docs/salesforce-testing/core-concepts` token 化
+  //   される点に合わせて JA link 先を `/docs/salesforce-testing/core-concepts`
+  //   に restore し token 一致させた (arrow-fusion / verbatim mirror)。
+  //   さらに preface 4 項目 list の `**Where Can You Improve?**` が glossary
+  //   登録済み (`?` 付き) にもかかわらず `\bWhere Can You Improve\?\b` の
+  //   trailing `\b` が後続 `**` (non-word) と penalty 0 を生み mask が当たら
+  //   ない既知制約 (classifier RESIDUE_MIN_WORDS=3 発火) を、GLOSSARY に
+  //   `?` 抜き alias `Where Can You Improve` を追加して `\bWhere Can You
+  //   Improve\b` が `e` (word) → `?` (non-word) で成立する形で mask を張り
+  //   解消。5 entry (segment-missing ×2, segment-extra ×2, segment-
+  //   untranslated ×1) を content-level fixes + 既存 mechanism (§5.3.2
+  //   registry) slug-scope extension で 0 化。
+  'testops/insights/reports',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
