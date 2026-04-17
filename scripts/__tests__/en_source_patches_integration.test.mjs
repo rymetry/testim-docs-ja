@@ -26,13 +26,8 @@ let EN_SOURCE_PATCHES;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..', '..');
-const SNAPSHOT_ROOT = join(
-  REPO_ROOT,
-  'snapshots',
-  'en',
-  'content',
-  'salesforce-testing',
-);
+const SNAPSHOTS_ROOT = join(REPO_ROOT, 'snapshots', 'en', 'content');
+const SNAPSHOT_ROOT = join(SNAPSHOTS_ROOT, 'salesforce-testing');
 const JA_BUNDLE_DIR = join(
   REPO_ROOT,
   'src',
@@ -150,6 +145,122 @@ describe('Bundle 1 JA markdown hygiene', () => {
       offenders.length,
       0,
       `gate #10 violated: ${offenders.length} file(s) contain '<!-- parity:' comments: ${offenders.join(', ')}`,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Gap 3 (Testing reviewer round-2): byte-identical regression for non-patched
+// slugs. If a future patch's `find` string accidentally broadens or the
+// slug-dispatch has a bug, this guard catches silent corruption across the
+// 282 clean-page slugs by sampling representatives from diverse categories.
+// ---------------------------------------------------------------------------
+
+const NON_PATCHED_SAMPLE_SLUGS = [
+  'overview/testim-overview',
+  'running-tests/base-url',
+  'integrations/grid-management/custom-grid',
+  'testops/insights',
+  'salesforce-testing/salesforce-testing-overview',
+  'advanced-editing/validations/email-validation',
+];
+
+describe('preprocessEnHtml byte-identical for non-patched slugs (regression guard for 282-slug invariant)', () => {
+  it('sample slugs are not in any patch allow-list', () => {
+    for (const slug of NON_PATCHED_SAMPLE_SLUGS) {
+      for (const patch of EN_SOURCE_PATCHES) {
+        assert.ok(
+          !patch.slugs.includes(slug),
+          `${slug} should not be patched but is in ${patch.id}`,
+        );
+      }
+    }
+  });
+
+  it('preprocessEnHtml output is byte-identical with or without slug for all sample non-patched slugs', () => {
+    const verified = [];
+    const skipped = [];
+    for (const slug of NON_PATCHED_SAMPLE_SLUGS) {
+      const filepath = join(SNAPSHOTS_ROOT, `${slug}.html`);
+      if (!existsSync(filepath)) {
+        // Missing sample snapshot is not a gate failure — the contract is
+        // "the sample set we _did_ read is byte-identical", not "all
+        // hard-coded filenames must exist".
+        skipped.push(slug);
+        continue;
+      }
+      const html = readFileSync(filepath, 'utf8');
+      const baseline = preprocessEnHtml(html);
+      const withSlug = preprocessEnHtml(html, { slug });
+      assert.equal(
+        withSlug,
+        baseline,
+        `byte-identical regression for ${slug}`,
+      );
+      verified.push(slug);
+    }
+    assert.ok(
+      verified.length >= 1,
+      `expected >=1 verified sample, got 0. skipped=${JSON.stringify(skipped)}`,
+    );
+    if (skipped.length > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `byte-identical regression guard skipped ${skipped.length} missing sample(s): ${skipped.join(', ')}`,
+      );
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Gap 5 remainder (Testing reviewer round-2): codify gates #12/#13/#14
+// — "no new mechanism" invariants for the patch-layer PR.
+// ---------------------------------------------------------------------------
+
+describe('gates #12-14: no-new-mechanism invariant', () => {
+  it('gate #12: parity_artifact_registry has exactly 2 entries covering 8 slugs', async () => {
+    const { ARTIFACT_REGISTRY } = await import(
+      '../lib/parity_artifact_registry.mjs'
+    );
+    assert.equal(
+      ARTIFACT_REGISTRY.length,
+      2,
+      'new artifact registry entries are forbidden by the ONE-purpose principle',
+    );
+    const totalSlugs = ARTIFACT_REGISTRY.reduce(
+      (sum, e) => sum + e.slugs.length,
+      0,
+    );
+    assert.equal(totalSlugs, 8, 'slug count drift in artifact registry');
+  });
+
+  it('gate #13: SOURCE_SYNC_EXCLUSIONS has exactly 1 entry', async () => {
+    const { SOURCE_SYNC_EXCLUSIONS } = await import(
+      '../lib/source_sync_exclusions.mjs'
+    );
+    assert.equal(
+      Object.keys(SOURCE_SYNC_EXCLUSIONS).length,
+      1,
+      'new source sync exclusions are forbidden',
+    );
+  });
+
+  it('gate #14: source_parity.mjs barrel does NOT re-export patch-layer symbols (plan §3.2)', async () => {
+    const barrel = await import('../lib/source_parity.mjs');
+    assert.equal(
+      barrel.applyEnSourcePatches,
+      undefined,
+      'applyEnSourcePatches should not leak through barrel',
+    );
+    assert.equal(
+      barrel.EN_SOURCE_PATCHES,
+      undefined,
+      'EN_SOURCE_PATCHES should not leak through barrel',
+    );
+    assert.equal(
+      barrel.createEnSourcePatchCoverage,
+      undefined,
+      'createEnSourcePatchCoverage should not leak through barrel',
     );
   });
 });
