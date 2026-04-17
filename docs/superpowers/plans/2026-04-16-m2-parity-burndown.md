@@ -199,6 +199,41 @@ P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span 
 - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
 - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
 
+##### 5.3.1.a paragraph-count-mismatch audit signal coverage (2026-04-17 scope extension)
+
+PR #312 `audit-signals-triage` が `configure-tricentis-mobile-agent.md` §19 "WebDriverAgent (WDA) Errors" で `paragraph-count-mismatch` (EN=5 / JA=4) を追加検知。これは §5.3.1 既存 "FileOrFilePath paragraph vs code-fence kind-mismatch" の**同根**の副作用であり、新規 mechanism pattern ではない:
+
+- EN `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は paragraph kind で `extractParagraphCounts` に 1 件として乗る
+- JA は code-fence (```text / ```) で `code-block` kind に正規化されるため `extractParagraphCounts` でカウントされない
+- 結果: 同 section で segment-level の `section-structure-mismatch` / `segment-missing` (既存 §5.3.1 scope) と audit-signal の `paragraph-count-mismatch` が**同一 root cause から併発**する
+
+**Affected issue types** (scope extension):
+
+- `section-structure-mismatch` (既存 / baseline 対象 / gate-blocking)
+- `segment-missing` (既存 / baseline 対象 / gate-blocking)
+- `segment-extra` (既存 / baseline 対象 / gate-blocking)
+- `paragraph-count-mismatch` (**本 scope 拡張で追加 / `COARSE_SIGNAL_TYPES` 所属 / audit-only / gate-non-blocking**)
+
+**分類 rationale**: `paragraph-count-mismatch` は `scripts/lib/source_parity_types.mjs` §`COARSE_SIGNAL_TYPES` allowlist で既に gate 除外 (audit-only) され、`summary.auditSignalIssues` counter にのみ集計される。baseline への追加対象ではなく content 修正でも解消不能 (EN 側 extract mechanism 未改修の限り再発火)。本 scope 拡張は **classification-only** (plan 文書レベルでの既知 FileOrFilePath artifact への分類昇格) であり code / registry / baseline / test のいずれも変更不要。
+
+**対象 slug/entry (2026-04-17 実測)**:
+
+- slug: `recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent`
+- section: §19 "WebDriverAgent (WDA) Errors"
+- signal: `paragraph-count-mismatch`, EN=5 / JA=4 (-1)
+- 1 entry / 1 slug (per-slug cap は本 audit signal について ≤ 1 件、総合 §5.3.1 cap は ≤ 3 件に引き上げ — 既存 ≤ 2 gate-blocking + ≤ 1 audit-only)
+
+**M3 PR Z entry condition への影響**: `2026-04-16-m2-parity-burndown.md` §1 最終ゴールの `auditSignalIssues = 0` は**本 entry を §5.3.1 carve-out 由来として別枠で tracking** する (§P2-5 Exit の `auditSignalIssues = 0` 判定から除外)。M3 cutover 前に EN 抽出側 FileOrFilePath mechanism fix が入れば同時に解消される見込み。
+
+**Mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath (audit-signal scope)` ラベルを追記。baseline 追加はしない (audit-only counter の定義上 baseline-ineligible)。
+
+**Non-goals of this scope extension**:
+
+- 新規 registry 追加なし (§5.3.2 と違い runtime 側の登録は存在しない)
+- `COARSE_SIGNAL_TYPES` の変更なし
+- `extractParagraphCounts` の code-fence 扱いの変更なし
+- 他 slug への scope 拡張なし (他 slug で同 pattern が再発した場合は本 §5.3.1.a entry の slug リストへの追記で L2 gate 再通過)
+
 #### 5.3.2 EN `index.htm/#/` self-link artifact (slug-scope registry extension)
 
 P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCap Flare が出力する self-link `<a href="index.htm/#/">` / `<a href="index.htm">` は `normalizeUrlToken` (`scripts/lib/source_parity_extract.mjs`) が `/docs/index` token に変換する。この token は **既存 `ARTIFACT_REGISTRY` entry (`reason: en-side-self-index-link-artifact`)** として 5 slug で登録済み。`salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` は 6 番目の slug として同 entry の `slugs[]` に追加する slug-scope extension。新規 mechanism pattern ではなく、既存 mechanism の scope 拡張。
@@ -207,7 +242,62 @@ P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCa
 - **per-slug cap**: ≤ 2 件 (`segment-token-gap` with `missingTokens: ["/docs/index"]`)
 - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: docs-index-self-link-artifact` ラベルを記載
 - **follow-up mechanism PR**: `scripts/lib/parity_artifact_registry.mjs` `/docs/index` entry の `slugs[]` に新 slug を追加 (2026-04-17 PR #304 で処理)、同時に `scripts/__tests__/parity_artifact_registry.test.mjs` の hardcoded 件数 (5 slugs → 6 slugs) を更新。**registry + test の 2 files 更新**が必要 (架空の "1-line diff" ではない)。
+  - 2026-04-17: +1 slug (`testops/insights/reports`) via mechanism PR (6 → 7 slugs, PR #314 content-side の前置き)
 - **scope lock**: 本 §5.3.2 entry は **`/docs/index` token の既存 artifact entry 再利用のみ** 対象。別 token (`http://google.com`、`http://example.com` 等) に対する新規 registry 登録は独立 §5.3.N として別途 security L2 gate を経由する。
+
+#### 5.3.3 JA-side intentional-omission policy (Tricentis removal-request registry)
+
+`[PENDING REVIEWER APPROVAL — §5.3.3 L2 gate]`
+
+M2 Wave 3 Batch 2 `overview/testim-overview` (PR #309) で初検知。`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis 削除依頼 policy** により、EN 原文の特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL) を JA 側で意図的に削除している。再追加は policy 違反 (commits `bf40dad`, `e5d9f88` で legal reasoning 記録済)。
+
+この JA-side 意図的除外は既存 3 mechanism のどれにも該当しない:
+- `scripts/lib/source_sync_exclusions.mjs` は EN-broken page を対象 (本 slug の EN は正常)
+- `scripts/lib/parity_artifact_registry.mjs` は EN-side artifact token のみ対象 (§5.3.2 の `/docs/index` self-link 等)
+- §5.3.1 FileOrFilePath は EN 抽出側 kind-mismatch を対象
+
+新 mechanism `scripts/lib/ja_omission_policy_registry.mjs` を追加し、alignSegments の post-filter で quota-based suppression を適用する。
+
+- **symptom pattern**: Tricentis 削除依頼対象の segment 群。具体的には (a) pricing callout、(b) changelog callout の派生 offset、(c) `http://testim.io` / `https://www.testim.io/pricing/` の intro URL 削除
+- **per-slug cap**: ≤ 4 件 (`segment-missing`/`segment-extra`/`segment-token-gap`/`section-structure-mismatch` の 4 drift type を合計。`testim-overview` は現状 4 entries に集約)
+- **disambiguator**: **quota-based** を採用。1 registry entry は `{slugs[], issueTypes[], segmentKinds, missingToken?, quota}` を持ち、alignSegments の post-filter で `(slug, issueType, segmentKind, missingTokens)` に match する diff を quota 範囲で 1 件ずつ drop する。fingerprint-based は EN 文面更新で sha-256 が変化しやすく、WRITING_GUIDE 除外が「EN 文面がどう変わっても JA は出さない」意思表示と相性が悪いため不採用。content-prefix は brittle で却下
+- **mitigation**: 新 registry module + runtime integration (`scripts/lib/source_parity_align.mjs` 末尾の `suppressJaOmissionDiffs`) + coverage aggregator (`createOmissionCoverage` / `NOOP_OMISSION_COVERAGE`) + full test coverage (`scripts/__tests__/ja_omission_policy_registry.test.mjs` 20 tests)
+- **registry scope lock**: 本 §5.3.3 entry は `docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` 対象 slug のみ。「翻訳省略したい」という agent 側要望で別 slug を追加するのは禁止。WRITING_GUIDE 除外表の更新が先行条件
+- **runtime integration**: `alignSegments({slug, omissionCoverage})` が diffs 生成後に `suppressJaOmissionDiffs` を呼ぶ。coverage snapshot (`snapshot().quotaUsage` / `exhaustedEntries`) は `parity-check-status.json` の `debug.omissionCoverage` に含まれ、後続 monitoring で quota 尽きに気付けるようにする
+- **initial inventory (2026-04-17)**: `overview/testim-overview` に 4 entries を登録。合計 quota = 5 で `parity-baseline.json` の該当 5 件を全て抑止する
+- **follow-up**: 本 PR merge 後、PR #309 側で baseline 再生成 (5 → 0) を実施
+
+#### 5.3.4 `extractMarkdownTables` GFM strict-check (backslash-pipe paragraph false-positive)
+
+PR #312 audit-signals-triage で initially 検知、本 mechanism PR で解消。`scripts/lib/source_parity_extract.mjs` の `extractMarkdownTables` は従来、`^\|(.+)\|$` / `^\|[\s:|-]+\|$` の緩い regex + naïve `.split('|')` によって以下の 2 種 false-positive を誘発していた:
+
+1. **Separator-less pipe block**: GFM §tables-extension は pipe table に separator 行 (`| --- |` / `| :---: |`) を必須とするが、現行実装はこの要件を満たさない連続した `| cell |` 行列も table として認識していた。turndown が EN HTML の `<p>|...|</p>` orphan broken-table-row を「separator-less pipe row」として吐くため、EN 側 table count が実態より過剰にカウントされ `table-shape-mismatch` (signal) が誤発火していた (EN=2 / JA=1 等)。
+2. **Escaped-pipe cell split**: cell split が `.split('|')` で行われていたため、WRITING_GUIDE §5 「broken-table-row paragraph mirror」で採用する `\|` (backslash-escape) が cell 区切りとして解釈され、`| A \| B | C |` のような正当な GFM row でも 3 cell (`["A \\", "B", "C"]`) に誤分解される。salesforce Wave 2 sentinel `use-agentic-test-automation-for-salesforce` で定義された backslash-pipe paragraph pattern は、JA 側では既に `\|` 行頭で paragraph に落ちるため直接の false-positive は避けられていたが、EN turndown 側の broken-table-row 誤認知と組み合わさって per-slug 1 件ずつの `table-shape-mismatch` を誘発していた (4 slug × 1 件 = 4 signal)。
+
+**修正方針 (Option A: regex strict-check)**:
+
+- 行頭が `\|` で始まる行は candidate から除外 (`isGfmTableCandidateLine` で `trimmed.startsWith('|')` を要求、かつ末尾が unescaped `|` であることを `(?<!\\)\|\s*$` で要求)。
+- cell split は `UNESCAPED_PIPE_SPLIT_RE = /(?<!\\)\|/` で負 lookbehind により unescaped pipe のみを区切りとし、cell 内の `\|` は literal `|` に復元する (`cell.replace(/\\\|/g, '|')`)。
+- separator 行 (`GFM_TABLE_SEPARATOR_RE = /^\|(?:\s*:?-{1,}:?\s*\|)+$/`) を明示的に要求し、separator に到達しない pending row 列は全て破棄 (pipe-row-only の segment は GFM 上 table ではなく段落として扱う)。
+
+**scope lock (§5.3.4)**: 本修正は `extractMarkdownTables` のみを対象とし、`extractHtmlTables` / `extractTableStructure` / `classifyLine` / `compareTableStructure` には手を入れない。`classifyLine` は `/^\|/` (trimmed) で `markdown-table` kind を返すが、これは structure fingerprint 用途で既に backslash-pipe paragraph を `paragraph-start` に分類する挙動を持つため変更不要。
+
+**regression ガード**:
+
+- `scripts/__tests__/source_parity.test.mjs` の `extractMarkdownTables` describe block に 5 テストを追加 (backslash paragraph rejection / separator 要求 / escaped-pipe cell preservation / 混在 pattern / trailing escaped-pipe rejection)。
+- salesforce sentinel `use-agentic-test-automation-for-salesforce` は `source_parity_clean_page_fixtures.test.mjs` の canonical regression gate として既存 (本 PR でも totalIssues=0 を維持)。
+
+**parity diff (BEFORE / AFTER)**:
+
+| metric                       | BEFORE | AFTER | delta |
+| --- | --- | --- | --- |
+| `totalIssues`                | 223    | 219   | -4    |
+| `baselinedIssues` (frozen)   | 183    | 183   | ±0    |
+| `issuesByType.table-shape-mismatch` | 4 | 0 | -4 |
+| `signalFiles`                | 7      | 6     | -1    |
+| `activeFiles`                | 26     | 25    | -1    |
+
+baseline は完全不変 (183 固定)、active/signal 側で false-positive 4 件が消滅、他の issue type は全て同値。
 
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 

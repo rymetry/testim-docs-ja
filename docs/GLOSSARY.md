@@ -1481,6 +1481,8 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | afterTest | Testim Config Hook 名 (JS) |
 | allLabels | Config Hook 事前定義パラメーター名 |
 | baseUrl | Config ファイルプロパティ名 |
+| platformVersion | W3C / Appium ケイパビリティ識別子（SauceLabs / BrowserStack mobile grid） |
+| osVersion | Testim mobile CLI フラグ / ケイパビリティ識別子（platformVersion のフォールバック） |
 | user.email | SSO フィールドマッピング識別子 |
 | user.userprincipalname | Azure AD フィールドマッピング識別子 |
 | user.mail | Azure AD フィールドマッピング識別子 |
