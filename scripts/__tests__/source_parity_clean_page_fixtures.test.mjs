@@ -218,6 +218,37 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   sibling `validate-element-text` (6 entry) も同じ a./b./c. classifier
   //   pattern を共有する可能性があり Wave 4 で再利用予定。
   'advanced-editing/validations/validate-download',
+  // M2 P2-2 Wave 3 Batch 2 追加 — segment-token-gap (bold wrapping) +
+  //   classifier residue word-count (>=3) pattern の複合 sentinel。
+  //   (1) EN `<p>...: <strong>--sauce-options ...</strong></p>` の bold 内
+  //   CLI flag を JA も bold 維持したまま、flagRe `(?:^|\s)(--?[a-zA-Z]...)`
+  //   の `(?:^|\s)` 前提を満たすよう `**` と `--` の間に inline code fence
+  //   ``**`--sauce-options`** `` を挟んで token 抽出を復活させる (同 pattern
+  //   を SauceLabs/Browserstack web セクションの `--sauce-options` /
+  //   `--browserstack-options` へも適用)。bold は WRITING_GUIDE の Testim UI
+  //   見出し強調として EN と mirror される必要があり、inline code で飾り直す
+  //   のは source-first を維持したままの書式調整。
+  //   (2) JA heading `## capability の override rule (mobile)` と EN `<h2>
+  //   Override rules for a capability (mobile)</h2>` の見出し文字列を mirror
+  //   (`## Override rules for a capability (mobile)`)。同様に JA
+  //   `## BrowserStack` を EN `<h2>Browserstack</h2>` に mirror。callout /
+  //   uli を EN section index と同位置に置くため見出し文字列を揃える。
+  //   (3) `classifier RESIDUE_MIN_WORDS=3` 制約により、JA prose に残る
+  //   standalone camelCase 識別子 (`platformVersion`, `osVersion`,
+  //   `capabilities`) と汎用語 (`build`, `project`, `capabilities`) が
+  //   同一 segment 内で 3 個以上残ると segment-untranslated が誤発火する。
+  //   本 slug では (a) Override rules callout-body で `platformVersion` ×2
+  //   + `osVersion` ×1 が 3 語 fail を誘発 → GLOSSARY Tier C に
+  //   W3C/Appium spec 識別子として `platformVersion` / `osVersion` を登録
+  //   して mask 対象化 (chore(glossary) as per hint)、(b) preface uli と
+  //   Browserstack uli でそれぞれ `build`/`project` と `capabilities` ×2
+  //   が 3 語に達していた箇所を、inline-code fence + `と` 日本語接続 /
+  //   `capabilities` の一つを削って 2 語に減らす content-level 回避で解消。
+  //   6 entry (segment-token-gap ×3, segment-untranslated ×3) → 0。新
+  //   mechanical exception / §5.3.N carve-out なし、§5.4 許容範囲内の
+  //   Tier C 追加 2 件のみ。Wave 2 sibling `integrations/grid-management`
+  //   (generic-English-residue pattern 8) の同一 folder 派生 sentinel。
+  'integrations/grid-management/saucelabs-browserstack-options',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
