@@ -21,7 +21,7 @@ keywords:
 
 Salesforce 環境に接続するには、Salesforce 環境が以下の要件を満たしていることを確認してください:
 
-- API アクセスをサポート - エンタープライズ、パフォーマンス、アンリミテッド、デベロッパー の 4 種類の上位エディション（UI 上は Enterprise や Performance などの英語表記）の組織が必要です。Professional Edition 組織は、アドオンとして API アクセスを追加できます。Salesforce Essentials Edition は API アクセスをサポートしていません。
+- API アクセスをサポート - Enterprise / Performance / Unlimited / Developer のいずれかの Edition 組織（Salesforce の上位エディション群）が必要です。Professional Edition 組織は、アドオンとして API アクセスを追加できます。Salesforce Essentials Edition は API アクセスをサポートしていません。
 - **管理 > ユーザー > プロファイル**で、Salesforce 環境に接続するために選択されたユーザーに対して REST API が有効になっています。
 
   ![プロファイル設定で REST API を有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)

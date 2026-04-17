@@ -18,7 +18,7 @@ keywords:
   - Testim
 ---
 
-HTML 属性検証では、要素の任意の HTML 属性（_href_ 属性や _src_ 属性など）の値を検証できます。また、以下に説明する通り「disabled」属性の検証も可能です。
+HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt_、_title_ など、HTML 仕様の属性名）の値を検証できます。また、以下に説明する通り _disabled_ 属性の検証も可能です。
 
 ## Validate HTML attribute ステップの追加
 
