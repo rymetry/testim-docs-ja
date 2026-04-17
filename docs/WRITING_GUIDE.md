@@ -28,9 +28,9 @@
 
 **本プロジェクトの最上位契約**: JA ドキュメントは **EN 原文の構造をそのまま写した日本語版** として整備する。JA 独自の構造は作成しない。
 
-1. **Source-First 絶対遵守**: `sourceUrl` の原文にある見出し・段落・番号手順・箇条書き・callout・画像は欠落なく、**構造そのまま** 日本語化する。JA 独自の section / 段落 / callout / リスト項目 / 見出しは **絶対に追加しない**（詳細は [§🪞 原文準拠ルール](#-原文準拠ルールsource-first-構造契約)）
+1. **Source-First 絶対遵守 — JA独自の構造は作成しない**: `sourceUrl` の原文にある見出し・段落・番号手順・箇条書き・callout・画像は欠落なく、**構造そのまま** 日本語化する。JA 独自の section / 段落 / callout / リスト項目 / 見出しは **絶対に追加しない**（詳細は [§🪞 原文準拠ルール](#-原文準拠ルールsource-first-構造契約)）。callout `:::note` / `:::warning` 等は EN `<div class="note">` / `<div class="warning">` 等に 1:1 mirror し、JA 側での種別変更・callout 分割・段落分割は禁止
 2. **Callout は EN 原文準拠**: EN の callout タイプ (`note` / `warning` / `caution` / `danger` / `tip` / `info`) にそのまま追従する。JA 独自 callout 種別の発明禁止（[Callout 規則](#-callout-規則)の変換マップ参照）
-3. **Testim 固有名詞の英語維持**: 機能名、製品名、画面名、UI ラベル、CLI flag、設定キーは原則として英語のまま維持する（正本: [GLOSSARY.md](./GLOSSARY.md) の 3-tier 分類）
+3. **Testim UI 用語は英語維持**: 機能名、製品名、画面名、UI ラベル、CLI flag、設定キーは原則として英語のまま維持する（正本: [GLOSSARY.md](./GLOSSARY.md) の 3-tier 分類 / 詳細は [§Testim 機能名・製品名・画面名の英語維持](#️-testim-機能名製品名画面名の英語維持)）
 4. **検知基盤との整合**: 上記 1–3 に違反すると `npm run check:parity` が gate で報告する。baseline 対象にする前に、まず **JA 側を EN 構造に追従させる** ことを優先する
 5. `npm run lint:docs` で検出される違反は必ず修正してからマージする
 6. 公開ページは原則 `.md` で管理し、特別な UI が必要な場合だけ `.mdx` を使う
@@ -38,6 +38,12 @@
 
 > **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0。baseline は「時限的 ack」であって「恒常許容」ではない。
 > このゴールを達成するため、本ガイドは baseline を増やす方向の変更（JA 独自構造追加 / callout 改変 / Testim 用語翻訳）を全面禁止する。
+>
+> **Source-first 例外の canonical registry**:
+>
+> - **Mechanical exceptions (parser-level)**: kind-multiset fingerprint 上で検知器が許容する既知 pattern (flat-list split / arrow-fusion 段落融合 等) は [`docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §5.2](./superpowers/plans/2026-04-16-m2-parity-burndown.md) に登録。個別 PR の自由裁量で追加禁止 (reviewer 承認 + plan 明示登録の security L2 gate)
+> - **Mechanism-pending carve-outs**: content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch / EN self-link artifact 等) は同 plan §5.3 に `§5.3.N` 形式で登録。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL — §5.3.N proposal]` マーカー経由で提案する ([PARITY_GUIDE.md §並列エージェント委任チェックリスト](./PARITY_GUIDE.md#並列エージェント委任チェックリスト) 参照)
+> - **Wave 2 実績 pattern**: P2-2 で確立した 8 pattern の catalog は [PARITY_GUIDE.md §Wave 2 実績 pattern catalog](./PARITY_GUIDE.md#wave-2-実績-pattern-catalog) に一覧化、翻訳観点は [TRANSLATION_GUIDE.md §5.5 Source-first 翻訳パターン](./TRANSLATION_GUIDE.md#55-source-first-翻訳パターンwave-2-確立) 参照
 
 ---
 
