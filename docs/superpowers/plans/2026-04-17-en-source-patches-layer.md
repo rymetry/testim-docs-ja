@@ -348,7 +348,7 @@ export function preprocessEnHtml(html, options = {}) {
 5. [ ] Phase 3 regression: 非該当 slug で全 288 page の `parity-check-status.json` fileSummary 同一
 6. [ ] Phase 4 `patchCoverage.mismatches.length === 0`
 7. [ ] Phase 4 `patchCoverage.matchedHits ≥ 6`
-8. [ ] Phase 4 baseline net delta **-13 ≤ Δ ≤ -7**
+8. [ ] Phase 4 baseline net delta **-13 ≤ Δ ≤ -7** (UD-attributable only; Bundle 1 non-UD content fixes may contribute additional negative delta, expected combined total up to -17)
 9. [ ] Phase 4 baseline **新規追加 0 件** (orphan 置換は許容)
 10. [ ] Bundle 1 JA markdown に `<!-- parity:` コメント 0
 11. [ ] `salesforce-steps.md` の `[ログアウト]` link が `/docs/salesforce-testing/salesforce-steps/sfdc-step-logout`
