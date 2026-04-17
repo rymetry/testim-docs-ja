@@ -199,6 +199,41 @@ P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span 
 - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
 - **mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath` ラベルを記載
 
+##### 5.3.1.a paragraph-count-mismatch audit signal coverage (2026-04-17 scope extension)
+
+PR #312 `audit-signals-triage` が `configure-tricentis-mobile-agent.md` §19 "WebDriverAgent (WDA) Errors" で `paragraph-count-mismatch` (EN=5 / JA=4) を追加検知。これは §5.3.1 既存 "FileOrFilePath paragraph vs code-fence kind-mismatch" の**同根**の副作用であり、新規 mechanism pattern ではない:
+
+- EN `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は paragraph kind で `extractParagraphCounts` に 1 件として乗る
+- JA は code-fence (```text / ```) で `code-block` kind に正規化されるため `extractParagraphCounts` でカウントされない
+- 結果: 同 section で segment-level の `section-structure-mismatch` / `segment-missing` (既存 §5.3.1 scope) と audit-signal の `paragraph-count-mismatch` が**同一 root cause から併発**する
+
+**Affected issue types** (scope extension):
+
+- `section-structure-mismatch` (既存 / baseline 対象 / gate-blocking)
+- `segment-missing` (既存 / baseline 対象 / gate-blocking)
+- `segment-extra` (既存 / baseline 対象 / gate-blocking)
+- `paragraph-count-mismatch` (**本 scope 拡張で追加 / `COARSE_SIGNAL_TYPES` 所属 / audit-only / gate-non-blocking**)
+
+**分類 rationale**: `paragraph-count-mismatch` は `scripts/lib/source_parity_types.mjs` §`COARSE_SIGNAL_TYPES` allowlist で既に gate 除外 (audit-only) され、`summary.auditSignalIssues` counter にのみ集計される。baseline への追加対象ではなく content 修正でも解消不能 (EN 側 extract mechanism 未改修の限り再発火)。本 scope 拡張は **classification-only** (plan 文書レベルでの既知 FileOrFilePath artifact への分類昇格) であり code / registry / baseline / test のいずれも変更不要。
+
+**対象 slug/entry (2026-04-17 実測)**:
+
+- slug: `recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent`
+- section: §19 "WebDriverAgent (WDA) Errors"
+- signal: `paragraph-count-mismatch`, EN=5 / JA=4 (-1)
+- 1 entry / 1 slug (per-slug cap は本 audit signal について ≤ 1 件、総合 §5.3.1 cap は ≤ 3 件に引き上げ — 既存 ≤ 2 gate-blocking + ≤ 1 audit-only)
+
+**M3 PR Z entry condition への影響**: `2026-04-16-m2-parity-burndown.md` §1 最終ゴールの `auditSignalIssues = 0` は**本 entry を §5.3.1 carve-out 由来として別枠で tracking** する (§P2-5 Exit の `auditSignalIssues = 0` 判定から除外)。M3 cutover 前に EN 抽出側 FileOrFilePath mechanism fix が入れば同時に解消される見込み。
+
+**Mitigation**: 該当 slug の baseline entry には commit message に `mechanism-pending: FileOrFilePath (audit-signal scope)` ラベルを追記。baseline 追加はしない (audit-only counter の定義上 baseline-ineligible)。
+
+**Non-goals of this scope extension**:
+
+- 新規 registry 追加なし (§5.3.2 と違い runtime 側の登録は存在しない)
+- `COARSE_SIGNAL_TYPES` の変更なし
+- `extractParagraphCounts` の code-fence 扱いの変更なし
+- 他 slug への scope 拡張なし (他 slug で同 pattern が再発した場合は本 §5.3.1.a entry の slug リストへの追記で L2 gate 再通過)
+
 #### 5.3.2 EN `index.htm/#/` self-link artifact (slug-scope registry extension)
 
 P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCap Flare が出力する self-link `<a href="index.htm/#/">` / `<a href="index.htm">` は `normalizeUrlToken` (`scripts/lib/source_parity_extract.mjs`) が `/docs/index` token に変換する。この token は **既存 `ARTIFACT_REGISTRY` entry (`reason: en-side-self-index-link-artifact`)** として 5 slug で登録済み。`salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` は 6 番目の slug として同 entry の `slugs[]` に追加する slug-scope extension。新規 mechanism pattern ではなく、既存 mechanism の scope 拡張。
