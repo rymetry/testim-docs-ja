@@ -255,43 +255,39 @@ Wave 2 pattern catalog row 5 (broken-table-row paragraph mirror) の canonical s
 
 詳細は plan `2026-04-16-m2-parity-burndown.md §5.3.4` を参照。
 
-### §5.3.7 `classifySegment` CJK_RE g-flag + tech-vocabulary residue allowlist (2026-04-17 mechanism PR)
+### §5.3.7 `classifySegment` CJK_RE g-flag fix (2026-04-17 mechanism PR)
 
 PR #309 reviewer agent 73 / PR #324 §5.3.6 agent の継続調査で確定した `parity_glossary_mask.classifySegment` の 2 つ目の latent bug (CJK_RE に `g` flag が欠落) を解消する mechanism PR。詳細: plan `2026-04-16-m2-parity-burndown.md §5.3.7`。
 
-#### allowlist 追加の判断原則 (agent 向け)
+**scope**: `scripts/lib/parity_glossary_mask.mjs` の `CJK_RE` 宣言に `/g` flag を追加する **1 文字の bug fix のみ**。
 
-新規 tech token を `TECH_TOKEN_ALLOWLIST` に追加する場合:
+#### 絶対原則: 許容機構は broken EN snapshot 退避にのみ正当化される
 
-1. **L2 gate**: 追加前に reviewer 承認 + plan §5.3.7 への明示登録を経由する (本 §5.3.7 は Testim UI enum / 技術仕様 vocabulary に scope lock)。
-2. **category 分類**: 既存 10 category (HTTP request type / accessibility severity / visual match level / log level / file format / release channel / salesforce edition / HTML attribute / status enum / keyboard key word / API component) のいずれかに収まるか確認。新 category が必要な場合は plan §5.3.7 の allowlist 節に新 category を追記する。
-3. **source slug を document**: 追加 token の出現元 slug を comment で残す (将来の不要化判定のため)。
-4. **regression test pin**: `parity_glossary_mask.test.mjs §5.3.7 CJK_RE g-flag + tech-vocabulary residue allowlist` describe block に新 category の positive test + negative boundary (pure-EN segment で flagged) を追加する。
-5. **GLOSSARY との競合確認**: token が GLOSSARY の common-word guard (Enter/Tab/Approve 等) と衝突する場合は hasCjk gate が機能しているかを確認 — pure EN segment では allowlist が bypass される設計。
+検知システムの purpose は EN(t) vs EN(t-1) (diff1) と EN(t) vs JA(t) (diff2) を両方 0 に収束させることである。この目標に照らして:
 
-#### hasCjk gate の保全
+- **許容機構 (allowlist / registry / exclusion) は、壊れた EN snapshot を退避する用途にのみ正当化される**
+- それ以外の「技術用語は英語維持でよい」「UI 固有用語は除外してよい」といった allowance は **本質的に検知精度の dilute であり、設計違反**
+- classifier が pure-EN-heavy segment を flag するのは **正しい動作**
+- JA 側で英語 term 周囲を JA context で囲めば classifier は segment-dominant-JA と判定して silent になる (natural translation path)
 
-`TECH_TOKEN_ALLOWLIST` は **ORIGINAL text が CJK を 1 つも含まない segment には適用しない** (classifier 内 `hasCjk` early-return)。これにより:
+この原則により、§5.3.7 では **`TECH_TOKEN_ALLOWLIST` 類の tech-vocabulary allowlist を一切追加しない**。CJK_RE `/g` fix で surface する 38 件の cascade は全て以下で吸収する:
 
-- 純 EN segment (`Press Enter key` / `Click the Approve button`) は旧来の RESIDUE_MIN_WORDS=3 判定を維持し、untranslated English prose として flag される
-- 混在 JA/EN segment (`（enter、tab、esc、page up、page down など）`) のみが allowlist 対象となる
-- Spec Invariant 5 (`GLOSSARY common-word false-negative regression`) / plan §3.2 T4 regression guard が完全保全される
+1. **content-level JA 翻訳** (default / 本 PR の採用手段): 該当 JA segment を JA-dominant に書き直す。典型パターン:
+   - 4 tech token 以上の列挙 → JA 対訳 4 つ + 英語 UI label の括弧注記に集約 (例: `Critical、Serious、Moderate、Minor` → `重大、深刻、中程度、軽微 の 4 段階 (UI 上は英語表記)`)
+   - status symbol `x` / `v` 単独 → Unicode ×マーク / ✓マーク で置換
+   - 例値の enumeration → 単一代表値 + "例:" 表現に短縮
+   - UI ブランド名 enumeration → "YouTube などの SNS" 等に圧縮
+2. **baseline 追加は 0** (goal alignment)
+3. **broken EN snapshot 退避 (source-sync exclusion)**: 既存の `scripts/lib/source_sync_exclusions.mjs` registry のみが正当な許容機構 (`excludedPages` counter で可視化)
 
-allowlist 拡張時は本 gate を回避する design 変更を行わないこと (Category B false-positive suppression は hasCjk gate を前提条件とする)。
+#### cascade 発生時の判断フロー (agent 向け)
 
-#### Category A / B 判別表
+新 slug で CJK_RE fix 後に cascade が surface した場合:
 
-§5.3.7 mechanism fix で cascade として surface した segment は:
-
-| category | 定義 | 解消手段 |
-| --- | --- | --- |
-| **B** (mechanism-absorbable) | CJK 句読点区切りで enum / 技術 token が並んでいる。prose 構造を持たない | tech-vocabulary allowlist で吸収 |
-| **A** (content-level) | 例値 / ブランド名 / UI nav / EN UI label / 外部参照 title。prose 構造を持つが真正 EN 残留 | baseline 登録 (source-first policy per WRITING_GUIDE §33) |
-
-新 slug で同様の cascade 発生時は、まず residue の structure を見る:
-
-- residue word が全て短 enum token → Category B → allowlist 追加を検討 (L2 gate)
-- residue が prose-like → Category A → baseline 追加 (`--slug=<slug>` で partial regen)
+1. **residue を確認**: `npm run check:parity -- --slug=<slug>` で classifier 判定の詳細を見る
+2. **content-level で JA 翻訳を試みる**: source-first を維持 (paragraph の 分割 / 移動 / kind 変更 禁止) しつつ、residue word count を `RESIDUE_MIN_WORDS=3` 未満に抑え込む
+3. **allowlist / baseline 追加は禁止**: tech vocabulary の理由で allowance を足すのは **設計違反**。どうしても content 翻訳で解消不能な場合は STOP して coordinator に相談
+4. **EN snapshot が壊れている場合 (broken heading / impossible structure)**: `scripts/lib/source_sync_exclusions.mjs` の registry への追加を検討 (L2 gate)
 
 ## Bug backlog の返済優先順位
 
