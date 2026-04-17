@@ -328,6 +328,105 @@ describe('classifySegment — §5.3.6 preStrip backtick fix (GFM double-backtick
   });
 });
 
+describe('classifySegment — §5.3.7 CJK_RE g-flag fix (multi-CJK strip bug)', () => {
+  /**
+   * §5.4 item 2 Bug 2 resolution. Bug 2: `CJK_RE.replace(...)` 呼出で global
+   * flag (`g`) が欠落していたため、最初の 1 match のみが置換され、複数 CJK
+   * segment を含む長文 paragraph の classification が不正確だった。
+   *
+   * Scope lock: §5.3.7 は **classifier の pure bug fix** のみ。許容機構
+   * (allowlist / registry / exclusion) は検知システムの design principle に
+   * 照らして本 PR では追加しない。cascade で surface する技術トークン列挙は
+   * 全て content-level JA 翻訳 (該当 segment の該当 token を JA context で
+   * 囲む) により吸収する。
+   *
+   * 理由: parity 検知システムの purpose は EN(t-1) vs EN(t) (diff1) と
+   * EN(t) vs JA(t) (diff2) の両方を 0 に収束させること。classifier 側の
+   * 「技術用語は英語維持で可」という allowance は、将来の真の untranslated
+   * 見逃しを生み、検知精度 (diff2 の精度) を dilute する。Testim UI 用語 /
+   * 技術トークンの「英語のまま維持」は content-level policy
+   * (docs/WRITING_GUIDE.md, docs/TRANSLATION_GUIDE.md) の領域であり、
+   * JA 側で英語 term 周囲を JA で囲めば classifier は segment-dominant-JA と
+   * 判定して silent になる。
+   *
+   * PR #293 の URL-before-mask ordering / §5.3.6 の preStrip backtick fix は
+   * 完全保全する。
+   */
+
+  it('CJK_RE /g flag: strips ALL CJK in a long segment (bug 2 primary fix)', () => {
+    // Pre-fix: CJK_RE without `g` only stripped the FIRST CJK char, leaving
+    // all subsequent Japanese characters in englishPortion and collapsing
+    // everything into one noisy "word" split by /\s+/. Post-fix: every CJK
+    // codepoint is stripped, so the actual residue is visible.
+    const longJa = 'これは長い段落です。途中で this is english が混入しています。最後にも日本語。';
+    const cls = classifySegment(longJa);
+    // residue after CJK strip = "this is english" (3 words, prose)
+    assert.equal(cls.isFullyMasked, false, `residue: ${cls.residue}`);
+    assert.ok(
+      !/[\u3040-\u309f\u4e00-\u9faf]/.test(cls.residue),
+      `residue must contain 0 CJK chars after /g fix. residue: ${cls.residue}`,
+    );
+  });
+
+  it('CJK_RE /g flag: multi-paragraph JA with embedded EN still detects prose', () => {
+    // Without `/g`, CJK_RE would only strip the first '\u3000-\u30ff' block,
+    // and the remaining CJK chars would "stick" with English tokens via the
+    // /\s+/ split, producing mis-counted words.
+    const cls = classifySegment(
+      '最初の日本語テキスト。これは another English insertion here that should remain. さらに続く日本語。最後の一文も日本語テキストです。',
+    );
+    assert.equal(cls.isFullyMasked, false);
+    assert.ok(
+      !/[\u3040-\u309f\u4e00-\u9faf]/.test(cls.residue),
+      `residue should be CJK-free: ${cls.residue}`,
+    );
+  });
+
+  // -------------------------------------------------------------------------
+  // Negative boundary — pure-EN prose must still be flagged
+  // -------------------------------------------------------------------------
+
+  it('negative: pure-EN segment flagged (no allowlist bypass)', () => {
+    // If a segment has NO CJK at all, it is (by construction) pure English
+    // and must be flagged as untranslated. No allowlist, no silent bypass.
+    const cls = classifySegment('Press Enter key now and confirm');
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('negative: mixed JA/EN with genuine untranslated prose still flagged', () => {
+    // Long EN prose remains inside otherwise-translated content.
+    const cls = classifySegment(
+      '設定画面で choose integrate any other application you don\'t find in the gallery を選択します。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      false,
+      `genuine untranslated prose must still be flagged`,
+    );
+  });
+
+  // -------------------------------------------------------------------------
+  // Regression guards — §5.3.6 and PR #293 contracts preserved
+  // -------------------------------------------------------------------------
+
+  it('PR #293 regression guard: URL-before-mask ordering preserved', () => {
+    // With §5.3.7 mechanism layered on top of §5.3.6 and PR #293, the URL
+    // strip contract must still hold: bare URLs in JA callout body should
+    // be fully masked.
+    const cls = classifySegment(
+      'サードパーティアプリは url ベースのスキームのみサポートする場合があります。例: https://byby.dev/ios-deep-linking 参照。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('§5.3.6 regression guard: GFM double-backtick preStrip still effective', () => {
+    const cls = classifySegment(
+      '``code containing `backticks` here`` のような GFM double-backtick pattern',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+});
+
 describe('maskSegmentText — mask record shape', () => {
   it('mask record includes source, entry OR pattern, span (start/end)', () => {
     const result = maskSegmentText('Use the Visual Editor to edit.');

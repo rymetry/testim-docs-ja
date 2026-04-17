@@ -25,23 +25,23 @@ M1 (PR #286-#291) / M4 (PR #292) merge 完了時点で `parity-baseline.json.ent
 
 ## 2. Residual inventory (post-M1 / 2026-04-16)
 
-| issueType | 件数 | 主戦略 |
-|---|---:|---|
-| segment-extra | 120 | JA 独自段落を削除し EN 構造に戻す |
-| segment-missing | 76 | EN 段落を翻訳追加 |
-| section-structure-mismatch | 66 | 見出し/リスト形式を EN 構造に揃える |
-| segment-untranslated | 47 | 翻訳。Testim UI 用語は英語維持 |
-| segment-token-gap | 20 | URL/CLI flag/数値 token 復元 |
-| segment-inconclusive | 11 | 人手 review (PR Z entry は ≤ 3) |
-| **合計** | **340** | |
+| issueType                  |    件数 | 主戦略                              |
+| -------------------------- | ------: | ----------------------------------- |
+| segment-extra              |     120 | JA 独自段落を削除し EN 構造に戻す   |
+| segment-missing            |      76 | EN 段落を翻訳追加                   |
+| section-structure-mismatch |      66 | 見出し/リスト形式を EN 構造に揃える |
+| segment-untranslated       |      47 | 翻訳。Testim UI 用語は英語維持      |
+| segment-token-gap          |      20 | URL/CLI flag/数値 token 復元        |
+| segment-inconclusive       |      11 | 人手 review (PR Z entry は ≤ 3)     |
+| **合計**                   | **340** |                                     |
 
 ### Slug 分布 (top-heavy)
 
-| tier | 件数/slug | slug 数 | 合計 entries |
-|---|---:|---:|---:|
-| A: Heavy | ≥ 5 | ~20 | ~200 |
-| B: Medium | 2-4 | ~54 | ~129 |
-| C: Long-tail | 1 | 26 | 26 |
+| tier         | 件数/slug | slug 数 | 合計 entries |
+| ------------ | --------: | ------: | -----------: |
+| A: Heavy     |       ≥ 5 |     ~20 |         ~200 |
+| B: Medium    |       2-4 |     ~54 |         ~129 |
+| C: Long-tail |         1 |      26 |           26 |
 
 Top 5: `advanced-editing/deep-link-mobile` (18) / `recording-tests/.../configure-tricentis-mobile-agent` (16) / `editing-tests/generating-a-random-value` (14) / `salesforce-testing/salesforce-steps/sfdc-document-validation` (12) / `advanced-editing/keyboard-shortcut-step` (10)
 
@@ -98,27 +98,27 @@ Tier A agent は上記 2 pattern を優先 scan し、3 件目以降の未知 pa
 
 **Tier A 20 slug × `**Xするには:**` 出現数** (2026-04-17 実測 / 残 19 slug — pilot #1 は 0 化済み):
 
-| slug (entries) | `**Xするには:**` count |
-|---|---:|
-| editing-tests/generating-a-random-value (14) | 2 |
-| salesforce-testing/salesforce-steps/sfdc-document-validation (12) | 8 |
-| advanced-editing/keyboard-shortcut-step (10) | 0 |
-| integrations/test-management-integrations/ttm-for-jira-integration (9) | 1 |
-| salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce (9) | 1 |
-| editing-tests/editing-your-tests/editing-target-element-properties (8) | 0 |
-| integrations/visual-validation/lambdatest_integration (8) | 0 |
-| integrations/grid-management (7) | 1 |
-| administration/secrets (6) | 1 |
-| advanced-editing/parameters/passing-parameters-from-excel-file (6) | 0 |
-| advanced-editing/validations/validate-download (6) | 1 |
-| advanced-editing/validations/validate-element-text (6) | 4 |
-| integrations/grid-management/saucelabs-browserstack-options (6) | 0 |
-| integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration (6) | 0 |
-| administration/subscription-plans (5) | 1 |
-| advanced-editing/coding-assistant (5) | 0 |
-| integrations/test-management-integrations/xray-integration (5) | 1 |
-| overview/testim-overview (5) | 0 |
-| testops/insights/reports (5) | 3 |
+| slug (entries)                                                                             | `**Xするには:**` count |
+| ------------------------------------------------------------------------------------------ | ---------------------: |
+| editing-tests/generating-a-random-value (14)                                               |                      2 |
+| salesforce-testing/salesforce-steps/sfdc-document-validation (12)                          |                      8 |
+| advanced-editing/keyboard-shortcut-step (10)                                               |                      0 |
+| integrations/test-management-integrations/ttm-for-jira-integration (9)                     |                      1 |
+| salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce (9) |                      1 |
+| editing-tests/editing-your-tests/editing-target-element-properties (8)                     |                      0 |
+| integrations/visual-validation/lambdatest_integration (8)                                  |                      0 |
+| integrations/grid-management (7)                                                           |                      1 |
+| administration/secrets (6)                                                                 |                      1 |
+| advanced-editing/parameters/passing-parameters-from-excel-file (6)                         |                      0 |
+| advanced-editing/validations/validate-download (6)                                         |                      1 |
+| advanced-editing/validations/validate-element-text (6)                                     |                      4 |
+| integrations/grid-management/saucelabs-browserstack-options (6)                            |                      0 |
+| integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration (6)                      |                      0 |
+| administration/subscription-plans (5)                                                      |                      1 |
+| advanced-editing/coding-assistant (5)                                                      |                      0 |
+| integrations/test-management-integrations/xray-integration (5)                             |                      1 |
+| overview/testim-overview (5)                                                               |                      0 |
+| testops/insights/reports (5)                                                               |                      3 |
 
 Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高密度 slug (`sfdc-document-validation` 8 / `validate-element-text` 4 / `testops/insights/reports` 3) は baseline entry の大半が同 pattern 由来の可能性が高く、expected effort は中程度。pattern 0 slug (8 slug: `keyboard-shortcut-step` 10 entries / `editing-target-element-properties` 8 entries / `lambdatest_integration` 8 entries 等) は異なる構造起因の drift を主因とするため、pilot #1 の recipe が即適用できず agent 側で別 pattern 識別が必要。
 
@@ -177,12 +177,12 @@ M2 exit 直前の本 phase で、既存 **全退避 entry を再検証**する�
 
 **対象 registry**:
 
-| registry | 現行 entry 数 | 対象 slug |
-|---|---:|---|
-| `scripts/lib/source_sync_exclusions.mjs` (`SOURCE_SYNC_EXCLUSIONS`) | 1 | `testops/testops-version-control/pull-requests` |
-| `scripts/lib/parity_artifact_registry.mjs` — `/docs/index` self-link | 7 | `editing-tests/conditions/advanced-conditions-settings`, `integrations/visual-validation/visual_validation_index`, `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`, `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`, `salesforce-testing/salesforce-steps/sfdc-step-login`, `testops/insights/dashboard`, `testops/insights/reports` |
-| `scripts/lib/parity_artifact_registry.mjs` — `http://google.com` demo link | 1 | `getting-started/creating-your-first-codeless-test` |
-| `scripts/lib/ja_omission_policy_registry.mjs` (§5.3.3) | 4 (quota=5) | `overview/testim-overview` |
+| registry                                                                   | 現行 entry 数 | 対象 slug                                                                                                                                                                                                                                                                                                                                                                                             |
+| -------------------------------------------------------------------------- | ------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/lib/source_sync_exclusions.mjs` (`SOURCE_SYNC_EXCLUSIONS`)        |             1 | `testops/testops-version-control/pull-requests`                                                                                                                                                                                                                                                                                                                                                       |
+| `scripts/lib/parity_artifact_registry.mjs` — `/docs/index` self-link       |             7 | `editing-tests/conditions/advanced-conditions-settings`, `integrations/visual-validation/visual_validation_index`, `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`, `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`, `salesforce-testing/salesforce-steps/sfdc-step-login`, `testops/insights/dashboard`, `testops/insights/reports` |
+| `scripts/lib/parity_artifact_registry.mjs` — `http://google.com` demo link |             1 | `getting-started/creating-your-first-codeless-test`                                                                                                                                                                                                                                                                                                                                                   |
+| `scripts/lib/ja_omission_policy_registry.mjs` (§5.3.3)                     |   4 (quota=5) | `overview/testim-overview`                                                                                                                                                                                                                                                                                                                                                                            |
 
 **運用 (P2-6)**:
 
@@ -227,7 +227,7 @@ M2 exit 直前の本 phase で、既存 **全退避 entry を再検証**する�
 
 #### 5.3.1 FileOrFilePath paragraph vs code-fence kind-mismatch
 
-P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は `source_parity_segments_en.mjs` の INLINE_JOIN_TAGS 透過経路で paragraph kind に extract される。JA は code-fence (```text / ``` ) で `code-block` kind になる。paragraph 一致には backtick inline が不可欠だが textNorm が backticks を strip するため classifier で segment-untranslated が再発火。構造的修正は EN 抽出側で FileOrFilePath を inline-code として wrap する mechanism change が必要 (= M2 範囲外)
+P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は `source_parity_segments_en.mjs` の INLINE_JOIN_TAGS 透過経路で paragraph kind に extract される。JA は code-fence (`text / ` ) で `code-block` kind になる。paragraph 一致には backtick inline が不可欠だが textNorm が backticks を strip するため classifier で segment-untranslated が再発火。構造的修正は EN 抽出側で FileOrFilePath を inline-code として wrap する mechanism change が必要 (= M2 範囲外)
 
 - **symptom pattern**: WDA section / CLI prerequisites / error log example ページ
 - **per-slug cap**: ≤ 2 件 (`section-structure-mismatch` + `segment-missing` / `segment-extra` の対)
@@ -238,7 +238,7 @@ P2-2-1 pilot `configure-tricentis-mobile-agent` で初検知。EN の `<p><span 
 PR #312 `audit-signals-triage` が `configure-tricentis-mobile-agent.md` §19 "WebDriverAgent (WDA) Errors" で `paragraph-count-mismatch` (EN=5 / JA=4) を追加検知。これは §5.3.1 既存 "FileOrFilePath paragraph vs code-fence kind-mismatch" の**同根**の副作用であり、新規 mechanism pattern ではない:
 
 - EN `<p><span class="FileOrFilePath">...Java stack trace...</span></p>` は paragraph kind で `extractParagraphCounts` に 1 件として乗る
-- JA は code-fence (```text / ```) で `code-block` kind に正規化されるため `extractParagraphCounts` でカウントされない
+- JA は code-fence (`text / `) で `code-block` kind に正規化されるため `extractParagraphCounts` でカウントされない
 - 結果: 同 section で segment-level の `section-structure-mismatch` / `segment-missing` (既存 §5.3.1 scope) と audit-signal の `paragraph-count-mismatch` が**同一 root cause から併発**する
 
 **Affected issue types** (scope extension):
@@ -286,6 +286,7 @@ P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCa
 M2 Wave 3 Batch 2 `overview/testim-overview` (PR #309) で初検知。`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis 削除依頼 policy** により、EN 原文の特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL) を JA 側で意図的に削除している。再追加は policy 違反 (commits `bf40dad`, `e5d9f88` で legal reasoning 記録済)。
 
 この JA-side 意図的除外は既存 3 mechanism のどれにも該当しない:
+
 - `scripts/lib/source_sync_exclusions.mjs` は EN-broken page を対象 (本 slug の EN は正常)
 - `scripts/lib/parity_artifact_registry.mjs` は EN-side artifact token のみ対象 (§5.3.2 の `/docs/index` self-link 等)
 - §5.3.1 FileOrFilePath は EN 抽出側 kind-mismatch を対象
@@ -323,13 +324,13 @@ PR #312 audit-signals-triage で initially 検知、本 mechanism PR で解消�
 
 **parity diff (BEFORE / AFTER)**:
 
-| metric                       | BEFORE | AFTER | delta |
-| --- | --- | --- | --- |
-| `totalIssues`                | 223    | 219   | -4    |
-| `baselinedIssues` (frozen)   | 183    | 183   | ±0    |
-| `issuesByType.table-shape-mismatch` | 4 | 0 | -4 |
-| `signalFiles`                | 7      | 6     | -1    |
-| `activeFiles`                | 26     | 25    | -1    |
+| metric                              | BEFORE | AFTER | delta |
+| ----------------------------------- | ------ | ----- | ----- |
+| `totalIssues`                       | 223    | 219   | -4    |
+| `baselinedIssues` (frozen)          | 183    | 183   | ±0    |
+| `issuesByType.table-shape-mismatch` | 4      | 0     | -4    |
+| `signalFiles`                       | 7      | 6     | -1    |
+| `activeFiles`                       | 26     | 25    | -1    |
 
 baseline は完全不変 (183 固定)、active/signal 側で false-positive 4 件が消滅、他の issue type は全て同値。
 
@@ -359,15 +360,15 @@ exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan へ
 
 PR #309 agent 73 reviewer 検出の classifier latent bug。本 §5.3.6 は §5.4 item 2 の 2 件のうち、**preStrip backtick no-op** のみを scope-locked 解消した mechanism PR。2 件目の `CJK_RE` missing `g` flag については本 PR の調査で **scope-lock を超える副作用を確認した** ため、本 mechanism PR から除外した (詳細は §5.4 item 2 参照)。
 
-**bug 実体**: `classifySegment` の pre-strip pass にある inline-code strip regex `/`[^`]*`/g` は GFM double-backtick code-span (``` ``code`` ```) に対して先頭の空 single-pair (``` `` ```) にマッチを譲るため、2 個目以降の content が strip されずに残り、backtick strip が実質 no-op になる edge case があった。GFM §code-spans では double-backtick pair は内部に single backtick を含めるため (例: ``` ``use `backtick` here`` ```)、純粋な alternation `/`` [^`]*`` | `[^`]*`/g` だけでは不十分で、内部の single backtick を許容する negative-lookahead (``` `(?!`) ```) が必須。
+**bug 実体**: `classifySegment` の pre-strip pass にある inline-code strip regex `/`[^`]_`/g` は GFM double-backtick code-span (` ``code`` `) に対して先頭の空 single-pair (` `` `) にマッチを譲るため、2 個目以降の content が strip されずに残り、backtick strip が実質 no-op になる edge case があった。GFM §code-spans では double-backtick pair は内部に single backtick を含めるため (例: ``` ``use `backtick` here`` ```)、純粋な alternation `/`` [^`]_``|`[^`]\*`/g` だけでは不十分で、内部の single backtick を許容する negative-lookahead (`` `(?!`) ``) が必須。
 
-**修正方針**: preStrip regex を `/` `` `` `(?:[^`]|`(?!`))*` `` `` `|` `` ` `` `[^`]*` `` ` `` `/g` に拡張。
+**修正方針**: preStrip regex を `/` ` ` `(?:[^`]|`(?!`))_` `` `` `|` `` ` `` `[^`]_` `` ` `` `/g` に拡張。
 
 - double-backtick pair を alternation の左側に置き **先に消費** する
 - double-pair 内部では `[^`]` (非 backtick) または `` ` ``(?!`) (次が backtick でない single backtick) を受容
-- alternation の右側 (single-pair) は旧来どおり `/` `` ` `` `[^`]*` `` ` `` `/` で fallback
+- alternation の右側 (single-pair) は旧来どおり `/` `` ` `` `[^`]\*` `` ` `` `/` で fallback
 
-標準 single-backtick code-span (``` `foo` ```) は post-fix も byte-identical に strip される。adjacent double-backtick pair / nested single-inside-double のいずれも全 content が strip される。
+標準 single-backtick code-span (`` `foo` ``) は post-fix も byte-identical に strip される。adjacent double-backtick pair / nested single-inside-double のいずれも全 content が strip される。
 
 **scope lock (§5.3.6)**: 本修正は `classifySegment` 内の inline-code pre-strip regex 1 行のみを対象とし、
 
@@ -382,14 +383,81 @@ PR #309 agent 73 reviewer 検出の classifier latent bug。本 §5.3.6 は §5.
 
 **parity diff (BEFORE / AFTER)**:
 
-| metric | BEFORE | AFTER | delta |
-| --- | --- | --- | --- |
-| `totalIssues` | 229 | 229 | ±0 |
-| `baselinedIssues` (frozen) | 173 | 173 | ±0 |
-| `issuesByType.segment-untranslated` | 18 | 18 | ±0 |
-| `activeFiles` | 39 | 39 | ±0 |
+| metric                              | BEFORE | AFTER | delta |
+| ----------------------------------- | ------ | ----- | ----- |
+| `totalIssues`                       | 229    | 229   | ±0    |
+| `baselinedIssues` (frozen)          | 173    | 173   | ±0    |
+| `issuesByType.segment-untranslated` | 18     | 18    | ±0    |
+| `activeFiles`                       | 39     | 39    | ±0    |
 
-repo 内に GFM double-backtick content (``` ``...`` ```) が実在しないため本修正の production impact は **0 件** (latent bug fix)。
+repo 内に GFM double-backtick content (` ``...`` `) が実在しないため本修正の production impact は **0 件** (latent bug fix)。
+
+#### 5.3.7 CJK_RE global flag fix (classifier multi-match bug) — cascade は content-level JA 翻訳で吸収
+
+§5.4 item 2 Bug 2 (`CJK_RE.replace(...)` missing `g` flag) の mechanism 完了 PR。§5.3.6 では scope lock のため除外していたが、本 §5.3.7 で **CJK_RE g-flag fix のみ** を mechanism-level で施し、それによって surface する 38 件の cascade は全て **content-level JA 翻訳** で吸収する。
+
+**bug 実体 (Bug 2)**: `classifySegment` 内の `residue.replace(CJK_RE, ' ')` は CJK_RE が `g` flag なしで宣言されていたため、**最初の 1 match のみ** を置換していた。複数 CJK 文字を含む長文 paragraph では JA 文字が englishPortion に混入し、`/\s+/.split()` で単一ノイズ word に collapse して RESIDUE_MIN_WORDS=3 threshold を silent に bypass していた (false negative)。
+
+**g-flag 単独 fix の副作用**: 上記 bug の修正 (CJK_RE に `g` flag 追加) は、JA segments で CJK 句読点 (`、` / `。`) 区切りの enum / 技術トークン列挙が可視化され、**38 件の segment-untranslated issues を 22 slug に surface** する (うち 22 件は既存 baseline entry と fingerprint 一致、16 件が active、5 件が新 Category A 候補だが今回全て content-level で解消)。主なパターン:
+
+- HTTP request type enum (`xhr、js、css、img、media、font、doc、ws、manifest`)
+- accessibility severity enum (`critical、serious、moderate、minor`)
+- visual match level enum (`exact、strict、content、layout`)
+- log level enum (`verbose、error、warning、info`)
+- file format token enum (`csv、jpg、ppt、pdf、xls、image、doc`)
+- release channel enum (`beta、dev、canary、stable`)
+- salesforce edition enum (`enterprise、performance、unlimited、developer、professional、essentials`)
+- HTML attribute name (`src、alt、href、title、disabled`)
+- status symbol (`— x — x — v`)
+- 例値 / ブランド名 / UI nav (`user47 user65 user32` / `youtube twitter linkedin facebook` / `personas add persona` / `sanity nightly monitor`)
+
+**設計思想 (critical)**: 検知システムの design principle に照らし、**許容機構 (allowlist / registry / exclusion) は壊れた EN snapshot の退避のみ**が正当化される用途であり、「技術用語は英語維持でよい」という類の allowance は本 PR では一切追加しない。Testim UI 用語 / 技術トークンの英語維持は **content-level policy** (docs/WRITING_GUIDE.md, docs/TRANSLATION_GUIDE.md) の領域であり、JA 側で英語 term の周囲を JA で囲めば classifier は segment-dominant-JA と判定して silent になる。allowlist を足すと将来の真の untranslated 見逃しを生み、EN(t) vs JA(t) (diff2) の検知精度を dilute するため、**baseline への追加と同じく禁止**。
+
+**§5.3.7 mechanism 変更点** (1 箇所のみ):
+
+- `scripts/lib/parity_glossary_mask.mjs` 155 行目: `const CJK_RE = /[...]/` → `const CJK_RE = /[...]/g` (1 文字追加)
+
+以下は完全保全:
+
+- `maskSegmentText` (glossary + invariant masking 本体) 無変更
+- URL strip pass (bare URL / GFM autolink / markdown link / `/docs` link) の順序・regex 完全保全 (PR #293 URL-before-mask ordering 契約)
+- §5.3.6 preStrip backtick regex 完全保全
+- `RESIDUE_MIN_WORDS=3` / `RESIDUE_MIN_LENGTH=15` threshold 定数 無変更
+- classifier flow: `normalizeSegmentText → preStrip → maskSegmentText → residue → englishPortion (CJK strip) → words → threshold`
+- **新たな allowlist / tech-token filter / hasCjk gate は一切追加しない**
+
+**cascade 解消結果** (38 件 × 22 slug):
+
+- **22 件**: 既存 baseline entry に fingerprint 一致 (sectionPath + jaSourceFingerprint で frozen 済、gate blocking 無し)
+- **16 件**: runtime surface する新 active で **全 content-level JA 翻訳** で吸収 (16 slug across 11 files: accessibility × 2 slug, element-accessibility × 2 slug, html-attribute × 1, pixel-validation × 4, validate-download, debug-helper, how-to-record, network-logs, test-runs, salesforce-troubleshoot, version-control-branches)
+- **新規 baseline 追加**: **0 件** (Category A 相当の 5 件も全て content-level 翻訳で吸収)
+
+**content-level 翻訳戦略**: 英語 term の 3 件以上の連続列挙を JA word / フレーズで wrap し、classifier の residue word-count を `< RESIDUE_MIN_WORDS=3` に抑え込む。典型パターン:
+
+- 4 tech token 列挙 → JA 対訳 4 つ + UI label 英語表記を括弧注記に集約 (例: `Critical、Serious、Moderate、Minor` → `重大、深刻、中程度、軽微 の 4 段階から選択します（UI 上は英語表記）`)
+- status symbol `x` / `v` → Unicode ×マーク / ✓マーク で置換 (test-runs)
+- 例値の enumeration → 単一代表値 + "例:" 表現に短縮 (user47 等)
+- UI ブランド名 enumeration → "YouTube や Twitter などの各種 SNS" 等に圧縮
+
+**副次効果 — RESIDUAL → RESOLVED 昇格**: `results/test-runs` は content-level Unicode 置換で status-symbol residue が消え、classifier が fully-masked 判定する。既存 baselined segment-untranslated entry が runtime で不要となり、baseline 1 件を削除。`scripts/__tests__/source_parity_representative_summary.test.mjs` の RESIDUAL_PAGES から RESOLVED_PAGES へ昇格。
+
+**regression ガード**:
+
+- `scripts/__tests__/parity_glossary_mask.test.mjs` の `classifySegment — §5.3.7 CJK_RE g-flag fix` describe block に **6 test** (primary CJK g-flag × 2 / pure-EN segment flagged 1 / mixed JA/EN prose flagged 1 / PR #293 URL 規制 1 / §5.3.6 GFM double-backtick 1) を pin。
+- 既存 `§5.3.6 preStrip backtick fix` describe block (7 test) + `URL/link stripping order (M2-P2-1 pilot regression)` describe block (11 test) は全て byte-identical に pass、PR #293 / §5.3.6 contract の完全保全を confirm。
+- Spec Invariant 5 `GLOSSARY common-word false-negative regression` guard (`Press Enter key` など) は **allowlist を導入していないため自動的に保全** (hasCjk gate は不要)。
+
+**parity delta (vs origin/main)**:
+
+| metric                             | BEFORE (origin/main) | AFTER (§5.3.7 rework)        | delta                   |
+| ---------------------------------- | -------------------- | ---------------------------- | ----------------------- |
+| baseline entries                   | 150                  | 149                          | **-1** (test-runs 解消) |
+| baseline additions                 | —                    | 0                            | **0**                   |
+| `segment-untranslated` in baseline | 17                   | 16                           | -1                      |
+| active actionable files            | 0                    | 0                            | ±0                      |
+| content translations applied       | —                    | 16 active + 5 would-be-Cat-A | 21 slugs                |
+
+**goal alignment**: baseline → 0 の M2 ゴールに整合。**baseline 追加 = 0、allowlist 追加 = 0** を両立し、cascade は全て content-level JA 翻訳で吸収。検知精度 (EN(t) vs JA(t) diff2) は dilute なし。
 
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
 
@@ -418,13 +486,13 @@ Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 repor
 - **発見**: PR #309 agent 73 reviewer
 - **所在**: `scripts/lib/parity_glossary_mask.mjs` `classifySegment` 周辺
 - **症状**:
-  - `preStrip` pass で backtick (``` ` ```) 除去を試みているが実際には no-op になっており、backtick inline が masking 前に strip されないケースがある
+  - `preStrip` pass で backtick (`` ` ``) 除去を試みているが実際には no-op になっており、backtick inline が masking 前に strip されないケースがある
   - `CJK_RE.replace(...)` 呼出で global flag (`g`) が欠落。最初の 1 match のみが置換される設計バグ。複数 CJK segment を含む長文 paragraph の classification 精度に影響
 - **影響範囲**: classifier 精度低下による false-positive / false-negative の僅かな揺れ。現状 PR #293 で導入した "URL-before-mask ordering" の regression は無く、Tier 2 merge までの counter には悪影響なし
-- **対応 (partial)**:
+- **対応 (全完了)**:
   - **Bug 1 (preStrip backtick no-op)** → `[Resolved via §5.3.6 (PR #324)]` GFM double-backtick code-span に対する pre-strip regex の拡張で解消。§5.3.6 参照
-  - **Bug 2 (`CJK_RE` missing `g` flag)** → `[DEFERRED — out of §5.3.6 scope]` **mechanism fix を試行した結果、classifier の word-count 設計 (RESIDUE_MIN_WORDS=3 threshold) が CJK-delimited 短 tech token (例: `img media font` 等の filter type 名) に対して false-positive を発生させる pre-existing latent design limit を露出する** ため、§5.3.6 scope lock (single bug mechanism PR) の範囲外と判定。`g` flag 追加のみの fix は 20 件の新 segment-untranslated false-positive を surface し (15 slug / clean-page sentinel + RESOLVED_PAGES への副次 assertion failure)、classifier threshold 再設計 (word-count vs char-count / ASCII-only word 計上 / short-token allow-list 等) を伴う別 PR (§5.3.7 相当) として分離する必要がある。単独 PR では welcome side effect とならず、baseline 増加 + sentinel 改訂の policy 判断が必要なため留保。
-- **Sev**: 3 (accuracy / hidden latent bug) — Bug 1 解消済、Bug 2 は Sev 3 維持 (classifier design work を伴う)
+  - **Bug 2 (`CJK_RE` missing `g` flag)** → `[Resolved via §5.3.7 (PR #325)]` CJK_RE `/g` flag 追加の **mechanism 1 文字 fix** のみで Bug 2 を完了。surface する cascade 38 件 (22 slug) は allowlist / baseline を一切追加せず、**全て content-level JA 翻訳で吸収** (16 active + 5 Category A would-be + 22 既存 baseline match)。RESIDUAL_PAGES `results/test-runs` は Unicode ×/✓ への content-level 置換で RESOLVED 昇格 (baseline -1)。§5.3.7 参照
+- **Sev**: 3 (accuracy / hidden latent bug) — **両 Bug 解消済**
 
 **(3) EN upstream: Smart Locators anchor broken at `salesforce-testing/core-concepts#smart-locators`**
 

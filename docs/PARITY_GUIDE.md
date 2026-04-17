@@ -255,6 +255,40 @@ Wave 2 pattern catalog row 5 (broken-table-row paragraph mirror) の canonical s
 
 詳細は plan `2026-04-16-m2-parity-burndown.md §5.3.4` を参照。
 
+### §5.3.7 `classifySegment` CJK_RE g-flag fix (2026-04-17 mechanism PR)
+
+PR #309 reviewer agent 73 / PR #324 §5.3.6 agent の継続調査で確定した `parity_glossary_mask.classifySegment` の 2 つ目の latent bug (CJK_RE に `g` flag が欠落) を解消する mechanism PR。詳細: plan `2026-04-16-m2-parity-burndown.md §5.3.7`。
+
+**scope**: `scripts/lib/parity_glossary_mask.mjs` の `CJK_RE` 宣言に `/g` flag を追加する **1 文字の bug fix のみ**。
+
+#### 絶対原則: 許容機構は broken EN snapshot 退避にのみ正当化される
+
+検知システムの purpose は EN(t) vs EN(t-1) (diff1) と EN(t) vs JA(t) (diff2) を両方 0 に収束させることである。この目標に照らして:
+
+- **許容機構 (allowlist / registry / exclusion) は、壊れた EN snapshot を退避する用途にのみ正当化される**
+- それ以外の「技術用語は英語維持でよい」「UI 固有用語は除外してよい」といった allowance は **本質的に検知精度の dilute であり、設計違反**
+- classifier が pure-EN-heavy segment を flag するのは **正しい動作**
+- JA 側で英語 term 周囲を JA context で囲めば classifier は segment-dominant-JA と判定して silent になる (natural translation path)
+
+この原則により、§5.3.7 では **`TECH_TOKEN_ALLOWLIST` 類の tech-vocabulary allowlist を一切追加しない**。CJK_RE `/g` fix で surface する 38 件の cascade は全て以下で吸収する:
+
+1. **content-level JA 翻訳** (default / 本 PR の採用手段): 該当 JA segment を JA-dominant に書き直す。典型パターン:
+   - 4 tech token 以上の列挙 → JA 対訳 4 つ + 英語 UI label の括弧注記に集約 (例: `Critical、Serious、Moderate、Minor` → `重大、深刻、中程度、軽微 の 4 段階 (UI 上は英語表記)`)
+   - status symbol `x` / `v` 単独 → Unicode ×マーク / ✓マーク で置換
+   - 例値の enumeration → 単一代表値 + "例:" 表現に短縮
+   - UI ブランド名 enumeration → "YouTube などの SNS" 等に圧縮
+2. **baseline 追加は 0** (goal alignment)
+3. **broken EN snapshot 退避 (source-sync exclusion)**: 既存の `scripts/lib/source_sync_exclusions.mjs` registry のみが正当な許容機構 (`excludedPages` counter で可視化)
+
+#### cascade 発生時の判断フロー (agent 向け)
+
+新 slug で CJK_RE fix 後に cascade が surface した場合:
+
+1. **residue を確認**: `npm run check:parity -- --slug=<slug>` で classifier 判定の詳細を見る
+2. **content-level で JA 翻訳を試みる**: source-first を維持 (paragraph の 分割 / 移動 / kind 変更 禁止) しつつ、residue word count を `RESIDUE_MIN_WORDS=3` 未満に抑え込む
+3. **allowlist / baseline 追加は禁止**: tech vocabulary の理由で allowance を足すのは **設計違反**。どうしても content 翻訳で解消不能な場合は STOP して coordinator に相談
+4. **EN snapshot が壊れている場合 (broken heading / impossible structure)**: `scripts/lib/source_sync_exclusions.mjs` の registry への追加を検討 (L2 gate)
+
 ## Bug backlog の返済優先順位
 
 Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 以降で以下の優先順位で返済する:

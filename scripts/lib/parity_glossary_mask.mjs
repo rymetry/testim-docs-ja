@@ -152,7 +152,7 @@ export function maskSegmentText(text) {
 
 const RESIDUE_MIN_WORDS = 3;
 const RESIDUE_MIN_LENGTH = 15;
-const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/;
+const CJK_RE = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]/g;
 
 /**
  * After masking, decide whether the remaining text is (a) fully covered

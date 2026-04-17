@@ -33,7 +33,7 @@ Testim for Salesforce のペルソナは、管理者、営業、顧客などの�
 
 **Testim for Salesforce ペルソナを作成するには:**
 
-1. Testim for Salesforce で、**Settings** > **Salesforce** > **Personas**に移動し、**Add Persona**ボタンをクリックします。
+1. Testim for Salesforce で、**Settings** > **Salesforce** > **Personas** に移動し、**Add Persona** ボタン（設定メニュー内のペルソナ追加ボタン）をクリックします。
 
    ![スクリーンショット](/images/salesforce-testing/create-a-persona-and-add-users/29532af-addpersona4.png)
 

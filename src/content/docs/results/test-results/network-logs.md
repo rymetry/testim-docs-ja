@@ -125,11 +125,11 @@ keywords:
 
 ![ファイル名とドメインでのフィルター例](/images/results/network-logs/e21c0d7-Testim_074a.png)
 
-*File* 列と *Domain* 列のテキストに基づいて、結果が即座にフィルタリングされます。
+_File_ 列と _Domain_ 列のテキストに基づいて、結果が即座にフィルタリングされます。
 
 **リクエストタイプでフィルタリングするには:**
 
-1. リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。オプションには*XHR*、*JS*、*CSS*、*Img*、*Media*、*Font*、*Doc*、*WS*、*Manifest*が含まれます。
+1. リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。選べるのは _XHR_ / _JS_ / _CSS_ / _Img_ / _Media_ / _Font_ / _Doc_ / _WS_ / _Manifest_ の 9 種類のリクエストタイプ（それぞれ非同期通信、スクリプト、スタイルシート、画像、メディア、フォント、ドキュメント、WebSocket、マニフェスト リソースに対応）です。
 
 ![リクエストタイプ別フィルターの例](/images/results/network-logs/0d05487-Testim_074b.png)
 
@@ -155,7 +155,7 @@ keywords:
 
 ![リクエスト一覧テーブルの例](/images/results/network-logs/190bb8b-results-rows.png)
 
-Headers ウィンドウが開き、*General*、*Response Headers*、*Request Headers*の 3 つのセクションが表示されます。
+Headers ウィンドウが開き、_General_、_Response Headers_、_Request Headers_ の 3 つのセクションが表示されます。
 
 ![Headers ウィンドウに表示される情報](/images/results/network-logs/a67587b-result-headers.png)
 
