@@ -165,6 +165,19 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   level で解消 + 2 entry を §5.3.2 runtime suppress (PR #304 registry 拡張
   //   で有効化、PARITY_GUIDE marker protocol 参照)。
   'salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce',
+  // M2 P2-2 Wave 3 追加 — CALLOUT_NORMALIZATION_SLUGS allow list 非対象 slug で
+  //   EN `<blockquote>` が paragraph kind に展開される pattern の sentinel。JA
+  //   `:::danger` callout-body と EN paragraph の kind-level mismatch を、JA を
+  //   plain markdown `> ...` blockquote に戻して mirror (allow list に追加する
+  //   のではなく JA 側を EN の paragraph 取り扱いに追従させる方針)。併せて
+  //   (1) JA-only stray `<br />` paragraph の削除 (EN extractor は `<br />` を
+  //   segment emit しない事実への追従)、(2) EN `<span class="FileOrFilePath">module.exports=</span>`
+  //   の dotRe token (`module.exports`) と JA backtick token (`module.exports=`)
+  //   の mismatch を解消するため JA を `` `module.exports`= `` と分割して backtick
+  //   範囲を調整。FileOrFilePath span に trailing 記号 (`=`) が張り付く token
+  //   整合 pattern は Wave 2 未出で、本 sentinel で pin する。6 entry
+  //   (section-structure-mismatch ×1, segment-missing ×2, segment-extra ×3) → 0。
+  'administration/secrets',
   // M2 P2-2 Wave 3 追加 — `<!-- -->` sibling-break + EN URL path mirror + Excel
   //   glossary 登録の複合 sentinel。EN は `<p>intro</p>` の後に single-`<li>` を
   //   持つ `<ul>` が 2 連続する構造で、同種 segment が collapse されて
