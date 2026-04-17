@@ -240,6 +240,29 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   であり、新 carve-out 不要。6 entry (section-structure-mismatch ×1,
   //   segment-missing ×3, segment-extra ×2) → 0。
   'integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration',
+  // M2 P2-2 Wave 3 Batch 2 追加 — sibling (#308 validate-download) の 2 pattern
+  //   を再検証した結果、本 slug では EN 側に a./b./c. enumeration も broken-
+  //   table-row paragraph も実在せず、代わりに MadCap 出力の orphan
+  //   `<p>&lt;/Image&gt;</p>` artifact paragraph (3 箇所のうち 2 箇所は
+  //   stand-alone paragraph、残り 1 箇所は次段落と結合) が Parameter only
+  //   section の block structure を EN=14 / JA=12 に崩していた
+  //   (section-structure-mismatch + segment-missing×2 paragraph)。JA は
+  //   `</Image>` を emit していなかったため、sibling の broken-table-row と
+  //   同じ inline-code mirror 技法 (`` `</Image>` ``) を適用して
+  //   SCORE_TEXTNORM_MATCH=500 で一致させる (素の `</Image>` だと Astro /
+  //   MDX 系 parser が component 扱いして build warning を出し得るため
+  //   inline-code で safe escape するのが sibling と同じ戦略)。併せて JA が
+  //   EN の `../data-driven-testing/index.htm#section-...` anchor を smart-
+  //   resolve で別 sub-page URL に展開していた 2 箇所を、`extractInvariant
+  //   Tokens` が fragment を落として `/docs/advanced-editing/data-driven-
+  //   testing` に正規化する挙動に合わせて path-only URL に restore
+  //   (sibling `passing-parameters-from-excel-file` と同じ invariant token
+  //   disjoint 解消 pattern)。6 entry を content-level で解消、新 mechanical
+  //   exception なし。#308 の sibling hint は 2 pattern のうち a./b./c. は
+  //   non-applicable だったが、broken-table-row の inline-code mirror 技法
+  //   自体は同じ mechanism (textNorm 一致で SCORE_TEXTNORM_MATCH を稼ぐ) で
+  //   `</Image>` MadCap artifact にも転用できた。
+  'advanced-editing/validations/validate-element-text',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {

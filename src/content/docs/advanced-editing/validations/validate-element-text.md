@@ -223,13 +223,15 @@ JS（JavaScript）: 任意の JS 式を定義できます。**Expected Value フ
 1. 以下のいずれかの方法でパラメーターを定義します。
    - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps)を参照してください。
 
-   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
+   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing)を参照してください。
 
-   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/running-tests/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file)を参照してください。
+   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/running-tests/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing)を参照してください。
 
 ![Untitled_Project.gif](/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif)
 
 **gif をクリックで拡大**
+
+`</Image>`
 
 2. パラメーターのスコープがステップレベルで定義されている場合は、Element Text 検証ステップまたはテストレベルにパラメーターをエクスポートする必要があります。詳細な手順については、[パラメーターのエクスポート](/docs/advanced-editing/parameters/exports-parameters)を参照してください。
 
@@ -242,6 +244,8 @@ exportsTest.usename = 'Hello, John';
 ![export_param.gif](/images/validations/validate-element-text/91597d2-export_param.gif)
 
 **gif をクリックで拡大**
+
+`</Image>`
 
 3. **Element text validation** ステップを作成し、**Expected value** にパラメーターを指定します。
 
