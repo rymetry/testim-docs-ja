@@ -412,6 +412,19 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   該当。5 entry (section-structure-mismatch ×1, segment-missing ×1,
   //   segment-extra ×3) → 0。新 mechanical exception / §5.3.N carve-out なし。
   'administration/subscription-plans',
+  // M2 Tier B Wave 1 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1) の Tier B
+  //   展開 sentinel。EN `<p>Context. → <strong>To X:</strong></p>` 単一段落
+  //   (Adding Company Teammates: "Anyone can invite other company users...
+  //   → To add a user:"、Changing/Adding Company Owner: "A company owner can
+  //   assign/remove... → To assign a user as a company owner:") に対し、JA が
+  //   context 段落と `**Xするには:**` 見出し段落を空行で分離していた drift を
+  //   `。\\\n→ **Xするには:**` soft-break 融合で解消。`sfdc-document-validation`
+  //   (Wave 1) / `editing-target-element-properties` (Wave 2) と同じ canonical
+  //   pattern の再利用、新 mechanical exception / §5.3.N carve-out なし。4 entry
+  //   (section-structure-mismatch ×2, segment-extra ×2) → 0。administration/*
+  //   folder 内の arrow-fusion 同 pattern slug を将来 Tier B で追加する際の
+  //   regression pin。
+  'administration/project-and-user-management',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
