@@ -28,7 +28,7 @@ keywords:
 - ステータスでテストをフィルタリングすることで、プロジェクトの可視性が向上します。
 
 :::note{title="これはPRO機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、[Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 :::warning{title="注意"}

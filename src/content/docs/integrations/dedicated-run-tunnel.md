@@ -20,7 +20,7 @@ keywords:
 場合によっては、Testim または外部プロバイダー（SauceLabs など）が提供するリモート Selenium Grid サーバーを使用して、独自のプライベートまたは内部サーバーでテストを実行したい場合があります。
 
 :::info
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、[Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 ## 前提条件

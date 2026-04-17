@@ -29,7 +29,7 @@ Testim Automate の REST API を使用して、以下のアクションを実行
 :::
 
 :::info{title="PRO機能"}
-この機能は Professional plan のプロジェクトでのみ利用できます。
+この機能は [Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 ## API アクセスの有効化

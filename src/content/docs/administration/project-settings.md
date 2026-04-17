@@ -93,7 +93,7 @@ keywords:
 Testim のオートコンプリート機能は、現在記録中のテストで以前に記録された共有グループステップを自動的に使用するオプションを提供し、テスト記録プロセスを迅速化します。オートコンプリートの詳細については、[オートコンプリート](/docs/editing-tests/groups/auto-complete)を参照してください。
 
 :::note{title="PRO機能"}
-この機能は Professional plan のプロジェクトでのみ利用できます。
+この機能は [Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 **オートコンプリート提案機能をオフ/オンにするには:**
@@ -146,7 +146,7 @@ Testim のオートコンプリート機能は、現在記録中のテストで�
 プルリクエスト設定では、プロジェクトの特定のブランチを変更から保護し、レビュアーの承認が必要なブランチとプルリクエストをレビューできるユーザーを設定できます。プルリクエスト設定はプロジェクトごとに設定されます。プロジェクトオーナーまたは企業オーナーのみがこれらの設定を変更できます。プルリクエストの詳細については、[プルリクエスト](/docs/testops/testops-version-control/pull-requests)を参照してください。
 
 :::note{title="PRO機能"}
-この機能は Professional plan のプロジェクトでのみ利用できます。
+この機能は [Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 ![521](/images/project-user-management/project-settings/cda9cf7-Picture19.png)

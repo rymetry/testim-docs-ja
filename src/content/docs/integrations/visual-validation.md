@@ -18,12 +18,12 @@ keywords:
 Testim のビジュアル検証および wait-for ステップを使用するには、まず[Applitools](https://applitools.com/)が提供する Applitools Eyes アプリと Testim アカウントを統合する必要があります。
 
 :::info{title="PRO機能"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、[Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 ## 前提条件
 
-- Professional plan のプロジェクトでのみ利用できる機能です。
+- [Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できる機能です。
 - Applitools Eyes と Testim の両方で管理者権限が必要です。
 
 ## Applitools 統合のセットアップ

@@ -24,7 +24,7 @@ Testim は、指定した Slack チャンネルにバグの説明を公開でき
 開始前に、データの取り扱いについて [プライバシーポリシー](https://www.testim.io/privacy) を確認してください。
 
 :::info{title="PRO機能"}
-この機能は Professional plan 以上で利用できます。
+この機能は [Professional plan](https://www.testim.io/pricing/) 以上で利用できます。
 :::
 
 ## Testim を Slack に接続する
