@@ -92,7 +92,7 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 **Description** – ステップの説明。（デフォルト = Accessibility validation）
 
-**Fail test from impact level** – テストを失敗とする最小影響レベル。オプション: Critical、Serious、Moderate、Minor。（デフォルト = Minor）
+**Fail test from impact level** – テストを失敗とする最小影響レベル。重大、深刻、中程度、軽微 の 4 段階から選択します（UI 上は英語表記）。（デフォルト = 軽微）
 
 - **Run only specific tags** – このフィールドをクリックして、テストしたいプロトコルをドロップダウンから選択します。[下記の表](/docs/advanced-editing/validations/accessibility-validations#ルールの説明)を参照してください。デフォルトではすべてのタグが選択されています。
 - **Exclude specific rule IDs** – 特定のルール ID を除外したい場合は、リストから選択します。また、特定のルール ID のみをチェックしたい場合は、すべてを選択してからテストしたいもののみを選択解除できます。
@@ -151,4 +151,4 @@ Testim のアクセシビリティステップは、業界をリードするア�
 ## ルールの説明
 
 Testim は、要素のアクセシビリティレベルをチェックするために以下のライブラリを使用しています: [https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
-各ルールには、関連する影響レベル（Critical、Serious、Moderate、Minor など）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。
+各ルールには、関連する影響レベル（重大、深刻、中程度、軽微 の 4 段階で、UI 上は英語表記）と関連するタグがあります。アクセシビリティチェックを設定する際、特定のタグや影響レベルに限定してチェックすることができます。

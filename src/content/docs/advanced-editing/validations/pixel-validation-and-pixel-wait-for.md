@@ -50,7 +50,7 @@ RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがな�
 Testim 内で変更できるビジュアル検証パラメーターは 4 つあります：
 
 - **Add Environment** – テストを実行する 1 つ以上のシミュレートされた環境設定（高度な環境を含む）を追加します。この機能には Ultrafast Test Cloud 用の追加 Applitools ライセンスが必要です。この機能ライセンスのないアカウントで追加された環境は Applitools によって拒否されます。
-- **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の Applitools Eyes マッチレベルをサポートしています：Exact、Strict（デフォルト）、Content、Layout。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/common/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
+- **Match level** – ベースラインとテスト間の比較方法を変更したい場合があります。特に動的コンテンツを含むアプリケーションを扱う際に有用です。Testim は次の 4 種類の Applitools Eyes マッチレベルをサポートしています：完全一致、厳密一致（デフォルト）、コンテンツ一致、レイアウト一致（UI 上は Exact や Strict などの英語表記）。これらのレベルの詳細については [Match Levels](https://applitools.com/docs/common/cmn-eyes-match-levels.html) を参照してください。Testim でマッチレベルを編集するだけでなく、Applitools Eyes で要素、ビューポート、またはページの領域をマークし、異なるマッチレベルを定義することもできます。
 - **Enable RCA** – Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。システムは DOM から情報を収集し、なぜ差異が生じたかを理解します。結果は Applitools Eyes で確認できます。この機能には追加の Applitools ライセンスが必要です。この機能ライセンスを持たないアカウントのプロジェクトで RCA を有効にすると、Applitools によって拒否されます。
 - **Ignore displacement diffs** – ページ上の要素が新しい位置に移動しても、他の点では変化しない場合があります。Ignore displacement diffs 機能は、このタイプの位置移動によって引き起こされるビジュアル差異を無視するようシステムを設定します。この機能を実装する際は、構成／テストレベルではなくステップレベルで有効にすることをお勧めします。
 
@@ -140,7 +140,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 5. **Visual validation** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
 6. **Visual validation** セクションで次のように設定を変更します：
 
-**Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+**Match Level** - 下矢印をクリックし、Applitools Eyes の 4 種類のマッチオプション（完全一致、厳密一致、コンテンツ一致、レイアウト一致、UI 上は _Exact_ や _Strict_ などの英語表記）から選択します。
 
 - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
 - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
@@ -171,7 +171,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 4. **Visual validation** セクションで次のように設定を変更します：
 
-**Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+**Match Level** - 下矢印をクリックし、Applitools Eyes の 4 種類のマッチオプション（完全一致、厳密一致、コンテンツ一致、レイアウト一致、UI 上は _Exact_ や _Strict_ などの英語表記）から選択します。
 
 - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
 - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。
@@ -199,7 +199,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 3. **Override test settings** セクションで **Add Environment** をクリックし、希望する環境設定を入力します。
 4. **Override test settings** セクションで残りの設定を次のように変更します：
 
-**Match Level** - 下矢印をクリックし、次の Applitools Eyes オプションから選択します：_Exact_、_Strict_、_Content_、または _Layout_。
+**Match Level** - 下矢印をクリックし、Applitools Eyes の 4 種類のマッチオプション（完全一致、厳密一致、コンテンツ一致、レイアウト一致、UI 上は _Exact_ や _Strict_ などの英語表記）から選択します。
 
 - **Concurrency** - 同時実行可能な Eyes テストの最大数を指定します。
 - **Enable RCA** - Enable RCA（Root Cause Analysis）機能は、ビジュアル差異の原因に関する根本原因分析の洞察を提供します。

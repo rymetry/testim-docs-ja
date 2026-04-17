@@ -217,7 +217,7 @@ keywords:
     Generate random value
    </td>
    <td>
-    値にプレフィックス文字列を追加します。例えば、「User」を追加すると、すべての値が User で始まります：User47、User65、User32。
+    値にプレフィックス文字列を追加します。例えば、プレフィックス「User」を追加すると、すべての値が User で始まります。例: User47 のような値が生成されます。
    </td>
    <td>
     <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>

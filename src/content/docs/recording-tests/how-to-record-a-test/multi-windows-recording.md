@@ -22,7 +22,7 @@ keywords:
 
 ![お問い合わせページ](/images/recording-tests/multi-windows-recording/3335429-Screen_Shot_2021-08-26_at_9.38.12.png)
 
-ページにはフォームと、会社のソーシャルメディアページ（YouTube、Twitter、LinkedIn、Facebook）へのリンクが含まれています。
+ページにはフォームと、会社のソーシャルメディアページ（YouTube などの SNS）へのリンクが含まれています。
 
 ![ソーシャルメディアリンク](/images/recording-tests/multi-windows-recording/06a6583-Untitled.png)
 

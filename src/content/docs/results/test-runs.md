@@ -227,9 +227,9 @@ CSV をダウンロードするには、**CSV Download**ボタンをクリック
     テスト実行のステータス。
    </td>
    <td style="text-align: left;">
-    <strong>Failed</strong> — 赤い x<br/>
-    <strong>Failed with retries</strong> — 黄色の感嘆符付き赤い x<br/>
-    <strong>Passed</strong> — 緑の v
+    <strong>Failed</strong> — 赤い ×マーク<br/>
+    <strong>Failed with retries</strong> — 黄色の感嘆符付き赤い ×マーク<br/>
+    <strong>Passed</strong> — 緑の ✓マーク
    </td>
   </tr>
  </tbody>
