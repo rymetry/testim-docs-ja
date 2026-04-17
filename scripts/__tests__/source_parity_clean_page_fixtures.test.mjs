@@ -367,6 +367,21 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   untranslated ×1) を content-level fixes + 既存 mechanism (§5.3.2
   //   registry) slug-scope extension で 0 化。
   'testops/insights/reports',
+  // M2 P2-2 Wave 4 追加 — broken-table-row paragraph mirror (Wave 2 pattern #5)
+  //   の Tier A 展開 sentinel。EN MadCap Flare の `<table>` 外 orphan `<p>| ...
+  //   Scheduler ... | Web & Mobile | Yes |</p>` paragraph (pipe table row が
+  //   `</tbody>` の外側に漏れた出力) を、JA が当初 markdown pipe-table row
+  //   (`| **スケジューラ** から... | Web &amp; モバイル | はい |`) として書いて
+  //   いたため、JA 側で orphan 3-cell table が発生して EN の `table → paragraph`
+  //   vs JA の `table` block mismatch と segment-extra table-cell ×3 を誘発
+  //   していた drift を、Wave 2 canonical sentinel (`use-agentic-test-automation-
+  //   for-salesforce`) と同じ backslash-escaped paragraph (`\| ... \|`) で
+  //   mirror して解消。CJK (`スケジューラ`, `モバイル`) と ASCII (`Web`) が
+  //   混在する row のため same-language penalty を回避できる、Wave 2 `\|`
+  //   派生 (Wave 3 `validate-download` の inline-code 変種ではなく原型) に
+  //   該当。5 entry (section-structure-mismatch ×1, segment-missing ×1,
+  //   segment-extra ×3) → 0。新 mechanical exception / §5.3.N carve-out なし。
+  'administration/subscription-plans',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
