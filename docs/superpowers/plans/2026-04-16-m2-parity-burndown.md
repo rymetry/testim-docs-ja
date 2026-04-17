@@ -209,6 +209,28 @@ P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCa
 - **follow-up mechanism PR**: `scripts/lib/parity_artifact_registry.mjs` `/docs/index` entry の `slugs[]` に新 slug を追加 (2026-04-17 PR #304 で処理)、同時に `scripts/__tests__/parity_artifact_registry.test.mjs` の hardcoded 件数 (5 slugs → 6 slugs) を更新。**registry + test の 2 files 更新**が必要 (架空の "1-line diff" ではない)。
 - **scope lock**: 本 §5.3.2 entry は **`/docs/index` token の既存 artifact entry 再利用のみ** 対象。別 token (`http://google.com`、`http://example.com` 等) に対する新規 registry 登録は独立 §5.3.N として別途 security L2 gate を経由する。
 
+#### 5.3.3 JA-side intentional-omission policy (Tricentis removal-request registry)
+
+`[PENDING REVIEWER APPROVAL — §5.3.3 L2 gate]`
+
+M2 Wave 3 Batch 2 `overview/testim-overview` (PR #309) で初検知。`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis 削除依頼 policy** により、EN 原文の特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL) を JA 側で意図的に削除している。再追加は policy 違反 (commits `bf40dad`, `e5d9f88` で legal reasoning 記録済)。
+
+この JA-side 意図的除外は既存 3 mechanism のどれにも該当しない:
+- `scripts/lib/source_sync_exclusions.mjs` は EN-broken page を対象 (本 slug の EN は正常)
+- `scripts/lib/parity_artifact_registry.mjs` は EN-side artifact token のみ対象 (§5.3.2 の `/docs/index` self-link 等)
+- §5.3.1 FileOrFilePath は EN 抽出側 kind-mismatch を対象
+
+新 mechanism `scripts/lib/ja_omission_policy_registry.mjs` を追加し、alignSegments の post-filter で quota-based suppression を適用する。
+
+- **symptom pattern**: Tricentis 削除依頼対象の segment 群。具体的には (a) pricing callout、(b) changelog callout の派生 offset、(c) `http://testim.io` / `https://www.testim.io/pricing/` の intro URL 削除
+- **per-slug cap**: ≤ 4 件 (`segment-missing`/`segment-extra`/`segment-token-gap`/`section-structure-mismatch` の 4 drift type を合計。`testim-overview` は現状 4 entries に集約)
+- **disambiguator**: **quota-based** を採用。1 registry entry は `{slugs[], issueTypes[], segmentKinds, missingToken?, quota}` を持ち、alignSegments の post-filter で `(slug, issueType, segmentKind, missingTokens)` に match する diff を quota 範囲で 1 件ずつ drop する。fingerprint-based は EN 文面更新で sha-256 が変化しやすく、WRITING_GUIDE 除外が「EN 文面がどう変わっても JA は出さない」意思表示と相性が悪いため不採用。content-prefix は brittle で却下
+- **mitigation**: 新 registry module + runtime integration (`scripts/lib/source_parity_align.mjs` 末尾の `suppressJaOmissionDiffs`) + coverage aggregator (`createOmissionCoverage` / `NOOP_OMISSION_COVERAGE`) + full test coverage (`scripts/__tests__/ja_omission_policy_registry.test.mjs` 20 tests)
+- **registry scope lock**: 本 §5.3.3 entry は `docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` 対象 slug のみ。「翻訳省略したい」という agent 側要望で別 slug を追加するのは禁止。WRITING_GUIDE 除外表の更新が先行条件
+- **runtime integration**: `alignSegments({slug, omissionCoverage})` が diffs 生成後に `suppressJaOmissionDiffs` を呼ぶ。coverage snapshot (`snapshot().quotaUsage` / `exhaustedEntries`) は `parity-check-status.json` の `debug.omissionCoverage` に含まれ、後続 monitoring で quota 尽きに気付けるようにする
+- **initial inventory (2026-04-17)**: `overview/testim-overview` に 4 entries を登録。合計 quota = 5 で `parity-baseline.json` の該当 5 件を全て抑止する
+- **follow-up**: 本 PR merge 後、PR #309 側で baseline 再生成 (5 → 0) を実施
+
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
