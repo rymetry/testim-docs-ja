@@ -41,7 +41,6 @@ import { compareSectionStructure } from './source_parity_structure.mjs';
 import { classifySegment } from './parity_glossary_mask.mjs';
 import { normalizeSegmentTokens } from './parity_normalize.mjs';
 import { isArtifactExcluded, NOOP_COVERAGE } from './parity_artifact_registry.mjs';
-import { NOOP_OMISSION_COVERAGE } from './ja_omission_policy_registry.mjs';
 
 const GATE_KIND_SET = new Set(GATE_ELIGIBLE_KINDS);
 
@@ -645,18 +644,11 @@ function alignSection(enSection, jaSection, crossSectionInfo, artifactCtx) {
  *
  * `options.coverage` は抑止 hit の runtime aggregator。省略時は `NOOP_COVERAGE`。
  *
- * `options.omissionCoverage` は §5.3.3 で新設した JA-side intentional-omission
- * 抑止の runtime aggregator。registry (`ja_omission_policy_registry`) と照合し、
- * Tricentis policy による JA 側意図的削除に起因する drift (segment-missing /
- * segment-extra / segment-token-gap / section-structure-mismatch) を quota
- * 範囲内で抑止する。省略時は `NOOP_OMISSION_COVERAGE` で no-op。
- *
  * @param {Segment[]} enSegments
  * @param {Segment[]} jaSegments
  * @param {{
  *   slug: string,
  *   coverage?: {record: Function, snapshot: Function},
- *   omissionCoverage?: {consume: Function, snapshot: Function},
  * }} [options]
  * @returns {AlignResult}
  */
@@ -664,7 +656,6 @@ export function alignSegments(enSegments, jaSegments, options = {}) {
   const {
     slug,
     coverage = NOOP_COVERAGE,
-    omissionCoverage = NOOP_OMISSION_COVERAGE,
   } = options;
   if (typeof slug !== 'string' || slug.length === 0) {
     throw new Error('alignSegments: slug option is required');
@@ -717,19 +708,14 @@ export function alignSegments(enSegments, jaSegments, options = {}) {
     for (const diff of sectionDiffs) diffs.push(diff);
   }
 
-  // §5.3.3: JA-side intentional-omission policy suppression. registry と照合
-  // した上で quota 範囲内の diff を 1 件ずつ consume して drop する。quota が
-  // 尽きる、または registry に一致しない diff は全てそのまま残す。
-  const filteredDiffs = suppressJaOmissionDiffs(diffs, slug, omissionCoverage);
-
   const ambiguousTokenlessSwap = detectAmbiguousAdjacentTokenlessSwap(
     enSections,
     jaSections,
-    filteredDiffs,
+    diffs,
   );
   if (ambiguousTokenlessSwap) {
     return {
-      diffs: filteredDiffs,
+      diffs,
       sectionsAligned: enSections.length,
       sectionsCompared: enSections.length,
       inconclusive: true,
@@ -749,7 +735,7 @@ export function alignSegments(enSegments, jaSegments, options = {}) {
   }
 
   return {
-    diffs: filteredDiffs,
+    diffs,
     sectionsAligned: enSections.length,
     sectionsCompared: enSections.length,
     inconclusive: false,
@@ -757,34 +743,6 @@ export function alignSegments(enSegments, jaSegments, options = {}) {
     inconclusiveMeta: null,
     inconclusiveReason: null,
   };
-}
-
-/**
- * §5.3.3 JA-side omission suppression。各 diff に対して registry 照合と
- * quota 減算を aggregator の `consume()` に委ねる (1 つの atomic 動作)。
- *
- *   - diff が registry に一致かつ quota 残あり: 減算して drop
- *   - diff が一致しない、または quota 尽きた: そのまま残す
- *
- * 純粋関数的に新配列を返す (入力 `diffs` は mutate しない)。
- *
- * @param {object[]} diffs
- * @param {string} slug
- * @param {{consume: Function, snapshot: Function}} omissionCoverage
- * @returns {object[]}
- */
-function suppressJaOmissionDiffs(diffs, slug, omissionCoverage) {
-  const kept = [];
-  for (const diff of diffs) {
-    const suppressed = omissionCoverage.consume({
-      slug,
-      issueType: diff.type,
-      segmentKind: typeof diff.segmentKind === 'string' ? diff.segmentKind : null,
-      missingTokens: Array.isArray(diff.missingTokens) ? diff.missingTokens : null,
-    });
-    if (!suppressed) kept.push(diff);
-  }
-  return kept;
 }
 
 // ---------------------------------------------------------------------------

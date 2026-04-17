@@ -1,6 +1,6 @@
 /** source parity 用に Markdown 構造を抽出・解析する補助関数群。 */
 import { extractSlug as extractSlugFromUrl } from './madcap_toc.mjs';
-import { resolveToFullSlug } from './project.mjs';
+import { buildBasenameToPathMap, resolveToFullSlug } from './project.mjs';
 import { FENCE_LINE_RE } from './source_parity_types.mjs';
 
 const IMAGE_PATTERNS = [
@@ -640,7 +640,15 @@ function normalizeUrlToken(url) {
   const cleaned = url.replace(/\\/g, '');
   if (cleaned.match(/^https?:\/\/docs\.tricentis\.com\/testim\/content\//)) {
     const slug = extractSlugFromUrl(cleaned.replace(/[?#].*$/, ''));
-    if (slug) return `/docs/${resolveToFullSlug(slug)}`;
+    if (slug) {
+      const full = resolveToFullSlug(slug);
+      // ambiguous basename (null from buildBasenameToPathMap): skip URL token
+      // emission to avoid false-positive token-gap vs a JA side that uses
+      // the canonical path-based URL. The original URL is still in the raw
+      // text so content comparison happens at textNorm / weak-position level.
+      if (buildBasenameToPathMap().get(slug.split('/').pop()) === null) return null;
+      return `/docs/${full}`;
+    }
   }
   if (/\.htm(?:[?#]|$)/.test(cleaned)) {
     // 相対 prefix (../../, ../, ./) と fragment/query を落とす。
@@ -648,7 +656,12 @@ function normalizeUrlToken(url) {
     // すでに root-relative な /content/ path はそのまま使う。
     const contentPath = stripped.startsWith('/content/') ? stripped : `/content/${stripped}`;
     const slug = extractSlugFromUrl(contentPath);
-    if (slug) return `/docs/${resolveToFullSlug(slug)}`;
+    if (slug) {
+      const full = resolveToFullSlug(slug);
+      // ambiguous basename: skip URL token emission (see comment above).
+      if (buildBasenameToPathMap().get(slug.split('/').pop()) === null) return null;
+      return `/docs/${full}`;
+    }
   }
   // /docs/ path は fragment を落として比較する。EN/JA で fragment がずれるため。
   if (cleaned.startsWith('/docs/') && cleaned.includes('#')) {
@@ -656,16 +669,6 @@ function normalizeUrlToken(url) {
   }
   return cleaned;
 }
-
-// WRITING_GUIDE「原文から意図的に除外するコンテンツ」で JA から削除すると
-// 指定されている既知 URL 一覧。EN/JA 両側の invariant token から除外して、
-// guide 準拠の JA と EN snapshot の間で token-gap が発生しないようにする。
-const EXCLUDED_INVARIANT_URL_TOKENS = Object.freeze(
-  new Set([
-    'https://www.testim.io/pricing/',
-    'https://www.testim.io/pricing',
-  ]),
-);
 
 export function extractInvariantTokens(cell) {
   const tokenSet = new Set();
@@ -679,7 +682,8 @@ export function extractInvariantTokens(cell) {
   const urlRe = /https?:\/\/[^\s)>\]]+/g;
   const urlSpans = [];
   while ((match = urlRe.exec(rest)) !== null) {
-    tokenSet.add(normalizeUrlToken(match[0]));
+    const token = normalizeUrlToken(match[0]);
+    if (token !== null) tokenSet.add(token);
     urlSpans.push([match.index, match.index + match[0].length]);
   }
   for (let index = urlSpans.length - 1; index >= 0; index -= 1) {
@@ -693,7 +697,8 @@ export function extractInvariantTokens(cell) {
     /(?:\]\(|(?:^|\s)\[)((?:\/docs\/[\w-]+(?:\/[\w-]+)*(?:#[^\]\)\s]+)?|https?:\/\/[^\s)\]]+|[^\s)\]]*\.htm(?:#[^\]\)\s]*)?))\]?\)?/g;
   const linkSpans = [];
   while ((match = linkDestRe.exec(rest)) !== null) {
-    tokenSet.add(normalizeUrlToken(match[1]));
+    const token = normalizeUrlToken(match[1]);
+    if (token !== null) tokenSet.add(token);
     linkSpans.push([match.index, match.index + match[0].length]);
   }
   for (let index = linkSpans.length - 1; index >= 0; index -= 1) {
@@ -727,13 +732,6 @@ export function extractInvariantTokens(cell) {
 
   const pathRe = /(?:^|\s)(\/[a-zA-Z][\w.-]+(?:\/[\w.-]+)+)/g;
   while ((match = pathRe.exec(rest)) !== null) tokenSet.add(match[1]);
-
-  // WRITING_GUIDE 除外ルール: JA から削除された既知 URL は EN 側でも token
-  // として emit しない。これにより guide 準拠の JA と raw EN snapshot の
-  // 間で false-positive な segment-token-gap が発生しない。
-  for (const excluded of EXCLUDED_INVARIANT_URL_TOKENS) {
-    tokenSet.delete(excluded);
-  }
 
   return [...tokenSet].sort();
 }
