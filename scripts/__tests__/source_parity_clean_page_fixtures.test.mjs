@@ -146,6 +146,16 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   BrowserStack 等) は英語維持、generic 語のみ JA 化で 7 entry を解消。
   //   後続の Tier A bulk で同 pattern の slug が多発する前の regression pin。
   'integrations/grid-management',
+  // M2 P2-2 Wave 2 追加 — ASCII-only UI-term punctuation mirror + EN token URL
+  //   verbatim mirror の複合 sentinel。EN `<li>Username.</li>` / `<li>Access key.</li>`
+  //   / `<li>Project token.</li>` の trailing `.` を JA が欠落していた drift を
+  //   復元 (scoreSegmentMatch の same-language penalty が ASCII-only term で
+  //   score 0 に落ちる挙動を回避)。また EN `https://www.testmuai.com/...`
+  //   (MadCap redirect domain, curl で 200 OK verified) を JA が canonical
+  //   `lambdatest.com` に置換していた drift を verbatim mirror に restore
+  //   (tokensInvariant 合致)。8 entry 解消、新 mechanical exception なし、
+  //   content-level source-first mirror のみ。
+  'integrations/visual-validation/lambdatest_integration',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
