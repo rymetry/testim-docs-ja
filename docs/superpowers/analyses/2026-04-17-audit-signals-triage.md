@@ -6,6 +6,8 @@
 **Parent plan:** [2026-04-16-m2-parity-burndown.md](../plans/2026-04-16-m2-parity-burndown.md) §P2-5 (inconclusive + audit-signal gate)
 **Authority refs:** [PARITY_GUIDE.md](../../PARITY_GUIDE.md) §EN-only artifact 厳格条件 / §並列エージェント委任 §5.3.N marker protocol
 
+> **Approval status (2026-04-17 post-merge):** Analysis approved 2026-04-17. §5.3.1.a implemented in PR #316, §5.3.4 implemented in PR #319. Numbering note: Proposal A is a scope extension of existing §5.3.1 (filed as §5.3.1.a, not a new §5.3.3 — the latter number was assigned to the JA omission registry in PR #318). Proposal B retained its proposed §5.3.4 number. 2 of 15 source-originating audit signals are now classified-as-artifact (suppressed via merged mechanism PRs); the remaining 13 flow into the Wave 4 content backlog (§3/§5.3).
+
 ## 0. Context — audit tier mechanics
 
 `npm run check:parity` は 2 tier で diff を分類する:
@@ -145,7 +147,7 @@
 
 ### 5.4 §5.3.N proposal 候補 2 件
 
-#### Proposal A: §5.3.3 `FileOrFilePath inline-code paragraph-count asymmetry` [PENDING REVIEWER APPROVAL — §5.3.N proposal]
+#### Proposal A: §5.3.1.a `FileOrFilePath inline-code paragraph-count asymmetry` [APPROVED via PR #316 (§5.3.1.a)]
 
 **対象 entry**: #18 `configure-tricentis-mobile-agent.md` §19 WebDriverAgent Errors (EN=5 JA=4)
 
@@ -157,7 +159,7 @@
 
 **Recommended mechanism**: 本 scope 拡張は既存 §5.3.1 entry に `affectedIssueTypes: ['section-structure-mismatch', 'paragraph-count-mismatch']` を明示追記する plan revision のみ。新規 registry 不要。
 
-#### Proposal B: §5.3.4 `Broken-table-row paragraph mirror table-shape asymmetry` [PENDING REVIEWER APPROVAL — §5.3.N proposal]
+#### Proposal B: §5.3.4 `Broken-table-row paragraph mirror table-shape asymmetry` [APPROVED via PR #319 (§5.3.4)]
 
 **対象 entry**: #38 `use-agentic-test-automation-for-salesforce.md` EN=2 JA=1
 
@@ -198,7 +200,7 @@
 `COARSE_SIGNAL_TYPES` (= `{paragraph-count-mismatch, step-count-mismatch, table-shape-mismatch, heading-mismatch, ...}`) は `scripts/lib/source_parity_types.mjs:61` で明示的 allowlist として gate 除外している。M2 P2-5 段階で 38 signals / 26 files が残存し、以下の 3 カテゴリに triage 済:
 
 - **(a) True positive (34 件)**: Wave 4 content batch で `**Xするには:**` split、JA-only 補足段落削除、JA heading level 昇格等で burn-down する
-- **(b) EN-source artifact (2 件)**: §5.3.3 FileOrFilePath paragraph-count scope extension / §5.3.4 broken-row table-shape extractor fix を reviewer 承認経由で 登録（本 guide §EN-only artifact 厳格条件 4 条件 + §5.3.N marker protocol 準拠）
+- **(b) EN-source artifact (2 件)**: §5.3.1.a FileOrFilePath paragraph-count scope extension (PR #316 merged) / §5.3.4 broken-row table-shape extractor fix (PR #319 merged) を reviewer 承認経由で登録済（本 guide §EN-only artifact 厳格条件 4 条件 + §5.3.N marker protocol 準拠）
 - **(c) Heuristic noise (2 件)**: `normalizeEnArtifacts` の EN-only space insertion による step/paragraph asymmetric extraction。`source_parity_extract.mjs:156` の規則を JA にも対称適用するか、EN 側の space insertion を撤去するかの mechanism-level fix が M3 前に必要。
 
 各カテゴリの詳細は [docs/superpowers/analyses/2026-04-17-audit-signals-triage.md](./superpowers/analyses/2026-04-17-audit-signals-triage.md) 参照。
@@ -218,13 +220,13 @@
 
 - [x] 本 analysis deliverable を `docs/superpowers/analyses/2026-04-17-audit-signals-triage.md` にコミット
 - [x] 38 audit signals + 6 advisory queue entries の分類確定
-- [x] §5.3.3 / §5.3.4 proposal を `[PENDING REVIEWER APPROVAL]` marker 付きで draft
+- [x] §5.3.1.a / §5.3.4 proposal を `[APPROVED via PR #316 / PR #319]` marker で post-merge reconcile（初稿は `[PENDING REVIEWER APPROVAL]`、本 rebase で解消）
 - [x] `npm run lint && npm run test && npm run build` で gate 緑確認
 
 ### 7.2 Reviewer L2 gate 後（本 PR 範囲外）
 
-- [ ] §5.3.3 FileOrFilePath scope extension を `2026-04-16-m2-parity-burndown.md` §5.3.3 として登録（reviewer 承認後）
-- [ ] §5.3.4 broken-row table-shape extractor fix を `source_parity_extract.mjs::extractMarkdownTables` の regex 修正 PR として提出（reviewer 承認後）
+- [x] §5.3.1.a FileOrFilePath scope extension を `2026-04-16-m2-parity-burndown.md` §5.3.1.a として登録（merged PR #316）
+- [x] §5.3.4 broken-row table-shape extractor fix を `source_parity_extract.mjs::extractMarkdownTables` の regex 修正 PR として提出（merged PR #319）
 - [ ] `normalizeEnArtifacts` symmetric fix を M3 PR Z entry criteria に入れる判断（reviewer / architect gate）
 
 ### 7.3 Wave 4/5 (P2-5 content batch)
@@ -243,5 +245,5 @@
 - [x] `snapshots/en/**` 一切未編集
 - [x] `parity-baseline.json` 一切未編集
 - [x] `docs/superpowers/analyses/` 新規追加のみ
-- [x] §5.3.N proposal は `[PENDING REVIEWER APPROVAL]` marker 付きで analysis 内に留め、plan への直接書き込みなし
+- [x] §5.3.N proposal は analysis 内で管理。初稿は `[PENDING REVIEWER APPROVAL]` marker、post-merge rebase (2026-04-17) で §5.3.1.a (PR #316) / §5.3.4 (PR #319) の `[APPROVED]` marker へ reconcile 済
 - [x] PARITY_GUIDE update proposal も analysis §6 の draft として格納、本 PR で直接適用しない
