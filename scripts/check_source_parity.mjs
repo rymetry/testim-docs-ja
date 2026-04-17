@@ -52,6 +52,7 @@ import { createMaskCoverage, maskSegmentText } from './lib/parity_glossary_mask.
 import { createArtifactCoverage } from './lib/parity_artifact_registry.mjs';
 import { createOmissionCoverage } from './lib/ja_omission_policy_registry.mjs';
 import { createEnSourcePatchCoverage } from './lib/en_source_patches.mjs';
+import { collectOverduePatches, formatWarning as formatPatchReviewWarning } from './check_patch_review_cadence.mjs';
 export { buildRunScope };
 
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
@@ -368,6 +369,14 @@ export async function checkSourceParity({
     if (includeAdvisory) console.log('📝 tokenless-near-tie review queue 表示: ON');
     if (includeAuditSignals) console.log('🔍 audit signals 表示: ON');
     console.log('');
+  }
+
+  // Non-blocking patch review cadence warnings: list EN_SOURCE_PATCHES
+  // entries whose `reviewAfter` has elapsed. Does not affect exit code;
+  // surfaces reviewer attention via console.warn (monitoring only).
+  const overduePatches = collectOverduePatches();
+  for (const entry of overduePatches) {
+    console.warn(formatPatchReviewWarning(entry));
   }
 
   const results = [];
