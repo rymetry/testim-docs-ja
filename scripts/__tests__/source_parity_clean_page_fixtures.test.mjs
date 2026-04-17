@@ -443,6 +443,29 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   pattern の再利用、新 mechanical exception / §5.3.N carve-out なし。4 entry
   //   (section-structure-mismatch ×2, segment-extra ×2) → 0。
   'administration/project-and-user-management',
+  // M2 Tier B Wave 2.5 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1) +
+  //   image-only ordered-list-item 圧縮 (§5.2 #1 flat-ol-split の派生) の複合
+  //   sentinel。Adding Manual Steps section で EN `<p>Manual steps can be either
+  //   Salesforce steps, ... →   <strong>To add a step manually:</strong></p>`
+  //   単一段落に対し JA が context 段落と `**ステップを手動で追加するには:**`
+  //   段落に分離していた drift を `。→ **ステップを手動で追加するには:**`
+  //   soft-break 融合で mirror (sfdc-document-validation / editing-target-
+  //   element-properties と同 canonical pattern)。Recording Steps section で
+  //   EN `<ol>` 内 `<li value="5"><p><img/></p></li>` (画像のみの li) を
+  //   EN extractor が `image` segment として emit し、後続 `<li value="6">` /
+  //   `<li value="7">` を ordered-list-item として emit する (ol が `ol → image
+  //   → li → li → image → li` と分解される) のに対し、JA が image item を `5.
+  //   ![...]` として ol 内部に render していた drift を、画像を独立 block と
+  //   して ol 外部に配置し後続 item を `5./6.` に renumber (deep-link-mobile §5.2
+  //   #1 と同一 mechanism)。new mechanical exception / §5.3.N carve-out なし。
+  //   3 entry (section-structure-mismatch ×1, segment-extra paragraph ×1,
+  //   segment-extra ordered-list-item ×1) → 0。audit-only `step-count-mismatch`
+  //   ×2 (14→13 / 7→6) は EN extractor の ol segment vs step-count asymmetry
+  //   (image-only li が ordered-list-item segment には emit されないが turndown
+  //   では `5. ![](...)` として step counter に捕捉される既知 mechanism gap) の
+  //   副作用で、COARSE_SIGNAL_TYPES allowlist 内かつ BASELINE_ELIGIBLE_TYPES 非
+  //   対象のため gate-blocking / baseline への影響なし。
+  'salesforce-testing/create-a-salesforce-test',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
