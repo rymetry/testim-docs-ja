@@ -120,6 +120,13 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
+  // M2 P2-2 Wave 2 追加 — flat ol split (§5.2 #1) + callout-vs-paragraph
+  //   修正の複合 sentinel。EN の `<ol>` に orphan `<p>modules.</p>` が挟まる
+  //   broken-ish 構造を ol 分割 + 外部段落で mirror し、callout に bullet を
+  //   含んでいた JA を single paragraph に畳み、EN `<blockquote>` (paragraph
+  //   kind に展開される) を JA blockquote `> ` で表現して :::warning callout
+  //   から paragraph kind に揃えた。9 entry 一括解消。
+  'integrations/test-management-integrations/ttm-for-jira-integration',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
