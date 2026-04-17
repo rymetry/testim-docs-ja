@@ -142,6 +142,41 @@ export function stripTitleH1(body) {
     .join('\n');
 }
 
+/**
+ * Section 5.3.5: Insert a space after an ordered-list-item period when the
+ * body of that list item is glued to the numeral (e.g. `1.foo` to `1. foo`).
+ *
+ * Guards:
+ *   - Only triggers when the first character after the period is a non-space
+ *     non-digit.
+ *   - Skips sub-step numbering like `1.1.` / `2.3.` so decimal / IP-like
+ *     constructs (`1.0`, `1.2.3.4`) are untouched.
+ *
+ * This helper is deliberately minimal so it can be applied symmetrically to
+ * BOTH EN and JA bodies inside `compareSnapshotStructure` without carrying
+ * the EN-only artifact strips (wrapping fence unwrap, zero-width whitespace
+ * line collapse, trailing backslash strip). Those remain the exclusive
+ * responsibility of `normalizeEnArtifacts`.
+ *
+ * Rationale: turndown output and directly-authored markdown can expose the
+ * same `\d+\.(\S)` pattern on either side. A single-sided normalize causes
+ * asymmetric paragraph splitting, which in turn emits audit-signal noise
+ * (`paragraph-count-mismatch` / `step-count-mismatch`) even when the two
+ * bodies are structurally equivalent. Applying the same insertion to JA
+ * eliminates the asymmetry at the source.
+ */
+export function normalizeNumericPeriodSpacing(body) {
+  if (typeof body !== 'string') return body;
+  const lines = body.split('\n');
+  const processed = lines.map((line) => {
+    if (/^\d+\.\D/.test(line) && !/^\d+\.\d+\./.test(line)) {
+      return line.replace(/^(\d+)\.(\S)/, '$1. $2');
+    }
+    return line;
+  });
+  return processed.join('\n');
+}
+
 export function normalizeEnArtifacts(body) {
   let normalized = body;
   const wrappingFence = /^```\w*\n([\s\S]*)\n```\s*$/.exec(normalized.trim());

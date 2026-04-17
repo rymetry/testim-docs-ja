@@ -301,6 +301,26 @@ baseline は完全不変 (183 固定)、active/signal 側で false-positive 4 �
 
 exception 追加は §5.2 と同じ security L2 gate (reviewer 承認 + plan への明示登録) を要求する。
 
+#### 5.3.5 `normalizeEnArtifacts` EN/JA symmetric `\d+\.(\S)` normalization
+
+§5.4 item 1 (2026-04-17 PR #312 agent 77 reviewer discovery) を §5.3.N mechanism として昇格 (PR #322)。`scripts/lib/source_parity_extract.mjs` の `normalizeEnArtifacts` は `\d+\.(\S)` (番号+ピリオド+非空白 non-digit) パターンに対してスペースを挿入する正規化を行うが、`compareSnapshotStructure` 内で **EN 側のみ** 呼ばれており、JA 側は未正規化の素で比較されていた。結果、EN=「1.foo」→「1. foo」(ordered-list + 後続段落に分割)、JA=「1.foo」(単一行) という非対称な paragraph 分割が発生し、turndown 出力 / 直書き markdown で両言語に同形パターンが存在する場合に `paragraph-count-mismatch` / `step-count-mismatch` の audit noise が誤発火していた。
+
+**修正方針 (Option A: 対称適用)**:
+
+- `scripts/lib/source_parity_extract.mjs` に `normalizeNumericPeriodSpacing(body)` helper を新設。`^\d+\.\D` かつ `^\d+\.\d+\.` でない行に対して `^(\d+)\.(\S)` → `$1. $2` の単一 pass を適用する最小実装 (wrapping fence unwrap / zero-width space strip / trailing backslash strip などの EN-only artifact は含まない)。
+- `normalizeEnArtifacts` は従来通り全 EN artifact pass を保持し、`compareSnapshotStructure` から呼び出される既存 EN 側正規化は挙動不変。
+- `compareSnapshotStructure` 内で JA 側に対しても `normalizeNumericPeriodSpacing(jaBody)` を適用し、`extractStepCounts` / `extractBulletCounts` / `extractParagraphCounts` / `extractHeadingSequence` / `countSectionHeadings` の全 count 比較で対称化する。
+- decimal (`1.0`) / IP (`1.2.3.4`) / sub-step (`1.1.`) は既存 guard (`^\d+\.\D` と `^\d+\.\d+\.` 除外) で引き続き対象外。
+
+**scope lock (§5.3.5)**: 本修正は `\d+\.(\S)` asymmetry のみを対象とし、`normalizeEnArtifacts` 内の他の normalize pass (wrapping fence / zero-width space / trailing backslash) や `COARSE_SIGNAL_TYPES` allowlist には手を入れない。EN side で既に実施されている zero-width space 行削除 / wrapping fence unwrap 等は turndown 出力の EN 固有 artifact であり、JA 側に同じ処理を適用すると content regression のリスクがある。
+
+**regression ガード**:
+
+- `scripts/__tests__/source_parity.test.mjs` の `normalizeNumericPeriodSpacing` describe block に 8 unit tests (positive glue / already-spaced no-op / decimal negative / IP negative / sub-step guard / trailing newline preservation / non-string input / EN-JA symmetry) と `compareSnapshotStructure §5.3.5 numeric-period symmetry` describe block に 3 integration tests (両側 glued で audit signal clear / genuine drift は引き続き検出 / already-spaced no-op) を追加。
+- surface-API barrel re-export assertion (`source_parity.mjs` re-exports all expected functions) に `normalizeNumericPeriodSpacing` を追加し、将来の refactor で export が外れた場合に fail-fast する。
+
+**期待効果**: `paragraph-count-mismatch` / `step-count-mismatch` が purely normalization 非対称起因で発火していた audit signal の除去。PR #322 testing reviewer の実測で audit signals **36 → 34 (-2)** 削減 (mysql-validation.md step-count / paragraph-count 解消) を confirm。baseline / gate-blocking path は完全不変 (§5.3.N scope lock 遵守)。
+
 #### 5.3.6 classifier preStrip backtick GFM double-pair fix (§5.4 item 2 からの昇格)
 
 PR #309 agent 73 reviewer 検出の classifier latent bug。本 §5.3.6 は §5.4 item 2 の 2 件のうち、**preStrip backtick no-op** のみを scope-locked 解消した mechanism PR。2 件目の `CJK_RE` missing `g` flag については本 PR の調査で **scope-lock を超える副作用を確認した** ため、本 mechanism PR から除外した (詳細は §5.4 item 2 参照)。
@@ -350,13 +370,13 @@ exception 追加は **reviewer 承認 + plan への明示登録** を条件と�
 
 Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 reports) 4-reviewer gate で発見された高温度 Sev 3。M2 cutover をブロックしないが将来 mechanism PR で個別解消すべき 3 件。
 
-**(1) `normalizeEnArtifacts` EN-only `\d+\.(\S)` space-insertion asymmetry** (audit noise root cause)
+**(1) `normalizeEnArtifacts` EN-only `\d+\.(\S)` space-insertion asymmetry** (audit noise root cause) — **[Resolved via §5.3.5 (PR #322)]**
 
 - **発見**: PR #312 agent 77 reviewer
-- **所在**: `scripts/lib/source_parity_align.mjs` (または `source_parity_extract.mjs` の EN-side normalize pass)
+- **所在**: `scripts/lib/source_parity_extract.mjs` (EN-side normalize pass), `scripts/lib/source_parity_checks.mjs` (`compareSnapshotStructure` call site)
 - **症状**: EN 側でのみ `\d+\.(\S)` (番号+ピリオド+非空白) パターンにスペースを挿入する正規化が走り、JA 側では同等処理が走らない。結果、EN=「1.foo」→「1. foo」、JA=「1.foo」のまま。turndown 出力や直書き markdown で両言語に同形パターンが存在する場合に非対称な paragraph 分割差が発生し、`paragraph-count-mismatch` / `step-count-mismatch` の audit noise を誘発する
 - **影響範囲**: audit-signal 系 (`COARSE_SIGNAL_TYPES` allowlist 内) のみ。baseline / gate-blocking path には及ばない
-- **対応**: EN/JA 両側に対称適用するか、両側で無効化する mechanism PR を別途起票。scope lock 済の §5.3.N 範囲外 (新 §5.3.5 相当)
+- **対応**: §5.3.5 で Option A (対称適用) で解消。`normalizeNumericPeriodSpacing` helper を新設して `compareSnapshotStructure` 内で EN/JA 両側に同じ pass を適用する。詳細は §5.3.5 参照
 - **Sev**: 3 (noise suppression / signal hygiene)
 
 **(2) classifier `preStrip` backtick no-op + `CJK_RE.replace` missing global flag**
