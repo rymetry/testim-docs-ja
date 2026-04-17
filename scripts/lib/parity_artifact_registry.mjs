@@ -35,6 +35,7 @@ export const ARTIFACT_REGISTRY = Object.freeze([
       'salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce',
       'salesforce-testing/salesforce-steps/sfdc-step-login',
       'testops/insights/dashboard',
+      'testops/insights/reports',
     ]),
     token: '/docs/index',
     reason: 'en-side-self-index-link-artifact',
