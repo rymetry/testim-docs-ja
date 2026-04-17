@@ -34,7 +34,10 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 
 → **Testim を Xray に接続するには:**
 
-1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合モジュールがあります。
+1. **Settings（設定）** > **Integrations（統合）** タブに移動します。**Test Management** の下に様々な統合
+
+モジュールがあります。
+
 2. Xray 統合モジュールで、**login（ログイン）** をクリックします。
 
 ![Xray 統合モジュールのログインボタン](/images/test-management-integrations/xray-integration/c11e6d6-image.png)
@@ -160,9 +163,7 @@ Xray の **Test** 課題タイプが変更された場合、実行は Xray で�
  </tbody>
 </table>
 
-:::warning
-Xray でこれらのステータスを変更すると、統合が中断される可能性があります。
-:::
+> Xray でこれらのステータスを変更すると、統合が中断される可能性があります。
 
 :::note
 Xray の必須カスタムフィールドはサポートされていません。Xray でカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
