@@ -129,6 +129,15 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   pin する (mobile variant `editing-target-element-properties-mobile`
   //   は元々 0-drift のため追加不要)。
   'editing-tests/editing-your-tests/editing-target-element-properties',
+  // M2 P2-2 Wave 2 追加 — 複合 sentinel (flat-ol-split §5.2 #1 + callout-bullet-to-paragraph
+  //   + callout-to-blockquote)。Setting up TTM for Jira Integration セクションで EN の
+  //   `<ol>` に orphan `<p>modules.</p>` が挟まる flat-ol-split pattern、Bulk Create
+  //   セクションで EN callout 内 single `<p>` を JA が bullet split していた drift、
+  //   Upon Testim test run execution end セクションで EN `<blockquote>` (paragraph kind に
+  //   展開) に JA `:::warning` が合致しないため `> ` blockquote に置換。9 entry を
+  //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
+  //   first callout 修正の組み合わせ。
+  'integrations/test-management-integrations/ttm-for-jira-integration',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
