@@ -271,6 +271,7 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Chrome DevTools | Chrome ブラウザの開発者ツール |
 | Wikipedia | オンライン百科事典 |
 | Microsoft | ソフトウェア企業 |
+| Excel | Microsoft Excel スプレッドシート製品名 |
 | Slack | 通知 / メッセージングサービス |
 | LambdaTest | クラウドブラウザ / デバイスグリッド |
 | LambdaTest Grid | LambdaTest のグリッドサービス |
