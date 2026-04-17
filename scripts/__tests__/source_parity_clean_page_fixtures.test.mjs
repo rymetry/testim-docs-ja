@@ -218,6 +218,28 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   sibling `validate-element-text` (6 entry) も同じ a./b./c. classifier
   //   pattern を共有する可能性があり Wave 4 で再利用予定。
   'advanced-editing/validations/validate-download',
+  // M2 P2-2 Wave 3 Batch 2 追加 — flat-ol-split §5.2 #1 の EN `<ol>` 内
+  //   orphan paragraph variant の sentinel。EN MadCap 出力で単一 `<ol>` の
+  //   内部に `<li value="1">` (item A) + orphan `<p>​2. ...</p>` + orphan
+  //   `<p>​3. ...</p>` + `<li value="2">..<li value="11">` が interleave し、
+  //   EN extractor は orphan `<p>` を `paragraph` segment、`<li>` を
+  //   `ordered-list-item` segment として分離 emit するため、structure
+  //   comparator は EN を `ol → p → p → ol → p → ol → p → ol → p` と解釈
+  //   する。JA は当初 orphan paragraphs も `<li>` として render していた
+  //   ため JA 側が `ol → p → ol → p → ol` となり kind-multiset が不一致。
+  //   修正方針: JA の該当 2 項目を ZWSP (`\u200b`) prefix 付き "2. ..."
+  //   / "3. ..." 段落に変換し、後続 ol を EN の `<li value="N">` (2〜11)
+  //   に揃えて renumber、さらに EN 末尾の `<p>​ ​<br /> ​</p>` 空段落を
+  //   JA でも単独 `\u200b` 行として mirror。ZWSP prefix はブラウザ表示
+  //   上は不可視だが、markdown parser (`2.` prefix の自動 ol 認識) を
+  //   回避し、`extractSegmentsFromMarkdown` でも textNorm が
+  //   `"2. 新しいビルドを作成します"` になるため EN の
+  //   `textNorm="2. create a new build"` と scoreSegmentMatch が成立する
+  //   (CJK 混在 + 数字 prefix 一致で same-language penalty を回避)。
+  //   deep-link-mobile §5.2 #1 と同じ mechanical exception pattern の拡張
+  //   であり、新 carve-out 不要。6 entry (section-structure-mismatch ×1,
+  //   segment-missing ×3, segment-extra ×2) → 0。
+  'integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration',
   // M2 P2-2 Wave 3 Batch 2 追加 — sibling (#308 validate-download) の 2 pattern
   //   を再検証した結果、本 slug では EN 側に a./b./c. enumeration も broken-
   //   table-row paragraph も実在せず、代わりに MadCap 出力の orphan
