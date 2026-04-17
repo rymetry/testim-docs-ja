@@ -412,18 +412,36 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   該当。5 entry (section-structure-mismatch ×1, segment-missing ×1,
   //   segment-extra ×3) → 0。新 mechanical exception / §5.3.N carve-out なし。
   'administration/subscription-plans',
+  // M2 P2-3 Tier B Wave 1 追加 — arrow-fusion pattern (Wave 2 pattern #1 /
+  //   §5.2 mechanical exception #2) のみで構成される small-slug sentinel。
+  //   EN `<p>Context. → <strong>To X:</strong></p>` 単一段落に対し、JA が
+  //   "Context。" paragraph と `**Xするには:**` paragraph に分離していた
+  //   drift (Run Step by Step / Insert a Breakpoint の 2 section) を、
+  //   `。\n→ **Xするには:**` soft-break 融合で mirror して 0 drift 化。
+  //   canonical arrow-fusion sentinel `editing-target-element-properties`
+  //   と同一 mechanism の Tier B 展開で、他 section (Stop a Test / Pause /
+  //   Run from a specific step) は EN 側にも preceding context が無く
+  //   既に single arrow paragraph のみで 0 drift だったため影響なし。
+  //   4 entry (section-structure-mismatch ×2, segment-extra paragraph ×2)
+  //   → 0。新 mechanical exception / §5.3.N carve-out なし。
+  'results/stop-pause-debug-tests',
+  // M2 P2-3 Tier B Wave 1 追加 — arrow-fusion pattern (plan §5.2 #2) の小規模
+  //   sentinel。EN の `<p>Context<br /> → <strong>To X:</strong></p>` 単一段落
+  //   (Reusing a Group section と Changing one instance... section の 2 箇所)
+  //   に対し JA が context 段落と `**Xするには:**` 段落を分離していた drift を、
+  //   `。\n→ **Xするには:**` soft-break 融合で zero-drift 化。Wave 2 sibling
+  //   (`sfdc-document-validation` / `editing-target-element-properties`) と
+  //   同 pattern の Tier B 展開。4 entry (section-structure-mismatch ×2,
+  //   segment-extra ×2) → 0。新 mechanical exception / §5.3.N carve-out なし。
+  'editing-tests/groups',
   // M2 Tier B Wave 1 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1) の Tier B
   //   展開 sentinel。EN `<p>Context. → <strong>To X:</strong></p>` 単一段落
-  //   (Adding Company Teammates: "Anyone can invite other company users...
-  //   → To add a user:"、Changing/Adding Company Owner: "A company owner can
-  //   assign/remove... → To assign a user as a company owner:") に対し、JA が
-  //   context 段落と `**Xするには:**` 見出し段落を空行で分離していた drift を
-  //   `。\\\n→ **Xするには:**` soft-break 融合で解消。`sfdc-document-validation`
+  //   (Adding Company Teammates / Changing/Adding Company Owner の 2 section) に
+  //   対し、JA が context 段落と `**Xするには:**` 見出し段落を空行で分離していた
+  //   drift を `。\\\n→ **Xするには:**` soft-break 融合で解消。`sfdc-document-validation`
   //   (Wave 1) / `editing-target-element-properties` (Wave 2) と同じ canonical
   //   pattern の再利用、新 mechanical exception / §5.3.N carve-out なし。4 entry
-  //   (section-structure-mismatch ×2, segment-extra ×2) → 0。administration/*
-  //   folder 内の arrow-fusion 同 pattern slug を将来 Tier B で追加する際の
-  //   regression pin。
+  //   (section-structure-mismatch ×2, segment-extra ×2) → 0。
   'administration/project-and-user-management',
 ]);
 
