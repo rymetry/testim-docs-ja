@@ -33,6 +33,7 @@ let alignSegments;
 let parityDiffsToIssues;
 let extractSegmentsFromHtml;
 let extractSegmentsFromMarkdown;
+let createOmissionCoverage;
 
 before(async () => {
   ({
@@ -41,6 +42,7 @@ before(async () => {
     extractSegmentsFromHtml,
     extractSegmentsFromMarkdown,
   } = await import('../lib/source_parity.mjs'));
+  ({ createOmissionCoverage } = await import('../lib/ja_omission_policy_registry.mjs'));
 });
 
 const ROOT = join(import.meta.dirname, '../../');
@@ -65,12 +67,17 @@ function runStructureComparator(slug) {
   const jaBody = extractJaBody(jaMd);
   const enSegments = extractSegmentsFromHtml(rawEnHtml);
   const jaSegments = extractSegmentsFromMarkdown(jaBody);
-  const alignment = alignSegments(enSegments, jaSegments, { slug });
+  // §5.3.3: `overview/testim-overview` のような JA-side intentional-omission
+  // policy 対象 slug は registry による runtime 抑止後に 0 drift になる。
+  // unregistered slug では consume() が常に false を返す no-op になるため、
+  // clean sentinel 全体に omissionCoverage を渡しても副作用は無い。
+  const omissionCoverage = createOmissionCoverage();
+  const alignment = alignSegments(enSegments, jaSegments, { slug, omissionCoverage });
   const issues = parityDiffsToIssues(alignment.diffs);
   const structureIssues = issues.filter(
     (i) => i.type === 'section-structure-mismatch' || i.type === 'segment-order-mismatch',
   );
-  return { alignment, issues, structureIssues };
+  return { alignment, issues, structureIssues, omissionCoverage };
 }
 
 // ---------------------------------------------------------------------------
@@ -294,6 +301,44 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   Tier C 追加 2 件のみ。Wave 2 sibling `integrations/grid-management`
   //   (generic-English-residue pattern 8) の同一 folder 派生 sentinel。
   'integrations/grid-management/saucelabs-browserstack-options',
+  // M2 Wave 3 Tier 2 追加 — §5.3.3 `ja_omission_policy_registry` (PR #318) の
+  //   runtime 抑止に依存する初の sentinel。
+  //   (a) Tricentis policy omission scenario: `docs/WRITING_GUIDE.md
+  //   §「原文から意図的に除外するコンテンツ」` で規定された Tricentis 削除
+  //   依頼ポリシー (commits `bf40dad`, `e5d9f88`) により、EN 原文に存在する
+  //   "At Testim, we are developers and testers too..." 段落 (`http://testim.io`
+  //   リンク含む) と pricing callout (`https://www.testim.io/pricing/`) を
+  //   JA 側で意図的に除外している。この JA-side intentional-omission は content
+  //   修正 (段落/callout 再追加) で drift を消すと legal/policy 違反となるため
+  //   runtime 抑止以外の経路が無く、§5.3.3 registry が唯一の解決策。
+  //   (b) §5.3.3 registry 4 entry が 5 drift を抑止:
+  //     - `tricentis-pricing-changelog-callout-removal` (quota=2) →
+  //       segment-missing callout-body ×2
+  //     - `tricentis-changelog-callout-offset-remnant` (quota=1) →
+  //       segment-extra callout-body ×1
+  //     - `tricentis-testim-io-url-removal` (quota=1) →
+  //       segment-token-gap paragraph `http://testim.io` ×1
+  //     - `tricentis-callout-removal-structure-derivative` (quota=1) →
+  //       section-structure-mismatch ×1
+  //   いずれも `slugs: ['overview/testim-overview']` の per-slug scope で
+  //   quota 計 5 (全ページ cap)。
+  //   (c) 5→0 baseline delta: 既存 baseline (generate 時刻
+  //   2026-04-17T05:33:56.126Z) は本 slug 5 entry (structure ×1, missing ×2,
+  //   extra ×1, token-gap ×1) を保持していたが、§5.3.3 merge (PR #318) 後は
+  //   alignSegments が registry と照合して 5 entry 全てを drop するため、本
+  //   PR で `node scripts/generate_parity_baseline.mjs --slug=overview/testim-overview`
+  //   を実行し baseline から 5 entry を除去 (rationale: "M2 Wave 3 Tier 2 —
+  //   testim-overview baseline cleanup post §5.3.3 mechanism merge (5 entries
+  //   policy-suppressed)")。他 slug は byte-identical。
+  //   (d) Regression gate: 本 sentinel は `runStructureComparator` に
+  //   `createOmissionCoverage()` を渡すため、registry が消滅 (または quota が
+  //   減る) と `overview/testim-overview` の drift が再発して `issues.length === 0`
+  //   で fail する。逆に言えば registry 抑止が正しく機能している限りは clean
+  //   sentinel の invariant (structureIssues=0, issues=0, not inconclusive) を
+  //   維持できる。§5.3.3 regression を検知する唯一の clean-page gate。
+  //   (`ja_omission_policy_registry.test.mjs` は registry 単体契約を pin するが
+  //   本 sentinel は EN snapshot + JA content の end-to-end 経路を pin する。)
+  'overview/testim-overview',
   // M2 P2-2 Wave 3 Batch 2 追加 — §5.3.2 `/docs/index` registry slug-scope
   //   extension (PR #317 で承認 merge 済み) + URL token restore + GLOSSARY
   //   `?`-less alias 追加 + JA nav link 除去 の複合 sentinel。EN の preface
