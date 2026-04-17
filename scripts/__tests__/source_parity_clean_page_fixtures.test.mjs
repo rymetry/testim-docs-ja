@@ -145,6 +145,21 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
   //   first callout 修正の組み合わせ。
   'integrations/test-management-integrations/ttm-for-jira-integration',
+  // M2 P2-2 Wave 4 追加 — sibling `ttm-for-jira-integration` (Wave 2) と同じ
+  //   複合 pattern (flat-ol-split §5.2 #1 + callout-to-blockquote) の sentinel。
+  //   Setting up Xray integration セクションで EN `<ol>` 内 `<li value="1">` が
+  //   `various integration<br />` + orphan `<p>modules.</p>` に分岐する
+  //   MadCap broken-`<br />` artifact を、JA 側で ol item 1 の末尾を
+  //   「様々な統合」で止めて空行 + orphan paragraph「モジュールがあります。」
+  //   を挟み、`2.` で ol を継続する形に分割して mirror (sibling
+  //   ttm-for-jira と同じ handling)。Running a test セクションで EN
+  //   `<blockquote><p>Changing these statuses...</p></blockquote>` (warning-like
+  //   lead word が無く allow list 非対象なので paragraph kind に展開される) に
+  //   JA `:::warning` callout-body が合致しない drift を `> ...` blockquote に
+  //   置換して kind 一致させた。5 entry (section-structure-mismatch ×2,
+  //   segment-missing ×2, segment-extra ×1) → 0 を content-level で解消、
+  //   新 mechanical exception / carve-out なし。
+  'integrations/test-management-integrations/xray-integration',
   // M2 P2-2 Wave 2 追加 — 初の純 content-level segment-untranslated sentinel。
   //   arrow-fusion / ol-split / table 等の構造 pattern は不使用、generic-
   //   English-residue (browser version, shared/dedicated device, hover,
