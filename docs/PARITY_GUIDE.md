@@ -269,3 +269,48 @@ Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 �
 | segment-inconclusive | tokenless-near-tie 等。自動判定の限界。手動確認 | 高 |
 
 Top 2 大物ファイルとロングテール (1-3 件ファイル 69 ファイル) はバッチ処理で返済する。
+
+## §5.3.3 JA-side intentional-omission policy (Tricentis removal-request registry)
+
+`[PENDING REVIEWER APPROVAL — §5.3.3 L2 gate]` — plan `docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §5.3.3 登録と対応。
+
+### 何に使うか
+
+`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis からの削除依頼 policy** により、EN 原文にある特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL 等) を JA 側で意図的に削除している slug の drift を quota-based で抑止する。
+
+既存 3 mechanism との棲み分け:
+
+| mechanism | 対象 | §5.3.3 との差異 |
+| --- | --- | --- |
+| `scripts/lib/source_sync_exclusions.mjs` | page-level EN-broken | JA 側意図的削除は対象外 (本 slug の EN は正常) |
+| `scripts/lib/parity_artifact_registry.mjs` (§5.3.2) | EN-side artifact token (`/docs/index` 等) | EN 側 artifact のみ。JA 削除は対象外 |
+| §5.3.1 FileOrFilePath | EN 抽出側 kind-mismatch | パーサ側問題。削除 policy は対象外 |
+| **§5.3.3 `ja_omission_policy_registry`** | **JA 側の意図的削除 (Tricentis removal-request policy)** | **新規** |
+
+### runtime 契約
+
+- `scripts/lib/ja_omission_policy_registry.mjs` が registry + `matchPolicy` + `createOmissionCoverage` + `NOOP_OMISSION_COVERAGE` を export する
+- `alignSegments(enSegments, jaSegments, { slug, coverage, omissionCoverage })` は diffs 生成後に `suppressJaOmissionDiffs` を呼び、registry と照合した上で quota 範囲内の diff を 1 件ずつ drop する
+- `check_source_parity.mjs` は run 単位で `createOmissionCoverage()` を 1 個生成し、全 slug の alignSegments に共有。最終的な `parity-check-status.json` の `debug.omissionCoverage` に snapshot を格納する
+
+### quota-based disambiguator の理由
+
+`overview/testim-overview` では 1 slug × `callout-body segment-missing` が 2 件出る (pricing + changelog)。同一 `(slug, issueType, segmentKind)` での複数 diff を個別に指すために、以下 3 候補から **quota-based** を採用:
+
+| 案 | 利点 | 欠点 | 採否 |
+| --- | --- | --- | --- |
+| (a) quota-based | 登録データが最小。EN 文面が変わっても安定 | 同種 drift の 3 件目が別原因で発生すると quota 内で誤抑止され得る (現実的には低確率) | **採用** |
+| (b) fingerprint-based | 厳密 | EN 文面更新で sha-256 変化。policy 意図 ("EN がどうなっても JA は出さない") と相反 | 不採用 |
+| (c) content-prefix match | 部分柔軟 | brittle / 監査しづらい / policy drift を許す | 不採用 |
+
+(a) の副作用 (同種 3 件目の誤抑止) は quota が尽きた時点で次の diff が通常通り surface するため、reviewer が気付いて registry entry を分割する運用で受容する。coverage snapshot の `exhaustedEntries` を監視対象にする。
+
+### entry 追加手順
+
+新 slug を追加する場合は `docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` 表の更新を先行条件とし、その上で以下を行う:
+
+1. `scripts/lib/ja_omission_policy_registry.mjs` の `JA_OMISSION_POLICY_REGISTRY` に entry を追加 (`slugs[]` / `issueTypes[]` / `segmentKinds` / `missingToken?` / `quota` / `reason` / `note` / `policySource` / `addedAt`)
+2. `scripts/__tests__/ja_omission_policy_registry.test.mjs` の inventory describe block に新 slug 用 assertion を追加
+3. plan §5.3.3 の initial inventory 行を更新
+
+registry 新規 token 追加は `§5.3.N` 新規 carve-out として reviewer L2 gate を経由する (本 §5.3.3 は Tricentis removal-request policy に scope lock)。
