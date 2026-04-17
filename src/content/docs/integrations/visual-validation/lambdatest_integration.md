@@ -25,11 +25,11 @@ LambdaTest と Testim を統合する前に、以下を確認してください:
 
 また、LambdaTest から以下の認証情報が必要です:
 
-- Username
-- Access key
-- Project token
+- Username.
+- Access key.
+- Project token.
 
-これらの認証情報の取得方法については、[LambdaTest のガイド](https://www.lambdatest.com/support/docs/hyperexecute-how-to-get-my-username-and-access-key/)を参照してください。
+これらの認証情報の取得方法については、[LambdaTest のガイド](https://www.testmuai.com/support/docs/hyperexecute-how-to-get-my-username-and-access-key/)を参照してください。
 
 ## LambdaTest SmartUI の統合
 

@@ -120,6 +120,18 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
+  // M2 P2-2 Wave 2 追加 — ASCII-only list item の textNorm-match 回復 pattern。
+  //   EN `<li><p>Username.</p></li>` 等の Testim UI 用語は英語維持のため
+  //   両側 ASCII-only となり、`scoreSegmentMatch` の same-language penalty
+  //   (score 0) により weighted LCS で match 候補から外れていた。JA 側に
+  //   EN と同一の trailing punctuation (`.`) を付与すると textNorm が完全
+  //   一致し、score 500 で確実に matching される (content-level 1:1 mirror)。
+  //   併せて EN 側の `https://www.testmuai.com/...` URL を JA が canonical
+  //   `lambdatest.com` に置き換えていた drift を EN verbatim にリストアし、
+  //   token overlap を回復。両 fix とも source-first の範囲内 (新 exception
+  //   ではない)。Tier A bulk で同 pattern (ASCII UI 用語 list + EN token URL
+  //   mirror) の slug が増える前の regression pin として固定。
+  'integrations/visual-validation/lambdatest_integration',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
