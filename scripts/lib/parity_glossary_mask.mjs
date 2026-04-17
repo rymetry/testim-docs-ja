@@ -183,12 +183,14 @@ export function classifySegment(text) {
   // preserves raw tokens for fingerprinting elsewhere; the stripping here is
   // classifier-local and does not leak back to callers.
   //
-  // Inline code: GFM 準拠で **double-backtick pair** (``code``) を **single**
-  // より先に alternation で消費する。旧実装 `/`[^`]*`/g` は先頭の `` (空の
-  // single pair) に最長一致を譲って 2 個目以降の content が residue に残り、
-  // backtick strip が実質 no-op になるケースがあった (§5.3.6 bug 1)。
+  // Inline code: GFM 準拠で **double-backtick pair** (``code``) を alternation
+  // で single より先に消費する。double-pair は内部に single backtick を含み
+  // 得る (GFM §code-spans) ため negative-lookahead `` `(?!`) `` で
+  // consecutive backtick だけを exclude する。旧実装 `/`[^`]*`/g` は先頭の
+  // `` (空の single pair) に最長一致を譲って 2 個目以降の content が residue
+  // に残り、backtick strip が実質 no-op になるケースがあった (§5.3.6 bug 1)。
   const preStripped = text
-    .replace(/``[^`]*``|`[^`]*`/g, ' ') // inline code (single + GFM double)
+    .replace(/``(?:[^`]|`(?!`))*``|`[^`]*`/g, ' ') // inline code (GFM double + single)
     .replace(/\[[^\]]*\]\([^)]*\)/g, ' ') // markdown link [label](url)
     .replace(/<https?:\/\/[^>]+>/g, ' ') // GFM autolink
     .replace(/https?:\/\/\S+/g, ' ') // bare URL
