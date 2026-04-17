@@ -337,7 +337,7 @@ EN snapshot           →  JA 翻訳
 
 - EN に存在しない **セクション / 段落 / callout / リスト項目 / 見出し** は source parity のために削除する
 - 「読者に親切な補足」「JA 読者向けの注記」等の追加は禁止。翻訳ニュアンスは構造を変えずに文内で表現する
-- 例外は §「原文から意図的に除外するコンテンツ」のみ（Tricentis からの削除依頼ページ）
+- 例外は `scripts/lib/source_sync_exclusions.mjs` の `SOURCE_SYNC_EXCLUSIONS` に登録された broken-EN snapshot 退避のみ
 
 ### その他
 
@@ -370,17 +370,6 @@ check:parity で [reason=...] token 付与？
 ```
 
 この operationalization により、例外判定は **登録 registry + runtime token** の 2 つの決定論的 signal のみに基づく。「EN が broken に見える」という主観判断で JA を断念するパスを閉じる。
-
-### 原文から意図的に除外するコンテンツ
-
-以下のコンテンツは Tricentis より削除依頼を受けており、原文に存在しても日本語版には**含めないこと**。source parity チェックで差分として検出されても再追加しない。対象ファイルには HTML コメントで除外理由を記載済み。
-
-| ページ            | 除外対象                                                                                                                                                                |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `testim-overview` | 「At Testim, we are developers and testers too...」段落（企業紹介文）                                                                                                   |
-| `testim-overview` | Pricing callout（料金プラン・サブスクリプション案内）                                                                                                                   |
-| 全ページ共通      | `https://www.testim.io/pricing/` への誘導リンクは削除する                                                                                                               |
-| 全ページ共通      | 「Professional plan でのみ利用可能」の制限案内文は残してよい（pricing リンクだけ削除し、"Professional plan のプロジェクトでのみ利用できます" のような制限文は保持する） |
 
 ### ルール追加・更新の手順
 
