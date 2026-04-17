@@ -328,6 +328,206 @@ describe('classifySegment — §5.3.6 preStrip backtick fix (GFM double-backtick
   });
 });
 
+describe('classifySegment — §5.3.7 CJK_RE g-flag + tech-vocabulary residue allowlist', () => {
+  /**
+   * §5.4 item 2 Bug 2 resolution. Bug 2: `CJK_RE.replace(...)` 呼出で global
+   * flag (`g`) が欠落していたため、最初の 1 match のみが置換され、複数 CJK
+   * segment を含む長文 paragraph の classification が不正確だった。
+   *
+   * g-flag 単独の fix は 20+ 件の segment-untranslated false-positive を
+   * surface する (mixed JA/EN 段落で CJK 句読点で区切られた enum / 技術トークン
+   * リストが残留)。§5.3.7 mechanism は以下 2 層で cascade を吸収する:
+   *
+   *   1. **CJK_RE `/g` flag**: 全 CJK 文字を剥がし、真の residue を得る
+   *   2. **tech-vocabulary allowlist + single-alpha-char filter**: residue
+   *      word-count から技術トークン / 列挙値 / 句読点残骸を除外し、
+   *      RESIDUE_MIN_WORDS=3 threshold を non-allowlisted words に適用する
+   *
+   * Allowlist は pure-EN segment には適用しない (hasCjk gate)。
+   *
+   * PR #293 の URL-before-mask ordering / §5.3.6 の preStrip backtick fix は
+   * 完全保全する。
+   */
+
+  it('CJK_RE /g flag: strips ALL CJK in a long segment (bug 2 primary fix)', () => {
+    // Pre-fix: CJK_RE without `g` only stripped the FIRST CJK char, leaving
+    // all subsequent Japanese characters in englishPortion and collapsing
+    // everything into one noisy "word" split by /\s+/. Post-fix: every CJK
+    // codepoint is stripped, so the actual residue is visible.
+    const longJa = 'これは長い段落です。途中で this is english が混入しています。最後にも日本語。';
+    const cls = classifySegment(longJa);
+    // residue after CJK strip = "this is english" (3 words, prose)
+    assert.equal(cls.isFullyMasked, false, `residue: ${cls.residue}`);
+    assert.ok(
+      !/[\u3040-\u309f\u4e00-\u9faf]/.test(cls.residue),
+      `residue must contain 0 CJK chars after /g fix. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: HTTP request types (network-logs)', () => {
+    // Real residue from src/content/docs/results/test-results/network-logs.md
+    // line 132. The JA segment lists HTTP filter types as enum values
+    // separated by CJK punctuation. After CJK strip residue = 9 tech tokens.
+    const cls = classifySegment(
+      'リクエスト結果テーブルのヘッダーで、いずれかのリクエストタイプを選択します。オプションにはxhr、js、css、img、media、font、doc、ws、manifestが含まれます。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `HTTP request types must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: accessibility severity levels', () => {
+    // Real residue from accessibility-validations.md Rules Descriptions.
+    const cls = classifySegment(
+      '各ルールには、関連する影響レベル（critical、serious、moderate、minor など）と関連するタグがあります。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `accessibility severity enum must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: visual match levels (Applitools Eyes)', () => {
+    // Real residue from pixel-validation-and-pixel-wait-for.md.
+    const cls = classifySegment(
+      'match level - 下矢印をクリックし、次の applitools eyes オプションから選択します：exact、strict、content、または layout。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `visual match level enum must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: log levels (debug-helper-panels)', () => {
+    const cls = classifySegment(
+      'ログレベルは、error、warning、info、verbose です。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `log level enum must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: release channels (browser versions)', () => {
+    const cls = classifySegment(
+      '安定版ブラウザのみサポートしており、beta、dev、canary バージョンはサポート対象外です。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `release channel enum must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: salesforce editions', () => {
+    const cls = classifySegment(
+      'これには、enterprise、performance、unlimited、および developer edition 組織が必要です。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `salesforce edition enum must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('tech-vocabulary allowlist: HTML attribute names', () => {
+    const cls = classifySegment(
+      'html 属性検証では、要素の任意の html 属性の値を検証できます（例：href、src、alt、title など）。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `HTML attribute enum must be allowlisted. residue: ${cls.residue}`,
+    );
+  });
+
+  it('single-alpha-char filter: enumeration markers (a. b. c.)', () => {
+    // Residue after CJK strip contains markdown-style enumeration markers
+    // "a." "b." "c." — single alphabetic char + punctuation. Should not
+    // count as prose.
+    const cls = classifySegment(
+      'a. + params をクリック\\ b. js parameter — ドロップダウンを js にして javascript パラメーターを入力\\ c. package parameter — ドロップダウンを package にして npm パッケージ変数を入力',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `single-alpha-char markers must be filtered. residue: ${cls.residue}`,
+    );
+  });
+
+  it('single-alpha-char filter: status symbols (x / v)', () => {
+    // Real residue from results/test-runs.md.
+    const cls = classifySegment(
+      'failed — 赤い x failed with retries — 黄色の感嘆符付き赤い x passed — 緑の v',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      true,
+      `single-char status symbols must be filtered. residue: ${cls.residue}`,
+    );
+  });
+
+  // -------------------------------------------------------------------------
+  // Negative boundary — allowlist must not silently mask genuine EN prose
+  // -------------------------------------------------------------------------
+
+  it('negative: pure-EN segment with allowlist words still flagged (hasCjk gate)', () => {
+    // If a segment has NO CJK at all, it is (by construction) pure English.
+    // The allowlist must NOT kick in: "Press Enter key" has 3 allowlisted
+    // words (press/enter/key → 1 allowlist hit `enter`), but the classifier
+    // must still flag it as untranslated because the ORIGINAL text contains
+    // zero CJK characters. Protects Spec Invariant 5 regression guard
+    // (`GLOSSARY common-word false-negative regression`).
+    const cls = classifySegment('Press Enter key');
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('negative: pure-EN 4-word segment with 1 allowlist token still flagged', () => {
+    const cls = classifySegment('Click the Enter button now');
+    assert.equal(cls.isFullyMasked, false);
+  });
+
+  it('negative: mixed JA/EN with genuine untranslated prose still flagged', () => {
+    // Long EN prose remains inside otherwise-translated content. Only 1-2
+    // allowlist tokens do not suffice to silence the classifier; the
+    // non-allowlisted prose words must still cross RESIDUE_MIN_WORDS.
+    const cls = classifySegment(
+      '設定画面で choose integrate any other application you don\'t find in the gallery を選択します。',
+    );
+    assert.equal(
+      cls.isFullyMasked,
+      false,
+      `genuine untranslated prose must still be flagged`,
+    );
+  });
+
+  // -------------------------------------------------------------------------
+  // Regression guards — §5.3.6 and PR #293 contracts preserved
+  // -------------------------------------------------------------------------
+
+  it('PR #293 regression guard: URL-before-mask ordering preserved', () => {
+    // With §5.3.7 mechanism layered on top of §5.3.6 and PR #293, the URL
+    // strip contract must still hold: bare URLs in JA callout body should
+    // be fully masked.
+    const cls = classifySegment(
+      'サードパーティアプリは url ベースのスキームのみサポートする場合があります。例: https://byby.dev/ios-deep-linking 参照。',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+
+  it('§5.3.6 regression guard: GFM double-backtick preStrip still effective', () => {
+    const cls = classifySegment(
+      '``code containing `backticks` here`` のような GFM double-backtick pattern',
+    );
+    assert.equal(cls.isFullyMasked, true, `residue: ${cls.residue}`);
+  });
+});
+
 describe('maskSegmentText — mask record shape', () => {
   it('mask record includes source, entry OR pattern, span (start/end)', () => {
     const result = maskSegmentText('Use the Visual Editor to edit.');
