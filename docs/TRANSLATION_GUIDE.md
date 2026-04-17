@@ -43,7 +43,7 @@
 | `segment-untranslated` | Testim UI 用語以外の英語 prose 残留 |
 | `segment-token-gap` | CLI flag / URL / 数値 token の欠落 |
 
-**これらの issue は必ず「JA を EN に追従させる」方向で解消する。baseline で許容してはならない。** 詳細は [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) と [PARITY_GUIDE.md M2 burn-down recipe](./PARITY_GUIDE.md) を参照。
+**これらの issue は必ず「JA を EN に追従させる」方向で解消する。baseline で許容してはならない。** 詳細は [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) と [PARITY_GUIDE.md M2 burn-down recipe](./PARITY_GUIDE.md) を参照。Wave 2 (P2-2) で確立済の具体的翻訳 pattern は [§5.5 Source-first 翻訳パターン](#55-source-first-翻訳パターンwave-2-確立) を参照。
 
 ## 1. 準備：公式サイトの構造を確認
 
@@ -599,6 +599,111 @@ Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のま
 **false-positive 事例**（M1 T4 で除外済）:
 
 - `browser version` / `major version` / `Add action` / `Add validation` は compound general であり、GLOSSARY に登録しない（一般 IT 英文の silent false-negative 源になる）
+
+### 5.5 Source-first 翻訳パターン（Wave 2 確立）
+
+2026-04-17 時点の Wave 2 (P2-2) で確立済の翻訳パターン一覧。各 pattern は `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` 内 sentinel slug で zero-drift として pin 済。canonical reference は PARITY_GUIDE §Wave 2 実績 pattern catalog と各 sentinel slug のコメント。
+
+本 subsection は **既に確定したパターンの codification** であり、新規 mechanical exception / §5.3.N carve-out の提案経路ではない。翻訳作業中に未知 pattern を見つけた場合は §Source-first 例外の canonical registry (WRITING_GUIDE 冒頭) に従って reviewer gate を経由する。
+
+#### パターン 1: Arrow-fusion（矢印プレフィックス段落融合）
+
+EN 原文の `<p>Context. →<strong>To X:</strong></p>` は **1 段落**。JA で context と `**Xするには:**` を 2 段落に分割すると `segment-extra` 発火。`。\n→ **Xするには:**` soft-break で融合する。
+
+```text
+EN 原文:
+<p>Use loops to repeat actions. →<strong>To configure a loop:</strong></p>
+
+❌ NG (JA で 2 段落分離):
+ループを使用すると、同じアクションを繰り返せます。
+
+**ループを設定するには:**
+
+✅ OK (soft-break 融合):
+ループを使用すると、同じアクションを繰り返せます。
+→ **ループを設定するには:**
+```
+
+EN に `<br />` がある場合は `。  \n→ **Xするには:**` (trailing 2-space + newline) で hard break を保持する。判別は EN snapshot の `grep -oE '<br /> →|\. →'` で。
+
+Canonical sentinel: `editing-tests/editing-your-tests/editing-target-element-properties`
+
+#### パターン 2: Flat-list split（単一リストの複数分割）
+
+EN の単一 `<ol>` / `<ul>` に orphan `<p>` + `<img>` / `<div class="note">` が interleave する場合、JA 側でリストを複数に分割し、sibling 要素をリスト外に出す。番号は EN の `<li value="N">` に合わせて手動指定する。これは mechanical exception (plan §5.2 #1) であり JA 独自構造の追加ではない（kind-multiset fingerprint 上で検知器が許容する既知 pattern）。
+
+Canonical sentinel: `advanced-editing/deep-link-mobile` (ol 版) / `editing-tests/generating-a-random-value` (ol/ul interleave 版)
+
+#### パターン 3: ASCII punctuation mirror（trailing punctuation 維持）
+
+UI-term `<li>Username.</li>` / `<li>Access key.</li>` / `<li>Project token.</li>` 等の trailing `.` を JA で欠落させると `scoreSegmentMatch` の same-language penalty により score 0 に落ち、segment-untranslated が誤発火する。ASCII-only の UI-term は trailing punctuation を verbatim mirror する。
+
+```text
+❌ NG (JA で trailing punctuation 欠落):
+- Username
+- Access key
+
+✅ OK (EN 通りに trailing dot を保持):
+- Username.
+- Access key.
+```
+
+Canonical sentinel: `integrations/visual-validation/lambdatest_integration`
+
+#### パターン 4: URL token verbatim mirror（URL 文字列そのまま維持）
+
+EN の URL token は JA で canonical domain に置換しない (MadCap redirect 経由の domain も含めて verbatim mirror)。`tokensInvariant` が URL 文字列一致を要求するため、`testmuai.com` (MadCap redirect, HTTP/2 200 OK で生きている) を `lambdatest.com` に置換すると segment-token-gap が発火する。
+
+Canonical sentinel: `integrations/visual-validation/lambdatest_integration`
+
+#### パターン 5: Broken-table-row paragraph mirror（broken 行 artifact の mirror）
+
+EN MadCap Flare が吐く `<table>` 外 orphan `<p>|...|</p>` (broken row artifact) は、JA でも backslash-escaped paragraph (`\| ... \|`) で段落として mirror する。テーブル内に取り込まない。
+
+```text
+EN 原文 (table 外 orphan paragraph):
+<p>|Column A|Column B|High|</p>
+
+✅ OK (JA 側 backslash-escaped paragraph):
+\| Column A \| Column B \| 高 \|
+```
+
+Canonical sentinel: `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`
+
+#### パターン 6: HTML `<table>` cell `<br />` mirror（セル内改行の保持）
+
+EN `<td>` が `<br />` + nested `<p>` で複数行を包む場合、JA で ` / ` などのセパレータ文字に置換せず `<br />` をそのまま維持する (extractHtmlTableCells 経路との整合)。
+
+```text
+❌ NG (JA で ` / ` セパレータ):
+<td>Cmd+C / Ctrl+C</td>
+
+✅ OK (EN 通りに <br /> を保持):
+<td>Cmd+C<br />Ctrl+C</td>
+```
+
+Canonical sentinel: `advanced-editing/keyboard-shortcut-step`
+
+#### パターン 7: JA navigation link removal（MadCap self-link artifact の除去）
+
+EN MadCap Flare が吐く `<a href="index.htm">` / `<a href="index.htm/#/">` の self-link artifact が JA にも残存している場合、JA 側でリンクを除去する（text のみ残す）。これは plan §5.3.2 registry の slug-scope extension 対象パターン。
+
+Canonical sentinel: `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`
+
+#### パターン 8: Generic-English-residue translation（一般英語語は翻訳）
+
+Testim UI / vendor name (Grid / Editor / VPN / IP / CLI / SauceLabs / BrowserStack 等) は英語維持、一般英語語 (browser version / hover / geolocation / site-to-site / executive 等) は JA 化する。判定は GLOSSARY Tier A/B (Testim 固有) + Tier C (closed-list 一般 IT 英語維持語) の登録有無。未登録 generic 語を「業界共通語」として英語維持することは禁止 (§5.4 参照)。
+
+```text
+❌ NG (generic 語を英語維持):
+Hover した状態で geolocation を site-to-site で共有します。
+
+✅ OK (generic 語を JA 化、Testim / vendor name は英語維持):
+ホバーした状態で位置情報をサイト間で共有します。
+(ただし「Testim Grid」「SauceLabs」「BrowserStack」「VPN」「IP」「CLI」は英語維持)
+```
+
+Canonical sentinel: `integrations/grid-management`
 
 ## 6. ナビゲーション構造の確認
 
