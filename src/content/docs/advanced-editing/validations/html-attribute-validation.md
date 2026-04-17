@@ -115,12 +115,12 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更するときは、それぞれの値をシングルクォートで囲みます。属性名の例: `'href'`。期待値には URL 文字列などをシングルクォートで囲んで指定します（例: `'https://example.com'` のような形式）。
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更するときは、それぞれの値をシングルクォートで囲みます。例: ‘href’ および ‘[https://www.testim.io’](https://www.testim.io’)。
 :::
 
 8. 要素を再割り当てしたステップの左側にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
-**_元の_**要素のプロパティを変更するには:\*\*
+→ **_元の_ 要素のプロパティを変更するには:**
 
 1. 要素を再割り当てしたいステップにカーソルを合わせ、**Show Properties** アイコンをクリックします。
 
@@ -134,5 +134,5 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 3. **Properties** パネルの **Expected value** フィールドに、属性の新しい期待値を入力します。
 
 :::note
-**Properties** パネルで **Attribute name** と **Expected value** の値を変更するときは、それぞれの値をシングルクォートで囲みます。属性名の例: `'href'`。期待値には URL 文字列などをシングルクォートで囲んで指定します（例: `'https://example.com'` のような形式）。
+**Properties** パネルで **Attribute name** と **Expected value** の値を変更するときは、それぞれの値をシングルクォートで囲みます。例: ‘href’ および ‘[https://www.testim.io’](https://www.testim.io’)。
 :::
