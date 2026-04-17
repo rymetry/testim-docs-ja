@@ -120,12 +120,23 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
-  // M2 P2-2 Wave 2 追加 — flat ol split (§5.2 #1) + callout-vs-paragraph
-  //   修正の複合 sentinel。EN の `<ol>` に orphan `<p>modules.</p>` が挟まる
-  //   broken-ish 構造を ol 分割 + 外部段落で mirror し、callout に bullet を
-  //   含んでいた JA を single paragraph に畳み、EN `<blockquote>` (paragraph
-  //   kind に展開される) を JA blockquote `> ` で表現して :::warning callout
-  //   から paragraph kind に揃えた。9 entry 一括解消。
+  // M2 P2-2 Wave 2 追加 — arrow-fusion pattern P1 の 4-section 集中型 sentinel。
+  //   Wave 2 briefing pattern 1 の pure P1 (`<br />` なし) のみで成立する
+  //   slug で、EN `<p>Context. → <strong>To X:</strong></p>` 単一段落を
+  //   JA が context 段落 + `**Xするには:**` 段落に分離していた drift を
+  //   `。\n→ **Xするには:**` soft-break 融合で 4 section × 2 entry = 8 entry
+  //   を消化。同 pattern の regression を Tier A bulk 以降で広く検知するため
+  //   pin する (mobile variant `editing-target-element-properties-mobile`
+  //   は元々 0-drift のため追加不要)。
+  'editing-tests/editing-your-tests/editing-target-element-properties',
+  // M2 P2-2 Wave 2 追加 — 複合 sentinel (flat-ol-split §5.2 #1 + callout-bullet-to-paragraph
+  //   + callout-to-blockquote)。Setting up TTM for Jira Integration セクションで EN の
+  //   `<ol>` に orphan `<p>modules.</p>` が挟まる flat-ol-split pattern、Bulk Create
+  //   セクションで EN callout 内 single `<p>` を JA が bullet split していた drift、
+  //   Upon Testim test run execution end セクションで EN `<blockquote>` (paragraph kind に
+  //   展開) に JA `:::warning` が合致しないため `> ` blockquote に置換。9 entry を
+  //   content-level で一括解消、新 mechanical exception ではなく既存 §5.2 #1 + source-
+  //   first callout 修正の組み合わせ。
   'integrations/test-management-integrations/ttm-for-jira-integration',
 ]);
 
