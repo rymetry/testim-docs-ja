@@ -2873,6 +2873,7 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | when to run | When to run step の短縮表記 |
 | When to run step | プロパティ名（再掲） |
 | When to run step | Testim Properties の実行条件セクション |
+| Where Can You Improve | Reports の改善ポイント見出し（`?` 抜き版、bold 隣接 `?**` で `\b` boundary が失われる環境でも mask を成立させる） |
 | Where Can You Improve? | Reports の改善ポイント質問見出し |
 | Where to Run | Test Plans の実行先フィールド |
 | While | Testim のループ種別 |
