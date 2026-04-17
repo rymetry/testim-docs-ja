@@ -135,9 +135,9 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定: “Run download validation”）。
 9. 次の手順で必要なパラメーターを定義します:\
-   a. **Properties** パネルで **+ PARAMS** をクリック\
-   b. **JS parameter** — ドロップダウンを **JS** にし、JavaScript パラメーターを入力\
-   c. **Package parameter** — ドロップダウンを **Package** にし、NPM パッケージ変数を入力
+   **Properties** パネルで **+ PARAMS** ボタンをクリックします。\
+   **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
+   **Package parameter**: NPM パッケージ変数を追加する場合は、ドロップダウンリストから **Package** を選択し、パッケージ変数を入力します。
 
 :::warning
 コード内で npm パッケージを使用する場合は `require` を書かず、ステップのプロパティで PACKAGE パラメーターとして渡してください。
@@ -698,4 +698,4 @@ return pdf(fileBuffer).then((data) => {
  </tbody>
 </table>
 
-| expectedText       | JavaScript | 'A Simple PDF File'  |
+`| expectedText       | JavaScript | 'A Simple PDF File'  |`

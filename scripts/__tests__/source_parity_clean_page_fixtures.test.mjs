@@ -198,6 +198,26 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   `Excel` を追加して mask 対象化。6 entry を content-level + glossary 登録
   //   で解消、新 mechanical exception なし。
   'advanced-editing/parameters/passing-parameters-from-excel-file',
+  // M2 P2-2 Wave 3 追加 — broken-table-row paragraph mirror (inline-code 版) +
+  //   classifier a./b./c. 回避 pattern の複合 sentinel。EN PDF テーブル外
+  //   orphan `<p>| expectedText | JavaScript | 'A Simple PDF File' |</p>`
+  //   (table tbody 内にあるべき 3 行目が `</tbody>` 外に漏れた MadCap 出力)
+  //   を、JA は inline-code `` `| ... |` `` で mirror する。salesforce Wave 2
+  //   の `\|` backslash escape は JA 側の CJK 混在前提だったが、本 slug では
+  //   変数名のみで CJK を含められないため same-language penalty を避ける
+  //   代わりに inline-code で textNorm 一致 (SCORE_TEXTNORM_MATCH=500) を
+  //   成立させる新派生 pattern (既存 broken-table-row と同じ mechanism pattern
+  //   の変種)。さらに Adding section で EN の a./b./c. 付き sub-step 段落
+  //   (`a. In the Properties panel... b. JS parameter... c. Package parameter...`)
+  //   を JA が `a./b./c.` prefix 付きで訳すと classifier (RESIDUE_MIN_WORDS=3)
+  //   が 3 個の isolated English letter を residue として検知し segment-
+  //   untranslated が false-positive 発火する既知制約を、EN enumeration marker
+  //   を削除して mirror する content-level 回避で解消 (EN 側の a./b./c. は
+  //   meta-enumeration で Testim UI term ではなく、段落 segment kind は保持
+  //   される — 構造 mismatch は起こらない)。6 entry を content-level で解消。
+  //   sibling `validate-element-text` (6 entry) も同じ a./b./c. classifier
+  //   pattern を共有する可能性があり Wave 4 で再利用予定。
+  'advanced-editing/validations/validate-download',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
