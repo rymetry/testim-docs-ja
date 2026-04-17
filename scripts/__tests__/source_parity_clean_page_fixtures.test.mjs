@@ -96,6 +96,21 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   // callout-heavy: callout-body が 3 件の長文ページ。mobile-apps セクションの
   //   代表 zero-drift sentinel。
   'mobile-apps/mobile-apps',
+  // M2 P2-2 Wave 4 追加 — escaped-details-residue broken EN shape に対する
+  //   content-level source-first mirror sentinel。EN snapshot の Examples
+  //   section が MadCap Flare 由来で `&lt;details&gt;` / `&lt;summary&gt;`
+  //   が paragraph 内に entity-escape された状態 (normalizeEscapedFaqDetails
+  //   discriminator で「prose 先行」と判定されて rewrite されない balanced
+  //   ケース) になっており、comparator は `p → p → p → p → p` の 5 paragraph
+  //   kind-multiset を取る。JA 側が `<details>/<summary>` widget で wrap して
+  //   いた 4 段の accordion を、EN と同じ 5 paragraph + 4 image (intro +
+  //   body ×4) 構造に flatten し、各 section のタイトルを **bold** inline
+  //   として直前の paragraph 末尾に embed することで zero-drift 化。
+  //   EN upstream 固有の "prose-prefixed escaped details" shape は本 slug
+  //   のみで発現 (faq は prose 無しで normalizeEscapedFaqDetails の rewrite
+  //   対象となる) のため、sentinel 登録は content-level mirroring の範囲
+  //   (mechanical exception ではない)。
+  'advanced-editing/coding-assistant',
   // M2 P2-1 pilot 追加 — flat ol 分割 (source-first mechanical exception
   //   per plan §5.2) + classifier URL-before-mask fix の regression pin。
   //   EN の single <ol> with <li value="1"..value="15"> + img/note sibling

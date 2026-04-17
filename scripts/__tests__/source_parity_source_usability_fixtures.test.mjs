@@ -173,9 +173,13 @@ describe('detectSourceUsability fixture: advanced-editing/coding-assistant', () 
     );
   });
 
-  it('runtime: source-unusable を出さず segment-* issue が生成される', () => {
-    // gate が null を返す → alignSegments が走り → 通常の segment-* diffs が出る。
-    // ここでは alignSegments + parityDiffsToIssues を直接呼んで確認する。
+  it('runtime: source-unusable を出さず alignSegments が通常実行される', () => {
+    // gate が null を返す → alignSegments が走り通常 diff を emit する経路を確認。
+    // 注: M2 P2-2 Wave 4 で本 slug を content-level source-first mirror により
+    //     zero-drift に burn-down した結果、segment-* issue は 0 件になった。
+    //     本 test の invariant は「gate が null を返し source-unusable が
+    //     emit されない」ことのみ。segment-* issue 数の下限 assertion は
+    //     content-level burn-down と競合するため排除する。
     const rawEnHtml = readFileSync(
       join(SNAPSHOTS_DIR, 'advanced-editing/coding-assistant.html'),
       'utf8',
@@ -205,14 +209,14 @@ describe('detectSourceUsability fixture: advanced-editing/coding-assistant', () 
         slug: 'advanced-editing/coding-assistant',
       });
       const issues = parityDiffsToIssues(alignment.diffs);
-      // source-unusable は出ない
+      // source-unusable は出ない (本 test の唯一の runtime invariant)
       const sourceUnusable = issues.filter(i => i.type === 'source-unusable');
       assert.equal(sourceUnusable.length, 0, 'source-unusable は出るべきでない');
-      // segment-* issue が 1 件以上ある (parity diffs が存在する)
-      const segmentIssues = issues.filter(i => i.type.startsWith('segment-'));
-      assert.ok(
-        segmentIssues.length >= 1,
-        `segment-* issue が少なくとも 1 件あるべき。実際: ${segmentIssues.map(i => i.type).join(', ')}`,
+      // alignment が inconclusive に倒れない (comparator が健全に走る証拠)
+      assert.equal(
+        alignment.inconclusive ?? false,
+        false,
+        'alignment は inconclusive に倒れるべきでない (gate bypass 後の正常実行)',
       );
     }
   });
