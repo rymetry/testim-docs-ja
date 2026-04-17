@@ -102,6 +102,25 @@ JA 側の構造修正で解消可能？
 
 この厳格条件により、`△` 欄は「自由裁量で baseline できる escape hatch」ではなく「具体 evidence + reviewer 承認必須の限定ケース」として運用される。
 
+## Wave 2 実績 pattern catalog
+
+2026-04-17 時点の Wave 2 (P2-2) で burn-down 済の source-first pattern 一覧。各 pattern は `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` 内 sentinel slug で zero-drift として pin 済。新 pattern は本 catalog に **追加しない** (plan §5.2 mechanical exceptions / §5.3 carve-outs の reviewer 承認経由で initial 登録を経た pattern のみ codify 対象)。
+
+本 catalog は "既に確定した pattern" の reference であり、新規 `§5.3.N` carve-out の提案経路ではない。新規 mechanism-pending 残存を発見した場合は §並列エージェント委任チェックリスト 末尾の `[PENDING REVIEWER APPROVAL — §5.3.N proposal]` マーカー運用に従う。
+
+| # | pattern | 概要 | canonical sentinel slug |
+| --- | --- | --- | --- |
+| 1 | Arrow-fusion (plan §5.2 #2) | EN `<p>Context. →<strong>To X:</strong></p>` 単一段落を JA が 2 段落に分離していた drift を `。\n→ **Xするには:**` soft-break 融合で zero-drift 化 | `editing-tests/editing-your-tests/editing-target-element-properties` |
+| 2 | Flat-list split (plan §5.2 #1) | EN 単一 `<ol>` / `<ul>` に orphan `<p>` + `<img>` / `<div class="note">` が interleave する構造を、JA 側でリストを複数分割 + 外部 block sibling + `<li value="N">` 番号手動指定で mirror | `advanced-editing/deep-link-mobile` (+ `editing-tests/generating-a-random-value` で ol/ul interleave 拡張) |
+| 3 | ASCII punctuation mirror | UI-term `<li>Username.</li>` / `<li>Access key.</li>` 等の trailing `.` を JA で欠落させると `scoreSegmentMatch` の same-language penalty で score 0 に落ちるため、EN 側の trailing ASCII punctuation は verbatim mirror する | `integrations/visual-validation/lambdatest_integration` |
+| 4 | URL token verbatim mirror | EN URL を JA が canonical domain に置換していた drift (例: MadCap redirect `testmuai.com` → `lambdatest.com`) は `tokensInvariant` 不一致で検知される。EN URL が HTTP 200 OK で生きている限り verbatim mirror する | `integrations/visual-validation/lambdatest_integration` |
+| 5 | Broken-table-row paragraph mirror | EN MadCap Flare が吐く `<table>` 外 orphan paragraph (broken row artifact、本文中に `<p>&#124;...&#124;</p>` として現れる) を JA で backslash-escaped paragraph (`\|...\|` 形式) で段落として mirror する | `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` |
+| 6 | HTML `<table>` cell `<br />` mirror | EN `<td>` が `<br />` + nested `<p>` で複数行を包む場合、JA で slash セパレータに変換せず `<br />` をそのまま保持する (extractHtmlTableCells 経路との整合) | `advanced-editing/keyboard-shortcut-step` |
+| 7 | JA navigation link removal | EN `<a href="index.htm">` / `<a href="index.htm/#/">` の self-link MadCap artifact が JA にも残存している場合、JA 側でリンクを除去して mirror する (§5.3.2 registry の slug-scope extension 対象) | `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` |
+| 8 | Generic-English-residue translation | 一般英語語 (browser version / hover / geolocation / site-to-site / executive 等) は JA 化し、Testim / vendor name (Grid / Editor / VPN / IP / CLI / SauceLabs / BrowserStack) は英語維持する (GLOSSARY Tier A/B + Tier C closed-list 運用) | `integrations/grid-management` |
+
+各 pattern の判定・対処の詳細は sentinel test (`scripts/__tests__/source_parity_clean_page_fixtures.test.mjs`) の slug コメントを canonical reference とする。TRANSLATION_GUIDE §5.5 にも同 8 pattern の翻訳観点を codify している。
+
 ## 頻出パターン
 
 ### 1. preface に frontmatter description の重複段落（segment-extra）
