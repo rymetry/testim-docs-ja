@@ -310,6 +310,41 @@ M4 で確立した "JA 独自構造禁止" policy は **content-level** の独�
 
 exception 追加は **reviewer 承認 + plan への明示登録** を条件とし、個別 PR の自由裁量では追加しない (security L2 gate)
 
+### 5.4 Tier 2 Sev 3 follow-ups (2026-04-17, non-blocking backlog)
+
+Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 reports) 4-reviewer gate で発見された高温度 Sev 3。M2 cutover をブロックしないが将来 mechanism PR で個別解消すべき 3 件。
+
+**(1) `normalizeEnArtifacts` EN-only `\d+\.(\S)` space-insertion asymmetry** (audit noise root cause)
+
+- **発見**: PR #312 agent 77 reviewer
+- **所在**: `scripts/lib/source_parity_align.mjs` (または `source_parity_extract.mjs` の EN-side normalize pass)
+- **症状**: EN 側でのみ `\d+\.(\S)` (番号+ピリオド+非空白) パターンにスペースを挿入する正規化が走り、JA 側では同等処理が走らない。結果、EN=「1.foo」→「1. foo」、JA=「1.foo」のまま。turndown 出力や直書き markdown で両言語に同形パターンが存在する場合に非対称な paragraph 分割差が発生し、`paragraph-count-mismatch` / `step-count-mismatch` の audit noise を誘発する
+- **影響範囲**: audit-signal 系 (`COARSE_SIGNAL_TYPES` allowlist 内) のみ。baseline / gate-blocking path には及ばない
+- **対応**: EN/JA 両側に対称適用するか、両側で無効化する mechanism PR を別途起票。scope lock 済の §5.3.N 範囲外 (新 §5.3.5 相当)
+- **Sev**: 3 (noise suppression / signal hygiene)
+
+**(2) classifier `preStrip` backtick no-op + `CJK_RE.replace` missing global flag**
+
+- **発見**: PR #309 agent 73 reviewer
+- **所在**: `scripts/lib/parity_glossary_mask.mjs` `classifySegment` 周辺
+- **症状**:
+  - `preStrip` pass で backtick (``` ` ```) 除去を試みているが実際には no-op になっており、backtick inline が masking 前に strip されないケースがある
+  - `CJK_RE.replace(...)` 呼出で global flag (`g`) が欠落。最初の 1 match のみが置換される設計バグ。複数 CJK segment を含む長文 paragraph の classification 精度に影響
+- **影響範囲**: classifier 精度低下による false-positive / false-negative の僅かな揺れ。現状 PR #293 で導入した "URL-before-mask ordering" の regression は無く、Tier 2 merge までの counter には悪影響なし
+- **対応**: 2 fixes を単一 mechanism PR で解消 (regression test 追加必須)。既存 `parity_glossary_mask.test.mjs` に backtick strip / CJK multi-segment の test を追加
+- **Sev**: 3 (accuracy / hidden latent bug)
+
+**(3) EN upstream: Smart Locators anchor broken at `salesforce-testing/core-concepts#smart-locators`**
+
+- **発見**: PR #314 QA reviewer (reports slug)
+- **所在**: `docs.tricentis.com/testim` 上流 EN page `salesforce-testing/core-concepts` の `#smart-locators` anchor
+- **症状**: EN ソース側で `#smart-locators` が該当 section に出力されておらず、内部リンクが 404 / empty-anchor となる。JA 側 PR #314 でも anchor リンクを一旦削除する措置済 (PR-introduced の不具合ではない)
+- **影響範囲**: EN 原文の broken link。`check:snapshots` diff には現れない (anchor は fragment で HTML body 変化なし)。JA 翻訳側では代替として「スマートロケーター」テキストを bold 強調で残す運用を継続
+- **対応**: Tricentis 本家 docs 上流チームへ issue report。本リポ側で直接修正不可。運用回避は PR #314 で対応済
+- **Sev**: 3 (external / upstream-owned)
+
+**scope lock (§5.4)**: 本 section は **discovery record** であり、個別 mechanism PR が起票される時点で §5.3.N として mechanism-pending registry に昇格する (その際は本 §5.4 entry を "Resolved via §5.3.N (PR #XXX)" に書き換える)。追加 Sev 3 項目の登録は **L2 gate (reviewer 承認 + 本 plan への明示登録)** を経由する。
+
 ## 6. Tracking
 
 各 phase PR は本 plan に進捗追記 (before/after counter)、M2 完了時に M3 plan (Rev 7) §10 入力として summary commit。
