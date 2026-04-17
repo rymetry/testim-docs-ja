@@ -13,6 +13,7 @@
  *   | advanced-editing/custom-action-step-mobile         | Phase 4 B2+B3 burn-down (T11 / plan §3.2)        |
  *   | salesforce-testing/faq                             | Phase 4 B2+B3 burn-down (T11 / plan §3.2)        |
  *   | advanced-editing/validations/email-validation      | Phase 4 B2+B3 burn-down (T11 / plan §3.2)        |
+ *   | results/test-runs                                  | §5.3.7: CJK_RE g-flag fix + single-char filter が status-symbol residue (`— x — x — v`) を fully-masked 化 |
  *
  * RESIDUAL_PAGES (segment-untranslated が baseline 凍結):
  *   Testim UI 名の英語残留が surface するページ。GLOSSARY 拡張での解消は
@@ -97,6 +98,11 @@ const RESOLVED_PAGES = Object.freeze([
   'advanced-editing/custom-action-step-mobile',
   'salesforce-testing/faq',
   'advanced-editing/validations/email-validation',
+  // §5.3.7 promotion: CJK_RE g-flag + single-char residue filter が
+  // status-symbol residue ("— x — x — v") を fully-masked 化したため、
+  // 既 baselined segment-untranslated entry が削除され 0 件 clean green に
+  // 復帰。
+  'results/test-runs',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -105,7 +111,8 @@ const RESOLVED_PAGES = Object.freeze([
 // T15: section-structure-mismatch / segment-extra も requiredBaselinedTypes で pin 可能。
 // ---------------------------------------------------------------------------
 const RESIDUAL_PAGES = Object.freeze([
-  { slug: 'results/test-runs', requiredBaselinedTypes: ['segment-untranslated'] },
+  // §5.3.7: results/test-runs は RESOLVED_PAGES へ昇格 (status-symbol residue が
+  // single-char filter で fully-masked 化)
   { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
   // T15: section-structure-mismatch / segment-extra も代表 pin として追加
   // (PR #287/#288 で副作用増加した surface。plan §3.2)
