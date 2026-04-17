@@ -30,7 +30,7 @@ TestRail 統合により、TestRail のテストを Testim のテストにリン
 
 ![TestRail 統合のログインボタン](/images/test-management-integrations/testrail-integration/cbf1548-Untitled.png)
 
-3. TestRail を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、URL フィールドに貼り付けます。URL 構造は `https://<プロジェクト名>.testrail.io/` で、プロジェクト名は TestRail の URL で確認できます。
+3. TestRail を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、URL フィールドに貼り付けます。URL 構造は https://&lt;projectName&gt;.testrail.io/, プロジェクト名は TestRail の URL で確認できます。例: 下のアカウントの projectName は ranhadar1 です。
 
 ![TestRail の URL 入力例](/images/test-management-integrations/testrail-integration/ea0ada5-image-20210523-052818.png)
 
@@ -89,7 +89,7 @@ JSON は以下の形式にする必要があります:
 
 1. Testim の実行名は常に以下の規則に従います:
 
-"Report from Testim.io - _Suite\Test name_"
+"Report from [Testim.io](http://testim.io/) - _Suite\Test name_"
 2. リモート実行の結果のみが TestRail に表示されます（ローカル実行は表示されません）。
 3. スイート実行は TestRail で 1 つの実行として表示されます。特定の実行をクリックして、スイート内のすべてのテストの結果を確認してください。
 4. TestRail の必須カスタムフィールドはサポートされていません。TestRail でカスタムフィールドを必須にすると、統合が機能しなくなる可能性があります。
