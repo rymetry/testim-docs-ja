@@ -120,6 +120,15 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
+  // M2 P2-2 Wave 2 追加 — arrow-fusion pattern P1 の 4-section 集中型 sentinel。
+  //   Wave 2 briefing pattern 1 の pure P1 (`<br />` なし) のみで成立する
+  //   slug で、EN `<p>Context. → <strong>To X:</strong></p>` 単一段落を
+  //   JA が context 段落 + `**Xするには:**` 段落に分離していた drift を
+  //   `。\n→ **Xするには:**` soft-break 融合で 4 section × 2 entry = 8 entry
+  //   を消化。同 pattern の regression を Tier A bulk 以降で広く検知するため
+  //   pin する (mobile variant `editing-target-element-properties-mobile`
+  //   は元々 0-drift のため追加不要)。
+  'editing-tests/editing-your-tests/editing-target-element-properties',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
