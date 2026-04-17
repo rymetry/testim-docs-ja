@@ -412,6 +412,15 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   該当。5 entry (section-structure-mismatch ×1, segment-missing ×1,
   //   segment-extra ×3) → 0。新 mechanical exception / §5.3.N carve-out なし。
   'administration/subscription-plans',
+  // M2 P2-3 Tier B Wave 1 追加 — arrow-fusion pattern (plan §5.2 #2) の小規模
+  //   sentinel。EN の `<p>Context<br /> → <strong>To X:</strong></p>` 単一段落
+  //   (Reusing a Group section と Changing one instance... section の 2 箇所)
+  //   に対し JA が context 段落と `**Xするには:**` 段落を分離していた drift を、
+  //   `。\n→ **Xするには:**` soft-break 融合で zero-drift 化。Wave 2 sibling
+  //   (`sfdc-document-validation` / `editing-target-element-properties`) と
+  //   同 pattern の Tier B 展開。4 entry (section-structure-mismatch ×2,
+  //   segment-extra ×2) → 0。新 mechanical exception / §5.3.N carve-out なし。
+  'editing-tests/groups',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
