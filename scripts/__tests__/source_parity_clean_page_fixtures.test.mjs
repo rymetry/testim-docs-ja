@@ -120,6 +120,16 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   orphan `<p>` の interleave までをカバーする extension として sentinel
   //   登録 (新 mechanical exception ではなく content-level mirroring の範囲)。
   'editing-tests/generating-a-random-value',
+  // M2 P2-2 Wave 2 追加 — 純 content-level segment-untranslated pattern の
+  //   sentinel。EN 側に Testim UI 用語 (Grid / Editor / VPN / IP / CLI) と
+  //   vendor 名 (SauceLabs / BrowserStack / HeadSpin / LambdaTest) が多く
+  //   混在する Grid management 記事で、JA が "version" / "address" / "hover"
+  //   / "shared device" / "dedicated device" / "executive" 等の generic な
+  //   英単語を未翻訳で残していた drift を「Testim UI 用語 + vendor 名のみ
+  //   英語維持、generic 語は和訳」の運用原則に基づき 7 entry を消化。
+  //   arrow-fusion / ol-split / table 等の構造 pattern は不使用の純翻訳系
+  //   sentinel として Wave 2 以降の同系 slug 向け regression pin とする。
+  'integrations/grid-management',
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
