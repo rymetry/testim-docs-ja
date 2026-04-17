@@ -368,7 +368,7 @@ Wave 3 Batch 2 (PR #309 testim-overview / #312 audit-signals-triage / #314 repor
   - `CJK_RE.replace(...)` 呼出で global flag (`g`) が欠落。最初の 1 match のみが置換される設計バグ。複数 CJK segment を含む長文 paragraph の classification 精度に影響
 - **影響範囲**: classifier 精度低下による false-positive / false-negative の僅かな揺れ。現状 PR #293 で導入した "URL-before-mask ordering" の regression は無く、Tier 2 merge までの counter には悪影響なし
 - **対応 (partial)**:
-  - **Bug 1 (preStrip backtick no-op)** → `[Resolved via §5.3.6 (PR #XXX)]` GFM double-backtick code-span に対する pre-strip regex の拡張で解消。§5.3.6 参照
+  - **Bug 1 (preStrip backtick no-op)** → `[Resolved via §5.3.6 (PR #324)]` GFM double-backtick code-span に対する pre-strip regex の拡張で解消。§5.3.6 参照
   - **Bug 2 (`CJK_RE` missing `g` flag)** → `[DEFERRED — out of §5.3.6 scope]` **mechanism fix を試行した結果、classifier の word-count 設計 (RESIDUE_MIN_WORDS=3 threshold) が CJK-delimited 短 tech token (例: `img media font` 等の filter type 名) に対して false-positive を発生させる pre-existing latent design limit を露出する** ため、§5.3.6 scope lock (single bug mechanism PR) の範囲外と判定。`g` flag 追加のみの fix は 20 件の新 segment-untranslated false-positive を surface し (15 slug / clean-page sentinel + RESOLVED_PAGES への副次 assertion failure)、classifier threshold 再設計 (word-count vs char-count / ASCII-only word 計上 / short-token allow-list 等) を伴う別 PR (§5.3.7 相当) として分離する必要がある。単独 PR では welcome side effect とならず、baseline 増加 + sentinel 改訂の policy 判断が必要なため留保。
 - **Sev**: 3 (accuracy / hidden latent bug) — Bug 1 解消済、Bug 2 は Sev 3 維持 (classifier design work を伴う)
 
