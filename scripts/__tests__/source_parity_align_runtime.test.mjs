@@ -32,6 +32,15 @@
  *   fallback: administration/project-and-user-management → editing-tests/groups
  *     (swapped 2026-04-17 when Tier B Wave 1 burned down project-and-user-management
  *     4→0; condition (b) of re-pin threshold triggered)
+ *   fallback: editing-tests/groups → debugging-tests/recording-additional-steps-to-fix-bugs
+ *     (swapped 2026-04-17 when PR #328 burned down editing-tests/groups 4→0;
+ *     condition (b) of re-pin threshold triggered)
+ *   fallback: debugging-tests/recording-additional-steps-to-fix-bugs →
+ *     integrations/grid-management/virtual-mobile-grid
+ *     (swapped 2026-04-17 when Tier B Wave 2.5 burned down recording-additional-
+ *     steps 4→0 via arrow-fusion; condition (b) of re-pin threshold triggered.
+ *     新 target は grid-management 配下で Tier A/B 即時計画対象外かつ
+ *     multi-type 3 entry を保持)
  *
  * ## Numeric re-pin threshold (T13 fragility-2 / plan §3.2)
  *
@@ -428,7 +437,13 @@ describe('pin slug content-correctness + fallback (T12)', () => {
     // NOTE: 2026-04-17 に旧 fallback `editing-tests/groups` が PR #328 で burn-down
     //       され 0 entry になったため、より安定した `debugging-tests/recording-
     //       additional-steps-to-fix-bugs` (4 baseline entry / 恒常残留) へ移行。
-    const fallbackSlug = 'debugging-tests/recording-additional-steps-to-fix-bugs';
+    // NOTE: 2026-04-17 に `debugging-tests/recording-additional-steps-to-fix-bugs`
+    //       も Tier B Wave 2.5 で arrow-fusion burn-down され 0 entry になった
+    //       ため、grid-management 配下で Tier A/B 即時計画対象外かつ multi-type
+    //       (section-structure-mismatch / segment-extra / segment-token-gap) を
+    //       持つ `integrations/grid-management/virtual-mobile-grid` (3 baseline
+    //       entry) へ再 pin。
+    const fallbackSlug = 'integrations/grid-management/virtual-mobile-grid';
     const baselinePath = join(ROOT, 'parity-baseline.json');
     const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
     const count = baseline.entries.filter((e) => e.slug === fallbackSlug).length;

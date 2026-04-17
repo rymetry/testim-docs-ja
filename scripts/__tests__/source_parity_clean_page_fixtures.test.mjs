@@ -443,7 +443,53 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   pattern の再利用、新 mechanical exception / §5.3.N carve-out なし。4 entry
   //   (section-structure-mismatch ×2, segment-extra ×2) → 0。
   'administration/project-and-user-management',
-<<<<<<< HEAD
+  // M2 Tier B Wave 2 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1 / §5.2 #2)
+  //   の Tier B 展開 sentinel。EN `<p>Context. → <strong>To X:</strong></p>` 単一
+  //   段落 (Allow Testim Chrome Extension to Run in Incognito Mode / How to Run
+  //   Tests in Incognito Mode の 2 section) に対し、JA が context 段落と
+  //   `**Xするには:**` 見出し段落を空行で分離していた drift を
+  //   `。\n→ **Xするには:**` soft-break 融合で解消。canonical arrow-fusion
+  //   sentinel (`editing-target-element-properties` / `sfdc-document-validation`
+  //   / `stop-pause-debug-tests` / `groups` / `project-and-user-management`) と
+  //   同 mechanism の再利用、新 mechanical exception / §5.3.N carve-out なし。
+  //   4 entry (section-structure-mismatch ×2, segment-extra ×2) → 0。
+  'running-tests/run-in-incognito',
+  // M2 Tier B Wave 2.5 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1) の
+  //   debugging-tests folder 小規模 sentinel。EN `<p>Context. → <strong>To X:</strong></p>`
+  //   単一段落 (Start recording / Start recording at this position の 2 section)
+  //   に対し、JA が context 段落と `**Xするには:**` 段落を空行で分離していた
+  //   drift を `。\n→ **Xするには:**` soft-break 融合で解消。canonical arrow-
+  //   fusion sentinel `editing-target-element-properties` (Wave 2) / `results/
+  //   stop-pause-debug-tests` (Tier B Wave 1) / `editing-tests/groups` (Tier B
+  //   Wave 1) と同一 mechanism の Tier B 再利用。Tier B Wave 2.5 で旧 T12
+  //   fallback pin だった本 slug を burn-down、fallback pin は
+  //   `integrations/grid-management/virtual-mobile-grid` (3 entry / multi-type)
+  //   に再 pin。4 entry (section-structure-mismatch ×2, segment-extra ×2) → 0。
+  //   新 mechanical exception / §5.3.N carve-out なし。
+  'debugging-tests/recording-additional-steps-to-fix-bugs',
+  // M2 P2-3 Tier B Wave 2 追加 — callout-body token-disjoint + orphan arrow-
+  //   paragraph malformation の複合 sentinel。"Modifying a Validate HTML
+  //   attribute step" section で (1) 2 つの `:::note` callout-body が EN URL
+  //   token `https://www.testim.io’` (末尾 U+2019) と disjoint になる JA
+  //   独自の `'https://example.com'` 例示を含んでおり、LCS で非マッチ化して
+  //   segment-missing ×2 + segment-extra ×2 を誘発していた drift を、EN の
+  //   `[url](url)` markdown-link 形式 (collectInlineText の `<a>` → `[label](href)`
+  //   出力と同一) で `[https://www.testim.io’](https://www.testim.io’)` と
+  //   mirror して tokensInvariant を一致させることで解消。URL 末尾が `。` や
+  //   `)` より外なら token regex `[^\s)>\]]+` が captured 部分を切り詰めて
+  //   EN と同 token を産出する。加えて (2) 2 つ目のサブ手順冒頭の JA
+  //   paragraph `**_元の_**要素のプロパティを変更するには:\*\*` が markdown
+  //   syntax として malformed (leading `→ ` 欠落 + trailing escaped `\*\*`)
+  //   だった箇所を、EN `<p>→ <strong>To modify the properties of the
+  //   <em>original</em> element:</strong></p>` に合わせて `→ **_元の_
+  //   要素のプロパティを変更するには:**` に正規化。4 entry (callout-body
+  //   segment-missing ×2, segment-extra ×2) → 0。新 mechanical exception /
+  //   §5.3.N carve-out なし、content-level mirror のみ。URL token 整合は
+  //   `collectInlineText` の markdown-link wrapping (EN 側 mechanism) と
+  //   JA 側 markdown link syntax を揃える canonical pattern であり、本
+  //   sentinel で pin する (Tier B 以降で同種の token-disjoint callout が
+  //   再発する可能性あり)。
+  'advanced-editing/validations/html-attribute-validation',
   // M2 Tier B Wave 2 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1 / §5.2
   //   mechanical exception #2) のみで構成される Tier B 展開 sentinel。EN
   //   `<p>Context. → <strong>To X:</strong></p>` 単一段落 (Filtering the Test
@@ -460,19 +506,6 @@ const CLEAN_PAGE_SLUGS = Object.freeze([
   //   carve-out なし。Testim UI 用語 (Locators / Smart Locators / Auto Improve
   //   / Test Library / Filter Test 等) は英語維持。
   'test-management/locators-auto-improve',
-=======
-  // M2 Tier B Wave 2 追加 — arrow-fusion pattern P1 (Wave 2 pattern #1 / §5.2 #2)
-  //   の Tier B 展開 sentinel。EN `<p>Context. → <strong>To X:</strong></p>` 単一
-  //   段落 (Allow Testim Chrome Extension to Run in Incognito Mode / How to Run
-  //   Tests in Incognito Mode の 2 section) に対し、JA が context 段落と
-  //   `**Xするには:**` 見出し段落を空行で分離していた drift を
-  //   `。\n→ **Xするには:**` soft-break 融合で解消。canonical arrow-fusion
-  //   sentinel (`editing-target-element-properties` / `sfdc-document-validation`
-  //   / `stop-pause-debug-tests` / `groups` / `project-and-user-management`) と
-  //   同 mechanism の再利用、新 mechanical exception / §5.3.N carve-out なし。
-  //   4 entry (section-structure-mismatch ×2, segment-extra ×2) → 0。
-  'running-tests/run-in-incognito',
->>>>>>> origin/main
 ]);
 
 for (const slug of CLEAN_PAGE_SLUGS) {
