@@ -137,7 +137,10 @@ Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高
 
 **Progress log:**
 
-- 2026-04-18: Bundle 3 (Running Tests) 完了 — 4 slugs × 3 entries = 12 eliminated, baseline 100 → 88 (PR #337)。UD-003 / UD-004 candidates registered in upstream-defect-tracker.md。
+- 2026-04-18: Tier B Wave 3 完結 (PR #337):
+  - Bundle 3 (Running Tests): predefined-properties 1 slug を UD-003 broken-row-mirror で burn-down (3→0)、残 3 slug (scheduler / scheduler-mobile / the-command-line-cli) は WRITING_GUIDE §91-109/§192 + TRANSLATION_GUIDE §28 準拠で principled revert → UD-003 + UD-004A/B/C deferral (upstream-defect-tracker.md 登録済)
+  - Bundle 4 (mobile-test-editor): 3→0 eliminated (EN MadCap broken callout の JA mirror 採用、UD candidate 候補)
+  - Net baseline: 97 → 93 (-4)
 
 ### P2-4: Tier C sweep — long-tail
 
