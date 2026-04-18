@@ -18,9 +18,9 @@
  *
  * ## Pin strategy (T12 / T13 / plan §3.2)
  *
- * Primary pin: `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
- * (3 baseline entries, multi-type: section-structure-mismatch / segment-extra /
- * segment-missing). Not a Tier A target so less likely to churn in M2 P2-2.
+ * Primary pin: `advanced-editing/validations/pixel-validation-and-pixel-wait-for`
+ * (3 baseline entries, multi-type: segment-extra / segment-missing / segment-token-gap).
+ * Not a Tier A/B immediate target so less likely to churn in M2 Tier B waves.
  * Fallback pin: `administration/encrypted-credentials` (2 baseline entries,
  * multi-type: segment-extra / segment-missing). Administration-scoped and
  * outside Bundle 2/3/4 scope, so less likely to churn during M2 Tier B waves.
@@ -30,6 +30,11 @@
  *   → running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks
  *     (swapped 2026-04-17 when P2-2 Wave 1 burned down generating-a-random-value 14→0;
  *     condition (b) of re-pin threshold triggered)
+ *   → advanced-editing/validations/pixel-validation-and-pixel-wait-for
+ *     (swapped 2026-04-17 when Tier B Wave 3 Bundle 3 burned down predefined-properties
+ *     3→0; condition (b) of re-pin threshold triggered.
+ *     New target is validation-scoped, outside Bundle 2/3/4 scope,
+ *     multi-type 3 entry baseline with segment-extra / segment-missing / segment-token-gap.)
  *   fallback: administration/project-and-user-management → editing-tests/groups
  *     (swapped 2026-04-17 when Tier B Wave 1 burned down project-and-user-management
  *     4→0; condition (b) of re-pin threshold triggered)
@@ -245,7 +250,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks',
+          '--slug=advanced-editing/validations/pixel-validation-and-pixel-wait-for',
           '--json',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -269,7 +274,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
       // segment-* issues は primary gate shape のまま baselined: true になる。
       const file = data.files.find(
-        (f) => f.file === 'src/content/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.md',
+        (f) => f.file === 'src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md',
       );
       assert.ok(file, 'drifted page must appear in the results');
       const segmentIssues = file.issues.filter((i) =>
@@ -303,7 +308,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks',
+          '--slug=advanced-editing/validations/pixel-validation-and-pixel-wait-for',
           '--fail-on=actionable',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -316,7 +321,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       // 既存 drift は baseline で覆われているため CLI suffix は covered 扱いになる。
       assert.ok(
         result.stdout.includes(
-          '⏸️ src/content/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.md (covered by baseline/ack)',
+          '⏸️ src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md (covered by baseline/ack)',
         ),
         `stdout did not mark the file as covered by baseline/ack:\n${result.stdout}`,
       );
@@ -325,7 +330,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         `stdout did not annotate baselined issues:\n${result.stdout}`,
       );
       assert.ok(
-        !result.stdout.includes('❌ src/content/docs/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.md'),
+        !result.stdout.includes('❌ src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md'),
         `stdout still marked the file as blocking:\n${result.stdout}`,
       );
     } finally {
@@ -344,7 +349,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=running-tests/scheduler',
+          '--slug=advanced-editing/validations/add-network-validation',
           '--json',
           '--include-advisory',
         ],
@@ -362,26 +367,31 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       assert.equal(data.summary.advisoryQueueComplete, false);
       assert.equal(data.summary.advisoryQueueScopeType, 'slug');
       assert.deepEqual(data.advisoryQueueScope.filters, {
-        slug: 'running-tests/scheduler',
+        slug: 'advanced-editing/validations/add-network-validation',
         section: null,
       });
       assert.equal(data.advisoryQueueScope.isComplete, false);
       assert.equal(data.advisoryQueueScope.checkedFiles, 1);
       assert.ok(data.advisoryQueueScope.totalFiles >= 1);
 
-      const entry = data.advisoryQueue.find((item) => item.slug === 'running-tests/scheduler');
-      assert.ok(entry, 'expected scheduler page in advisory queue');
+      const entry = data.advisoryQueue.find(
+        (item) => item.slug === 'advanced-editing/validations/add-network-validation',
+      );
+      assert.ok(entry, 'expected add-network-validation page in advisory queue');
       assert.equal(entry.issueCount, 1);
       const issue = entry.issues[0];
       assert.equal(
         issue.queueKey,
-        'running-tests/scheduler|segment-inconclusive|category=tokenless-near-tie|pair=Modify your scheduled test suites > Activate or Pause=>Modify your scheduled test suites > Edit',
+        'advanced-editing/validations/add-network-validation|segment-inconclusive|category=tokenless-near-tie|pair=Network Validation > Network Validation Examples > Validate all the image requests=>Network Validation > Network Validation Examples > Validate a single request',
       );
       assert.equal(
         issue.leftSectionPath,
-        'Modify your scheduled test suites > Activate or Pause',
+        'Network Validation > Network Validation Examples > Validate all the image requests',
       );
-      assert.equal(issue.rightSectionPath, 'Modify your scheduled test suites > Edit');
+      assert.equal(
+        issue.rightSectionPath,
+        'Network Validation > Network Validation Examples > Validate a single request',
+      );
       assert.equal(typeof issue.currentScore, 'number');
       assert.equal(typeof issue.swapScore, 'number');
       assert.ok(issue.currentScore > 0);
@@ -402,7 +412,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=running-tests/scheduler',
+          '--slug=advanced-editing/validations/add-network-validation',
           '--include-advisory',
           '--fail-on=actionable',
         ],
@@ -414,7 +424,9 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         `check_source_parity exited ${result.status}. stderr:\n${result.stderr}`,
       );
       assert.ok(
-        result.stdout.includes('partial scope: slug=running-tests/scheduler'),
+        result.stdout.includes(
+          'partial scope: slug=advanced-editing/validations/add-network-validation',
+        ),
         `stdout did not describe partial advisory queue scope:\n${result.stdout}`,
       );
       assert.ok(
@@ -438,7 +450,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
 describe('pin slug content-correctness + fallback (T12)', () => {
   it('primary pin slug file has extractable segments (fixture non-empty guard)', () => {
-    const pinSlug = 'running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks';
+    const pinSlug = 'advanced-editing/validations/pixel-validation-and-pixel-wait-for';
     const jaPath = join(ROOT, `src/content/docs/${pinSlug}.md`);
     assert.ok(existsSync(jaPath), `primary pin JA file must exist at ${jaPath}`);
     const content = readFileSync(jaPath, 'utf8');

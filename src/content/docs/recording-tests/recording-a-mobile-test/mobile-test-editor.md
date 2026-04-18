@@ -34,11 +34,8 @@ Test Editorの Device and Mobile Application Information セクションには�
 - **Application Name**: テストに使用されているモバイルアプリケーションを表示します。
 
 :::note
-Testim で使用する仮想デバイスを追加するには、以下のソフトウェアを使用できます:
-
-- Android デバイス: Virtual Device Manager 付き Android Studio
-- Apple デバイス: XCode iOS Simulator
-  :::
+Testim で使用する仮想デバイスを追加するには、以下のソフトウェアを使用できます: **Android Devices**: Android Studio with Virtual Device Manager **Apple Devices**: XCode iOS Simulator
+:::
 
 ### テストに使用するモバイルアプリの変更
 

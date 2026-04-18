@@ -105,16 +105,16 @@ keywords:
 
 - **設定** - 通知の送信先を指定できます。次のオプションが利用可能です：
   - メール - メール通知を受け取るには、「メール」チェックボックスを選択し、受信者のメール/メールを入力します。
-  - Slack - Slack 経由で通知を送信するには、「Slack」チェックボックスを選択します。Slack に通知を送信するには、初期統合を設定する必要があります。詳細については、[下記](https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack) を参照してください。
+  - Slack - Slack 経由で通知を送信するには、「Slack」チェックボックスを選択します。Slack に通知を送信するには、初期統合を設定する必要があります。詳細については、[下記](/docs/running-tests/scheduler#スケジューラーを-slack-と統合する) を参照してください。
 
 ![Slack 通知設定の詳細画面](/images/running-tests/scheduler/748b4b5-notify.png)
 
-12. **詳細** をクリックして [高度なスケジューラーオプション](/docs/running-tests/scheduler#高度なスケジューラーオプション) を構成します。
+1. **詳細** をクリックして [高度なスケジューラーオプション](/docs/running-tests/scheduler#高度なスケジューラーオプション) を構成します。
 
 ![高度なスケジューラーオプション設定画面](/images/running-tests/scheduler/ee069a6-scheduler3.png)
 
-13. Professional plan をお持ちの場合は、スケジューラーを [ターボモード](/docs/testops/turbo-mode) で実行するように設定することもできます。
-14. **作成** をクリックしてスケジューラーを保存します。
+2. Professional plan をお持ちの場合は、スケジューラーを [ターボモード](/docs/testops/turbo-mode) で実行するように設定することもできます。
+3. **作成** をクリックしてスケジューラーを保存します。
 
 新しいスケジュール実行が作成され、自動的にオンになります：
 

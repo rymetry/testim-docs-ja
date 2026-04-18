@@ -1360,4 +1360,4 @@ keywords:
  </tbody>
 </table>
 
-| globalParameters      |             |      |
+`|` globalParameters | | |
