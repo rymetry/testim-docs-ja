@@ -92,31 +92,31 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 
 ### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
 
-- **Patch IDs**: _none_ (candidate — not yet patched)
+- **Patch IDs**: `UD-004A-scheduler-high-speed-mode`, `UD-004C-scheduler-slack-integration-anchor`
 - **Defect class**: `stale-reference`
 - **Added**: 2026-04-18
 - **Rescoped**: 2026-04-18 (PR #337 rework — URL-localization takes precedence over raw mirror)
+- **Applied**: 2026-04-18 (Category B PR — UD-004A + UD-004C promoted from candidate to applied; UD-004B retired as N/A)
 - **Review after**: 2026-10-18
 - **Affected slugs** (2):
-  - `running-tests/scheduler`
-  - `running-tests/scheduler-mobile`
+  - `running-tests/scheduler` (UD-004A + UD-004C)
+  - `running-tests/scheduler-mobile` (UD-004C only)
 - **Defect**: EN HTML 内のリンクが legacy domain `https://help.testim.io/...` を指しているが、該当コンテンツは `docs.tricentis.com/testim` の modern canonical URL (例: `/docs/testops/turbo-mode` 等) に移行済み。さらに `high-speed-mode` → `turbo-mode` の feature rename も絡む。観測された legacy URL と modern canonical の対応:
   - EN `https://help.testim.io/docs/high-speed-mode` ↔ modern `/docs/testops/turbo-mode` (feature rename: high-speed → turbo)
   - EN `https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack` ↔ modern `/docs/running-tests/scheduler#スケジューラーを-slack-と統合する` (JA-local anchor per WRITING_GUIDE §91-109)
 - **JA side**: JA markdown は WRITING_GUIDE §91-109 (path-based `/docs/{folder}/{slug}`) および §192 (URL-localization `help.testim.io/docs/X` ↔ `/docs/X` を唯一の許容差分として列挙) に従い modern canonical / JA-local anchor を保持する。これは raw-mirror rationale より優先される (JA 独自構造の追加ではなく、§192 の明示的許容)。
-- **Fix applied**: _none_ — EN HTML boundary での literal patch は未実装。JA が modern canonical を保持することで 2-4 個の URL token mismatch entry が baseline に発生するが、これは cosmetic EN staleness の意図的 deferral として許容する。
-- **Status**: `candidate (not yet patched)` — 2-4 個の baseline residual は意図的 deferral
-- **Planned mechanism**: C phase (M3 PR Z 候補) で `en_source_patches` に以下を登録し、EN HTML boundary で canonicalize する:
-  - `UD-004A-scheduler-high-speed-mode`: `href="https://help.testim.io/docs/high-speed-mode"` → `href="../testops/turbo-mode.htm"` (scheduler.md 対応)
-  - `UD-004B-scheduler-mobile-high-speed-mode`: 同上 (scheduler-mobile.md 対応、該当する場合)
-  - `UD-004C-scheduler-slack-integration-anchor`: `href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack"` → `href="scheduler.htm#integrating-scheduler-with-slack"` + JA-side anchor も同期 (scheduler.md / scheduler-mobile.md)
-  - 代替 Option: URL-alias normalizer layer を導入し、`help.testim.io/*` → `docs.tricentis.com/testim/*` の mapping を token extraction 時に適用 (より広範囲の stale-reference に適用可能だが scope creep リスク)
+- **Fix applied**:
+  - `UD-004A-scheduler-high-speed-mode`: `<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>` → `<a href="../testops/turbo-mode.htm">Turbo mode</a>` (scheduler のみ — scheduler-mobile に high-speed-mode 参照なし)
+  - `UD-004C-scheduler-slack-integration-anchor`: `<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>` → `<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>` (scheduler + scheduler-mobile 両方に適用)
+  - `UD-004B`: **N/A retired** — scheduler-mobile には high-speed-mode legacy URL 参照が存在しないため、当初 plan 時の推測上の patch は不要 (EN HTML grep で確認済)
+  - 結果: baseline から URL token mismatch 由来の segment-extra/missing pair が消滅 (scheduler 5→1, scheduler-mobile 3→1 / 残 1 件ずつは segment-inconclusive tokenless-near-tie = P2-5 対象)
+- **Status**: `applied (UD-004A + UD-004C)`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP** (after patch applied and upstream fix confirmed):
+- **Removal SOP** (after upstream fix confirmed):
   1. `snapshots/en/content/running-tests/scheduler.html` と `scheduler-mobile.html` を再取得
   2. `grep 'help.testim.io'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-004 entry を削除
-  4. baseline 再生成 (residual 2-4 entry 消化を期待)
+  3. `scripts/lib/en_source_patches.mjs` から UD-004A / UD-004C entry を削除
+  4. baseline 再生成 (既存 entry は tokenless-near-tie のみ残存するはず)
 
 ## Adding a new defect
 

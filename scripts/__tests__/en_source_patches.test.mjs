@@ -211,6 +211,57 @@ describe('applyEnSourcePatches (UD-001 / UD-002 application)', () => {
     assert.equal(cov.snapshot().matchedHits, 1);
   });
 
+  it('applies UD-004A on legacy high-speed-mode href for scheduler', () => {
+    const html =
+      '<p>If you are on a pro plan, you are also able to set the scheduler to run in ' +
+      '<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'running-tests/scheduler', cov);
+    assert.ok(out.includes('<a href="../testops/turbo-mode.htm">Turbo mode</a>'));
+    assert.equal(out.includes('help.testim.io/docs/high-speed-mode'), false);
+    const s = cov.snapshot();
+    assert.equal(s.byPatchId['UD-004A-scheduler-high-speed-mode'], 1);
+  });
+
+  it('applies UD-004C on legacy Slack-integration anchor for scheduler AND scheduler-mobile', () => {
+    const html =
+      '<p>For details, see ' +
+      '<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>.</p>';
+    for (const slug of ['running-tests/scheduler', 'running-tests/scheduler-mobile']) {
+      const cov = createEnSourcePatchCoverage();
+      const out = applyEnSourcePatches(html, slug, cov);
+      assert.ok(
+        out.includes(
+          '<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>',
+        ),
+        `slug ${slug} patch did not apply`,
+      );
+      assert.equal(out.includes('help.testim.io/v2.0'), false);
+      assert.equal(
+        cov.snapshot().byPatchId['UD-004C-scheduler-slack-integration-anchor'],
+        1,
+      );
+    }
+  });
+
+  it('applies BOTH UD-004A and UD-004C when scheduler HTML contains both defects', () => {
+    const html =
+      '<p>See ' +
+      '<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>.</p>\n' +
+      '<p>Run in ' +
+      '<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'running-tests/scheduler', cov);
+    assert.ok(out.includes('scheduler.htm#integrating-scheduler-with-slack'));
+    assert.ok(out.includes('../testops/turbo-mode.htm'));
+    assert.equal(out.includes('help.testim.io'), false);
+    const s = cov.snapshot();
+    assert.equal(s.byPatchId['UD-004A-scheduler-high-speed-mode'], 1);
+    assert.equal(s.byPatchId['UD-004C-scheduler-slack-integration-anchor'], 1);
+    assert.equal(s.bySlug['running-tests/scheduler'], 2);
+    assert.equal(s.mismatches.length, 0);
+  });
+
   it('does NOT apply UD-001A on sfdc-step-edit (slug mismatch)', () => {
     const html = '<p>Verify -this action verifies x</p>';
     const cov = createEnSourcePatchCoverage();
@@ -336,21 +387,55 @@ describe('createEnSourcePatchCoverage', () => {
 // T-2: slug uniqueness (order-independence structural guarantee)
 // ---------------------------------------------------------------------------
 
-describe('en_source_patches slug uniqueness', () => {
-  it('no two patches share a slug (order-independence structural guarantee)', () => {
-    const slugToPatchIds = {};
+describe('en_source_patches order-independence invariants', () => {
+  // Multiple patches MAY share a slug (e.g. UD-004A + UD-004C both target
+  // running-tests/scheduler) as long as their find strings do not overlap.
+  // The structural guarantee is that for any slug, no `find` is a substring
+  // of another `find` or `replace` of a patch that targets the same slug.
+  // Under that condition, literal split/join replacement is commutative.
+  it('for any shared slug, no patch find is a substring of another patch find (same slug)', () => {
+    const slugToPatches = {};
     for (const patch of EN_SOURCE_PATCHES) {
       for (const s of patch.slugs) {
-        if (!slugToPatchIds[s]) slugToPatchIds[s] = [];
-        slugToPatchIds[s].push(patch.id);
+        if (!slugToPatches[s]) slugToPatches[s] = [];
+        slugToPatches[s].push(patch);
       }
     }
-    for (const [slug, ids] of Object.entries(slugToPatchIds)) {
-      assert.equal(
-        ids.length,
-        1,
-        `slug ${slug} is covered by multiple patches: ${ids.join(', ')}. This breaks order-independence guarantee.`,
-      );
+    for (const [slug, patches] of Object.entries(slugToPatches)) {
+      if (patches.length < 2) continue;
+      for (const a of patches) {
+        for (const b of patches) {
+          if (a === b) continue;
+          assert.ok(
+            !a.find.includes(b.find),
+            `slug ${slug}: patch ${a.id}.find contains patch ${b.id}.find — breaks order-independence`,
+          );
+        }
+      }
+    }
+  });
+
+  it('for any shared slug, no patch find is a substring of another patch replace (same slug)', () => {
+    // If A.find ⊂ B.replace, applying B first could re-introduce A.find and
+    // break idempotency / order-independence. Guard against that regression.
+    const slugToPatches = {};
+    for (const patch of EN_SOURCE_PATCHES) {
+      for (const s of patch.slugs) {
+        if (!slugToPatches[s]) slugToPatches[s] = [];
+        slugToPatches[s].push(patch);
+      }
+    }
+    for (const [slug, patches] of Object.entries(slugToPatches)) {
+      if (patches.length < 2) continue;
+      for (const a of patches) {
+        for (const b of patches) {
+          if (a === b) continue;
+          assert.ok(
+            !b.replace.includes(a.find),
+            `slug ${slug}: patch ${b.id}.replace contains patch ${a.id}.find — breaks order-independence`,
+          );
+        }
+      }
     }
   });
 });
