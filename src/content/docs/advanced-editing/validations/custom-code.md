@@ -63,12 +63,12 @@ keywords:
 
 8. **Properties** パネルの **Description** に、必要ならステップの説明を入力します（既定: “Run validation” / “Run action”）。
 9. ステップに必要なパラメーターを定義します。\
-   a. **Properties** パネルで **+ PARAMS** をクリック\
-   b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
-   c. **HTML parameter** — ドロップダウンを **HTML** にして HTML 要素をパラメーターとして指定（ブラウザが開き、対象ページが表示されます）。次を実施します：
-   - **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) を参照してください。
 
-d. 追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
+まず **Properties** パネルで **+ PARAMS** をクリックします。次に **JS parameter** を追加する場合はドロップダウンを **JS** にして JavaScript パラメーターを入力します。最後に **HTML parameter** として HTML 要素を定義する場合はドロップダウンを **HTML** にします。ブラウザが開き、対象ページが表示されるので次を実施します：
+
+- **AUT** ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。選択要素は **Properties** の **Target Element** に表示されます。選択要素の確認・置き換え・設定調整は、[Editing Target Element Properties](/docs/editing-tests/editing-your-tests/editing-target-element-properties) を参照してください。
+
+追加した要素は "param" または "element" といった既定名になります（JS/HTML の種別によって異なります）。編集アイコンから分かりやすい名前に変更してください。
 
 ![パラメーター名の編集](/images/validations/custom-code/9e53245-Testim_285a_r.png)
 

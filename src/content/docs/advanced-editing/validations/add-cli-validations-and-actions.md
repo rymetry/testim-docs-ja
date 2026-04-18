@@ -83,9 +83,7 @@ _Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定値: “Run CLI validation” / “Run CLI action”）。
 9. パラメーターを定義します。
-   a. **+ PARAMS** をクリック\
-   b. **JS parameter** — ドロップダウンを **JS** にして JavaScript パラメーターを入力\
-   c. **Package parameter** — ドロップダウンを **Package** にして NPM パッケージ変数を入力
+   まず **+ PARAMS** をクリックします。次に **JS parameter** の場合はドロップダウンを **JS** にして JavaScript パラメーターを入力します。**Package parameter** の場合はドロップダウンを **Package** にして NPM パッケージ変数を入力します。
 
 :::warning
 コード内で npm パッケージを使う場合、`require` は行わず、ステップのパラメーターで PACKAGE として渡してください。

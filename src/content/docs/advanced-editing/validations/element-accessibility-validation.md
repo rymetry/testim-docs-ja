@@ -62,13 +62,12 @@ Testim のアクセシビリティステップは、業界をリードするア�
 
 ![定義済みステップメニュー](/images/accessibility-validations/element-accessibility-validation/238c2a5-Testim_270_r2_predefined_steps.png)
 
-5. **Validations**をクリックします。
-
+5.**Validations** をクリックします。\
 検証メニューが展開されます。
 
 ![検証メニュー](/images/accessibility-validations/element-accessibility-validation/e797323-Testim_271_r2_validations_menu.png)
 
-6. メニューをスクロールして**Validate element accessibility**を選択します。
+5. メニューをスクロールして**Validate element accessibility**を選択します。
 
 :::note
 または、メニュー上部の検索ボックスを使用して「Validate element accessibility」を検索できます。
