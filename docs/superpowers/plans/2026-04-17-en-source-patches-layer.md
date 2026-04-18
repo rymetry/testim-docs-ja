@@ -83,6 +83,24 @@ Direct defect elimination (必ず消える): **5 (UD-001) + 2 (UD-002) = 7**
 Cascade (段落/構造 alignment で連鎖): 最大 **+6 (sfdc-step-create, edit, validate の structure/extra 2 × 3)**
 **Δ acceptance range**: **-13 ≤ Δ ≤ -7**。新規追加 0 は binary gate。
 
+#### 1.4.1 Inventory addendum (post-initial defects)
+
+初版の UD-001 / UD-002 以降に追加された defect。scope / defectClass / gates #6-8 の適用範囲を明示するため、以降の PR 作成時は本 sub-section に entry を追記する。
+
+**Defect UD-003** (`madcap-artifact`、PR #337 で registered candidate、applied 未実施)
+- `<p>| globalParameters      |             |      |</p>` (broken-table-row-as-paragraph)
+- affected: `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
+- JA 側は byte-identical mirror で interim 対応済、baseline 追加無し
+- C phase (M3 PR Z 候補) で `en_source_patches` に昇格予定
+
+**Defect UD-004** (`stale-reference`、PR #338 で UD-004A + UD-004C applied、UD-004B retired as N/A)
+- affected: `running-tests/scheduler` (UD-004A + UD-004C), `running-tests/scheduler-mobile` (UD-004C)
+- UD-004A: `<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>` → `<a href="../testops/turbo-mode.htm">Turbo mode</a>` (feature rename: high-speed → turbo、legacy domain strip)
+- UD-004C: `<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>` → `<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>` (legacy v2.0 anchor → self-link canonical)
+- UD-004B retired: EN grep で scheduler-mobile に high-speed-mode 参照が無いことを確認済
+- **Per-slug overlap**: UD-004A + UD-004C は `running-tests/scheduler` を共有する最初のケース。test invariant (§2.4 order-independence) は "no two patches share a slug" ではなく "per-slug find-disjointness (find-to-find + find-to-replace substring free)" で保証される (`scripts/__tests__/en_source_patches.test.mjs`)。literal split/join replacement の commutativity には後者で十分 — slug-disjointness は overly-strict。
+- **Δ PR #338**: -6 (scheduler 5→1 / scheduler-mobile 3→1)、新規追加 0。Gates #6 (`mismatches = 0`)、#7 (`matchedHits ≥ 3`) 適用。**Gate #8 (-13 ≤ Δ ≤ -7) は UD-001/002 Bundle 1 固有の acceptance range であり、本 UD-004 promotion には適用しない** (per-defect acceptance range は各 PR で個別に宣言する)。
+
 ## 2. Architecture
 
 ### 2.1 Design choice: canonical HTML を outer layer で生成し downstream に伝播
