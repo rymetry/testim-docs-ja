@@ -478,7 +478,12 @@ describe('pin slug content-correctness + fallback (T12)', () => {
     //       entry になる見込みのため、Bundle 2/3/4 即時計画対象外かつ multi-type
     //       (segment-extra / segment-missing) を持つ
     //       `administration/encrypted-credentials` (2 baseline entry) へ再 pin。
-    const fallbackSlug = 'administration/encrypted-credentials';
+    // NOTE: 2026-04-18 に `administration/encrypted-credentials` が PR F (misc
+    //       areas) の token-alignment 修正で 0 entry になったため、EN tokenizer
+    //       の `index.htm` 相対リンク処理制限由来で content-level 解決不能 (M3
+    //       PR Z 候補) かつ multi-type (segment-extra / segment-missing) を
+    //       持つ `editing-tests/groups/auto-grouping` (2 baseline entry) へ再 pin。
+    const fallbackSlug = 'editing-tests/groups/auto-grouping';
     const baselinePath = join(ROOT, 'parity-baseline.json');
     const baseline = JSON.parse(readFileSync(baselinePath, 'utf8'));
     const count = baseline.entries.filter((e) => e.slug === fallbackSlug).length;
