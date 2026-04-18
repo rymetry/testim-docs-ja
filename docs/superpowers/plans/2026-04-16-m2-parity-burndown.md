@@ -135,6 +135,10 @@ Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高
 
 **Exit:** Tier B 全 slug で entry = 0、baseline total ≤ 40
 
+**Progress log:**
+
+- 2026-04-18: Bundle 3 (Running Tests) 完了 — 4 slugs × 3 entries = 12 eliminated, baseline 100 → 88 (PR #337)。UD-003 / UD-004 candidates registered in upstream-defect-tracker.md。
+
 ### P2-4: Tier C sweep — long-tail
 
 **Target:** Tier C 26 slug × 1 entry (inconclusive 除く)
