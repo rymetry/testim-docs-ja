@@ -22,8 +22,8 @@
  *
  *   | slug                                               | 残留理由                                         |
  *   | -------------------------------------------------- | ------------------------------------------------ |
- *   | results/test-runs                                  | Testim UI 名 英語残留 (segment-untranslated)     |
- *   | running-tests/the-command-line-cli                 | Testim UI 名 英語残留 (segment-untranslated, 4 件 / T11 pending) |
+ *   | results/test-runs                                  | Testim UI 名 英語残留 (segment-untranslated) — §5.3.7 で解消済み（RESOLVED へ移動） |
+ *   | running-tests/the-command-line-cli                 | Testim UI 名 英語残留 (segment-untranslated, 4 件 / T11 pending) — Bundle 3 で解消済み（RESOLVED へ移動） |
  *
  * pin する契約:
  *   RESOLVED: 全 slug で `reportableActiveFiles === 0` かつ `baselinedByType === {}`
@@ -31,6 +31,11 @@
  *             `baselinedByType[segment-untranslated] >= 1`
  *             T15: 加えて `section-structure-mismatch` / `segment-extra` も
  *             requiredBaselinedTypes として pin 可能 (plan §3.2)
+ *
+ *   2026-04-17 (Tier B Wave 3 Bundle 3): running-tests/the-command-line-cli の
+ *   3 件 segment-untranslated baseline を JA 側 content rewrite
+ *   (ラベル A/B/C/D → 甲/乙/丙/丁; AND/OR default → 論理和) で解消し、
+ *   RESOLVED_PAGES へ移動。RESIDUAL_PAGES は現在空。
  *
  * slug ごとに別 status file へ書き出し、repo root は触らない。
  */
@@ -106,6 +111,9 @@ const RESOLVED_PAGES = Object.freeze([
   // M2 Tier B Wave 1: arrow-fusion burn-down で 4→0 (section-structure-mismatch ×2,
   //   segment-extra ×2) に clean 化 — RESIDUAL から移動
   'administration/project-and-user-management',
+  // M2 Tier B Wave 3 Bundle 3: segment-untranslated 3 件を content rewrite
+  //   (ラベル A-D → 甲-丁 / AND-OR default → 論理和) で解消 — RESIDUAL から移動
+  'running-tests/the-command-line-cli',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -116,7 +124,8 @@ const RESOLVED_PAGES = Object.freeze([
 const RESIDUAL_PAGES = Object.freeze([
   // §5.3.7: results/test-runs は RESOLVED_PAGES へ昇格
   // (status-symbol 表現を Unicode ×/✓ に置換する content-level JA 翻訳で解消)
-  { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
+  // Tier B Wave 3 Bundle 3: running-tests/the-command-line-cli も RESOLVED_PAGES へ昇格
+  // (ラベル A-D → 甲-丁 / AND-OR default → 論理和 で segment-untranslated を解消)
   // T15 pin は M2 Tier B Wave 1 で `administration/project-and-user-management`
   // を 4→0 に clean 化して解消。RESOLVED に移動済み。他の
   // section-structure-mismatch / segment-extra 代表 pin が必要になったら
