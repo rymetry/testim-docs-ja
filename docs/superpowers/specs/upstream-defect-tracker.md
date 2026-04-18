@@ -69,6 +69,51 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   3. `scripts/lib/en_source_patches.mjs` から UD-002 entry を削除
   4. baseline 再生成
 
+### UD-003: broken-table-row-as-paragraph in predefined-properties-in-config-file-hooks
+
+- **Patch IDs**: _none_ (candidate — not yet patched)
+- **Defect class**: `madcap-artifact`
+- **Added**: 2026-04-18
+- **Review after**: 2026-10-18
+- **Affected slugs** (1):
+  - `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
+- **Defect**: EN HTML 内に `<p>| globalParameters | | |</p>` という段落が存在する。著者は markdown-table row を意図して書いたが、MadCap が raw paragraph として出力したため、`|` 区切り文字を含む単なる散文として render されている。Turndown 通過後も同形の段落として JA 側と compare されるため、JA は byte-identical な literal mirror で fingerprint 一致させる interim workaround を採っている。
+- **Fix applied**: _none_ — `en_source_patches` entry は未登録。JA 側も broken form をそのまま mirror (source-first literal 忠誠)
+- **Status**: `candidate (not yet patched)`
+- **Planned mechanism**: M3 PR Z / C phase で `en_source_patches` に `UD-003-broken-table-row-as-paragraph` を登録し、EN HTML boundary で broken row を strip / normalize する。候補案:
+  - Option A: `<p>| globalParameters | | |</p>` → 削除 (JA も同期削除)
+  - Option B: 完全な markdown-table form に normalize し、header / body を復元する
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
+- **Removal SOP** (after patch applied and upstream fix confirmed):
+  1. `snapshots/en/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.html` を再取得
+  2. `grep '| globalParameters | | |'` が 0 hit になったことを確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-003 entry を削除
+  4. baseline 再生成
+
+### UD-004: legacy `help.testim.io` URLs in scheduler pages
+
+- **Patch IDs**: _none_ (candidate — not yet patched)
+- **Defect class**: `stale-reference`
+- **Added**: 2026-04-18
+- **Review after**: 2026-10-18
+- **Affected slugs** (2):
+  - `running-tests/scheduler`
+  - `running-tests/scheduler-mobile`
+- **Defect**: EN HTML 内のリンクが legacy domain `https://help.testim.io/...` を指しているが、該当コンテンツは `docs.tricentis.com/testim` の modern URL (例: `/docs/testops/turbo-mode` 等) に移行済み。観測された legacy URL 例:
+  - `https://help.testim.io/docs/high-speed-mode`
+  - `https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack`
+- **Fix applied**: _none_ — JA 側は EN と byte-identical な literal URL mirror で alignment を通す interim workaround。canonical 化は行わない (source-first 忠誠)
+- **Status**: `candidate (not yet patched)`
+- **Planned mechanism**: C phase で以下のいずれかを実施:
+  - Option A: `en_source_patches` に `UD-004-legacy-help-testim-io-url-{scheduler,scheduler-mobile}` を登録し、EN HTML boundary で legacy URL → modern URL に literal 置換
+  - Option B: URL-alias normalizer layer を導入し、`help.testim.io/*` → `docs.tricentis.com/testim/*` の mapping を token extraction 時に適用
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
+- **Removal SOP** (after patch applied and upstream fix confirmed):
+  1. `snapshots/en/content/running-tests/scheduler.html` と `scheduler-mobile.html` を再取得
+  2. `grep 'help.testim.io'` が 0 hit になったことを確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-004 entry を削除
+  4. baseline 再生成
+
 ## Adding a new defect
 
 新しい broken-EN defect を見つけた際のチェックリスト:
