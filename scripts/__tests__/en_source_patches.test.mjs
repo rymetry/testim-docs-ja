@@ -387,6 +387,71 @@ describe('createEnSourcePatchCoverage', () => {
 // T-2: slug uniqueness (order-independence structural guarantee)
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Shared helpers for permutation-commutativity tests (main test + self-
+// verification meta-test reference these same functions so generator drift
+// surfaces as a meta-test failure, not a silent coverage hole).
+// ---------------------------------------------------------------------------
+
+function _applyPatchPermutation(input, patchOrder) {
+  let out = input;
+  for (const p of patchOrder) {
+    out = out.split(p.find).join(p.replace);
+  }
+  return out;
+}
+
+function _allPermutations(arr) {
+  if (arr.length <= 1) return [arr.slice()];
+  const result = [];
+  for (let i = 0; i < arr.length; i += 1) {
+    const rest = arr.slice(0, i).concat(arr.slice(i + 1));
+    for (const sub of _allPermutations(rest)) {
+      result.push([arr[i], ...sub]);
+    }
+  }
+  return result;
+}
+
+// Build test inputs exercising different placement patterns AND
+// overlap-boundary cases. The overlap-boundary inputs are critical —
+// they catch partial-overlap collisions like f1='abc' + f2='bcd' on
+// 'abcd', which simple concatenation/separation inputs do NOT expose.
+//
+// For every ordered pair (f1, f2) of distinct finds, enumerate all
+// overlap lengths k where f1's suffix of length k equals f2's prefix
+// of length k, and emit `f1 + f2[k:]` (both bare and with prefix/suffix).
+// This exhaustively constructs every input shape in which applying-
+// then-replacing f1 could destroy or expose an f2 match position (and
+// vice versa for all orderings).
+function _buildPatchSyntheticInputs(finds) {
+  const sep1 = ' ';
+  const sep2 = '</p>\n<p>';
+  const inputs = new Set([
+    finds.join(''),
+    finds.join(sep1),
+    finds.join(sep2),
+    finds.slice().reverse().join(sep1),
+    finds.concat(finds).join(sep1),
+  ]);
+  for (let i = 0; i < finds.length; i += 1) {
+    for (let j = 0; j < finds.length; j += 1) {
+      if (i === j) continue;
+      const f1 = finds[i];
+      const f2 = finds[j];
+      const maxK = Math.min(f1.length, f2.length) - 1;
+      for (let k = 1; k <= maxK; k += 1) {
+        if (f1.slice(-k) === f2.slice(0, k)) {
+          const merged = f1 + f2.slice(k);
+          inputs.add(`prefix ${merged} suffix`);
+          inputs.add(merged);
+        }
+      }
+    }
+  }
+  return Array.from(inputs);
+}
+
 describe('en_source_patches order-independence invariants', () => {
   // Multiple patches MAY share a slug (e.g. UD-004A + UD-004C both target
   // running-tests/scheduler) as long as their find strings do not interfere.
@@ -464,81 +529,15 @@ describe('en_source_patches order-independence invariants', () => {
       }
     }
 
-    // Apply a permutation of patches in order (literal split/join each).
-    function applyPermutation(input, patchOrder) {
-      let out = input;
-      for (const p of patchOrder) {
-        out = out.split(p.find).join(p.replace);
-      }
-      return out;
-    }
-
-    // Generate all permutations of an array (small N — worst case 24 at N=4).
-    function permutations(arr) {
-      if (arr.length <= 1) return [arr.slice()];
-      const result = [];
-      for (let i = 0; i < arr.length; i += 1) {
-        const rest = arr.slice(0, i).concat(arr.slice(i + 1));
-        for (const sub of permutations(rest)) {
-          result.push([arr[i], ...sub]);
-        }
-      }
-      return result;
-    }
-
-    // Build test inputs exercising different placement patterns AND
-    // overlap-boundary cases. The overlap-boundary inputs are critical —
-    // they catch partial-overlap collisions like f1='abc' + f2='bcd' on
-    // 'abcd', which simple concatenation/separation inputs do NOT expose
-    // (see self-verification meta-test at the bottom of this suite).
-    //
-    // For every ordered pair (f1, f2) of distinct finds, enumerate all
-    // overlap lengths k where f1's suffix of length k equals f2's prefix
-    // of length k, and emit `prefix + (f1 concatenated to f2 via overlap
-    // k) + suffix`. This exhaustively constructs every input shape in
-    // which applying-then-replacing f1 could destroy or expose an f2
-    // match position (and vice versa for all orderings).
-    function buildSyntheticInputs(finds) {
-      const sep1 = ' ';
-      const sep2 = '</p>\n<p>';
-      const inputs = new Set([
-        finds.join(''),
-        finds.join(sep1),
-        finds.join(sep2),
-        finds.slice().reverse().join(sep1),
-        finds.concat(finds).join(sep1),
-      ]);
-
-      // Enumerate suffix(f1) ∩ prefix(f2) overlap merges for every pair.
-      for (let i = 0; i < finds.length; i += 1) {
-        for (let j = 0; j < finds.length; j += 1) {
-          if (i === j) continue;
-          const f1 = finds[i];
-          const f2 = finds[j];
-          const maxK = Math.min(f1.length, f2.length) - 1;
-          for (let k = 1; k <= maxK; k += 1) {
-            if (f1.slice(-k) === f2.slice(0, k)) {
-              // Merged input: f1 + f2[k:] contains f1 (positions [0, f1.len))
-              // and f2 (positions [f1.len - k, f1.len - k + f2.len)).
-              const merged = f1 + f2.slice(k);
-              inputs.add(`prefix ${merged} suffix`);
-              inputs.add(merged); // also bare, no prefix/suffix
-            }
-          }
-        }
-      }
-      return Array.from(inputs);
-    }
-
     for (const [slug, patches] of Object.entries(slugToPatches)) {
       if (patches.length < 2) continue;
       const finds = patches.map((p) => p.find);
-      const inputs = buildSyntheticInputs(finds);
-      const perms = permutations(patches);
+      const inputs = _buildPatchSyntheticInputs(finds);
+      const perms = _allPermutations(patches);
       for (const input of inputs) {
-        const reference = applyPermutation(input, perms[0]);
+        const reference = _applyPatchPermutation(input, perms[0]);
         for (let i = 1; i < perms.length; i += 1) {
-          const candidate = applyPermutation(input, perms[i]);
+          const candidate = _applyPatchPermutation(input, perms[i]);
           assert.equal(
             candidate,
             reference,
@@ -551,17 +550,18 @@ describe('en_source_patches order-independence invariants', () => {
   });
 
   // Meta-test: prove the permutation check has teeth by constructing a
-  // deliberately-colliding fake patch pair and confirming (a) the
-  // synthetic-input generator actually produces the overlap-boundary
-  // input that exposes order-dependence, (b) applying permutations to
-  // that input yields different outputs, and (c) the cheap substring
-  // checks pass for this pair — so permutation-commutativity is the
-  // load-bearing invariant that adds real value.
-  it('permutation check detects the classic abc+bcd partial-overlap collision (self-verification)', () => {
+  // deliberately-colliding fake patch pair and running it through the
+  // SAME shared helpers (_buildPatchSyntheticInputs, _applyPatchPermutation,
+  // _allPermutations) used by the main registry-wide test. If the generator
+  // regresses and stops emitting overlap-boundary inputs, this meta-test
+  // fails loud — so drift between generator and self-check cannot be silent.
+  // Also confirms the cheap substring checks PASS for the colliding pair,
+  // proving permutation-commutativity is the load-bearing invariant.
+  it('shared generator detects the classic abc+bcd partial-overlap collision (self-verification)', () => {
     const fakeA = { id: 'FAKE-A', find: 'abc', replace: 'X' };
     const fakeB = { id: 'FAKE-B', find: 'bcd', replace: 'Y' };
 
-    // (c) Both substring checks — find-in-find and find-in-replace —
+    // (1) Both substring checks — find-in-find and find-in-replace —
     // MUST pass for this pair. Otherwise the cheap checks would already
     // catch it and permutation-commutativity would be redundant.
     assert.ok(!fakeA.find.includes(fakeB.find), 'abc does not contain bcd');
@@ -569,39 +569,28 @@ describe('en_source_patches order-independence invariants', () => {
     assert.ok(!fakeA.replace.includes(fakeB.find), 'X does not contain bcd');
     assert.ok(!fakeB.replace.includes(fakeA.find), 'Y does not contain abc');
 
-    // (a) Reconstruct the same generator logic used above to prove the
-    // overlap-boundary case `abcd` IS produced. If this diverges from
-    // the generator, update both to keep them in lockstep.
-    const finds = [fakeA.find, fakeB.find];
-    const overlapCandidates = [];
-    for (let i = 0; i < finds.length; i += 1) {
-      for (let j = 0; j < finds.length; j += 1) {
-        if (i === j) continue;
-        const f1 = finds[i];
-        const f2 = finds[j];
-        const maxK = Math.min(f1.length, f2.length) - 1;
-        for (let k = 1; k <= maxK; k += 1) {
-          if (f1.slice(-k) === f2.slice(0, k)) {
-            overlapCandidates.push(f1 + f2.slice(k));
-          }
-        }
-      }
-    }
+    // (2) The actual shared generator MUST produce the overlap-boundary
+    // input 'abcd' (or 'prefix abcd suffix'). This calls the exact same
+    // helper the main test uses — no duplicated logic.
+    const inputs = _buildPatchSyntheticInputs([fakeA.find, fakeB.find]);
+    const hasOverlapBoundary = inputs.some((i) => i === 'abcd' || i === 'prefix abcd suffix');
     assert.ok(
-      overlapCandidates.includes('abcd'),
-      `generator must produce 'abcd' for abc+bcd overlap; got ${JSON.stringify(overlapCandidates)}`,
+      hasOverlapBoundary,
+      `shared generator must produce 'abcd' overlap-boundary input; got ${JSON.stringify(inputs)}`,
     );
 
-    // (b) On the overlap-boundary input, AB and BA permutations diverge.
-    const input = 'prefix abcd suffix';
-    const orderAB = input.split(fakeA.find).join(fakeA.replace)
-                        .split(fakeB.find).join(fakeB.replace);
-    const orderBA = input.split(fakeB.find).join(fakeB.replace)
-                        .split(fakeA.find).join(fakeA.replace);
+    // (3) Running the shared permutation-apply helper across both orderings
+    // of the fake pair on an overlap-boundary input MUST produce divergent
+    // outputs. This proves the overlap case is order-dependent and that
+    // the generator's input is sufficient to expose it.
+    const perms = _allPermutations([fakeA, fakeB]);
+    assert.equal(perms.length, 2, 'permutation helper should produce 2 orderings for 2 patches');
+    const overlapInput = 'prefix abcd suffix';
+    const outputs = perms.map((order) => _applyPatchPermutation(overlapInput, order));
     assert.notEqual(
-      orderAB,
-      orderBA,
-      'meta-test sanity: abc+bcd should be order-dependent on abcd — if these agree, the permutation check is vacuous',
+      outputs[0],
+      outputs[1],
+      'meta-test sanity: shared helpers must show AB and BA produce different outputs on abcd — otherwise the main permutation test is vacuous',
     );
   });
 });
