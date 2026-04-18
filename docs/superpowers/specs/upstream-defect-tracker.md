@@ -90,29 +90,33 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   3. `scripts/lib/en_source_patches.mjs` から UD-003 entry を削除
   4. baseline 再生成
 
-### UD-004: legacy `help.testim.io` URLs in scheduler pages
+### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
 
 - **Patch IDs**: _none_ (candidate — not yet patched)
 - **Defect class**: `stale-reference`
 - **Added**: 2026-04-18
+- **Rescoped**: 2026-04-18 (PR #337 rework — URL-localization takes precedence over raw mirror)
 - **Review after**: 2026-10-18
 - **Affected slugs** (2):
   - `running-tests/scheduler`
   - `running-tests/scheduler-mobile`
-- **Defect**: EN HTML 内のリンクが legacy domain `https://help.testim.io/...` を指しているが、該当コンテンツは `docs.tricentis.com/testim` の modern URL (例: `/docs/testops/turbo-mode` 等) に移行済み。観測された legacy URL 例:
-  - `https://help.testim.io/docs/high-speed-mode`
-  - `https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack`
-- **Fix applied**: _none_ — JA 側は EN と byte-identical な literal URL mirror で alignment を通す interim workaround。canonical 化は行わない (source-first 忠誠)
-- **Status**: `candidate (not yet patched)`
-- **Planned mechanism**: C phase で以下のいずれかを実施:
-  - Option A: `en_source_patches` に `UD-004-legacy-help-testim-io-url-{scheduler,scheduler-mobile}` を登録し、EN HTML boundary で legacy URL → modern URL に literal 置換
-  - Option B: URL-alias normalizer layer を導入し、`help.testim.io/*` → `docs.tricentis.com/testim/*` の mapping を token extraction 時に適用
+- **Defect**: EN HTML 内のリンクが legacy domain `https://help.testim.io/...` を指しているが、該当コンテンツは `docs.tricentis.com/testim` の modern canonical URL (例: `/docs/testops/turbo-mode` 等) に移行済み。さらに `high-speed-mode` → `turbo-mode` の feature rename も絡む。観測された legacy URL と modern canonical の対応:
+  - EN `https://help.testim.io/docs/high-speed-mode` ↔ modern `/docs/testops/turbo-mode` (feature rename: high-speed → turbo)
+  - EN `https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack` ↔ modern `/docs/running-tests/scheduler#スケジューラーを-slack-と統合する` (JA-local anchor per WRITING_GUIDE §91-109)
+- **JA side**: JA markdown は WRITING_GUIDE §91-109 (path-based `/docs/{folder}/{slug}`) および §192 (URL-localization `help.testim.io/docs/X` ↔ `/docs/X` を唯一の許容差分として列挙) に従い modern canonical / JA-local anchor を保持する。これは raw-mirror rationale より優先される (JA 独自構造の追加ではなく、§192 の明示的許容)。
+- **Fix applied**: _none_ — EN HTML boundary での literal patch は未実装。JA が modern canonical を保持することで 2-4 個の URL token mismatch entry が baseline に発生するが、これは cosmetic EN staleness の意図的 deferral として許容する。
+- **Status**: `candidate (not yet patched)` — 2-4 個の baseline residual は意図的 deferral
+- **Planned mechanism**: C phase (M3 PR Z 候補) で `en_source_patches` に以下を登録し、EN HTML boundary で canonicalize する:
+  - `UD-004A-scheduler-high-speed-mode`: `href="https://help.testim.io/docs/high-speed-mode"` → `href="../testops/turbo-mode.htm"` (scheduler.md 対応)
+  - `UD-004B-scheduler-mobile-high-speed-mode`: 同上 (scheduler-mobile.md 対応、該当する場合)
+  - `UD-004C-scheduler-slack-integration-anchor`: `href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack"` → `href="scheduler.htm#integrating-scheduler-with-slack"` + JA-side anchor も同期 (scheduler.md / scheduler-mobile.md)
+  - 代替 Option: URL-alias normalizer layer を導入し、`help.testim.io/*` → `docs.tricentis.com/testim/*` の mapping を token extraction 時に適用 (より広範囲の stale-reference に適用可能だが scope creep リスク)
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP** (after patch applied and upstream fix confirmed):
   1. `snapshots/en/content/running-tests/scheduler.html` と `scheduler-mobile.html` を再取得
   2. `grep 'help.testim.io'` が 0 hit になったことを確認
   3. `scripts/lib/en_source_patches.mjs` から UD-004 entry を削除
-  4. baseline 再生成
+  4. baseline 再生成 (residual 2-4 entry 消化を期待)
 
 ## Adding a new defect
 
