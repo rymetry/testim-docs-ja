@@ -419,7 +419,7 @@ testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "E
 
 #### intersect-with-operand
 
-文字列を受け入れます。値は `AND` か `OR` のいずれかで、未定義時は論理和がデフォルトとして適用されます。これは `--intersect-with-label` フラグでのみ機能します。
+文字列を受け入れます。値には `AND`/`OR` のいずれかを指定できます。未定義時は `OR` (論理和) がデフォルトとして適用されます。これは `--intersect-with-label` フラグでのみ機能します。
 
 ### Sealights 統合
 
