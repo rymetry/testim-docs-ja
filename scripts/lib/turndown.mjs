@@ -12,6 +12,8 @@
 
 import TurndownService from 'turndown';
 
+import { applyEnSourcePatches, NOOP_PATCH_COVERAGE } from './en_source_patches.mjs';
+
 const turndown = new TurndownService({
   headingStyle: 'atx',
   codeBlockStyle: 'fenced',
@@ -389,22 +391,43 @@ function normalizeEscapedCallouts(html) {
 /**
  * Normalize EN HTML before turndown conversion.
  *
- * Chains three preprocessing steps:
+ * Chains preprocessing steps (idempotent):
  *   1. `normalizeEscapedCallouts` — convert escaped `>` callout patterns
  *   2. `normalizeEscapedFaqDetails` — `faq` の broken escaped details tree を
  *      valid sibling `<h2>/<p>` block に再構成する
  *   3. `unescapeDetails` — legacy single-<p> の escaped details 復元経路
  *      (coding-assistant のようにドキュメント内の `<details>` 使用例を
  *      real `<details>` に戻す古い処理を維持する)
+ *   4. `applyEnSourcePatches` — literal find→replace patches for broken
+ *      upstream EN snapshot fragments (slug-scope, opt-in via options.slug)
+ *
+ * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md
  *
  * @param {string} html - Raw MadCap Flare HTML from EN snapshot
- * @returns {string} Normalized HTML for both turndown and EN extractor
+ * @param {{slug?: string|null, patchCoverage?: object}} [options]
+ *   - slug: 対象 slug。省略 or 空文字の場合 patch は適用しない
+ *     (backward-compat: 内部再呼び出しや usability は raw を観察)。
+ *   - patchCoverage: run 単位 aggregator。省略時は NOOP_PATCH_COVERAGE.
+ * @returns {string} Normalized (and optionally patched) HTML
  */
-export function preprocessEnHtml(html) {
+export function preprocessEnHtml(html, options = {}) {
   if (typeof html !== 'string') {
     throw new TypeError(`preprocessEnHtml expected string, got ${typeof html}`);
   }
-  return unescapeDetails(normalizeEscapedFaqDetails(normalizeEscapedCallouts(html)));
+  const normalized = unescapeDetails(
+    normalizeEscapedFaqDetails(normalizeEscapedCallouts(html)),
+  );
+
+  // Slug-scope patches apply AFTER other normalizations so `find` strings are
+  // written against the post-normalize HTML shape. When slug is not provided,
+  // this path is a no-op (preserves existing semantics for internal callers
+  // like source usability and for every existing test).
+  const slug = typeof options?.slug === 'string' ? options.slug : '';
+  if (slug.length === 0) {
+    return normalized;
+  }
+  const coverage = options?.patchCoverage ?? NOOP_PATCH_COVERAGE;
+  return applyEnSourcePatches(normalized, slug, coverage);
 }
 
 /**
@@ -413,7 +436,12 @@ export function preprocessEnHtml(html) {
  * Use this instead of calling `preprocessEnHtml` + `turndown.turndown`
  * separately to avoid the implicit two-step protocol.
  *
- * @param {string} html - Raw MadCap Flare HTML from EN snapshot
+ * When upstream has already produced canonical HTML via
+ * `preprocessEnHtml(rawEnHtml, { slug, patchCoverage })`, pass that canonical
+ * HTML here — the inner `preprocessEnHtml(html)` call is idempotent and
+ * runs without slug, so patches won't double-apply.
+ *
+ * @param {string} html - Raw or canonical MadCap Flare HTML
  * @returns {string} Markdown output
  */
 export function convertEnHtmlToMd(html) {

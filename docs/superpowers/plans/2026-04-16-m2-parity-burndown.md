@@ -192,6 +192,24 @@ M2 exit 直前の本 phase で、既存 **全退避 entry を再検証**する�
 - 真に解決不能な entry → plan に「永続退避根拠」を明記 (upstream 本体修正待ちの broken-EN など)
 - `ja_omission_policy_registry` は broken EN ではなく Tricentis legal policy (pricing/changelog/testim.io 除外) のため、**別枠の policy-driven registry** として継続するか、legal 確認して段階的に解除するか、user と協議
 
+**Route W — EN source patches layer (2026-04-17 追加)**:
+
+broken upstream EN defect を segment-level で検出した場合、従来の **allowlist / registry / page-level exclusion** 3 路線だけでは対応しきれないケース (例: 単純 typo、href miswire) が発生する。これらは JA 側に workaround を置く選択肢 (HTML コメント等) が **`§5.3 Scope preamble` によって禁止** されているため、新たに **HTML-boundary patch 層** を導入した:
+
+- 設計計画: [`docs/superpowers/plans/2026-04-17-en-source-patches-layer.md`](./2026-04-17-en-source-patches-layer.md) (v4, Codex APPROVED 4 rounds)
+- 実装: `scripts/lib/en_source_patches.mjs` (literal `find → replace` at `preprocessEnHtml` 境界、slug-scope、defectClass 4-enum 限定)
+- Upstream tracker: `docs/superpowers/specs/upstream-defect-tracker.md` (UD-001 / UD-002 初期登録)
+- 初期 delta: baseline 131 → 114 (-17)、新規追加 0、patchCoverage matchedHits=6 / mismatches=0
+
+Route W は既存 3 mechanism と排他ではなく **補完**的に動作する (§5.3.2 / §5.3.3 registry と独立)。「どの層で対処するか」の判断基準は:
+
+1. **page-level 全体が broken** → `SOURCE_SYNC_EXCLUSIONS` (source_sync_exclusions.mjs)
+2. **slug-scope token-level invariant** (EN 固有 artifact として token 単位で抑止) → `parity_artifact_registry`
+3. **slug-scope segment-level 具体 defect** (typo / href miswire 等、HTML 修正で fix できる) → **`en_source_patches`**
+4. **JA-side intentional omission** (Tricentis legal removal) → `ja_omission_policy_registry` (§5.3.3、abolition PR で将来撤廃)
+
+本 Route W の追加により、plan §5.3 の「ONE purpose = broken-EN 退避」原則は維持したまま、broken-EN への対応 precision が slug × token から **slug × segment × literal pattern** へ格上げされる。
+
 **Exit (P2-6 = 真の M2 完了)**:
 
 - 各 registry の entry について「upstream broken 確認済 ∧ mechanism 解決不能」が全 entry で成立
@@ -464,7 +482,7 @@ repo 内に GFM double-backtick content (` ``...`` `) が実在しないため�
 M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:
 
 1. **flat リスト (`<ol>` / `<ul>` / 両者 interleave) の複数分割**: EN の単一 `<ol>` / `<ul>`、もしくは `<ol>` / `<ul>` + orphan `<p>` の interleave に non-`<li>` sibling (`<img>`/`<p>`/`<div class="note">`) が混在する場合、JA はリストを複数に分割して sibling をリスト外に出してよい。`<li value="N">` 属性に対応する番号は手動指定。(P2-1 pilot `deep-link-mobile` で `<ol>` pattern を pin、P2-2 Wave 1 `generating-a-random-value` で `<ul>` + `<ol>`/`<ul>` interleave pattern を pin。いずれも kind-multiset fingerprint で同値)
-2. **`:fa-arrow-right:` 段落融合**: EN の矢印 `→` プレフィックス段落は JA で `→**...するには:**` に変換するだけで段落は分離しない (PARITY_GUIDE §頻出パターン 2 で既定義)
+2. **`:fa-arrow-right:` 段落融合**: EN の矢印 `→` プレフィックス段落は JA で `**...するには:**` に変換するだけで段落は分離しない (PARITY_GUIDE §頻出パターン 2 / WRITING_GUIDE §313 で既定義。WRITING_GUIDE が authoritative: JA 側には先頭 `→` glyph を付けない)
 
 exception 追加は **reviewer 承認 + plan への明示登録** を条件とし、個別 PR の自由裁量では追加しない (security L2 gate)
 
