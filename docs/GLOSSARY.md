@@ -2113,6 +2113,7 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | hello, john | サンプル値（小文字） |
 | Hello, John | サンプル値 |
 | help.testim.io | Testim のドキュメントドメイン |
+| hub.lambdatest.com | LambdaTest Grid のデフォルトホスト名 (例示ホスト名) |
 | Hidden parameter | 非公開パラメーター（単数形） |
 | hidden parameters | 非公開パラメーター（小文字バリアント） |
 | Hidden parameters | 非公開パラメーター（小文字バリアント） |

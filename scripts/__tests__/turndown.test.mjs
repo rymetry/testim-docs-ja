@@ -431,6 +431,55 @@ describe('preprocessEnHtml composition', () => {
 });
 
 // ---------------------------------------------------------------------------
+// T-1: preprocessEnHtml with options (en_source_patches integration)
+// ---------------------------------------------------------------------------
+describe('preprocessEnHtml with options (en_source_patches integration)', () => {
+  it('applies UD-001A patch when slug is provided', () => {
+    const html = '<p>Verify -this action verifies x</p>';
+    const out = preprocessEnHtml(html, {
+      slug: 'salesforce-testing/salesforce-steps/sfdc-step-create',
+    });
+    assert.ok(
+      out.includes('Verify - this action verifies x'),
+      `expected patched output, got: ${out}`,
+    );
+  });
+
+  it('does NOT apply patches when slug is absent (backward compat)', () => {
+    const html = '<p>Verify -this action verifies x</p>';
+    const out = preprocessEnHtml(html);
+    assert.ok(
+      out.includes('Verify -this action verifies'),
+      `expected original typo preserved when slug is omitted, got: ${out}`,
+    );
+  });
+
+  it('records hits in patchCoverage when provided', async () => {
+    const { createEnSourcePatchCoverage } = await import('../lib/en_source_patches.mjs');
+    const cov = createEnSourcePatchCoverage();
+    preprocessEnHtml('<p>Verify -this action verifies x</p>', {
+      slug: 'salesforce-testing/salesforce-steps/sfdc-step-create',
+      patchCoverage: cov,
+    });
+    assert.equal(cov.snapshot().matchedHits, 1);
+  });
+
+  it('slug-less call produces identical output to {slug: ""} / null / empty options', () => {
+    const samples = [
+      '<p>Normal paragraph</p>',
+      '<p>Verify -this action verifies x</p>',
+      '<div class="note"><p>Note body</p></div>',
+    ];
+    for (const html of samples) {
+      const baseline = preprocessEnHtml(html);
+      assert.equal(preprocessEnHtml(html, {}), baseline, 'empty options should match baseline');
+      assert.equal(preprocessEnHtml(html, { slug: '' }), baseline, 'empty slug should match baseline');
+      assert.equal(preprocessEnHtml(html, { slug: null }), baseline, 'null slug should match baseline');
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
 // HTML details/summary conversion
 // ---------------------------------------------------------------------------
 describe('HTML details/summary rules', () => {
