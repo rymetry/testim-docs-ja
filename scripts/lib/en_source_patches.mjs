@@ -91,6 +91,40 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     addedAt: '2026-04-17',
     reviewAfter: '2026-10-17',
   }),
+  Object.freeze({
+    id: 'UD-004A-scheduler-high-speed-mode',
+    slugs: Object.freeze(['running-tests/scheduler']),
+    defectClass: 'stale-reference',
+    find: '<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>',
+    replace: '<a href="../testops/turbo-mode.htm">Turbo mode</a>',
+    rationale:
+      'Upstream EN uses legacy help.testim.io domain + pre-rename "high-speed-mode" slug. ' +
+      'Feature was renamed to turbo-mode and canonical URL moved to docs.tricentis.com/testim. ' +
+      'JA content already uses modern /docs/testops/turbo-mode per WRITING_GUIDE §91-109/§192; ' +
+      'normalizeUrlToken converts the patched relative .htm path to the same /docs/testops/turbo-mode token.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-004',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-004C-scheduler-slack-integration-anchor',
+    slugs: Object.freeze([
+      'running-tests/scheduler',
+      'running-tests/scheduler-mobile',
+    ]),
+    defectClass: 'stale-reference',
+    find:
+      '<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>',
+    replace: '<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>',
+    rationale:
+      'Upstream EN uses legacy help.testim.io/v2.0 URL for a self-/sibling-link to the Scheduler ' +
+      'page Slack integration section. JA uses a JA-local anchor (#スケジューラーを-slack-と統合する) ' +
+      'per WRITING_GUIDE §192; normalizeUrlToken strips fragments from /docs/ URLs, so the patched ' +
+      'scheduler.htm → resolves to /docs/running-tests/scheduler which matches JA.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-004',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
 ]);
 
 /**

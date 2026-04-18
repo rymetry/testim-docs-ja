@@ -37,31 +37,56 @@ const JA_BUNDLE_DIR = join(
   'salesforce-steps',
 );
 
-// Target slugs per plan Bundle 1 (UD-001 / UD-002).
+// Target slugs per plan Bundle 1 (UD-001 / UD-002) + Category B (UD-004A/C).
+// Each entry lists the slug, its snapshot path, and the minimum number of
+// patch hits expected when the snapshot is processed. The hit counts are
+// the current upstream reality — they rise if a snapshot gains another
+// occurrence of the same defect, so the assertion is `>=` rather than `==`
+// to keep the test robust to benign upstream additions.
 const TARGET_SLUG_SNAPSHOTS = [
+  // --- Bundle 1: UD-001 / UD-002 --------------------------------------------
   {
     slug: 'salesforce-testing/salesforce-steps/sfdc-step-create',
     path: join(SNAPSHOT_ROOT, 'salesforce-steps', 'sfdc-step-create.html'),
+    minHits: 1,
   },
   {
     slug: 'salesforce-testing/salesforce-steps/sfdc-step-edit',
     path: join(SNAPSHOT_ROOT, 'salesforce-steps', 'sfdc-step-edit.html'),
+    minHits: 1,
   },
   {
     slug: 'salesforce-testing/salesforce-steps/sfdc-step-quickactions',
     path: join(SNAPSHOT_ROOT, 'salesforce-steps', 'sfdc-step-quickactions.html'),
+    minHits: 1,
   },
   {
     slug: 'salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction',
     path: join(SNAPSHOT_ROOT, 'salesforce-steps', 'sfdc-step-relatedlistaction.html'),
+    minHits: 1,
   },
   {
     slug: 'salesforce-testing/salesforce-steps/sfdc-step-validate',
     path: join(SNAPSHOT_ROOT, 'salesforce-steps', 'sfdc-step-validate.html'),
+    minHits: 1,
   },
   {
     slug: 'salesforce-testing/salesforce-steps',
     path: join(SNAPSHOT_ROOT, 'salesforce-steps.html'),
+    minHits: 1,
+  },
+  // --- Category B: UD-004A / UD-004C (PR #338) ------------------------------
+  {
+    slug: 'running-tests/scheduler',
+    path: join(SNAPSHOTS_ROOT, 'running-tests', 'scheduler.html'),
+    // UD-004A ×1 (high-speed-mode) + UD-004C ×1 (Slack anchor) = 2
+    minHits: 2,
+  },
+  {
+    slug: 'running-tests/scheduler-mobile',
+    path: join(SNAPSHOTS_ROOT, 'running-tests', 'scheduler-mobile.html'),
+    // UD-004C ×1 (Slack anchor only; no high-speed-mode reference)
+    minHits: 1,
   },
 ];
 
@@ -76,27 +101,41 @@ before(async () => {
 // Acceptance gates #6/#7: patchCoverage invariants against real snapshots
 // ---------------------------------------------------------------------------
 
-describe('en_source_patches integration (Bundle 1 real snapshots)', () => {
-  it('all 6 target snapshot files exist (sanity)', () => {
+describe('en_source_patches integration (Bundle 1 + Category B real snapshots)', () => {
+  it('all target snapshot files exist (sanity)', () => {
     for (const { path } of TARGET_SLUG_SNAPSHOTS) {
       assert.ok(existsSync(path), `missing snapshot: ${path}`);
     }
   });
 
-  it('processing all target slugs produces matchedHits >= 6 and zero mismatches', () => {
+  it('processing all target slugs produces the expected per-slug matchedHits with zero mismatches', () => {
     const coverage = createEnSourcePatchCoverage();
     for (const { slug, path } of TARGET_SLUG_SNAPSHOTS) {
       const raw = readFileSync(path, 'utf8');
       preprocessEnHtml(raw, { slug, patchCoverage: coverage });
     }
     const snap = coverage.snapshot();
-    // Gate #7: matchedHits >= 6 (each of the 6 target slugs contributes ≥1).
+
+    // Gate #7 (total): matchedHits >= sum of minHits.
+    const expectedTotal = TARGET_SLUG_SNAPSHOTS.reduce((s, t) => s + t.minHits, 0);
     assert.ok(
-      snap.matchedHits >= 6,
-      `gate #7 violated: matchedHits=${snap.matchedHits}, expected >= 6. bySlug=${JSON.stringify(snap.bySlug)}`,
+      snap.matchedHits >= expectedTotal,
+      `gate #7 (total) violated: matchedHits=${snap.matchedHits}, expected >= ${expectedTotal}. bySlug=${JSON.stringify(snap.bySlug)}`,
     );
+
+    // Gate #7 (per-slug): each target slug contributes >= its expected minHits.
+    // This catches upstream snapshot drift where the `find` literal may have
+    // changed shape (fail-open produces matchedHits=0 instead of throwing).
+    for (const { slug, minHits } of TARGET_SLUG_SNAPSHOTS) {
+      const actual = snap.bySlug[slug] ?? 0;
+      assert.ok(
+        actual >= minHits,
+        `gate #7 (per-slug) violated for ${slug}: bySlug=${actual}, expected >= ${minHits}. Upstream HTML shape may have drifted.`,
+      );
+    }
+
     // Gate #6: no mismatches in target slugs. Filter to target slugs in case
-    // additional patches are registered for slugs outside the Bundle 1 set.
+    // additional patches are registered for slugs outside the target set.
     const targetSlugSet = new Set(TARGET_SLUG_SNAPSHOTS.map((t) => t.slug));
     const targetMismatches = snap.mismatches.filter((m) => targetSlugSet.has(m.slug));
     assert.equal(

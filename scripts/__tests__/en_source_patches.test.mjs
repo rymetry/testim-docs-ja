@@ -211,6 +211,57 @@ describe('applyEnSourcePatches (UD-001 / UD-002 application)', () => {
     assert.equal(cov.snapshot().matchedHits, 1);
   });
 
+  it('applies UD-004A on legacy high-speed-mode href for scheduler', () => {
+    const html =
+      '<p>If you are on a pro plan, you are also able to set the scheduler to run in ' +
+      '<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'running-tests/scheduler', cov);
+    assert.ok(out.includes('<a href="../testops/turbo-mode.htm">Turbo mode</a>'));
+    assert.equal(out.includes('help.testim.io/docs/high-speed-mode'), false);
+    const s = cov.snapshot();
+    assert.equal(s.byPatchId['UD-004A-scheduler-high-speed-mode'], 1);
+  });
+
+  it('applies UD-004C on legacy Slack-integration anchor for scheduler AND scheduler-mobile', () => {
+    const html =
+      '<p>For details, see ' +
+      '<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>.</p>';
+    for (const slug of ['running-tests/scheduler', 'running-tests/scheduler-mobile']) {
+      const cov = createEnSourcePatchCoverage();
+      const out = applyEnSourcePatches(html, slug, cov);
+      assert.ok(
+        out.includes(
+          '<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>',
+        ),
+        `slug ${slug} patch did not apply`,
+      );
+      assert.equal(out.includes('help.testim.io/v2.0'), false);
+      assert.equal(
+        cov.snapshot().byPatchId['UD-004C-scheduler-slack-integration-anchor'],
+        1,
+      );
+    }
+  });
+
+  it('applies BOTH UD-004A and UD-004C when scheduler HTML contains both defects', () => {
+    const html =
+      '<p>See ' +
+      '<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>.</p>\n' +
+      '<p>Run in ' +
+      '<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'running-tests/scheduler', cov);
+    assert.ok(out.includes('scheduler.htm#integrating-scheduler-with-slack'));
+    assert.ok(out.includes('../testops/turbo-mode.htm'));
+    assert.equal(out.includes('help.testim.io'), false);
+    const s = cov.snapshot();
+    assert.equal(s.byPatchId['UD-004A-scheduler-high-speed-mode'], 1);
+    assert.equal(s.byPatchId['UD-004C-scheduler-slack-integration-anchor'], 1);
+    assert.equal(s.bySlug['running-tests/scheduler'], 2);
+    assert.equal(s.mismatches.length, 0);
+  });
+
   it('does NOT apply UD-001A on sfdc-step-edit (slug mismatch)', () => {
     const html = '<p>Verify -this action verifies x</p>';
     const cov = createEnSourcePatchCoverage();
@@ -336,22 +387,211 @@ describe('createEnSourcePatchCoverage', () => {
 // T-2: slug uniqueness (order-independence structural guarantee)
 // ---------------------------------------------------------------------------
 
-describe('en_source_patches slug uniqueness', () => {
-  it('no two patches share a slug (order-independence structural guarantee)', () => {
-    const slugToPatchIds = {};
-    for (const patch of EN_SOURCE_PATCHES) {
-      for (const s of patch.slugs) {
-        if (!slugToPatchIds[s]) slugToPatchIds[s] = [];
-        slugToPatchIds[s].push(patch.id);
+// ---------------------------------------------------------------------------
+// Shared helpers for permutation-commutativity tests (main test + self-
+// verification meta-test reference these same functions so generator drift
+// surfaces as a meta-test failure, not a silent coverage hole).
+// ---------------------------------------------------------------------------
+
+function _applyPatchPermutation(input, patchOrder) {
+  let out = input;
+  for (const p of patchOrder) {
+    out = out.split(p.find).join(p.replace);
+  }
+  return out;
+}
+
+function _allPermutations(arr) {
+  if (arr.length <= 1) return [arr.slice()];
+  const result = [];
+  for (let i = 0; i < arr.length; i += 1) {
+    const rest = arr.slice(0, i).concat(arr.slice(i + 1));
+    for (const sub of _allPermutations(rest)) {
+      result.push([arr[i], ...sub]);
+    }
+  }
+  return result;
+}
+
+// Build test inputs exercising different placement patterns AND
+// overlap-boundary cases. The overlap-boundary inputs are critical —
+// they catch partial-overlap collisions like f1='abc' + f2='bcd' on
+// 'abcd', which simple concatenation/separation inputs do NOT expose.
+//
+// For every ordered pair (f1, f2) of distinct finds, enumerate all
+// overlap lengths k where f1's suffix of length k equals f2's prefix
+// of length k, and emit `f1 + f2[k:]` (both bare and with prefix/suffix).
+// This exhaustively constructs every input shape in which applying-
+// then-replacing f1 could destroy or expose an f2 match position (and
+// vice versa for all orderings).
+function _buildPatchSyntheticInputs(finds) {
+  const sep1 = ' ';
+  const sep2 = '</p>\n<p>';
+  const inputs = new Set([
+    finds.join(''),
+    finds.join(sep1),
+    finds.join(sep2),
+    finds.slice().reverse().join(sep1),
+    finds.concat(finds).join(sep1),
+  ]);
+  for (let i = 0; i < finds.length; i += 1) {
+    for (let j = 0; j < finds.length; j += 1) {
+      if (i === j) continue;
+      const f1 = finds[i];
+      const f2 = finds[j];
+      const maxK = Math.min(f1.length, f2.length) - 1;
+      for (let k = 1; k <= maxK; k += 1) {
+        if (f1.slice(-k) === f2.slice(0, k)) {
+          const merged = f1 + f2.slice(k);
+          inputs.add(`prefix ${merged} suffix`);
+          inputs.add(merged);
+        }
       }
     }
-    for (const [slug, ids] of Object.entries(slugToPatchIds)) {
-      assert.equal(
-        ids.length,
-        1,
-        `slug ${slug} is covered by multiple patches: ${ids.join(', ')}. This breaks order-independence guarantee.`,
-      );
+  }
+  return Array.from(inputs);
+}
+
+describe('en_source_patches order-independence invariants', () => {
+  // Multiple patches MAY share a slug (e.g. UD-004A + UD-004C both target
+  // running-tests/scheduler) as long as their find strings do not interfere.
+  //
+  // Order-independence is enforced by TWO complementary layers:
+  //   (1) structural substring checks (find-in-find, find-in-replace) —
+  //       catches the common classes of collision quickly without running
+  //       patches;
+  //   (2) a permutation-commutativity test that applies every ordering of
+  //       same-slug patches to a synthetic input containing all finds, and
+  //       asserts all orderings produce the same output (catches partial-
+  //       overlap corner cases like find1="abc" + find2="bcd" on "abcd",
+  //       which the substring checks alone would let pass — see v4 plan
+  //       §2.4 "permutation compare" requirement).
+  it('for any shared slug, no patch find is a substring of another patch find (same slug)', () => {
+    const slugToPatches = {};
+    for (const patch of EN_SOURCE_PATCHES) {
+      for (const s of patch.slugs) {
+        if (!slugToPatches[s]) slugToPatches[s] = [];
+        slugToPatches[s].push(patch);
+      }
     }
+    for (const [slug, patches] of Object.entries(slugToPatches)) {
+      if (patches.length < 2) continue;
+      for (const a of patches) {
+        for (const b of patches) {
+          if (a === b) continue;
+          assert.ok(
+            !a.find.includes(b.find),
+            `slug ${slug}: patch ${a.id}.find contains patch ${b.id}.find — breaks order-independence`,
+          );
+        }
+      }
+    }
+  });
+
+  it('for any shared slug, no patch find is a substring of another patch replace (same slug)', () => {
+    // If A.find ⊂ B.replace, applying B first could re-introduce A.find and
+    // break idempotency / order-independence. Guard against that regression.
+    const slugToPatches = {};
+    for (const patch of EN_SOURCE_PATCHES) {
+      for (const s of patch.slugs) {
+        if (!slugToPatches[s]) slugToPatches[s] = [];
+        slugToPatches[s].push(patch);
+      }
+    }
+    for (const [slug, patches] of Object.entries(slugToPatches)) {
+      if (patches.length < 2) continue;
+      for (const a of patches) {
+        for (const b of patches) {
+          if (a === b) continue;
+          assert.ok(
+            !b.replace.includes(a.find),
+            `slug ${slug}: patch ${b.id}.replace contains patch ${a.id}.find — breaks order-independence`,
+          );
+        }
+      }
+    }
+  });
+
+  // Permutation-commutativity: the ultimate order-independence check. For
+  // each slug covered by ≥ 2 patches, build a synthetic input that embeds
+  // every `find` (plus adjacent variants covering overlapping / adjacent /
+  // separated placement), then apply patches in every permutation order
+  // and assert all orderings produce byte-identical output. This catches
+  // partial-overlap collisions (e.g. f1="abc" + f2="bcd" on "abcd") that
+  // the substring checks alone would let pass — closing Codex review gap
+  // for PR #338 (plan v4 §2.4 "permutation compare" requirement).
+  it('for any shared slug, every permutation of same-slug patches yields the same output (permutation-commutativity)', () => {
+    const slugToPatches = {};
+    for (const patch of EN_SOURCE_PATCHES) {
+      for (const s of patch.slugs) {
+        if (!slugToPatches[s]) slugToPatches[s] = [];
+        slugToPatches[s].push(patch);
+      }
+    }
+
+    for (const [slug, patches] of Object.entries(slugToPatches)) {
+      if (patches.length < 2) continue;
+      const finds = patches.map((p) => p.find);
+      const inputs = _buildPatchSyntheticInputs(finds);
+      const perms = _allPermutations(patches);
+      for (const input of inputs) {
+        const reference = _applyPatchPermutation(input, perms[0]);
+        for (let i = 1; i < perms.length; i += 1) {
+          const candidate = _applyPatchPermutation(input, perms[i]);
+          assert.equal(
+            candidate,
+            reference,
+            `slug ${slug}: permutation ${perms[i].map((p) => p.id).join(',')} ` +
+              `differs from ${perms[0].map((p) => p.id).join(',')} on input[${inputs.indexOf(input)}]`,
+          );
+        }
+      }
+    }
+  });
+
+  // Meta-test: prove the permutation check has teeth by constructing a
+  // deliberately-colliding fake patch pair and running it through the
+  // SAME shared helpers (_buildPatchSyntheticInputs, _applyPatchPermutation,
+  // _allPermutations) used by the main registry-wide test. If the generator
+  // regresses and stops emitting overlap-boundary inputs, this meta-test
+  // fails loud — so drift between generator and self-check cannot be silent.
+  // Also confirms the cheap substring checks PASS for the colliding pair,
+  // proving permutation-commutativity is the load-bearing invariant.
+  it('shared generator detects the classic abc+bcd partial-overlap collision (self-verification)', () => {
+    const fakeA = { id: 'FAKE-A', find: 'abc', replace: 'X' };
+    const fakeB = { id: 'FAKE-B', find: 'bcd', replace: 'Y' };
+
+    // (1) Both substring checks — find-in-find and find-in-replace —
+    // MUST pass for this pair. Otherwise the cheap checks would already
+    // catch it and permutation-commutativity would be redundant.
+    assert.ok(!fakeA.find.includes(fakeB.find), 'abc does not contain bcd');
+    assert.ok(!fakeB.find.includes(fakeA.find), 'bcd does not contain abc');
+    assert.ok(!fakeA.replace.includes(fakeB.find), 'X does not contain bcd');
+    assert.ok(!fakeB.replace.includes(fakeA.find), 'Y does not contain abc');
+
+    // (2) The actual shared generator MUST produce the overlap-boundary
+    // input 'abcd' (or 'prefix abcd suffix'). This calls the exact same
+    // helper the main test uses — no duplicated logic.
+    const inputs = _buildPatchSyntheticInputs([fakeA.find, fakeB.find]);
+    const hasOverlapBoundary = inputs.some((i) => i === 'abcd' || i === 'prefix abcd suffix');
+    assert.ok(
+      hasOverlapBoundary,
+      `shared generator must produce 'abcd' overlap-boundary input; got ${JSON.stringify(inputs)}`,
+    );
+
+    // (3) Running the shared permutation-apply helper across both orderings
+    // of the fake pair on an overlap-boundary input MUST produce divergent
+    // outputs. This proves the overlap case is order-dependent and that
+    // the generator's input is sufficient to expose it.
+    const perms = _allPermutations([fakeA, fakeB]);
+    assert.equal(perms.length, 2, 'permutation helper should produce 2 orderings for 2 patches');
+    const overlapInput = 'prefix abcd suffix';
+    const outputs = perms.map((order) => _applyPatchPermutation(overlapInput, order));
+    assert.notEqual(
+      outputs[0],
+      outputs[1],
+      'meta-test sanity: shared helpers must show AB and BA produce different outputs on abcd — otherwise the main permutation test is vacuous',
+    );
   });
 });
 

@@ -141,6 +141,10 @@ Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高
   - Bundle 3 (Running Tests): predefined-properties 1 slug を UD-003 broken-row-mirror で burn-down (3→0)、残 3 slug (scheduler / scheduler-mobile / the-command-line-cli) は WRITING_GUIDE §91-109/§192 + TRANSLATION_GUIDE §28 準拠で principled revert → UD-003 + UD-004A/B/C deferral (upstream-defect-tracker.md 登録済)
   - Bundle 4 (mobile-test-editor): 3→0 eliminated (EN MadCap broken callout の JA mirror 採用、UD candidate 候補)
   - Net baseline: 97 → 93 (-4)
+- 2026-04-18: Category B UD-004A/C promotion (PR #338): scheduler / scheduler-mobile の UD-004 candidate を applied 化 (`en_source_patches` registry 登録、`stale-reference` class、slug-scope literal patch)。UD-004B は retired as N/A (scheduler-mobile には high-speed-mode 参照なし、EN grep 確認済)。UD-004A + UD-004C は `running-tests/scheduler` を共有するため、test invariant を "no two patches share a slug" → "per-slug find-disjointness (find-to-find + find-to-replace substring free)" に relax — v4 plan §2.4 order-independence の最小十分条件。
+  - Net baseline: 93 → 87 (-6)、新規追加 0、`patchCoverage.matchedHits` scheduler=2 / scheduler-mobile=1、`mismatches=0`
+  - 残存: 両 slug に `segment-inconclusive` (tokenless-near-tie "Modify your scheduled test suites > Activate or Pause" / "Edit") 1 件ずつ → P2-5 対象
+  - §P2-6 Route W registry は UD-001A/B + UD-002 + UD-004A/C の 5 entries に拡張 (scope lock: ONE purpose = broken-EN 退避)
 
 ### P2-4: Tier C sweep — long-tail
 
