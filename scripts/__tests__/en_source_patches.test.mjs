@@ -486,22 +486,48 @@ describe('en_source_patches order-independence invariants', () => {
       return result;
     }
 
-    // Build 5 arrangements exercising different placement patterns:
-    //   - all finds concatenated (adjacent, no separator)
-    //   - all finds separated by a short sentinel
-    //   - all finds separated by a longer sentinel
-    //   - all finds in reverse-index order
-    //   - all finds duplicated (multi-occurrence)
+    // Build test inputs exercising different placement patterns AND
+    // overlap-boundary cases. The overlap-boundary inputs are critical —
+    // they catch partial-overlap collisions like f1='abc' + f2='bcd' on
+    // 'abcd', which simple concatenation/separation inputs do NOT expose
+    // (see self-verification meta-test at the bottom of this suite).
+    //
+    // For every ordered pair (f1, f2) of distinct finds, enumerate all
+    // overlap lengths k where f1's suffix of length k equals f2's prefix
+    // of length k, and emit `prefix + (f1 concatenated to f2 via overlap
+    // k) + suffix`. This exhaustively constructs every input shape in
+    // which applying-then-replacing f1 could destroy or expose an f2
+    // match position (and vice versa for all orderings).
     function buildSyntheticInputs(finds) {
       const sep1 = ' ';
       const sep2 = '</p>\n<p>';
-      return [
+      const inputs = new Set([
         finds.join(''),
         finds.join(sep1),
         finds.join(sep2),
         finds.slice().reverse().join(sep1),
         finds.concat(finds).join(sep1),
-      ];
+      ]);
+
+      // Enumerate suffix(f1) ∩ prefix(f2) overlap merges for every pair.
+      for (let i = 0; i < finds.length; i += 1) {
+        for (let j = 0; j < finds.length; j += 1) {
+          if (i === j) continue;
+          const f1 = finds[i];
+          const f2 = finds[j];
+          const maxK = Math.min(f1.length, f2.length) - 1;
+          for (let k = 1; k <= maxK; k += 1) {
+            if (f1.slice(-k) === f2.slice(0, k)) {
+              // Merged input: f1 + f2[k:] contains f1 (positions [0, f1.len))
+              // and f2 (positions [f1.len - k, f1.len - k + f2.len)).
+              const merged = f1 + f2.slice(k);
+              inputs.add(`prefix ${merged} suffix`);
+              inputs.add(merged); // also bare, no prefix/suffix
+            }
+          }
+        }
+      }
+      return Array.from(inputs);
     }
 
     for (const [slug, patches] of Object.entries(slugToPatches)) {
@@ -525,13 +551,48 @@ describe('en_source_patches order-independence invariants', () => {
   });
 
   // Meta-test: prove the permutation check has teeth by constructing a
-  // deliberately-colliding fake patch pair and confirming the permutation
-  // logic detects the order-dependence. Without this guard, a silently
-  // vacuous implementation could pass the real registry tests while
-  // providing no actual safety for future same-slug patches.
+  // deliberately-colliding fake patch pair and confirming (a) the
+  // synthetic-input generator actually produces the overlap-boundary
+  // input that exposes order-dependence, (b) applying permutations to
+  // that input yields different outputs, and (c) the cheap substring
+  // checks pass for this pair — so permutation-commutativity is the
+  // load-bearing invariant that adds real value.
   it('permutation check detects the classic abc+bcd partial-overlap collision (self-verification)', () => {
     const fakeA = { id: 'FAKE-A', find: 'abc', replace: 'X' };
     const fakeB = { id: 'FAKE-B', find: 'bcd', replace: 'Y' };
+
+    // (c) Both substring checks — find-in-find and find-in-replace —
+    // MUST pass for this pair. Otherwise the cheap checks would already
+    // catch it and permutation-commutativity would be redundant.
+    assert.ok(!fakeA.find.includes(fakeB.find), 'abc does not contain bcd');
+    assert.ok(!fakeB.find.includes(fakeA.find), 'bcd does not contain abc');
+    assert.ok(!fakeA.replace.includes(fakeB.find), 'X does not contain bcd');
+    assert.ok(!fakeB.replace.includes(fakeA.find), 'Y does not contain abc');
+
+    // (a) Reconstruct the same generator logic used above to prove the
+    // overlap-boundary case `abcd` IS produced. If this diverges from
+    // the generator, update both to keep them in lockstep.
+    const finds = [fakeA.find, fakeB.find];
+    const overlapCandidates = [];
+    for (let i = 0; i < finds.length; i += 1) {
+      for (let j = 0; j < finds.length; j += 1) {
+        if (i === j) continue;
+        const f1 = finds[i];
+        const f2 = finds[j];
+        const maxK = Math.min(f1.length, f2.length) - 1;
+        for (let k = 1; k <= maxK; k += 1) {
+          if (f1.slice(-k) === f2.slice(0, k)) {
+            overlapCandidates.push(f1 + f2.slice(k));
+          }
+        }
+      }
+    }
+    assert.ok(
+      overlapCandidates.includes('abcd'),
+      `generator must produce 'abcd' for abc+bcd overlap; got ${JSON.stringify(overlapCandidates)}`,
+    );
+
+    // (b) On the overlap-boundary input, AB and BA permutations diverge.
     const input = 'prefix abcd suffix';
     const orderAB = input.split(fakeA.find).join(fakeA.replace)
                         .split(fakeB.find).join(fakeB.replace);
@@ -542,12 +603,6 @@ describe('en_source_patches order-independence invariants', () => {
       orderBA,
       'meta-test sanity: abc+bcd should be order-dependent on abcd — if these agree, the permutation check is vacuous',
     );
-    // Also: both substring checks (find-in-find, find-in-replace) PASS
-    // for this pair — proving the permutation check adds real value.
-    assert.ok(!fakeA.find.includes(fakeB.find), 'abc does not contain bcd');
-    assert.ok(!fakeB.find.includes(fakeA.find), 'bcd does not contain abc');
-    assert.ok(!fakeA.replace.includes(fakeB.find), 'X does not contain bcd');
-    assert.ok(!fakeB.replace.includes(fakeA.find), 'Y does not contain abc');
   });
 });
 
