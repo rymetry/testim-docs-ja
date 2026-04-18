@@ -21,8 +21,9 @@
  * Primary pin: `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
  * (3 baseline entries, multi-type: section-structure-mismatch / segment-extra /
  * segment-missing). Not a Tier A target so less likely to churn in M2 P2-2.
- * Fallback pin: `editing-tests/groups` (4 entries, multi-type: section-structure-mismatch
- * / segment-extra). Not a Tier A/B target so less likely to churn in M2.
+ * Fallback pin: `administration/encrypted-credentials` (2 baseline entries,
+ * multi-type: segment-extra / segment-missing). Administration-scoped and
+ * outside Bundle 2/3/4 scope, so less likely to churn during M2 Tier B waves.
  *
  * Pin swap history:
  *   test-management/shared-configuration → editing-tests/generating-a-random-value
@@ -41,6 +42,23 @@
  *     steps 4→0 via arrow-fusion; condition (b) of re-pin threshold triggered.
  *     新 target は grid-management 配下で Tier A/B 即時計画対象外かつ
  *     multi-type 3 entry を保持)
+ *   fallback: integrations/grid-management/virtual-mobile-grid →
+ *     administration/encrypted-credentials
+ *     (swapped 2026-04-17 when Tier B Wave 3 Bundle 2 burned down virtual-mobile-grid
+ *     3→0; condition (b) of re-pin threshold triggered.
+ *     New target is administration-scoped, outside Bundle 2/3/4 scope,
+ *     multi-type 2 entry baseline.)
+ *
+ * ## Deferred baseline note: browserstack-integration-copy (2026-04-17)
+ *
+ * NOTE (2026-04-17): browserstack-integration-copy retains 2 baseline entries
+ * (segment-missing + segment-extra on "How to add a LambdaTest grid" section) due to
+ * EN <a href="index.htm#adding-a-grid"> self-link producing disjoint tokens between
+ * EN and JA. The entries cannot be suppressed by parity_artifact_registry because
+ * isArtifactExcluded only runs in the matched-pair token-gap path; here the pair
+ * fails to form (scoreSegmentMatch = 0 on disjoint tokens). Resolution deferred to
+ * M3 PR Z via Route W §3.2 (en_source_patches new UD entry for href-miswire class,
+ * same pattern as UD-002).
  *
  * ## Numeric re-pin threshold (T13 fragility-2 / plan §3.2)
  *
