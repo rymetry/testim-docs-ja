@@ -67,7 +67,7 @@ command line interface (CLI) では、Custom capabilities 付きでテストを�
 この 2 つのパラメーターは同時には使用できません。
 
 :::info
-CLI を使って SauceLabs / BrowserStack Grid で capabilities を扱う方法の詳細は、[SauceLabs と BrowserStack の CLI 用テスト capabilities](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。
+CLI を使って SauceLabs や BrowserStack Grid でケイパビリティを扱う方法の詳細は、[SauceLabs と BrowserStack 向け CLI 用テストケイパビリティ](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。
 :::
 
 ## Custom capabilities を使ってテストを schedule する
