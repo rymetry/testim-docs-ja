@@ -17,7 +17,7 @@ keywords:
   - Testim
 ---
 
-マイクを有効にするには、_--chrome-extra-args_ を値 _"use-fake-device-for-media-stream"_ と共に使用してください。\
+テストの一部としてブラウザでモックマイクを有効にすることができます。有効にするには、CLI コマンドの一部として追加のフラグを渡す必要があります。CLI コマンドの詳細については[こちら](/docs/running-tests/the-command-line-cli)を参照してください。マイクを有効にするには、`--chrome-extra-args` を値 `"use-fake-device-for-media-stream"` と共に使用してください。\
 例：
 
 ```shell

@@ -24,7 +24,7 @@ keywords:
 
 #### テスト開始前
 
-- [Config-file のパラメーター](/docs/running-tests/configuration-file-run-hooks) は [params-file のパラメーター](/docs/advanced-editing/parameters/json-parameters-file-parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
+- [Config-file のパラメーター](/docs/running-tests/configuration-file-run-hooks) は [params-file のパラメーター](/docs/advanced-editing/parameters) を上書きします。設定ファイル内では `beforeTest` が `beforeSuite` を上書きします。
 - [Params-file のパラメーター](/docs/running-tests/configuration-file-run-hooks) は [既定のテストデータ／ランデータ](/docs/advanced-editing/data-driven-testing) を上書きします。
 
 Note: テストに渡されるすべてのパラメーターは**ローカルレベル**の可視性（テスト全体を大きな 1 つのグループとみなす）を持ちます。

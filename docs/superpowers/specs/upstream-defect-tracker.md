@@ -152,6 +152,87 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   3. `scripts/lib/en_source_patches.mjs` から UD-004A / UD-004C entry を削除
   4. baseline 再生成 (既存 entry は tokenless-near-tie のみ残存するはず)
 
+### UD-005: legacy `help.testim.io/docs/<basename>` display-text / `index.htm` self-link in hooks & parameters pages
+
+- **Patch IDs**: `UD-005A-hooks-config-file-legacy-display-text`, `UD-005B-hooks-config-file-parameters-legacy-display-text`, `UD-005C-parameters-loops-legacy-display-text`, `UD-005D-parameter-override-rules-exports-doc-prefix`, `UD-005E-parameter-override-rules-params-file-index-preface`, `UD-005F-parameter-override-rules-params-file-index-listitem`
+- **Defect class**: `stale-reference` (A/B/C/D), `madcap-artifact` (E/F)
+- **Added**: 2026-04-18
+- **Review after**: 2026-10-18
+- **Affected slugs** (3):
+  - `advanced-editing/hooks` (A + B)
+  - `advanced-editing/parameters` (C)
+  - `advanced-editing/parameters/parameter-override-rules` (D + E + F)
+- **Defect**: Two related families of broken upstream EN markup that emit stale invariant tokens:
+  1. **Legacy display-text** (A/B/C): `<a href="...correct.htm">https://help.testim.io/docs/<basename></a>` — href target uses the modern category path (correct), but the display-text URL is a legacy pre-category-reorg flat path `help.testim.io/docs/<basename>` which normalizes to `/docs/<basename>` and emits a stale invariant token. JA (following WRITING_GUIDE §91-109) uses only the canonical `/docs/<category>/<basename>` path, so EN's stale token is reported as missing from JA.
+  2. **Malformed `doc:` prefix + legacy flat path** (D): `<a href="doc:https://help.testim.io/docs/exports-parameters">...` has a stray `doc:` prefix (MadCap authoring artifact) plus a legacy flat path. Rewritten to the correct relative `exports-parameters.htm` sibling.
+  3. **Bare `index.htm` self-link** (E/F): `<a href="index.htm">...` in the Parameter override rules page references the parent Parameters category index. The parity extractor `normalizeUrlToken` treats `index.htm` as slug `index` (no such doc), emitting a bogus `/docs/index` token. Rewritten to `../parameters/index.htm` so normalizeUrlToken resolves to `/docs/advanced-editing/parameters`.
+- **Fix applied**:
+  - UD-005A: `"...configuration-file-run-hooks/index.htm">https://help.testim.io/docs/configuration-file-run-hooks</a>"` → display-text rewritten to `https://help.testim.io/docs/running-tests/configuration-file-run-hooks`
+  - UD-005B: analogous fix for `configuration-file-parameters` display-text in the same paragraph (fragment stripped — `normalizeUrlForParity` retains fragments on `https://...#frag` URLs whereas `extractInvariantTokens` strips them on `/docs/...` paths, so preserving the fragment would introduce an asymmetric token that JA — which has the fragment-stripped href-derived form — would not match)
+  - UD-005C: analogous fix for `loops` display-text on `advanced-editing/parameters` (fragment stripped, same rationale as UD-005B)
+  - UD-005D: `doc:https://help.testim.io/docs/exports-parameters` → `exports-parameters.htm` (sibling path)
+  - UD-005E: `and the <a href="index.htm">Params file</a>` → `and the <a href="../parameters/index.htm">Params file</a>` (preamble-disambiguated in preface paragraph)
+  - UD-005F: `<a href="index.htm">params-file's parameters</a>` → `<a href="../parameters/index.htm">params-file's parameters</a>` (disambiguated by display text in list item)
+- **JA side**: JA was already using the canonical `/docs/<category>/<basename>` and `/docs/advanced-editing/parameters` paths per WRITING_GUIDE §91-109. For UD-005F the JA list-item link `/docs/advanced-editing/parameters/json-parameters-file-parameters` was corrected to `/docs/advanced-editing/parameters` to match the EN `index.htm` self-reference semantics (as a companion content-fix).
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
+- **Removal SOP** (after upstream fix confirmed):
+  1. `snapshots/en/content/advanced-editing/hooks.html`, `.../parameters.html`, `.../parameters/parameter-override-rules.html` を再取得
+  2. `grep 'help.testim.io/docs/'` および `grep 'doc:https'` および `grep '"index\.htm"'` が 0 hit であることを確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-005A-F entry を削除
+  4. baseline 再生成
+
+### UD-006: `-variable` typo in editing-tests/search-within-a-test Search limitations list
+
+- **Patch ID**: `UD-006-search-within-a-test-email-variable-typo`
+- **Defect class**: `typo`
+- **Added**: 2026-04-18
+- **Review after**: 2026-10-18
+- **Affected slugs** (1):
+  - `editing-tests/search-within-a-test`
+- **Defect**: MadCap authoring typo in the Search limitations list item `"Generate email address -variable name"` — missing space between `-` and `variable`. Adjacent list items use the correct `- variable name` form (e.g. `"Extract value - variable name"`, `"Get cookie - cookie name & variable name"`). The parity extractor flag regex emits a spurious `-variable` token because of the absent leading whitespace; JA (which uses the em-dash form `"— 変数名"`) has no corresponding token.
+- **Fix applied**: `<p>Generate email address -variable name</p>` → `<p>Generate email address - variable name</p>`
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
+- **Removal SOP**:
+  1. `snapshots/en/content/editing-tests/search-within-a-test.html` を再取得
+  2. `grep '-variable name'` が 0 hit になったことを確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-006 entry を削除
+  4. baseline 再生成
+
+### UD-007: `step.This` typo in guides/generate-random-data-with-js
+
+- **Patch ID**: `UD-007-generate-random-data-step-this-typo`
+- **Defect class**: `typo`
+- **Added**: 2026-04-18
+- **Review after**: 2026-10-18
+- **Affected slugs** (1):
+  - `guides/generate-random-data-with-js`
+- **Defect**: MadCap authoring typo — missing space after period in `"to your JS step.This will create the variable..."` in the "How to assign Random Data to a step?" list item. The parity extractor dotted-path regex emits a spurious `step.This` dotted-path token because of the absent space; JA uses a natural Japanese sentence break and has no corresponding token.
+- **Fix applied**: `to your JS step.This will create` → `to your JS step. This will create`
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
+- **Removal SOP**:
+  1. `snapshots/en/content/guides/generate-random-data-with-js.html` を再取得
+  2. `grep 'step\.This'` が 0 hit になったことを確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-007 entry を削除
+  4. baseline 再生成
+
+### UD-008: `index.htm` CLI self-link in running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone
+
+- **Patch ID**: `UD-008-allow-chrome-microphone-cli-index-self-link`
+- **Defect class**: `madcap-artifact`
+- **Added**: 2026-04-18
+- **Review after**: 2026-10-18
+- **Affected slugs** (1):
+  - `running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone`
+- **Defect**: Same class as UD-005E/F — bare `<a href="index.htm">CLI command</a>` self-link to the parent CLI category index page. The parity extractor resolves `index.htm` to the non-existent slug `index`, emitting a bogus `/docs/index` invariant token that JA (once content is restored to include the CLI command link) does not have.
+- **Fix applied**: `read here about the <a href="index.htm">CLI command</a>` → `read here about the <a href="../the-command-line-cli/index.htm">CLI command</a>`
+- **JA side**: JA first paragraph was missing the sentence introducing the CLI command flag; restored as a companion content-fix so JA also emits `/docs/running-tests/the-command-line-cli`.
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
+- **Removal SOP**:
+  1. `snapshots/en/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.html` を再取得
+  2. `grep '<a href="index.htm">CLI command</a>'` が 0 hit になったことを確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-008 entry を削除
+  4. baseline 再生成
+
 ## Adding a new defect
 
 新しい broken-EN defect を見つけた際のチェックリスト:

@@ -18,8 +18,10 @@
  *
  * ## Pin strategy (T12 / T13 / plan §3.2)
  *
- * Primary pin: `advanced-editing/validations/pixel-validation-and-pixel-wait-for`
- * (3 baseline entries, multi-type: segment-extra / segment-missing / segment-token-gap).
+ * Primary pin: `advanced-editing/parameters/hidden-parameters`
+ * (2 baseline entries, multi-type: segment-extra / segment-missing;
+ * no audit-signal issues, so CLI emits the `⏸️ (covered by baseline/ack)`
+ * suffix cleanly — required by the baseline-covered-CLI-output test).
  * Not a Tier A/B immediate target so less likely to churn in M2 Tier B waves.
  * Fallback pin: `administration/encrypted-credentials` (2 baseline entries,
  * multi-type: segment-extra / segment-missing). Administration-scoped and
@@ -30,11 +32,17 @@
  *   → running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks
  *     (swapped 2026-04-17 when P2-2 Wave 1 burned down generating-a-random-value 14→0;
  *     condition (b) of re-pin threshold triggered)
- *   → advanced-editing/validations/pixel-validation-and-pixel-wait-for
+ *   → advanced-editing/validations/add-network-validation
  *     (swapped 2026-04-17 when Tier B Wave 3 Bundle 3 burned down predefined-properties
  *     3→0; condition (b) of re-pin threshold triggered.
  *     New target is validation-scoped, outside Bundle 2/3/4 scope,
  *     multi-type 3 entry baseline with segment-extra / segment-missing / segment-token-gap.)
+ *   → advanced-editing/parameters/hidden-parameters
+ *     (swapped 2026-04-18 by PR C Stage B5 when pixel-validation-and-pixel-wait-for was
+ *     burned down 3→0. Initial re-pin to add-network-validation failed the
+ *     baseline-covered-CLI-output test because add-network-validation has an
+ *     audit-signal paragraph-count-mismatch that prevents the ⏸️ suffix. Switched
+ *     to hidden-parameters which has 2 baseline entries and no audit signals.)
  *   fallback: administration/project-and-user-management → editing-tests/groups
  *     (swapped 2026-04-17 when Tier B Wave 1 burned down project-and-user-management
  *     4→0; condition (b) of re-pin threshold triggered)
@@ -250,7 +258,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=advanced-editing/validations/pixel-validation-and-pixel-wait-for',
+          '--slug=advanced-editing/parameters/hidden-parameters',
           '--json',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -274,7 +282,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
       // segment-* issues は primary gate shape のまま baselined: true になる。
       const file = data.files.find(
-        (f) => f.file === 'src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md',
+        (f) => f.file === 'src/content/docs/advanced-editing/parameters/hidden-parameters.md',
       );
       assert.ok(file, 'drifted page must appear in the results');
       const segmentIssues = file.issues.filter((i) =>
@@ -308,7 +316,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         process.execPath,
         [
           join(ROOT, 'scripts/check_source_parity.mjs'),
-          '--slug=advanced-editing/validations/pixel-validation-and-pixel-wait-for',
+          '--slug=advanced-editing/parameters/hidden-parameters',
           '--fail-on=actionable',
         ],
         { cwd: ROOT, encoding: 'utf8' },
@@ -321,7 +329,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       // 既存 drift は baseline で覆われているため CLI suffix は covered 扱いになる。
       assert.ok(
         result.stdout.includes(
-          '⏸️ src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md (covered by baseline/ack)',
+          '⏸️ src/content/docs/advanced-editing/parameters/hidden-parameters.md (covered by baseline/ack)',
         ),
         `stdout did not mark the file as covered by baseline/ack:\n${result.stdout}`,
       );
@@ -330,7 +338,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
         `stdout did not annotate baselined issues:\n${result.stdout}`,
       );
       assert.ok(
-        !result.stdout.includes('❌ src/content/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for.md'),
+        !result.stdout.includes('❌ src/content/docs/advanced-editing/parameters/hidden-parameters.md'),
         `stdout still marked the file as blocking:\n${result.stdout}`,
       );
     } finally {
@@ -450,7 +458,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 
 describe('pin slug content-correctness + fallback (T12)', () => {
   it('primary pin slug file has extractable segments (fixture non-empty guard)', () => {
-    const pinSlug = 'advanced-editing/validations/pixel-validation-and-pixel-wait-for';
+    const pinSlug = 'advanced-editing/parameters/hidden-parameters';
     const jaPath = join(ROOT, `src/content/docs/${pinSlug}.md`);
     assert.ok(existsSync(jaPath), `primary pin JA file must exist at ${jaPath}`);
     const content = readFileSync(jaPath, 'utf8');
