@@ -47,6 +47,7 @@
     "docs:apply-llm": "node scripts/apply_llm_translations.mjs",
     "docs:report-categories": "node scripts/report_frontmatter_categories.mjs",
     "check:parity": "node scripts/check_source_parity.mjs",
+    "check:patch-review": "node scripts/check_patch_review_cadence.mjs",
     "check:summary": "node scripts/generate_detection_reports.mjs",
     "generate:parity-baseline": "node scripts/generate_parity_baseline.mjs",
     "check:snapshots:fetch": "node scripts/snapshot_update.mjs",

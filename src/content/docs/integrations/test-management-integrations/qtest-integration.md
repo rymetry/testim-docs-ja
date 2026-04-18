@@ -33,7 +33,7 @@ qTest 統合により、qTest のテストを Testim のテストにリンクで
 
 ![qTest 統合モジュールのログインボタン](/images/test-management-integrations/qtest-integration/dbe2722-image_3.png)
 
-3. qTest を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、Testim の **URL** フィールドに貼り付けます。URL 構造は `https://<projectName>.qtestnet.com/` の形式です。`projectName` の部分をプロジェクト名に置き換えてください。例: 下のアカウントの `projectName` は `myProject` です。
+3. qTest を開き、URL からドメインをコピーして（ログイン済みであることを確認してください）、Testim の **URL field** に貼り付けます。URL 構造は https://<projectName>.qtestnet.com/ の形式です。projectName の部分をプロジェクト名に置き換えてください。例: 下のアカウントの projectName は myProject です。
 
 ![qTest の URL 入力例](/images/test-management-integrations/qtest-integration/761db53-image_4.png)
 
@@ -107,7 +107,7 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 - **Name** - Testim のテスト名
 - **Status** - 実行のステータス。表示されるステータスは qTest ステータスで、Testim ステータスから以下のように変換されます（Testim → qTest）:
   - ABORTED - Unexecuted
-  - SKIPPED (quarantine status in Testim) - Blocked
+  - SKIPPED (Testim で隔離されたステータス) - Blocked
   - TIMEOUT - Failed
   - PASSED - Passed
   - FAILED - Failed
