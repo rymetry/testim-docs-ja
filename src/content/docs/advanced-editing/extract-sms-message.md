@@ -55,10 +55,10 @@ return client.messages
   });
 ```
 
-#### Parameters - この例で使用するパッケージと JavaScript
+#### Parameters - Packages and JavaScript used in this example
 
-1\. 名前 `twilio`、種類 Package、値 `twilio@3.25.0`<br />
-2\. 名前 `_`、種類 Package、値 `moment@latest`
+1.name: twilio, type: Package, value: twilio@3.25.0<br />
+2.name: _, type: Package, value: moment@latest
 
 **スクリーンショットを参照:**
 
