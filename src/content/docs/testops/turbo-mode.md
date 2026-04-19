@@ -19,7 +19,7 @@ keywords:
 パフォーマンスを向上させ、テストの実行時間を平均 30% 短縮し、不要なデータの保存を回避します。
 
 :::note{title="これはPRO機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、[Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 :::note

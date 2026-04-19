@@ -26,7 +26,7 @@ CLI アクションステップ中に出力されたログは、実行で起動�
 :::
 
 :::note
-これは Professional plan の機能です。
+これは [Professional plan](https://www.testim.io/pricing/) の機能です。
 :::
 
 ## 前提条件

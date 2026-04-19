@@ -22,7 +22,7 @@ keywords:
 ブランチを作成すると、テストの状態を「凍結」します。あるブランチでテストを変更しても、他のブランチでのテストの動作には影響しません。
 
 :::note{title="これはPRO機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、[Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 ## ブランチの使用

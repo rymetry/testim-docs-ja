@@ -27,7 +27,7 @@ API ステップには **Add API action** と **Validate API** の 2 種類が�
 - Validate API — API 応答の検証に使用（主にバックエンドのデータ検証）
 
 :::note{title="PRO機能"}
-Professional plan で利用可能です。
+[Professional plan](https://www.testim.io/pricing/) で利用可能です。
 :::
 
 ## Validate API ステップの追加

@@ -19,7 +19,7 @@ keywords:
 ---
 
 :::info{title="これはPRO機能です"}
-この機能は Professional plan のプロジェクトでのみ利用できます。
+この機能は [Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 web テストをリモートで実行するには Selenium Grid が必要です。mobile テストを実行するには HeadSpin が必要です。

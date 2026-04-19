@@ -27,7 +27,7 @@ keywords:
 Testim は、これらの不安定なテストを見つけ、そのステータスを決定する簡単な方法を提供します。
 
 :::note{title="これはPRO機能です"}
-この機能は、Professional plan のプロジェクトでのみ利用できます。
+この機能は、[Professional plan](https://www.testim.io/pricing/) のプロジェクトでのみ利用できます。
 :::
 
 ## 不安定なテストを見つける

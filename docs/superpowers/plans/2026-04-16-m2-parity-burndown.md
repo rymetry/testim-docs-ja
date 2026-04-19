@@ -200,7 +200,7 @@ M2 exit 直前の本 phase で、既存 **全退避 entry を再検証**する�
 | `scripts/lib/source_sync_exclusions.mjs` (`SOURCE_SYNC_EXCLUSIONS`)        |             1 | `testops/testops-version-control/pull-requests`                                                                                                                                                                                                                                                                                                                                                       |
 | `scripts/lib/parity_artifact_registry.mjs` — `/docs/index` self-link       |             7 | `editing-tests/conditions/advanced-conditions-settings`, `integrations/visual-validation/visual_validation_index`, `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`, `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`, `salesforce-testing/salesforce-steps/sfdc-step-login`, `testops/insights/dashboard`, `testops/insights/reports` |
 | `scripts/lib/parity_artifact_registry.mjs` — `http://google.com` demo link |             1 | `getting-started/creating-your-first-codeless-test`                                                                                                                                                                                                                                                                                                                                                   |
-| `scripts/lib/ja_omission_policy_registry.mjs` (§5.3.3)                     |   4 (quota=5) | `overview/testim-overview`                                                                                                                                                                                                                                                                                                                                                                            |
+| ~~`scripts/lib/ja_omission_policy_registry.mjs` (§5.3.3)~~ [Abolished 2026-04-17] | ~~4 (quota=5)~~ → **0** | ~~`overview/testim-overview`~~ — registry 撤廃、legal policy 撤回、JA が EN mirror に復帰                                                                                                                                                                                                                                                                                                              |
 
 **運用 (P2-6)**:
 
@@ -208,7 +208,21 @@ M2 exit 直前の本 phase で、既存 **全退避 entry を再検証**する�
 - 1 agent が audit、reviewer (architect) が approve/reject per-entry
 - 解決可能な entry → 対応する mechanism PR or content PR を起票 → registry から段階削除
 - 真に解決不能な entry → plan に「永続退避根拠」を明記 (upstream 本体修正待ちの broken-EN など)
-- `ja_omission_policy_registry` は broken EN ではなく Tricentis legal policy (pricing/changelog/testim.io 除外) のため、**別枠の policy-driven registry** として継続するか、legal 確認して段階的に解除するか、user と協議
+- `ja_omission_policy_registry` は broken EN ではなく Tricentis legal policy (pricing/changelog/testim.io 除外) のため、**別枠の policy-driven registry** として継続するか、legal 確認して段階的に解除するか、user と協議 → **2026-04-17 結果: 撤廃決定** (下記参照)
+
+**2026-04-17 P2-6 audit 結果 — `ja_omission_policy_registry` 撤廃**:
+
+User 判断により Tricentis legal removal policy 自体を撤廃。絶対原則 (§5.3.7) の「許容機構 = broken-EN snapshot 退避 ONE purpose only」を厳格適用するため、policy-driven registry は classifier 精度 dilute + design 違反と判断された。結果:
+
+- Tricentis legal exception (pricing callout / `http://testim.io` / `https://www.testim.io/pricing/`) を全撤廃し、JA は EN 原文を mirror する
+- `scripts/lib/ja_omission_policy_registry.mjs` 削除
+- `scripts/__tests__/ja_omission_policy_registry.test.mjs` 削除
+- `source_parity_align.mjs` / `check_source_parity.mjs` から関連 import / 使用箇所削除
+- `docs/WRITING_GUIDE.md` §373「原文から意図的に除外するコンテンツ」節削除
+- `overview/testim-overview` に EN 原文段落 / pricing callout / `http://testim.io` / `https://www.testim.io/pricing/` URL を復活
+- 全 Professional plan 言及ページで `[Professional plan](https://www.testim.io/pricing/)` URL を復元 (≈30 pages)
+
+P2-6 残対象 registry: `SOURCE_SYNC_EXCLUSIONS` (1 entry) + `ARTIFACT_REGISTRY` (8 entries) のみ。両者とも **broken-EN snapshot 退避** の ONE purpose に適合し、継続する。
 
 **Route W — EN source patches layer (2026-04-17 追加)**:
 
@@ -330,28 +344,24 @@ P2-2 Wave 2 `use-agentic-test-automation-for-salesforce` で初検知。EN MadCa
   - 2026-04-17: +1 slug (`testops/insights/reports`) via mechanism PR (6 → 7 slugs, PR #314 content-side の前置き)
 - **scope lock**: 本 §5.3.2 entry は **`/docs/index` token の既存 artifact entry 再利用のみ** 対象。別 token (`http://google.com`、`http://example.com` 等) に対する新規 registry 登録は独立 §5.3.N として別途 security L2 gate を経由する。
 
-#### 5.3.3 JA-side intentional-omission policy (Tricentis removal-request registry)
+#### 5.3.3 [Abolished 2026-04-17] JA-side intentional-omission policy (Tricentis removal-request registry)
 
-`[PENDING REVIEWER APPROVAL — §5.3.3 L2 gate]`
+~~M2 Wave 3 Batch 2 `overview/testim-overview` (PR #309) で初検知。`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis 削除依頼 policy** により、EN 原文の特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL) を JA 側で意図的に削除している。再追加は policy 違反 (commits `bf40dad`, `e5d9f88` で legal reasoning 記録済)。~~
 
-M2 Wave 3 Batch 2 `overview/testim-overview` (PR #309) で初検知。`docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` で規定された **Tricentis 削除依頼 policy** により、EN 原文の特定 segment (pricing callout / changelog callout / `http://testim.io` intro URL) を JA 側で意図的に削除している。再追加は policy 違反 (commits `bf40dad`, `e5d9f88` で legal reasoning 記録済)。
+~~新 mechanism `scripts/lib/ja_omission_policy_registry.mjs` を追加し、alignSegments の post-filter で quota-based suppression を適用する。~~
 
-この JA-side 意図的除外は既存 3 mechanism のどれにも該当しない:
+**2026-04-17 撤廃 (P2-6 audit 結果に基づく)**: 本 §5.3.3 は `ja_omission_policy_registry` 機構もろとも撤廃された。Tricentis legal removal policy を保持すると「許容機構 = broken-EN snapshot 退避 ONE purpose only」の絶対原則 (§5.3.7) に反するため、user 判断で legal removal policy 自体を撤廃し、JA は EN 原文 (pricing callout / `http://testim.io` / `https://www.testim.io/pricing/` URL 含む) を全面 mirror する source-first 契約に統合した。
 
-- `scripts/lib/source_sync_exclusions.mjs` は EN-broken page を対象 (本 slug の EN は正常)
-- `scripts/lib/parity_artifact_registry.mjs` は EN-side artifact token のみ対象 (§5.3.2 の `/docs/index` self-link 等)
-- §5.3.1 FileOrFilePath は EN 抽出側 kind-mismatch を対象
+**撤廃内容**:
 
-新 mechanism `scripts/lib/ja_omission_policy_registry.mjs` を追加し、alignSegments の post-filter で quota-based suppression を適用する。
+- `scripts/lib/ja_omission_policy_registry.mjs` 削除
+- `scripts/__tests__/ja_omission_policy_registry.test.mjs` 削除
+- `scripts/lib/source_parity_align.mjs` から `suppressJaOmissionDiffs` / `NOOP_OMISSION_COVERAGE` import 削除
+- `scripts/check_source_parity.mjs` から `createOmissionCoverage` / `debug.omissionCoverage` 削除
+- `docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` 節削除
+- `overview/testim-overview` と全 Professional plan 言及ページで EN 原文を JA で mirror (段落 / callout / URL 復元)
 
-- **symptom pattern**: Tricentis 削除依頼対象の segment 群。具体的には (a) pricing callout、(b) changelog callout の派生 offset、(c) `http://testim.io` / `https://www.testim.io/pricing/` の intro URL 削除
-- **per-slug cap**: ≤ 4 件 (`segment-missing`/`segment-extra`/`segment-token-gap`/`section-structure-mismatch` の 4 drift type を合計。`testim-overview` は現状 4 entries に集約)
-- **disambiguator**: **quota-based** を採用。1 registry entry は `{slugs[], issueTypes[], segmentKinds, missingToken?, quota}` を持ち、alignSegments の post-filter で `(slug, issueType, segmentKind, missingTokens)` に match する diff を quota 範囲で 1 件ずつ drop する。fingerprint-based は EN 文面更新で sha-256 が変化しやすく、WRITING_GUIDE 除外が「EN 文面がどう変わっても JA は出さない」意思表示と相性が悪いため不採用。content-prefix は brittle で却下
-- **mitigation**: 新 registry module + runtime integration (`scripts/lib/source_parity_align.mjs` 末尾の `suppressJaOmissionDiffs`) + coverage aggregator (`createOmissionCoverage` / `NOOP_OMISSION_COVERAGE`) + full test coverage (`scripts/__tests__/ja_omission_policy_registry.test.mjs` 20 tests)
-- **registry scope lock**: 本 §5.3.3 entry は `docs/WRITING_GUIDE.md §「原文から意図的に除外するコンテンツ」` 対象 slug のみ。「翻訳省略したい」という agent 側要望で別 slug を追加するのは禁止。WRITING_GUIDE 除外表の更新が先行条件
-- **runtime integration**: `alignSegments({slug, omissionCoverage})` が diffs 生成後に `suppressJaOmissionDiffs` を呼ぶ。coverage snapshot (`snapshot().quotaUsage` / `exhaustedEntries`) は `parity-check-status.json` の `debug.omissionCoverage` に含まれ、後続 monitoring で quota 尽きに気付けるようにする
-- **initial inventory (2026-04-17)**: `overview/testim-overview` に 4 entries を登録。合計 quota = 5 で `parity-baseline.json` の該当 5 件を全て抑止する
-- **follow-up**: 本 PR merge 後、PR #309 側で baseline 再生成 (5 → 0) を実施
+**絶対原則の再確認**: 許容機構は **broken-EN snapshot 退避 ONE purpose only** (`SOURCE_SYNC_EXCLUSIONS` + `ARTIFACT_REGISTRY`) に統合。policy-driven registry は将来も追加禁止。
 
 #### 5.3.4 `extractMarkdownTables` GFM strict-check (backslash-pipe paragraph false-positive)
 
