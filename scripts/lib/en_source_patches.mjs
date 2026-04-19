@@ -125,6 +125,161 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
+  Object.freeze({
+    id: 'UD-005A-hooks-config-file-legacy-display-text',
+    slugs: Object.freeze(['advanced-editing/hooks']),
+    defectClass: 'stale-reference',
+    find:
+      '<a href="../running-tests/configuration-file-run-hooks/index.htm">https://help.testim.io/docs/configuration-file-run-hooks</a>',
+    replace:
+      '<a href="../running-tests/configuration-file-run-hooks/index.htm">https://help.testim.io/docs/running-tests/configuration-file-run-hooks</a>',
+    rationale:
+      'Upstream EN anchor display-text uses a legacy flat help.testim.io/docs/<basename> URL ' +
+      '(pre-category-reorg). The href target is correct (running-tests/configuration-file-run-hooks), ' +
+      'but the display-text URL emits a stale /docs/configuration-file-run-hooks invariant token that ' +
+      'no longer exists in JA (JA uses canonical /docs/running-tests/configuration-file-run-hooks per ' +
+      'WRITING_GUIDE §91-109). Patch aligns display-text with modern canonical path so normalizeUrlToken ' +
+      'emits the same token from both sides.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-005B-hooks-config-file-parameters-legacy-display-text',
+    slugs: Object.freeze(['advanced-editing/hooks']),
+    defectClass: 'stale-reference',
+    find:
+      '<a href="parameters/configuration-file-parameters.htm#defining-parameters-in-a-configuration-file">https://help.testim.io/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file</a>',
+    replace:
+      '<a href="parameters/configuration-file-parameters.htm#defining-parameters-in-a-configuration-file">https://help.testim.io/docs/advanced-editing/parameters/configuration-file-parameters</a>',
+    rationale:
+      'Upstream EN anchor display-text uses a legacy flat help.testim.io/docs/<basename> URL ' +
+      '(pre-category-reorg). The href target is correct (advanced-editing/parameters/configuration-file-parameters), ' +
+      'but the display-text URL emits a stale /docs/configuration-file-parameters#... invariant token that ' +
+      'no longer exists in JA. Patch aligns display-text with the modern canonical path WITHOUT the ' +
+      'fragment — extractInvariantTokens strips fragments from /docs/ URLs whereas normalizeUrlForParity ' +
+      '(applied to raw https://...#frag URLs) retains them, so preserving the fragment would introduce ' +
+      'an asymmetric token pair. The href-derived token (already fragment-stripped during extraction) ' +
+      'carries the same /docs/ path, so fragment loss is harmless for parity gating.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-005C-parameters-loops-legacy-display-text',
+    slugs: Object.freeze(['advanced-editing/parameters']),
+    defectClass: 'stale-reference',
+    find:
+      '<a href="../loops.htm#using-the-loop-iterator-parameter">https://help.testim.io/docs/loops#using-the-loop-iterator-parameter</a>',
+    replace:
+      '<a href="../loops.htm#using-the-loop-iterator-parameter">https://help.testim.io/docs/advanced-editing/loops</a>',
+    rationale:
+      'Upstream EN anchor display-text uses a legacy flat help.testim.io/docs/<basename> URL ' +
+      '(pre-category-reorg). The href target is correct (advanced-editing/loops), but the display-text ' +
+      'URL emits a stale /docs/loops#using-the-loop-iterator-parameter invariant token that no longer ' +
+      'exists in JA. Patch aligns display-text with modern canonical path WITHOUT the fragment (see ' +
+      'UD-005B rationale for the fragment-asymmetry explanation).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-005D-parameter-override-rules-exports-doc-prefix',
+    slugs: Object.freeze(['advanced-editing/parameters/parameter-override-rules']),
+    defectClass: 'stale-reference',
+    find:
+      '<a href="doc:https://help.testim.io/docs/exports-parameters">Exports Parameters</a>',
+    replace: '<a href="exports-parameters.htm">Exports Parameters</a>',
+    rationale:
+      'Upstream EN anchor uses a malformed href "doc:https://help.testim.io/docs/exports-parameters" ' +
+      '(stray "doc:" prefix from MadCap tooling + legacy flat help.testim.io/docs/<basename> path). ' +
+      'Patch rewrites to the correct relative .htm path (exports-parameters.htm is a sibling of ' +
+      'parameter-override-rules.htm in the parameters folder), which normalizeUrlToken resolves to ' +
+      '/docs/advanced-editing/parameters/exports-parameters matching JA.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-005E-parameter-override-rules-params-file-index-preface',
+    slugs: Object.freeze(['advanced-editing/parameters/parameter-override-rules']),
+    defectClass: 'madcap-artifact',
+    find: 'and the <a href="index.htm">Params file</a>',
+    replace: 'and the <a href="../parameters/index.htm">Params file</a>',
+    rationale:
+      'Upstream EN uses a bare "index.htm" relative self-link for the parent Parameters category ' +
+      'index page. The parity extractor normalizes "index.htm" to the literal slug "index" (not ' +
+      'present in docs), producing a bogus /docs/index invariant token. Patch prepends the explicit ' +
+      '../parameters/ directory hop so normalizeUrlToken resolves to /docs/advanced-editing/parameters ' +
+      'matching JA. Literal find is anchored with "and the" preamble to disambiguate from the identical ' +
+      'href in the list item below (patched by UD-005F).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-005F-parameter-override-rules-params-file-index-listitem',
+    slugs: Object.freeze(['advanced-editing/parameters/parameter-override-rules']),
+    defectClass: 'madcap-artifact',
+    find: '<a href="index.htm">params-file\'s parameters</a>',
+    replace: '<a href="../parameters/index.htm">params-file\'s parameters</a>',
+    rationale:
+      'Same defect class as UD-005E (bare "index.htm" → bogus /docs/index token) in the "Before the ' +
+      'test begins:" list item. Display text "params-file\'s parameters" disambiguates the occurrence ' +
+      'from the preface paragraph. After patch, normalizeUrlToken emits /docs/advanced-editing/parameters ' +
+      'matching JA.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-006-search-within-a-test-email-variable-typo',
+    slugs: Object.freeze(['editing-tests/search-within-a-test']),
+    defectClass: 'typo',
+    find: '<p>Generate email address -variable name</p>',
+    replace: '<p>Generate email address - variable name</p>',
+    rationale:
+      'Upstream MadCap authoring typo: missing space between "-" and "variable" in the Search ' +
+      'limitations list item "Generate email address -variable name". Adjacent list items use the ' +
+      'correct "- variable name" form (e.g. "Extract value - variable name" at index 0). Without the ' +
+      'space, extractInvariantTokens flag regex emits a bogus "-variable" token that JA (which uses ' +
+      'em-dash "— 変数名") does not have. Patch adds the missing space to match the adjacent items.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-006',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-008-allow-chrome-microphone-cli-index-self-link',
+    slugs: Object.freeze(['running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone']),
+    defectClass: 'madcap-artifact',
+    find: 'read here about the <a href="index.htm">CLI command</a>',
+    replace:
+      'read here about the <a href="../the-command-line-cli/index.htm">CLI command</a>',
+    rationale:
+      'Same defect class as UD-005E/F (bare "index.htm" self-link → bogus /docs/index token). ' +
+      'Page links to the parent CLI category index via a bare "index.htm"; extractInvariantTokens ' +
+      'resolves it to the non-existent slug "index". Patch prepends the ../the-command-line-cli/ ' +
+      'directory hop so normalizeUrlToken resolves to /docs/running-tests/the-command-line-cli, ' +
+      'matching JA once JA content is restored to include the CLI command link.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-008',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
+  Object.freeze({
+    id: 'UD-007-generate-random-data-step-this-typo',
+    slugs: Object.freeze(['guides/generate-random-data-with-js']),
+    defectClass: 'typo',
+    find: 'to your JS step.This will create',
+    replace: 'to your JS step. This will create',
+    rationale:
+      'Upstream MadCap authoring typo: missing space after the period in "to your JS step.This will ' +
+      'create the variable...". Without the space, extractInvariantTokens dotRe regex emits a bogus ' +
+      '"step.This" dotted-path token that JA (natural prose with a proper sentence break) does not ' +
+      'have. Patch inserts the missing space.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-007',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
 ]);
 
 /**

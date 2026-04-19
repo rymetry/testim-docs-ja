@@ -262,6 +262,171 @@ describe('applyEnSourcePatches (UD-001 / UD-002 application)', () => {
     assert.equal(s.mismatches.length, 0);
   });
 
+  it('applies UD-005A on hooks page config-file-run-hooks legacy display text', () => {
+    const html =
+      '<p>Guide link - ' +
+      '<a href="../running-tests/configuration-file-run-hooks/index.htm">https://help.testim.io/docs/configuration-file-run-hooks</a>' +
+      ' tail.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'advanced-editing/hooks', cov);
+    assert.ok(
+      out.includes(
+        '>https://help.testim.io/docs/running-tests/configuration-file-run-hooks</a>',
+      ),
+      'display text should be rewritten to canonical category path',
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-005A-hooks-config-file-legacy-display-text'],
+      1,
+    );
+  });
+
+  it('applies UD-005B on hooks page config-file-parameters legacy display text (fragment stripped)', () => {
+    const html =
+      '<p>Param link - ' +
+      '<a href="parameters/configuration-file-parameters.htm#defining-parameters-in-a-configuration-file">https://help.testim.io/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file</a>' +
+      ' tail.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'advanced-editing/hooks', cov);
+    assert.ok(
+      out.includes(
+        '>https://help.testim.io/docs/advanced-editing/parameters/configuration-file-parameters</a>',
+      ),
+      'display text should use canonical path without fragment',
+    );
+    assert.equal(
+      out.includes('/docs/configuration-file-parameters#'),
+      false,
+      'stale flat path with fragment must be gone',
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-005B-hooks-config-file-parameters-legacy-display-text'],
+      1,
+    );
+  });
+
+  it('applies UD-005C on parameters page loops legacy display text (fragment stripped)', () => {
+    const html =
+      '<p>For more, see ' +
+      '<a href="../loops.htm#using-the-loop-iterator-parameter">https://help.testim.io/docs/loops#using-the-loop-iterator-parameter</a>' +
+      '.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'advanced-editing/parameters', cov);
+    assert.ok(
+      out.includes('>https://help.testim.io/docs/advanced-editing/loops</a>'),
+    );
+    assert.equal(
+      out.includes('/docs/loops#'),
+      false,
+      'stale flat path with fragment must be gone',
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-005C-parameters-loops-legacy-display-text'],
+      1,
+    );
+  });
+
+  it('applies UD-005D on parameter-override-rules doc: prefix + legacy exports-parameters', () => {
+    const html =
+      '<p>See ' +
+      '<a href="doc:https://help.testim.io/docs/exports-parameters">Exports Parameters</a>' +
+      ' for examples.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'advanced-editing/parameters/parameter-override-rules',
+      cov,
+    );
+    assert.ok(
+      out.includes('<a href="exports-parameters.htm">Exports Parameters</a>'),
+    );
+    assert.equal(out.includes('doc:https://'), false);
+    assert.equal(
+      cov.snapshot().byPatchId['UD-005D-parameter-override-rules-exports-doc-prefix'],
+      1,
+    );
+  });
+
+  it('applies UD-005E on parameter-override-rules bare index.htm self-link in preface', () => {
+    const html =
+      '<p>We have some links and the <a href="index.htm">Params file</a>. Each override...</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'advanced-editing/parameters/parameter-override-rules',
+      cov,
+    );
+    assert.ok(
+      out.includes('and the <a href="../parameters/index.htm">Params file</a>'),
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-005E-parameter-override-rules-params-file-index-preface'],
+      1,
+    );
+  });
+
+  it('applies UD-005F on parameter-override-rules bare index.htm self-link in list item', () => {
+    const html =
+      '<p><a href="../../running-tests/configuration-file-run-hooks/index.htm">Config-file\'s parameters</a>' +
+      ' overrides <a href="index.htm">params-file\'s parameters</a>.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'advanced-editing/parameters/parameter-override-rules',
+      cov,
+    );
+    assert.ok(
+      out.includes('<a href="../parameters/index.htm">params-file\'s parameters</a>'),
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-005F-parameter-override-rules-params-file-index-listitem'],
+      1,
+    );
+  });
+
+  it('applies UD-006 on search-within-a-test email-variable typo', () => {
+    const html = '<ul><li><p>Generate email address -variable name</p></li></ul>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'editing-tests/search-within-a-test', cov);
+    assert.ok(out.includes('<p>Generate email address - variable name</p>'));
+    assert.equal(out.includes(' -variable'), false);
+    assert.equal(
+      cov.snapshot().byPatchId['UD-006-search-within-a-test-email-variable-typo'],
+      1,
+    );
+  });
+
+  it('applies UD-008 on allow-chrome-microphone CLI self-link', () => {
+    const html =
+      '<p>read here about the <a href="index.htm">CLI command</a>. Use ...</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone',
+      cov,
+    );
+    assert.ok(
+      out.includes('<a href="../the-command-line-cli/index.htm">CLI command</a>'),
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-008-allow-chrome-microphone-cli-index-self-link'],
+      1,
+    );
+  });
+
+  it('applies UD-007 on generate-random-data step.This typo', () => {
+    const html =
+      '<p>exports.myVar = "testim"; to your JS step.This will create the variable</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(html, 'guides/generate-random-data-with-js', cov);
+    assert.ok(out.includes('to your JS step. This will create'));
+    assert.equal(out.includes('step.This'), false);
+    assert.equal(
+      cov.snapshot().byPatchId['UD-007-generate-random-data-step-this-typo'],
+      1,
+    );
+  });
+
   it('does NOT apply UD-001A on sfdc-step-edit (slug mismatch)', () => {
     const html = '<p>Verify -this action verifies x</p>';
     const cov = createEnSourcePatchCoverage();

@@ -17,7 +17,7 @@ keywords:
   - Android
 ---
 
-Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は[Device Management](/docs/device-management/view-local-connected-mobile-devices)ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。
+Virtual Mobile Grid は、さまざまな iOS シミュレーターと Android エミュレーター上でのテストの記録と実行に使用できます。Virtual Mobile Grid は [Mobile Apps Library](/docs/mobile-apps/mobile-apps) に接続されています。つまり、実行するテストがモバイルアプリを使用する場合、Virtual Mobile Grid 上でテストを実行する前に、そのアプリを Mobile Apps Library に追加しておく必要があります。Virtual Mobile Grid は特別な統合を必要としません。有料ユーザーのライセンスに含まれています。ただし、Community ライセンスユーザーは、Company Owner または Project Owner として無料トライアルに登録できます。無料トライアルが開始されると、Virtual Mobile Grid は [Device Management](/docs/device-management/view-local-connected-mobile-devices) ですぐに利用可能になります。無料トライアル期間中は、さまざまな仮想デバイス（Android と iOS）が利用できます。
 
 ## モード
 

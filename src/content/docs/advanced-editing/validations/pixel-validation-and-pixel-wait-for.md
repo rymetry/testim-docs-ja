@@ -20,11 +20,11 @@ keywords:
 
 ビジュアル検証／待機ステップでは、ベースラインと現在の実行結果の視覚的差分を精度高く比較できます。本機能は [Applitools](/docs/integrations/visual-validation) と [LambdaTest](/docs/integrations/visual-validation/lambdatest_integration) のアプリによって提供されています。
 
-開始前に、[Applitools Eyes](https://applitools.com/) または [LambdaTest SmartUI](https://www.lambdatest.com/) と Testim を連携してください。詳しくは[ビジュアル検証統合ガイド](/docs/integrations/visual-validation/visual_validation_index)を参照。\
+開始前に、[Applitools Eyes](/docs/integrations/visual-validation) または [LambdaTest Smart UI](/docs/integrations/visual-validation/lambdatest_integration) アプリを Testim と連携してください。詳しくは[ビジュアル検証統合ガイド](/docs/integrations/visual-validation/visual_validation_index)を参照。\
 関連情報：
 
 - [Applitools ドキュメント](https://applitools.com/docs/)
-- [LambdaTest ドキュメント](https://www.lambdatest.com/support/docs/)
+- [LambdaTest ドキュメント](https://www.testmuai.com/support/docs/)
 
 :::note
 RCA や Ultrafast Test Cloud（追加環境）は適切なライセンスがないと Applitools 側で拒否されます。詳細は Applitools 担当者にお問い合わせください。
