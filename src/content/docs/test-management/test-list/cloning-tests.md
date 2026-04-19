@@ -18,8 +18,6 @@ keywords:
 
 ## クローン作成後の動作
 
-<br />
-
 <table class="md-table md-table-3cols">
  <thead>
   <tr>

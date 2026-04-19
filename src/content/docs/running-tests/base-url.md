@@ -65,8 +65,8 @@ Testim のベース URL は、テストが開始されるウェブサイトの�
 
 ![ナビゲーションステップの URL オーバーライド例](/images/running-tests/base-url/6e073c9-image.png)
 
-:::note{title="ナビゲーションステップの URL がパラメーターの場合"}
-ナビゲーションステップの URL がハードコードされていないが、むしろパラメーターである場合（例：`url`=&lt;https://demo.testim.io/checkout&gt;）、およびホスト（demo.testim.io）がセットアップステップの元のホストと一致する場合、同じ動作が適用されます。
+:::note
+ナビゲーションステップの URL がパラメーターの場合 ナビゲーションステップの URL がハードコードされていないが、むしろパラメーターである場合（例：`url`=<https://demo.testim.io/checkout>）、およびホスト（demo.testim.io）がセットアップステップの元のホストと一致する場合、同じ動作が適用されます。
 :::
 
 ## ベース URL 既製パラメーターの使用
