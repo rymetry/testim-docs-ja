@@ -198,7 +198,7 @@ describe('Bundle 1 JA markdown hygiene', () => {
 const NON_PATCHED_SAMPLE_SLUGS = [
   'overview/testim-overview',
   'running-tests/base-url',
-  'integrations/grid-management/custom-grid',
+  'integrations/grid-management/tricentis-device-cloud',
   'testops/insights',
   'salesforce-testing/salesforce-testing-overview',
   'advanced-editing/validations/email-validation',

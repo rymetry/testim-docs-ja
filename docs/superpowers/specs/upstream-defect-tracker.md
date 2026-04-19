@@ -18,7 +18,7 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-006 | _(unallocated)_ | _TBD_ | reserved | TBD |
 | UD-007 | _(unallocated)_ | _TBD_ | reserved | TBD |
 | UD-008 | _(unallocated)_ | _TBD_ | reserved | TBD |
-| UD-009 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
 | UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | reserved | TBD (next MadCap artifact family PR) |
 
 ### Allocation protocol
@@ -232,6 +232,33 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   2. `grep '<a href="index.htm">CLI command</a>'` が 0 hit になったことを確認
   3. `scripts/lib/en_source_patches.mjs` から UD-008 entry を削除
   4. baseline 再生成
+
+### UD-009: `index.htm` self-link miswire in grid-management child pages
+
+- **Patch IDs**: `UD-009-grid-management-index-self-link`
+- **Defect class**: `href-miswire`
+- **Added**: 2026-04-18
+- **Applied**: 2026-04-18 (M2 PR D — Integrations area burn-down; renumbered from originally-proposed UD-005 due to ID collision with C's UD-005 mixed stale-reference/index.htm family in hooks & parameters)
+- **Review after**: 2026-10-18
+- **Affected slugs** (5):
+  - `integrations/grid-management/browserstack-integration-1`
+  - `integrations/grid-management/browserstack-integration-copy`
+  - `integrations/grid-management/custom-grid`
+  - `integrations/grid-management/headspin-integration`
+  - `integrations/grid-management/saucelabs-integration`
+- **Defect**: 5 つの grid-management 子ページの「Adding a grid」相互参照リンクが、親ページへのリンクとして `<a href="index.htm#adding-a-grid">Adding a grid</a>` を使用している。MadCap Flare の convention では `index.htm` は folder の TOC/index ページに解決されると期待されるが、実際の親 topic は 1 階層上の `integrations/grid-management.htm` に存在する。`integrations/grid-management/` フォルダ内には `index.htm` は存在しない (実測確認済)。
+- **Observed symptom**: `normalizeUrlToken` が broken `index.htm` を `/docs/index` token に変換する一方、JA 側は WRITING_GUIDE §192 に従い正しい `/docs/integrations/grid-management#adding-a-grid` を維持しているため、parity gate で `segment-extra + segment-missing` のペアが発生 (baseline 10 entries, 5 slug × 2)。
+- **JA side**: JA markdown は WRITING_GUIDE §91-109 / §192 に従い `/docs/integrations/grid-management#adding-a-grid` を canonical target とする。これは JA 独自構造ではなく、§192 で明示的に許容された URL localization。
+- **Fix applied**:
+  - `UD-009-grid-management-index-self-link`: `<a href="index.htm#adding-a-grid">Adding a grid</a>` → `<a href="../grid-management.htm#adding-a-grid">Adding a grid</a>` (5 slug 共通、literal 1-to-1)
+  - `normalizeUrlToken` は patched relative `../grid-management.htm` を `/docs/integrations/grid-management` token に変換するため、JA 側 token と一致する。
+- **Status**: `applied`
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — 5 ページ共通の MadCap authoring pattern)
+- **Removal SOP** (after upstream fix confirmed):
+  1. 5 slug の EN HTML snapshot を再取得
+  2. `grep 'href="index.htm#adding-a-grid"'` が全 5 file で 0 hit を確認
+  3. `scripts/lib/en_source_patches.mjs` から UD-009 entry を削除
+  4. `node scripts/generate_parity_baseline.mjs --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ## Adding a new defect
 

@@ -280,6 +280,32 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
+  Object.freeze({
+    id: 'UD-009-grid-management-index-self-link',
+    slugs: Object.freeze([
+      'integrations/grid-management/browserstack-integration-1',
+      'integrations/grid-management/browserstack-integration-copy',
+      'integrations/grid-management/custom-grid',
+      'integrations/grid-management/headspin-integration',
+      'integrations/grid-management/saucelabs-integration',
+    ]),
+    defectClass: 'href-miswire',
+    find: '<a href="index.htm#adding-a-grid">Adding a grid</a>',
+    replace: '<a href="../grid-management.htm#adding-a-grid">Adding a grid</a>',
+    rationale:
+      'Upstream MadCap href miswire: 5 grid-management child pages link to a non-existent ' +
+      '`index.htm` inside the `integrations/grid-management/` folder for the "Adding a grid" ' +
+      'cross-reference. MadCap convention would expect `index.htm` to resolve to the folder\'s ' +
+      'TOC page, but the actual parent topic lives at `integrations/grid-management.htm` ' +
+      'one level up. normalizeUrlToken converts the broken `index.htm` → `/docs/index` token ' +
+      'while JA content correctly references `/docs/integrations/grid-management#adding-a-grid` ' +
+      'per WRITING_GUIDE §192, causing segment-extra + segment-missing pairs in the parity gate. ' +
+      'Patched relative path `../grid-management.htm` normalizes to the same ' +
+      '`/docs/integrations/grid-management` token as JA.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-009',
+    addedAt: '2026-04-18',
+    reviewAfter: '2026-10-18',
+  }),
 ]);
 
 /**
