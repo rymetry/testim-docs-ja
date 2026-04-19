@@ -1,8 +1,42 @@
 # Upstream Defect Tracker
 
-- **Status**: Active (v1, 2026-04-17)
+- **Status**: Active (v2, 2026-04-20 — Reserved IDs table added, proposal B')
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/lib/en_source_patches.mjs`, `docs/superpowers/plans/2026-04-17-en-source-patches-layer.md`
+
+## Reserved IDs (proposal B', Codex Round-3 approved)
+
+UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-hoc. Ad-hoc verbal reservation is banned to prevent semantic collisions like the PR C vs PR D concurrent UD-005 allocation.
+
+| ID | Semantic family | Defect class | Status | Allocation PR |
+| --- | --- | --- | --- | --- |
+| UD-001 | Salesforce Verify list `-this` typo | `typo` | applied | (initial v1) |
+| UD-002 | Salesforce Steps "Log out" href miswire | `href-miswire` | applied | (initial v1) |
+| UD-003 | broken-table-row-as-paragraph (predefined-properties) | `madcap-artifact` | candidate | (initial v1) |
+| UD-004 | legacy `help.testim.io` stale-reference (scheduler pages) | `stale-reference` | applied | (initial v1) |
+| UD-005 | bare/bogus `index.htm` self-link href-miswire family | `href-miswire` | reserved | TBD (next index.htm family PR) |
+| UD-006 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-007 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-008 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-009 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | reserved | TBD (next MadCap artifact family PR) |
+
+### Allocation protocol
+
+Adding a new UD-NNN:
+
+1. Pick the **lowest available reserved slot** from the table above that matches the new defect's semantic family.
+2. Update the `Status` column (`reserved` → `candidate` or `applied`) and `Allocation PR` column to the PR that claims the ID.
+3. Add the detailed entry in the "Registry (active defects)" section below.
+4. The `defectClass` enum value in `en_source_patches` registry must match the table's `Defect class` column.
+
+### Rationale (why central reservation)
+
+Prior to v2, PR C and PR D both attempted to allocate `UD-005` concurrently for different semantic classes (PR D: `grid-management` index.htm self-link, PR C: different slug). Codex Round-2 recommended centralizing allocation through this table to prevent repeat collisions and to keep `grep UD-NNN` on the codebase returning a semantically coherent class.
+
+### Scope of B' (intentionally narrow)
+
+Already-merged IDs (`UD-001`..`UD-004`) are **not renumbered**. Codex Round-3 explicitly flagged that renumbering `UD-004 → UD-009` would churn `en_source_patches.mjs`, tracker, tests, and plan docs without corresponding benefit. The table above simply **reserves future IDs** and establishes allocation protocol going forward.
 
 ## Purpose
 
