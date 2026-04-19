@@ -39,8 +39,9 @@ Jenkins とテストを統合するには、まず Jenkins マシンまたはそ
 
 ![Jenkins で Execute Shell ビルドステップを追加する画面](/images/ci-integrations/jenkins-integration/5253260-ms0qPoJ5RymCKMlPFKTp_jenkins_execute_shell.PNG)
 
-4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
-   以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです（sudo は不要）
+4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。
+
+以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです（sudo は不要）
 
 ```shell
 mkdir -p "${WORKSPACE}/.npm-packages"
@@ -59,6 +60,8 @@ testim --label "<YOUR LABEL>" \
 ```
 
 ![Jenkins の Execute Shell コマンド設定画面](/images/ci-integrations/jenkins-integration/ff81d47-File1488700845402.png)
+
+Jenkins の Execute Shell コマンド
 
 **注記:** グリッド名については、[こちら](/docs/integrations/grid-management)でグリッドの設定方法をご確認ください。
 

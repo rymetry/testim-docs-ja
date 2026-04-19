@@ -47,6 +47,6 @@ GitHub 連携を使うと、Testim から直接 GitHub Issues にバグを報告
 この時点で、Testim Visual Editor の **Settings > CLI** 画面が開きます。
 
 8. **Settings > Bug Tracker** に戻り、**Github** をクリックします。
-9. `You are logged in` メッセージが表示されることを確認します。
+9. 「ログインしました」というメッセージが表示されることを確認します。
 
 ![GitHub 接続完了メッセージ](/images/bug-tracker-settings/connecting-testim-to-github/c4190f2-github6.PNG)
