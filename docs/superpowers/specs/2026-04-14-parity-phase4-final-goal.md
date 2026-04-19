@@ -38,6 +38,19 @@ Phase 4 完了時、以下の 5 つの field はすべて 0 でなければな�
 | snapshot diff — 削除 | `snapshot-diff-status.json` | `summary.removed === 0` |
 | artifact coverage shape | `parity-check-status.json` | `debug.artifactCoverage` が `{ registryEntries, matchedHits, bySlug, byToken }` を持つ |
 
+### PR Z entry fail-closed invariants (A'.4, Codex Round-3 approved)
+
+PR Z entry additionally requires the following machine-checkable predicates to hold on the full-repo parity run used to regenerate baseline:
+
+- `summary.orphanBaselineEntries === 0`
+- `debug.patchCoverage.mismatches.length === 0`
+- `summary.runScope.isComplete === true`
+- `summary.freshnessState === "fresh"`
+- `summary.linkageState === "linked"`
+- `summary.result === "pass"`
+
+Any full baseline regeneration from a run that fails any of these predicates is invalid. Implementation enforcement lives in `scripts/generate_parity_baseline.mjs` pre-regen gate (see plan §4 baseline 再生成).
+
 ### 測定
 
 - `npm run check:parity` が `parity-baseline.json` / `parity-check-status.json` を書き出す
@@ -82,17 +95,32 @@ section-structure-mismatch, segment-order-mismatch
 
 runtime (`check_source_parity.mjs` 経由) が検出する parity 差分は、以下 3 枠のいずれかに必ず分類される。どの枠が counter=0 にどう寄与するかも明記する。
 
+### 4.0 Final-state suppression-lane contract (A'.1, Codex Round-3 approved)
+
+Final state forbids intentional-divergence allow-lists, callout-normalization allow-lists, JA-side policy suppression, and any suppression lane that hides EN↔JA drift at parity time. Broken upstream EN may be handled only by source snapshot quarantine (`SOURCE_SYNC_EXCLUSIONS`) or EN-boundary literal repair (`en_source_patches`). All other differences must be eliminated by JA content fixes or detector/mechanism fixes before PR Z.
+
+この原則により、以下の実装レーンは **M2 burn-down 完了時点で撤去** される:
+
+- `scripts/lib/source_parity_segments_en.mjs` の `CALLOUT_NORMALIZATION_SLUGS` + `calloutAllowSlugs` plumbing (§8 と併せて撤去計画 — proposal G)
+- `scripts/lib/ja_omission_policy_registry.mjs` + `suppressJaOmissionDiffs` call site (proposal H — user legal/publishing policy 承認待ち)
+- §4.2 `parity-artifact-registry` は M2 期間中の transitional mechanism として扱い、PR Z までに全 entry を `en_source_patches` / content fix / upstream fix に migrate する (§4.2 参照、proposal F)
+
 ### 4.1 actionable-baseline
 
 - **定義**: 実コンテンツの parity bug (翻訳・構造・token 抜け)。baseline entry として登録され、修正対象。
 - **DoD 時の状態**: Phase 4 完了時に **entries.length === 0**。したがって `summary.baselinedIssues === 0` が連動して満たされる。
 - **測定**: `parity-baseline.json.entries[]` にすべてここから流入。
 
-### 4.2 parity-artifact-registry
+### 4.2 parity-artifact-registry (transitional, F — Codex Round-3 approved)
 
-- **定義**: EN 側の不可解な残置物 (壊れたリンク、demo link など、翻訳でも normalizer でも直らないもの) を **slug-scope の static registry** で抑止する。runtime は該当 (slug, token) をマッチしたら issue を emit せず `coverage.record()` を叩く。
+- **定義 (transitional)**: §4.2 `parity-artifact-registry` は **M2 burn-down のための transitional mechanism**。EN 側の不可解な残置物 (壊れたリンク、demo link など、翻訳でも normalizer でも直らないもの) を **slug-scope の static registry** で暫定的に抑止する。runtime は該当 (slug, token) をマッチしたら issue を emit せず `coverage.record()` を叩く。
 - **Truth source**: `scripts/lib/parity_artifact_registry.mjs` の `ARTIFACT_REGISTRY` 定数 (entry は `{ slugs, token, reason, expectedIssueType, addedAt, linkedIssue? }` の frozen record)。
-- **DoD 時の状態**: baseline には登録しない。registry 抑止は `debug.artifactCoverage.matchedHits` に加算され、通過実績が可観測。
+- **Final DoD (PR Z 時点)**: `ARTIFACT_REGISTRY` は **zero live entry** でなければならない。PR Z までに既存 entry はすべて以下のいずれかに migrate する:
+  - (a) `en_source_patches` slug-scope literal patch (EN HTML boundary repair)
+  - (b) JA content fix による token mismatch 解消
+  - (c) upstream Tricentis fix 確認 + entry 削除
+- **post-PR-Z 禁止**: PR Z 後の `ARTIFACT_REGISTRY` への追加は契約違反。許容される suppression lane は §4.0 に明示されるとおり `SOURCE_SYNC_EXCLUSIONS` (page-level quarantine) と `en_source_patches` (segment-level literal repair) のみ、いずれも broken-EN 退避に限定。
+- **M2 transitional 期の運用**: baseline には登録しない (従来通り)。registry 抑止は `debug.artifactCoverage.matchedHits` に加算され、通過実績が可観測。
 - **docs に slug / token を書かない**: 「追加・削除時は `ARTIFACT_REGISTRY` を更新する」とだけ docs に書く (本 spec 含む)。
 
 ### 4.3 advisory-residual

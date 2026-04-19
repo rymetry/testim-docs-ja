@@ -380,3 +380,55 @@ Top 2 大物ファイルとロングテール (1-3 件ファイル 69 ファイ�
 3. plan §5.3.3 の initial inventory 行を更新
 
 registry 新規 token 追加は `§5.3.N` 新規 carve-out として reviewer L2 gate を経由する (本 §5.3.3 は Tricentis removal-request policy に scope lock)。
+
+---
+
+## PR merge gate matrix (proposal J, Codex Round-3 approved)
+
+全ての PR が `parity-baseline.json`、`scripts/lib/source_parity_*`、`scripts/lib/en_source_patches.mjs`、`docs/superpowers/` 配下 を touch する場合、以下の gate を通過しない限り merge 不可。
+
+### 必須不変量
+
+1. **Baseline delta is monotonic non-increasing** (`Δ entries ≤ 0`)
+   - PR description に before/after entries count を明示必須
+   - `Δ > 0` は契約違反。architect + plan-fidelity reviewer の明示的 override 署名が PR description に必要
+   - cascade / mechanism PR でも例外なし
+
+2. **No new suppression lane**
+   - PR Z 以降で許容される suppression lane は **`SOURCE_SYNC_EXCLUSIONS` + `en_source_patches` のみ**、いずれも broken-EN 退避用途に限定
+   - M2 期間中に限り、`parity_artifact_registry` は transitional lane として存続 (PR Z までに zero live entry に migrate、spec §4.2 参照)
+   - 新規 allowlist / carve-out / acknowledgement / `inconclusiveReason` masking の導入は不可
+   - 検知 false-positive は silent suppression ではなく mechanism fix で解消する (§5.3.7 / §5.3.N 経由)
+
+3. **6-reviewer signoff matrix (parallel, all required)**:
+
+   | Reviewer | 観点 |
+   | --- | --- |
+   | architect | design integrity / spec 契約整合 / layer boundary |
+   | QA | behavior correctness / regression risk |
+   | testing | test coverage + regression pins (80%+ coverage) |
+   | security | L2 gate for exception additions / 設計違反スコープ逸脱検知 |
+   | Codex (external model) | independent second-opinion review |
+   | plan-fidelity | plan/spec 文言整合 / §5.3.N marker protocol 遵守 / 未登録 carve-out 検知 |
+
+4. **Test pins (must pass)**:
+   - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` (sentinel slugs の totalIssues=0)
+   - `scripts/__tests__/en_source_patches.test.mjs` / `_integration.test.mjs` (patch-registry invariants)
+   - `scripts/__tests__/generate_parity_baseline.test.mjs` (pre-regen gate / proposal I)
+   - 各 `§5.3.N` regression guard
+
+5. **Baseline regen cycle**: PR merge 後の full `--regenerate` は必ず pre-regen fail-closed gate (plan §4) を pass。CI run log に `baseline-regen-gate: pass` を明示。
+
+### 違反時の運用
+
+- gate 違反 PR は `REQUEST_CHANGES` で返却。gate override は architect + plan-fidelity reviewer の **両者明示署名** が必須 (single-reviewer override 不可)
+- Codex review は review-ordering 上 **最終 reviewer** (他 5 reviewer が揃った後に発火)
+- ad-hoc carve-out の導入禁止 (§5.3.N proposal marker protocol を経由)
+
+### Source contract
+
+- `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` §4.0 (final-state suppression-lane contract, A'.1)
+- `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` §4.2 (parity-artifact-registry transitional, F)
+- `docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §P2-5 Exit (DoD invariants, A'.2)
+- memory `feedback_baseline_zero_increase.md` (monotonic non-increase principle)
+- memory `feedback_four_reviewer_gate.md` (review orchestration)

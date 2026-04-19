@@ -8,8 +8,13 @@
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import {
   assertFullParityStatus,
+  assertPreRegenGate,
   buildBaselineFromStatus,
   buildGenerationMeta,
   serializeBaseline,
@@ -17,6 +22,7 @@ import {
   defaultReviewAfter,
   parseArgs,
   mergePartialBaselineByType,
+  loadSnapshotDiffStatus,
 } from '../generate_parity_baseline.mjs';
 import { computeStructureFingerprint } from '../lib/source_parity_baseline.mjs';
 
@@ -1010,5 +1016,173 @@ describe('parseArgs + validateTypesArg integration', () => {
     assert.deepEqual(args.types, ['source-unusable']);
     const v = validateTypesArg(args.types);
     assert.equal(v.ok, true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Pre-regen fail-closed gate (proposal I, Codex Round-3 approved)
+//
+// Source contract:
+//   - docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md §2
+//     (PR Z entry fail-closed invariants)
+//   - docs/superpowers/plans/2026-04-16-m2-parity-burndown.md §4
+//     (baseline 再生成, pre-regen fail-closed gate)
+// ---------------------------------------------------------------------------
+
+function makePassingStatus() {
+  return {
+    summary: {
+      runScope: { isComplete: true },
+      freshnessState: 'fresh',
+      linkageState: 'linked',
+      result: 'pass',
+      orphanBaselineEntries: 0,
+      checkedFiles: 288,
+      totalFiles: 288,
+      checkedAt: '2026-04-20T00:00:00.000Z',
+    },
+    debug: {
+      patchCoverage: { mismatches: [] },
+    },
+    files: [],
+  };
+}
+
+function makePassingSnapshotDiff() {
+  return {
+    summary: { changed: 0, added: 0, removed: 0, unchanged: 288, totalSnapshots: 288 },
+  };
+}
+
+describe('assertPreRegenGate — full --regenerate fail-closed invariants', () => {
+  it('passes when all invariants hold', () => {
+    assert.doesNotThrow(() =>
+      assertPreRegenGate(makePassingStatus(), makePassingSnapshotDiff()),
+    );
+  });
+
+  it('throws when summary.runScope.isComplete is not true', () => {
+    const s = makePassingStatus();
+    s.summary.runScope = { isComplete: false };
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /runScope\.isComplete/);
+  });
+
+  it('throws when summary.freshnessState is not "fresh"', () => {
+    const s = makePassingStatus();
+    s.summary.freshnessState = 'stale';
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /freshnessState/);
+  });
+
+  it('throws when summary.linkageState is not "linked"', () => {
+    const s = makePassingStatus();
+    s.summary.linkageState = 'missing';
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /linkageState/);
+  });
+
+  it('throws when summary.result is not "pass"', () => {
+    const s = makePassingStatus();
+    s.summary.result = 'inconclusive';
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /summary\.result/);
+  });
+
+  it('throws when summary.orphanBaselineEntries is non-zero', () => {
+    const s = makePassingStatus();
+    s.summary.orphanBaselineEntries = 3;
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /orphanBaselineEntries/);
+  });
+
+  it('throws when debug.patchCoverage.mismatches is non-empty', () => {
+    const s = makePassingStatus();
+    s.debug.patchCoverage.mismatches = [{ patchId: 'UD-001A', slug: 'x/y' }];
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /patchCoverage\.mismatches/);
+  });
+
+  it('throws when debug.patchCoverage.mismatches is missing (not an array)', () => {
+    const s = makePassingStatus();
+    s.debug = {};
+    assert.throws(() => assertPreRegenGate(s, makePassingSnapshotDiff()), /patchCoverage\.mismatches/);
+  });
+
+  it('throws when snapshotDiff.summary.changed is non-zero', () => {
+    const d = makePassingSnapshotDiff();
+    d.summary.changed = 1;
+    assert.throws(() => assertPreRegenGate(makePassingStatus(), d), /snapshotDiff\.summary\.changed/);
+  });
+
+  it('throws when snapshotDiff.summary.added is non-zero', () => {
+    const d = makePassingSnapshotDiff();
+    d.summary.added = 2;
+    assert.throws(() => assertPreRegenGate(makePassingStatus(), d), /snapshotDiff\.summary\.added/);
+  });
+
+  it('throws when snapshotDiff.summary.removed is non-zero', () => {
+    const d = makePassingSnapshotDiff();
+    d.summary.removed = 4;
+    assert.throws(
+      () => assertPreRegenGate(makePassingStatus(), d),
+      /snapshotDiff\.summary\.removed/,
+    );
+  });
+
+  it('throws when snapshotDiff.summary is missing', () => {
+    assert.throws(
+      () => assertPreRegenGate(makePassingStatus(), {}),
+      /snapshot-diff-status\.json: summary/,
+    );
+  });
+
+  it('throws when status.summary is missing', () => {
+    assert.throws(
+      () => assertPreRegenGate({}, makePassingSnapshotDiff()),
+      /summary missing or not an object/,
+    );
+  });
+
+  it('aggregates multiple failures in a single error message', () => {
+    const s = makePassingStatus();
+    s.summary.freshnessState = 'stale';
+    s.summary.linkageState = 'missing';
+    s.summary.result = 'inconclusive';
+    const d = makePassingSnapshotDiff();
+    d.summary.changed = 2;
+    let err;
+    try {
+      assertPreRegenGate(s, d);
+    } catch (e) {
+      err = e;
+    }
+    assert.ok(err, 'expected throw');
+    assert.match(err.message, /freshnessState/);
+    assert.match(err.message, /linkageState/);
+    assert.match(err.message, /summary\.result/);
+    assert.match(err.message, /snapshotDiff\.summary\.changed/);
+  });
+});
+
+describe('loadSnapshotDiffStatus — missing / unparseable is gate failure', () => {
+  it('throws when file is missing', () => {
+    const missing = path.join(os.tmpdir(), `non-existent-${Date.now()}-${Math.random()}.json`);
+    assert.throws(() => loadSnapshotDiffStatus(missing), /not found/);
+  });
+
+  it('throws when file is unparseable JSON', () => {
+    const tmp = path.join(os.tmpdir(), `bad-json-${Date.now()}-${Math.random()}.json`);
+    fs.writeFileSync(tmp, '{not json}');
+    try {
+      assert.throws(() => loadSnapshotDiffStatus(tmp), /parse failure/);
+    } finally {
+      fs.unlinkSync(tmp);
+    }
+  });
+
+  it('returns parsed object when file is valid JSON', () => {
+    const tmp = path.join(os.tmpdir(), `ok-json-${Date.now()}-${Math.random()}.json`);
+    fs.writeFileSync(tmp, JSON.stringify({ summary: { changed: 0 } }));
+    try {
+      const parsed = loadSnapshotDiffStatus(tmp);
+      assert.deepEqual(parsed, { summary: { changed: 0 } });
+    } finally {
+      fs.unlinkSync(tmp);
+    }
   });
 });

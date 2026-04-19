@@ -40,6 +40,7 @@ import { computeSnapshotFingerprint } from './lib/source_parity_acknowledgements
 
 const STATUS_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
+const SNAPSHOT_DIFF_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
 
 const DEFAULT_REVIEW_MONTHS = 6;
@@ -145,6 +146,117 @@ export function assertFullParityStatus(status) {
   ) {
     throw new Error(
       'parity-check-status.json is not a full-repo run. Run `npm run check:parity` before generating baseline.',
+    );
+  }
+}
+
+/**
+ * Load `snapshot-diff-status.json` for the pre-regen fail-closed gate.
+ *
+ * Missing file or unparseable JSON is a gate failure, not a warning
+ * (proposal I — Codex Round-3 approved).
+ *
+ * @returns {object} parsed snapshot-diff-status payload
+ * @throws {Error} if file is missing or unparseable
+ */
+export function loadSnapshotDiffStatus(filePath = SNAPSHOT_DIFF_PATH) {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(
+      `snapshot-diff-status.json not found at ${path.relative(ROOT_DIR, filePath)}. ` +
+        'Run `npm run check:snapshots` before a full --regenerate.',
+    );
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(filePath, 'utf8');
+  } catch (err) {
+    throw new Error(
+      `snapshot-diff-status.json read failure: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(
+      `snapshot-diff-status.json parse failure: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+}
+
+/**
+ * Pre-regen fail-closed gate for full `--regenerate` mode.
+ *
+ * Enforces the invariants documented in
+ *   `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` §2
+ *   "PR Z entry fail-closed invariants" (A'.4)
+ * and
+ *   `docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §4
+ *   "baseline 再生成 (pre-regen fail-closed gate, I)"
+ *
+ * A full regeneration from a run that fails any predicate is invalid —
+ * the gate throws instead of writing an unsafe baseline. Partial regen
+ * modes (`--slug`, `--types`) are intentionally out of scope.
+ *
+ * @param {object} status  — parsed parity-check-status.json
+ * @param {object} snapshotDiff — parsed snapshot-diff-status.json
+ * @throws {Error} on any failed predicate
+ */
+export function assertPreRegenGate(status, snapshotDiff) {
+  const failures = [];
+  const summary = status?.summary;
+  if (!summary || typeof summary !== 'object') {
+    throw new Error('parity-check-status.json: summary missing or not an object');
+  }
+  if (summary.runScope?.isComplete !== true) {
+    failures.push(
+      `summary.runScope.isComplete must be true (got ${JSON.stringify(summary.runScope?.isComplete)})`,
+    );
+  }
+  if (summary.freshnessState !== 'fresh') {
+    failures.push(
+      `summary.freshnessState must be "fresh" (got ${JSON.stringify(summary.freshnessState)})`,
+    );
+  }
+  if (summary.linkageState !== 'linked') {
+    failures.push(
+      `summary.linkageState must be "linked" (got ${JSON.stringify(summary.linkageState)})`,
+    );
+  }
+  if (summary.result !== 'pass') {
+    failures.push(`summary.result must be "pass" (got ${JSON.stringify(summary.result)})`);
+  }
+  if (summary.orphanBaselineEntries !== 0) {
+    failures.push(
+      `summary.orphanBaselineEntries must be 0 (got ${JSON.stringify(summary.orphanBaselineEntries)})`,
+    );
+  }
+  const patchMismatches = status?.debug?.patchCoverage?.mismatches;
+  if (!Array.isArray(patchMismatches)) {
+    failures.push(
+      `debug.patchCoverage.mismatches must be an array (got ${JSON.stringify(patchMismatches)})`,
+    );
+  } else if (patchMismatches.length !== 0) {
+    failures.push(
+      `debug.patchCoverage.mismatches.length must be 0 (got ${patchMismatches.length})`,
+    );
+  }
+  const diffSummary = snapshotDiff?.summary;
+  if (!diffSummary || typeof diffSummary !== 'object') {
+    failures.push('snapshot-diff-status.json: summary missing or not an object');
+  } else {
+    for (const counter of ['changed', 'added', 'removed']) {
+      if (diffSummary[counter] !== 0) {
+        failures.push(
+          `snapshotDiff.summary.${counter} must be 0 (got ${JSON.stringify(diffSummary[counter])})`,
+        );
+      }
+    }
+  }
+  if (failures.length > 0) {
+    throw new Error(
+      'baseline-regen-gate: FAIL\n' +
+        failures.map((f) => `  - ${f}`).join('\n') +
+        '\nSee docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md §2 (PR Z entry fail-closed invariants)',
     );
   }
 }
@@ -565,6 +677,17 @@ async function main() {
   }
   const status = JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8'));
   assertFullParityStatus(status);
+
+  // Full --regenerate triggers the pre-regen fail-closed gate (proposal I,
+  // Codex Round-3 approved). Partial modes (--slug / --types) are out of
+  // scope because they only re-generate a subset of entries and preserve
+  // bit-identical existing records for the rest.
+  if (args.regenerate) {
+    const snapshotDiff = loadSnapshotDiffStatus();
+    assertPreRegenGate(status, snapshotDiff);
+    console.log('baseline-regen-gate: pass');
+  }
+
   const fingerprintMap = buildFingerprintMap();
 
   const meta = buildGenerationMeta(status, args);

@@ -169,12 +169,19 @@ Tier A 合計 24 occurrences (pilot #1 の 6 occurrences 除く)。pattern 1 高
 - Stage B6 手段 (per-entry の JA wording 微調整 / alignment narrow rule / artifact 昇格)
 - Stage B7 は Stage B4 完了後に再評価 (parent plan §10.5)
 
-**Exit (= M2 完了):**
+**Exit (= PR Z entry, A'.2 Codex Round-3 approved):**
 
-- byIssueType: untranslated/missing/extra/structure/token-gap/order **= 0**
-- segment-inconclusive **≤ 3**
-- auditSignalIssues **= 0**
-- → PR Z (M3) entry 成立
+Machine-checkable predicates on `parity-check-status.json.summary`:
+
+- `summary.reportableActiveFiles = 0`
+- `summary.reportableActiveActionableFiles = 0`
+- `summary.advisoryQueueIssues = 0`
+- `summary.auditSignalIssues = 0`
+- `(summary.issuesByType["segment-inconclusive"] ?? 0) = 0`
+
+No advisory residual may enter PR Z via baseline, acknowledgement, carve-out, or audit-only demotion.
+
+**M2 完了 = 上記 5 predicate 全 pass ∧ `parity-baseline.json.entries.length = 0` ∧ spec §2 補助不変量 (snapshot-diff 全 0 + A'.4 fail-closed invariants) 全 pass** で PR Z (M3) entry 成立。
 
 ### P2-6: 退避 registry 最終検証 (final phase evacuation audit)
 
@@ -232,7 +239,18 @@ Route W は既存 3 mechanism と排他ではなく **補完**的に動作する
 
 - **base branch**: 各 phase で `origin/main` から新 branch を切る (`claude/m2-p2-1-pilot`, `claude/m2-p2-2-*`, …)
 - **worktree**: Tier A 並列時は per-slug worktree (`.claude/worktrees/m2-<slug-hash>`)
-- **baseline 再生成**: 各 **phase 完了 PR merge 後** に main で `node scripts/generate_parity_baseline.mjs --regenerate` (full 再生成 / slug-partial は非推奨) を実行し、`rationale` フィールドを固定文言 `"frozen baseline — M2 burn-down phase P2-X post-merge regen"` に統一する。phase 内の中間 PR では `--slug=<csv>` の partial 再生成を許容するが、最終 phase PR では必ず `--regenerate` で書き直す (M3 atomic cutover 時の "凍結日時" トレーサビリティ維持 / architect gate C2)
+- **baseline 再生成 (pre-regen fail-closed gate, I — Codex Round-3 approved)**: `node scripts/generate_parity_baseline.mjs --regenerate` は full 再生成前に以下の invariant を全て満たすことを machine-check する (一つでも失敗したら gate が throw して regen を拒否):
+  - `summary.runScope.isComplete === true`
+  - `summary.freshnessState === 'fresh'`
+  - `summary.linkageState === 'linked'`
+  - `summary.result === 'pass'`
+  - `summary.orphanBaselineEntries === 0`
+  - `debug.patchCoverage.mismatches.length === 0`
+  - `snapshotDiff.summary.changed === 0`
+  - `snapshotDiff.summary.added === 0`
+  - `snapshotDiff.summary.removed === 0`
+
+  `snapshot-diff-status.json` は full regen 時に **必ず読み込む**。missing / unparseable は gate failure (warning ではない)。CI では full `--regenerate` run log に `baseline-regen-gate: pass` を明示する。各 **phase 完了 PR merge 後** に main で上記 gate を通して `--regenerate` を実行し、`rationale` フィールドを固定文言 `"frozen baseline — M2 burn-down phase P2-X post-merge regen"` に統一する。phase 内の中間 PR では `--slug=<csv>` の partial 再生成を許容するが、最終 phase PR では必ず `--regenerate` で書き直す (M3 atomic cutover 時の "凍結日時" トレーサビリティ維持 / architect gate C2)
   - **中間 PR partial regen rationale (canonical format)** (architect gate P2-2 D1, 2026-04-17): `generate_parity_baseline.mjs --slug=<csv>` が自動生成する `"frozen baseline — partial regeneration for <slug>"` はそのまま使用してよい (script 出力準拠 / 人手編集不要)。複数 slug を一括 regen する場合は script が slug csv を連結するため、trail 情報は `generatedFromRunId` + commit SHA から追跡する。phase 最終 PR で full `--regenerate` に書き直すので中間 rationale は使い捨て前提
 - **`reviewAfter` field の扱い** (architect gate A2 注記): schema v1 の各 entry に付与されている `reviewAfter: "<YYYY-MM-DD>"` は、M1 で設計された "期限切れ baseline を orphanBaselineEntries として検知する" 仕組みの input。M2 burn-down の文脈では baseline total を漸減させる運用が主であり、**実質的に未使用** (期限切れを待たずに entry を解消するため)。M3 (PR Z schema v2) では本 field は削除予定 (`migrate_baseline_schema.mjs` で strip)。phase PR の `--regenerate` で自動付与される value (6 ヶ月先) は harmless だが意味を持たないことに留意
 - **PR description 必須**: before/after の baseline entries + byIssueType 表、対象 slug list、source-first 遵守宣言
@@ -296,6 +314,10 @@ PR #312 `audit-signals-triage` が `configure-tricentis-mobile-agent.md` §19 "W
 - `COARSE_SIGNAL_TYPES` の変更なし
 - `extractParagraphCounts` の code-fence 扱いの変更なし
 - 他 slug への scope 拡張なし (他 slug で同 pattern が再発した場合は本 §5.3.1.a entry の slug リストへの追記で L2 gate 再通過)
+
+**Final DoD gate (A'.3, Codex Round-3 approved)**:
+
+This scope note is temporary triage metadata only. It does not modify the final DoD or PR Z entry gate. Before PR Z, the underlying FileOrFilePath mechanism fix must land, `summary.auditSignalIssues` must reach 0, and all residuals tracked under §5.3.1 / §5.3.1.a must be eliminated with no exclusions, acknowledgements, baselines, or carve-outs.
 
 #### 5.3.2 EN `index.htm/#/` self-link artifact (slug-scope registry extension)
 
