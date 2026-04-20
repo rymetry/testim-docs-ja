@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 // scripts/check_patch_review_cadence.mjs
 /**
- * Patch review cadence monitor (non-blocking).
+ * Registry review cadence monitor (non-blocking).
  *
- * Walks `EN_SOURCE_PATCHES` and lists every patch whose `reviewAfter`
- * date is in the past relative to `now`. Warnings are printed to stderr
- * (human consumable) and the process exits 0 — this is monitoring, not
- * a gate. CI may surface the warnings but must not fail on them.
+ * Walks the two broken-EN retreat registries:
+ *   - `EN_SOURCE_PATCHES` (segment-level)
+ *   - `SOURCE_SYNC_EXCLUSIONS` (page-level, Phase A)
+ *
+ * Lists every entry whose `reviewAfter` date is in the past relative to `now`.
+ * Warnings are printed to stderr (human consumable) and the process exits 0 —
+ * this is monitoring, not a gate. CI may surface the warnings but must not
+ * fail on them.
  *
  * Usage:
  *   node scripts/check_patch_review_cadence.mjs
@@ -17,9 +21,11 @@
  * emission at run start) and from unit tests.
  *
  * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md §B2
+ *       docs/superpowers/plans/2026-04-20-upstream-recovery-detection.md §Task 6
  */
 
 import { EN_SOURCE_PATCHES } from './lib/en_source_patches.mjs';
+import { SOURCE_SYNC_EXCLUSIONS } from './lib/source_sync_exclusions.mjs';
 
 /**
  * Determine whether a patch's `reviewAfter` date has passed.
@@ -66,13 +72,46 @@ export function collectOverduePatches(registry = EN_SOURCE_PATCHES, nowMs = Date
 }
 
 /**
- * Render a single overdue-patch warning line.
+ * Same as `collectOverduePatches` but specialised for the page-level
+ * `SOURCE_SYNC_EXCLUSIONS` registry (indexed by slug instead of id).
  *
- * @param {{ id: string, reviewAfter: string, daysOverdue: number }} entry
+ * @param {Record<string, object>} registry
+ * @param {number} nowMs
+ * @returns {Array<{ slug: string, reviewAfter: string, daysOverdue: number }>}
+ */
+export function collectOverdueSyncExclusions(
+  registry = SOURCE_SYNC_EXCLUSIONS,
+  nowMs = Date.now(),
+) {
+  const overdue = [];
+  for (const [slug, entry] of Object.entries(registry)) {
+    const result = evaluatePatchReview(entry, nowMs);
+    if (result.overdue) {
+      overdue.push({
+        slug,
+        reviewAfter: entry.reviewAfter,
+        daysOverdue: result.daysOverdue,
+      });
+    }
+  }
+  return overdue;
+}
+
+/**
+ * Render a single overdue-entry warning line.
+ *
+ * Accepts either an `en_source_patches` row (keyed by `id`) or a
+ * `source_sync_exclusions` row (keyed by `slug`). The shape is detected
+ * from which field is present.
+ *
+ * @param {{ id?: string, slug?: string, reviewAfter: string, daysOverdue: number }} entry
  * @returns {string}
  */
 export function formatWarning(entry) {
-  return `[en_source_patches] reviewAfter overdue: patch=${entry.id} reviewAfter=${entry.reviewAfter} daysOverdue=${entry.daysOverdue}`;
+  if (entry.id) {
+    return `[en_source_patches] reviewAfter overdue: patch=${entry.id} reviewAfter=${entry.reviewAfter} daysOverdue=${entry.daysOverdue}`;
+  }
+  return `[source_sync_exclusions] reviewAfter overdue: slug=${entry.slug} reviewAfter=${entry.reviewAfter} daysOverdue=${entry.daysOverdue}`;
 }
 
 /**
@@ -80,17 +119,38 @@ export function formatWarning(entry) {
  *
  * @returns {{ overdueCount: number, exitCode: 0 }}
  */
-export function main({ registry = EN_SOURCE_PATCHES, nowMs = Date.now(), stderr = console.warn, stdout = console.log } = {}) {
-  const overdue = collectOverduePatches(registry, nowMs);
-  if (overdue.length === 0) {
-    stdout(`[en_source_patches] patch review cadence OK — ${registry.length} entries, 0 overdue`);
+export function main({
+  patchRegistry = EN_SOURCE_PATCHES,
+  exclusionsRegistry = SOURCE_SYNC_EXCLUSIONS,
+  nowMs = Date.now(),
+  stderr = console.warn,
+  stdout = console.log,
+} = {}) {
+  const overduePatches = collectOverduePatches(patchRegistry, nowMs);
+  const overdueExclusions = collectOverdueSyncExclusions(exclusionsRegistry, nowMs);
+  const patchTotal = patchRegistry.length;
+  const exclusionTotal = Object.keys(exclusionsRegistry).length;
+  const overdueCount = overduePatches.length + overdueExclusions.length;
+
+  if (overdueCount === 0) {
+    stdout(
+      `[registry-review-cadence] OK — ${patchTotal} en_source_patches + ` +
+        `${exclusionTotal} source_sync_exclusions, 0 overdue`,
+    );
     return { overdueCount: 0, exitCode: 0 };
   }
-  stdout(`[en_source_patches] ${overdue.length} overdue patch(es) of ${registry.length} total (warning only, non-blocking):`);
-  for (const entry of overdue) {
+  stdout(
+    `[registry-review-cadence] ${overdueCount} overdue entr(ies) ` +
+      `(${overduePatches.length} patches / ${overdueExclusions.length} exclusions, ` +
+      `warning only, non-blocking):`,
+  );
+  for (const entry of overduePatches) {
     stderr(formatWarning(entry));
   }
-  return { overdueCount: overdue.length, exitCode: 0 };
+  for (const entry of overdueExclusions) {
+    stderr(formatWarning(entry));
+  }
+  return { overdueCount, exitCode: 0 };
 }
 
 // CLI

@@ -976,3 +976,57 @@ describe('applyEnSourcePatches (console.warn on find-not-found)', () => {
     assert.equal(warnings.length, 0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase A — byPatchIdStatus enumeration shape (plan Task 1 Step 2)
+// ---------------------------------------------------------------------------
+//
+// `byPatchIdStatus` is the seed-with-all-IDs complement to `byPatchId`.
+// Downstream consumers (`check_upstream_recovery.mjs`) rely on every
+// registered patch ID being enumerable with `{ matched, hits }` shape,
+// including zero-hit patches. Missing a patch ID from the seed would
+// flip Phase A stale detection into a silent undefined check.
+
+describe('createEnSourcePatchCoverage — byPatchIdStatus enumeration', () => {
+  it('snapshot() seeds byPatchIdStatus with every registry entry (zero-hit default)', () => {
+    const cov = createEnSourcePatchCoverage();
+    const snap = cov.snapshot();
+    for (const patch of EN_SOURCE_PATCHES) {
+      const row = snap.byPatchIdStatus[patch.id];
+      assert.ok(row, `byPatchIdStatus missing entry for ${patch.id}`);
+      assert.equal(row.matched, false);
+      assert.equal(row.hits, 0);
+    }
+    assert.equal(
+      Object.keys(snap.byPatchIdStatus).length,
+      EN_SOURCE_PATCHES.length,
+      'byPatchIdStatus must equal registry size with zero hits recorded',
+    );
+  });
+
+  it('recordHit() flips matched to true and accumulates hits', () => {
+    const cov = createEnSourcePatchCoverage();
+    cov.recordHit({ slug: 'x', patchId: 'UD-001A-dash-this-typo-plain', hits: 2 });
+    cov.recordHit({ slug: 'x', patchId: 'UD-001A-dash-this-typo-plain', hits: 3 });
+    const snap = cov.snapshot();
+    assert.deepEqual(
+      snap.byPatchIdStatus['UD-001A-dash-this-typo-plain'],
+      { matched: true, hits: 5 },
+    );
+  });
+
+  it('NOOP_PATCH_COVERAGE.snapshot() also seeds the full enumeration', async () => {
+    const { NOOP_PATCH_COVERAGE } = await import('../lib/en_source_patches.mjs');
+    const snap = NOOP_PATCH_COVERAGE.snapshot();
+    assert.equal(
+      Object.keys(snap.byPatchIdStatus).length,
+      EN_SOURCE_PATCHES.length,
+    );
+    for (const patch of EN_SOURCE_PATCHES) {
+      const row = snap.byPatchIdStatus[patch.id];
+      assert.ok(row);
+      assert.equal(row.matched, false);
+      assert.equal(row.hits, 0);
+    }
+  });
+});

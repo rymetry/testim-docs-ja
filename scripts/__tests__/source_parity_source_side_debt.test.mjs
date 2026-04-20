@@ -121,6 +121,15 @@ describe('source-side debt registry / repository integrity', () => {
           /^\d{4}-\d{2}-\d{2}$/,
           `${slug}: addedAt must be ISO date (YYYY-MM-DD)`,
         );
+        // Phase A / Task 6: every SOURCE_SYNC_EXCLUSIONS entry must carry a
+        // reviewAfter (6-month cadence parity with en_source_patches) so that
+        // `check_patch_review_cadence.mjs` can surface overdue entries
+        // uniformly across both retreat mechanisms.
+        assert.match(
+          entry.reviewAfter,
+          /^\d{4}-\d{2}-\d{2}$/,
+          `${slug}: reviewAfter must be ISO date (YYYY-MM-DD)`,
+        );
         assert.equal(
           typeof entry.linkedIssue,
           'number',

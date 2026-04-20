@@ -303,3 +303,125 @@ describe('gates #12-14: no-new-mechanism invariant', () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase A / Task 2 — stale detection across all 34 patches (slug-driven)
+// ---------------------------------------------------------------------------
+//
+// Preconditions: the Bundle-1 integration block above has already imported
+// `preprocessEnHtml`, `createEnSourcePatchCoverage`, and `EN_SOURCE_PATCHES`.
+// This block reuses them to run a full registry-wide stale scan.
+//
+// Non-gating: warnings only. Gate enforcement happens through
+// `upstream-recovery-status.json` + sticky PR comment (Phase B).
+
+describe('en_source_patches stale detection (全 34 patch IDs / slug-driven / non-gating)', () => {
+  it('enumerates every registered patch ID through byPatchIdStatus even with zero hits', () => {
+    const coverage = createEnSourcePatchCoverage();
+    const snap = coverage.snapshot();
+    for (const patch of EN_SOURCE_PATCHES) {
+      const status = snap.byPatchIdStatus[patch.id];
+      assert.ok(
+        status,
+        `byPatchIdStatus must seed every registry entry (missing ${patch.id})`,
+      );
+      assert.equal(status.matched, false);
+      assert.equal(status.hits, 0);
+    }
+    assert.equal(
+      Object.keys(snap.byPatchIdStatus).length,
+      EN_SOURCE_PATCHES.length,
+      'byPatchIdStatus enumerates exactly the registry size when no hits recorded',
+    );
+  });
+
+  it('reports patches whose find string is missing from every registered snapshot', () => {
+    const coverage = createEnSourcePatchCoverage();
+    const uniqueSlugs = new Set(EN_SOURCE_PATCHES.flatMap((p) => [...p.slugs]));
+    const sawSnapshot = new Set();
+    for (const slug of uniqueSlugs) {
+      const snapshotPath = join(SNAPSHOTS_ROOT, `${slug}.html`);
+      if (!existsSync(snapshotPath)) continue;
+      sawSnapshot.add(slug);
+      const raw = readFileSync(snapshotPath, 'utf8');
+      preprocessEnHtml(raw, { slug, patchCoverage: coverage });
+    }
+
+    const snap = coverage.snapshot();
+    const stale = EN_SOURCE_PATCHES
+      .filter((p) => !snap.byPatchIdStatus[p.id]?.matched)
+      // Only flag as stale when at least one of the patch's slugs had a
+      // readable snapshot — otherwise we cannot distinguish stale from
+      // 'snapshot-not-fetched-in-this-env'.
+      .filter((p) => p.slugs.some((s) => sawSnapshot.has(s)))
+      .map((p) => ({ id: p.id, slugs: [...p.slugs], reviewAfter: p.reviewAfter }));
+
+    // Non-gating: warn only. Enforcement is via upstream-recovery-status.json +
+    // sticky PR comment (Phase B). Test always passes — do NOT assert length.
+    if (stale.length > 0) {
+      console.warn(
+        `[stale en_source_patches] ${stale.length} of ${EN_SOURCE_PATCHES.length} patches — ` +
+          `EN may be fixed upstream:\n${JSON.stringify(stale, null, 2)}\n` +
+          'Action: verify JA source-first correctness, remove entry, update upstream-defect-tracker.md',
+      );
+    }
+    // Sanity: the surface of the check grew beyond the original Bundle 1
+    // set. Pin the minimum slug coverage so the loop cannot silently
+    // regress to the old 8-slug scope.
+    assert.ok(
+      uniqueSlugs.size >= 30,
+      `expected slug-driven scan to cover >=30 unique slugs (got ${uniqueSlugs.size})`,
+    );
+  });
+
+  it('every registry entry carries a valid reviewAfter (YYYY-MM-DD)', () => {
+    const RE = /^\d{4}-\d{2}-\d{2}$/;
+    for (const patch of EN_SOURCE_PATCHES) {
+      assert.ok(
+        typeof patch.reviewAfter === 'string' && RE.test(patch.reviewAfter),
+        `patch ${patch.id} must have reviewAfter in YYYY-MM-DD format`,
+      );
+    }
+  });
+});
+
+describe('source_sync_exclusions recovery status (Task 2 Phase A / non-gating)', () => {
+  it('surfaces stale entries via source-sync-status.json when artifact is present (CI-only)', async () => {
+    const sourceSyncStatusPath = join(REPO_ROOT, 'source-sync-status.json');
+    if (!existsSync(sourceSyncStatusPath)) {
+      // Local dev / PR-triggered CI runs without source-sync-status.json
+      // cannot evaluate sync_exclusions recovery — the probe is weekly
+      // only. Skip silently rather than fail-close on a local env.
+      return;
+    }
+    const { SOURCE_SYNC_EXCLUSIONS } = await import(
+      '../lib/source_sync_exclusions.mjs'
+    );
+    const status = JSON.parse(readFileSync(sourceSyncStatusPath, 'utf8'));
+    const stale = (status.pages ?? []).filter(
+      (p) => p.fetchStatus === 'excluded-recovered' && SOURCE_SYNC_EXCLUSIONS[p.slug],
+    );
+    if (stale.length > 0) {
+      console.warn(
+        `[stale source_sync_exclusions] ${stale.length} entr(ies) — upstream may be fixed:\n` +
+          `${stale.map((s) => `  - ${s.slug}`).join('\n')}\n` +
+          'Action: verify EN snapshot manually, then remove registry entry + upstream-defect-tracker archive.',
+      );
+    }
+    // Non-gating: weekly workflow (scheduled-actionable.yml) is primary
+    // surfacing channel via sourceSyncHealth managed issue.
+  });
+
+  it('every SOURCE_SYNC_EXCLUSIONS entry carries a valid reviewAfter (YYYY-MM-DD) — Task 6 pin', async () => {
+    const { SOURCE_SYNC_EXCLUSIONS } = await import(
+      '../lib/source_sync_exclusions.mjs'
+    );
+    const RE = /^\d{4}-\d{2}-\d{2}$/;
+    for (const [slug, entry] of Object.entries(SOURCE_SYNC_EXCLUSIONS)) {
+      assert.ok(
+        typeof entry.reviewAfter === 'string' && RE.test(entry.reviewAfter),
+        `exclusion ${slug} must have reviewAfter in YYYY-MM-DD format`,
+      );
+    }
+  });
+});
