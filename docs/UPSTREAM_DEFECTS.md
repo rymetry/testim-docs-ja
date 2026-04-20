@@ -85,7 +85,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   1. `snapshots/en/content/salesforce-testing/salesforce-steps/sfdc-step-{create,edit,quickactions,relatedlistaction,validate}.html` を再取得
   2. `grep '-this action verifies'` が 0 hit になったことを確認
   3. `scripts/lib/en_source_patches.mjs` から UD-001A / UD-001B entry を削除
-  4. `node scripts/generate_parity_baseline.mjs --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+  4. `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ### UD-002: Salesforce Steps "Log out" href miswire
 
@@ -260,7 +260,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   1. 5 slug の EN HTML snapshot を再取得
   2. `grep 'href="index.htm#adding-a-grid"'` が全 5 file で 0 hit を確認
   3. `scripts/lib/en_source_patches.mjs` から UD-009 entry を削除
-  4. `node scripts/generate_parity_baseline.mjs --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+  4. `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
 
@@ -299,7 +299,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   5. `scripts/lib/en_source_patches.mjs` から UD-010A/B/C/D entry を削除
   6. JA 側 vsts-and-tfs-integration の orphan paragraph も `​N. ` prefix を再度付与するか、EN upstream が正規 `<li>` に戻れば JA も正規番号リストに統合するか、reviewer 判断
   7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
-  8. `node scripts/generate_parity_baseline.mjs --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
+  8. `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
 
 ## Adding a new defect
 
@@ -311,7 +311,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 4. **Slug scope**: 影響する slug を列挙し、`slugs: Object.freeze([...])` に登録
 5. **Linked defect anchor**: 本ファイルに `## UD-NNN: <summary>` セクションを追加し、`linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-NNN'` で refer
 6. **Tests**: `scripts/__tests__/en_source_patches.test.mjs` に application test と mismatch test を追加
-7. **Baseline regen**: `node scripts/generate_parity_baseline.mjs --regenerate --rationale="add UD-NNN patch"`、新規追加 0 を確認
+7. **Baseline regen**: `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="add UD-NNN patch"`、新規追加 0 を確認
 8. **Upstream report**: Tricentis への報告 ticket 起票、本ファイルの "Tricentis upstream report status" を更新
 
 ## Review cadence
@@ -321,7 +321,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   1. Tricentis への報告 status 再確認
   2. Upstream fix 未完了なら reviewAfter を 3-6 ヶ月延長し本ファイルに rationale 追記
   3. Upstream fix 完了なら Removal SOP を実行
-- Phase B 以降は `scripts/check_upstream_recovery.mjs` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
+- Phase B 以降は `scripts/detection/check_upstream_recovery.mjs` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
 

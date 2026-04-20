@@ -25,7 +25,7 @@ import path from 'node:path';
 let parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps;
 before(async () => {
   ({ parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps } = await import(
-    '../pipeline.mjs'
+    '../pipeline/pipeline.mjs'
   ));
 });
 

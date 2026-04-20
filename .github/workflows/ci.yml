@@ -96,7 +96,7 @@ jobs:
 
       - name: Render upstream recovery sticky comment body
         # Delegates markdown rendering to
-        # scripts/render_upstream_recovery_comment.mjs which imports
+        # scripts/detection/render_upstream_recovery_comment.mjs which imports
         # renderUpstreamRecoveryStickyComment from detection_reports.mjs.
         # This eliminates logic duplication between the CI step and
         # detection_reports.mjs (PR #363 code-review HIGH). The script
@@ -108,7 +108,7 @@ jobs:
           && hashFiles('upstream-recovery-status.json') != ''
         continue-on-error: true
         run: |
-          node scripts/render_upstream_recovery_comment.mjs >> "$GITHUB_OUTPUT"
+          node scripts/detection/render_upstream_recovery_comment.mjs >> "$GITHUB_OUTPUT"
 
       - name: Sticky PR comment — upstream recovery (upsert)
         # Idempotent upsert via hidden marker. The body was rendered by the

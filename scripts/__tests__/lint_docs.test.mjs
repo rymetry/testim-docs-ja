@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 let lintContent;
 let toKebab;
 before(async () => {
-  ({ lintContent, toKebab } = await import('../lint_docs.mjs'));
+  ({ lintContent, toKebab } = await import('../tools/lint_docs.mjs'));
 });
 
 // ---------------------------------------------------------------------------

@@ -30,7 +30,7 @@ function createTestLogger() {
 
 before(async () => {
   ({ normalizeUrl, parseExistingStatusMap, buildOutput, extractUrls, fetchSitemap, main } =
-    await import('../update_sidebar_urls_from_live.mjs'));
+    await import('../pipeline/update_sidebar_urls_from_live.mjs'));
 });
 
 // ---------------------------------------------------------------------------

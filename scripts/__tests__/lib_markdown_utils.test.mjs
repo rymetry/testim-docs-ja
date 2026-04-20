@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { stripMarkdown, generateDescription } from '../lib/markdown-utils.mjs';
+import { stripMarkdown, generateDescription } from '../lib/markdown_utils.mjs';
 
 describe('stripMarkdown', () => {
   it('removes image syntax', () => {

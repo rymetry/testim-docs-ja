@@ -49,7 +49,7 @@ import { join } from 'node:path';
 let checkSourceParity;
 
 before(async () => {
-  ({ checkSourceParity } = await import('../check_source_parity.mjs'));
+  ({ checkSourceParity } = await import('../detection/check_source_parity.mjs'));
 });
 
 // slug ごとに別の temp status file を使う。

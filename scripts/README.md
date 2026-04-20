@@ -2,6 +2,22 @@
 
 Testim Docs JA の運用スクリプト群。英語原文の同期、翻訳パイプライン、品質チェックを自動化する。
 
+## ディレクトリ構成（責務分離）
+
+| ディレクトリ | 責務 | 書き込み対象 | 呼び出し契機 |
+| --- | --- | --- | --- |
+| `detection/` | **観測**: EN/JA の状態を測定し、差分・乖離・異常を検知する | status JSON, snapshots/en/ HTML, parity-baseline.json, report MD | `check:*` npm scripts, CI scheduled |
+| `pipeline/` | **変換**: EN ソースを取得し、翻訳物を生成・適用する | `src/content/docs/`, `llm/tasks/`, `public/images/`, `docs/SIDEBAR_URLS.md` | `docs:*` npm scripts (pipeline, fetch, apply) |
+| `tools/` | **保全**: lint・正規化・修正ユーティリティ。既存コンテンツの品質を維持する | repo 内 `.md` (fix_alt_all), `src/content/docs/` (normalize/fix_notation), stdout (lint/report) | `lint:*` npm scripts, 手動実行 |
+| `lib/` | **共有基盤**: 上記 3 層から共通的に使われるライブラリ。直接実行されない | なし (pure library) | import のみ |
+
+**分離の核心**:
+
+- `detection/` は `src/content/docs/` (JA コンテンツ) に一切触れない。測定 artifact のみ書き込む
+- `pipeline/` は JA コンテンツの生成・更新を行う唯一の層
+- `tools/` は既存コンテンツの修正・検証を行う (lint は read-only、fix/normalize は write)
+- `lib/` は純粋なライブラリ層（CLI 実行不可、ファイル I/O は呼び出し側の責務）
+
 ## クイックリファレンス
 
 ```bash
@@ -71,8 +87,8 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 ```bash
 npm run check:parity                                      # ローカルチェック
 npm run check:parity -- --slug=overview/testim-overview            # 単一ページ
-node scripts/check_source_parity.mjs --section="概要"     # セクション絞り込み
-node scripts/check_source_parity.mjs --json               # JSON 出力
+node scripts/detection/check_source_parity.mjs --section="概要"     # セクション絞り込み
+node scripts/detection/check_source_parity.mjs --json               # JSON 出力
 npm run check:parity -- --fail-on=actionable              # actionable + error で exit 1
 npm run check:parity -- --fail-on=any                     # acknowledgement を除いた active issue > 0 で exit 1
 ```
@@ -159,7 +175,7 @@ acknowledgement の対象外:
 
 - `scripts/lib/parity_glossary_mask.mjs`: `docs/GLOSSARY.md` と `docs/INVARIANT_TOKENS.md` を読み、segment text を Testim 用語 + invariant pattern でマスクする
 - `scripts/lib/parity_normalize.mjs`: URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
-- `scripts/check_source_parity.mjs` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.* を読まない**契約）
+- `scripts/detection/check_source_parity.mjs` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.* を読まない**契約）
 - 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/__tests__/parity_glossary_mask.test.mjs` に追加する
 
 ---
@@ -168,7 +184,7 @@ acknowledgement の対象外:
 
 - `scripts/lib/en_source_patches.mjs`: broken EN HTML snapshot を `preprocessEnHtml` 境界で修復する slug-scope literal find→replace patch 層
 - `preprocessEnHtml(html, { slug, patchCoverage })` が optional 第 2 引数で patch application + coverage 集計を driver。slug 未指定時は no-op (backward-compat)
-- `scripts/check_source_parity.mjs` は run 単位 `createEnSourcePatchCoverage()` で集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
+- `scripts/detection/check_source_parity.mjs` は run 単位 `createEnSourcePatchCoverage()` で集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
 - 4 enum (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) 以外は登録不可、各 entry は `docs/UPSTREAM_DEFECTS.md#UD-NNN` の anchor へ結線必須
 - 運用 SOP: `docs/UPSTREAM_DEFECTS.md`
 
@@ -204,8 +220,8 @@ WRITING_GUIDE.md に基づく Markdown 構文・frontmatter の検証。
 
 ```bash
 npm run lint:docs
-node scripts/lint_docs.mjs --path="src/content/docs/overview/*.md"
-node scripts/lint_docs.mjs --section="概要"
+node scripts/tools/lint_docs.mjs --path="src/content/docs/overview/*.md"
+node scripts/tools/lint_docs.mjs --section="概要"
 ```
 
 **検証項目**: sourceUrl 形式、必須 frontmatter（title, category, updated）、description プレースホルダー残留、内部リンクターゲット存在確認（パスベース `/docs/{folder}/{slug}` 形式のみ）、Testim 機能名の英語保持、コードブロック言語指定、callout タイプ、画像ファイル存在確認
@@ -275,9 +291,9 @@ npm run docs:sync-sidebar
 
 ```bash
 npm run docs:fetch
-node scripts/fetch_translate_images.mjs --mode=full
-node scripts/fetch_translate_images.mjs --slug=overview/testim-overview
-node scripts/fetch_translate_images.mjs --section="Overview" --limit=5
+node scripts/pipeline/fetch_translate_images.mjs --mode=full
+node scripts/pipeline/fetch_translate_images.mjs --slug=overview/testim-overview
+node scripts/pipeline/fetch_translate_images.mjs --section="Overview" --limit=5
 ```
 
 **キャッシュ**: `scripts/.cache/docs-state.json` にコンテンツハッシュを保存し、diff モードで変更検出に利用。
@@ -290,7 +306,7 @@ SIDEBAR_URLS.md で ⏳（未翻訳）のページに対して、frontmatter 付
 
 ```bash
 npm run docs:placeholders
-node scripts/generate_untranslated_placeholders.mjs --section="Overview"
+node scripts/pipeline/generate_untranslated_placeholders.mjs --section="Overview"
 ```
 
 ---
@@ -301,8 +317,8 @@ node scripts/generate_untranslated_placeholders.mjs --section="Overview"
 
 ```bash
 npm run docs:prepare-llm
-node scripts/prepare_llm_tasks.mjs --slug=overview/testim-overview
-node scripts/prepare_llm_tasks.mjs --section="Overview"
+node scripts/pipeline/prepare_llm_tasks.mjs --slug=overview/testim-overview
+node scripts/pipeline/prepare_llm_tasks.mjs --section="Overview"
 ```
 
 ---
@@ -313,19 +329,19 @@ node scripts/prepare_llm_tasks.mjs --section="Overview"
 
 ```bash
 npm run docs:apply-llm
-node scripts/apply_llm_translations.mjs --section="Overview"
+node scripts/pipeline/apply_llm_translations.mjs --section="Overview"
 ```
 
 ---
 
 ### 修正・正規化系
 
-#### fix-notation.py
+#### fix_notation.py
 
-ドキュメント全体の表記揺れを一括修正する Python スクリプト。`verify-notation.py` とセットで使用する。
+ドキュメント全体の表記揺れを一括修正する Python スクリプト。`verify_notation.py` とセットで使用する。
 
 ```bash
-python3 scripts/fix-notation.py
+python3 scripts/tools/fix_notation.py
 ```
 
 **修正項目**:
@@ -346,12 +362,12 @@ python3 scripts/fix-notation.py
 
 ---
 
-#### verify-notation.py
+#### verify_notation.py
 
-`fix-notation.py` の修正結果を検証するスクリプト。残存する表記揺れを検出する。
+`fix_notation.py` の修正結果を検証するスクリプト。残存する表記揺れを検出する。
 
 ```bash
-python3 scripts/verify-notation.py
+python3 scripts/tools/verify_notation.py
 ```
 
 **検証項目**: カタカナ長音、たとえば、PRO機能、レガシー callout、callout スペース、英日スペース、半角カッコ
@@ -366,7 +382,7 @@ python3 scripts/verify-notation.py
 
 ```bash
 npm run docs:normalize
-node scripts/normalize_docs.mjs --section="概要"
+node scripts/tools/normalize_docs.mjs --section="概要"
 ```
 
 **主な変換**: 機能名の日本語→英語置換（`Testim拡張機能` → `Testim Extension`）、frontmatter フィールド順序統一
@@ -400,7 +416,7 @@ SIDEBAR_URLS.md のセクション構造に基づいて、各ドキュメント�
 ```bash
 npm run docs:sync-frontmatter           # ドライラン
 npm run docs:sync-frontmatter:apply     # 実際にファイルを更新
-node scripts/sync_frontmatter_from_sidebar.mjs --list-unmatched
+node scripts/tools/sync_frontmatter_from_sidebar.mjs --list-unmatched
 ```
 
 ---
@@ -437,7 +453,7 @@ npm run docs:report-categories
 | ファイル                                 | 用途                                                                          |
 | ---------------------------------------- | ----------------------------------------------------------------------------- |
 | `lib/project.mjs`                        | repo ルート、docs 探索、slug index、FM 読出し                                 |
-| `lib/markdown-utils.mjs`                 | Markdown 除去、description 自動生成                                           |
+| `lib/markdown_utils.mjs`                 | Markdown 除去、description 自動生成                                           |
 | `lib/madcap_toc.mjs`                     | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成                  |
 | `lib/turndown.mjs`                       | TurndownService + MadCap Flare カスタムルール（callout, ordered-list, table） |
 | `lib/source_parity.mjs`                  | parity API の facade（checks / types / summary を再 export）                  |
@@ -565,7 +581,7 @@ frozen baseline 機構は exact diff engine を deterministic に primary gate �
 
 - `scripts/lib/source_parity_baseline.mjs` — schema validation, key 生成,
   page-level invalidation を含む tagging（純粋関数のみ）
-- `scripts/generate_parity_baseline.mjs` — baseline 生成 CLI (schema v2)
+- `scripts/detection/generate_parity_baseline.mjs` — baseline 生成 CLI (schema v2)
   - `--regenerate` で full、`--slug=<csv>` で partial 再生成、`--types=<csv>` で
     structure family のみ部分再生成 (`section-structure-mismatch` /
     `segment-order-mismatch` の 2 種のみ許可)
@@ -578,8 +594,6 @@ frozen baseline 機構は exact diff engine を deterministic に primary gate �
 - `parity-baseline.json` — frozen baseline file (schema v2)。各 entry は
   `priority` (`high`/`medium`/`low`, default `medium`) と任意 `note` を持つ。
   Phase 4 cutover 後は `entries.length === 0` を維持する
-- `scripts/phase4/migrate_baseline_schema.mjs` — one-shot v1→v2 migration
-  helper (`migrateEntry` / `migrateBaseline` を export)
 
 **npm script**:
 
@@ -763,7 +777,7 @@ npm test    # node --test scripts/__tests__/*.mjs
 | `__tests__/detection_reports.test.mjs`               | lib/detection_reports.mjs               |
 | `__tests__/lib_project.test.mjs`                     | lib/project.mjs                         |
 | `__tests__/apply_llm_translations.test.mjs`          | apply_llm_translations.mjs              |
-| `__tests__/lib_markdown_utils.test.mjs`              | lib/markdown-utils.mjs                  |
+| `__tests__/lib_markdown_utils.test.mjs`              | lib/markdown_utils.mjs                  |
 | `__tests__/lib_sidebar_label.test.mjs`               | lib/sidebar.mjs                         |
 | `__tests__/turndown.test.mjs`                        | lib/turndown.mjs                        |
 | `__tests__/snapshot_update.test.mjs`                 | snapshot_update.mjs                     |

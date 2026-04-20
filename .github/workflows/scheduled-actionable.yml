@@ -58,7 +58,7 @@ jobs:
         # Phase B (Task 4): upstream-recovery-status.json feeds the
         # sourceSyncHealth family's enPatchRecovery / sourceSyncRecovery
         # subsections. Aggregator exits 0 even on failure — see
-        # scripts/check_upstream_recovery.mjs runCheckUpstreamRecovery catch.
+        # scripts/detection/check_upstream_recovery.mjs runCheckUpstreamRecovery catch.
         id: upstream_recovery
         run: npm run check:upstream-recovery
         continue-on-error: true

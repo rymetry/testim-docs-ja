@@ -38,7 +38,7 @@ before(async () => {
     getAllPagesList,
     getDiffPagesList,
     parseMode,
-  } = await import('../fetch_translate_images.mjs'));
+  } = await import('../pipeline/fetch_translate_images.mjs'));
   const project = await import('../lib/project.mjs');
   ROOT = project.ROOT_DIR;
 });

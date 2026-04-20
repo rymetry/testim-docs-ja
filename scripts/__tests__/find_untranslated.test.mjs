@@ -19,14 +19,14 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..', '..');
-const SCRIPT = path.join(ROOT, 'scripts', 'find_untranslated.mjs');
+const SCRIPT = path.join(ROOT, 'scripts', 'detection', 'find_untranslated.mjs');
 
 let splitMarkdownBlocks;
 let findUntranslatedBlocks;
 
 before(async () => {
   ({ splitMarkdownBlocks, findUntranslatedBlocks } =
-    await import('../find_untranslated.mjs'));
+    await import('../detection/find_untranslated.mjs'));
 });
 
 describe('splitMarkdownBlocks — frontmatter skip (plan §3.2 T5 case 1)', () => {

@@ -34,7 +34,7 @@ import {
   parseArgs,
   mergePartialBaselineByType,
   loadSnapshotDiffStatus,
-} from '../generate_parity_baseline.mjs';
+} from '../detection/generate_parity_baseline.mjs';
 import { computeStructureFingerprint } from '../lib/source_parity_baseline.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -42,6 +42,7 @@ const REPO_ROOT = path.resolve(path.dirname(__filename), '..', '..');
 const GENERATE_SCRIPT = path.join(
   REPO_ROOT,
   'scripts',
+  'detection',
   'generate_parity_baseline.mjs',
 );
 

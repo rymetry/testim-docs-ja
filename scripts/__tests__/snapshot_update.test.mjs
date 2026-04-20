@@ -19,7 +19,7 @@ function createResponse({ ok = true, status = 200, text = '' } = {}) {
 }
 
 before(async () => {
-  ({ main, extractMainContent, runRecoveryProbe } = await import('../snapshot_update.mjs'));
+  ({ main, extractMainContent, runRecoveryProbe } = await import('../detection/snapshot_update.mjs'));
 });
 
 afterEach(() => {

@@ -21,7 +21,7 @@ const GATE_SENSITIVE_FILES = [
   'scripts/lib/source_parity_acknowledgements.mjs',
   'scripts/lib/source_parity_summary.mjs',
   'scripts/lib/source_parity_issue_state.mjs',
-  'scripts/generate_parity_baseline.mjs',
+  'scripts/detection/generate_parity_baseline.mjs',
 ];
 
 const FORBIDDEN_PATTERNS = [

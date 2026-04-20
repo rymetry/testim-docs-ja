@@ -49,7 +49,7 @@
 
 チェック項目の詳細（actionable / signal の一覧、`--fail-on` フラグ、acknowledgements、出力形式）は `scripts/README.md` を参照。
 
-**セクション絞り込み**: `node scripts/check_source_parity.mjs --section="概要"`
+**セクション絞り込み**: `node scripts/detection/check_source_parity.mjs --section="概要"`
 
 **単一ページ**: `npm run check:parity -- --slug=overview/testim-overview`
 
@@ -395,7 +395,7 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
    - 翻訳完了後は新しい snapshot fingerprint で gate が自然に green に戻る
 3. **第二選択肢（justification 必須）: rebaseline**
    - 翻訳追従が現実的でない場合のみ
-   - `node scripts/generate_parity_baseline.mjs --slug=<slug>[,<slug>...]` で部分再生成
+   - `node scripts/detection/generate_parity_baseline.mjs --slug=<slug>[,<slug>...]` で部分再生成
    - 再生成 diff を含む PR を起こし、PR description に必ず justification を記載:
      - なぜ翻訳追従でなく rebaseline を選んだか
      - 想定される paydown のタイミング
@@ -418,7 +418,7 @@ baseline は bug backlog として運用する:
 - 新規 issue は原則として baseline に追加しない。修正するか、glossary / normalize / artifact registry / page-level exclusion のいずれかで説明可能に除外する
 - schema v2 では entry に `priority` (`high`/`medium`/`low`) と任意 `note` を付与する。paydown の優先順位決定はこれらで行う
 - Quarterly review は「方針再検討」ではなく「残 backlog の burn-down 進捗確認」として実施
-- 再生成手順: `npm run check:parity` と `node scripts/generate_parity_baseline.mjs`
+- 再生成手順: `npm run check:parity` と `node scripts/detection/generate_parity_baseline.mjs`
 
 ### Orphan baseline entry
 
@@ -434,7 +434,7 @@ issueType の baseline entry は **orphan** として残留する。`check_sourc
 掃除手順:
 
 1. `npm run check:parity` の CLI 出力で orphan 件数と byType を確認
-2. 該当 slug に対して `node scripts/generate_parity_baseline.mjs --slug=<slug>` で再生成
+2. 該当 slug に対して `node scripts/detection/generate_parity_baseline.mjs --slug=<slug>` で再生成
 3. 再度 `npm run check:parity` を走らせて `orphanBaselineEntries === 0` を確認
 
 `scripts/__tests__/source_parity_orphan_integration.test.mjs` が

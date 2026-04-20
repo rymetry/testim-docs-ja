@@ -10,7 +10,7 @@ let buildSidebarUrlMap;
 
 before(async () => {
   ({ classifyChanges, CHANGE_CLASSIFIERS, MARKER_404_RE, parseArgs, fallbackSourceUrl, buildSidebarUrlMap } = await import(
-    '../snapshot_diff.mjs'
+    '../detection/snapshot_diff.mjs'
   ));
 });
 

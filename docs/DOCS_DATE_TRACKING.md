@@ -92,7 +92,7 @@ npm run check:snapshots:fetch -- --dry-run
 `fetch_translate_images.mjs` はスナップショットから自動的に読み込みます（HTML → turndown で Markdown 変換）:
 
 ```bash
-node scripts/fetch_translate_images.mjs --mode=full
+node scripts/pipeline/fetch_translate_images.mjs --mode=full
 ```
 
 ### 新規ページ追加時
@@ -163,8 +163,8 @@ git commit -m "feat: 初回英語原文スナップショット"
 - `scripts/lib/madcap_toc.mjs` — MadCap Flare TOC データ解析
 - `scripts/lib/source_sync_exclusions.mjs` — Source-side debt registry
 - `scripts/lib/source_sync_health.mjs` — `source-sync-status.json` 生成と freshness 判定
-- `scripts/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON + exclusion 分岐）
-- `scripts/snapshot_diff.mjs` — 比較 & レポート
+- `scripts/detection/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON + exclusion 分岐）
+- `scripts/detection/snapshot_diff.mjs` — 比較 & レポート
 - `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック（日本語 warning/error メッセージ）
 - `.github/workflows/deep-audit.yml` — 手動 deep audit
 

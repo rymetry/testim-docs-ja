@@ -87,7 +87,7 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 
 1. **登録**: upstream 欠陥を人手で検証後、適切な mechanism に entry 追加 (`reviewAfter` を `addedAt` + 6 ヶ月で必ず設定)
 2. **自動検知**:
-   - `scripts/check_upstream_recovery.mjs` が毎 run で `upstream-recovery-status.json` を derive
+   - `scripts/detection/check_upstream_recovery.mjs` が毎 run で `upstream-recovery-status.json` を derive
    - 各 entry に `statusA` (`active` / `stale` / `unknown`) と `statusB` (`current` / `overdue`) が付与される
    - `en_source_patches_integration.test.mjs` は全 patches を slug-driven で scan (非 gating warning)
 3. **上流修正後の surfacing** (non-blocking):
