@@ -37,8 +37,13 @@
  *     expectedIssueType: string,
  *     expectedReason: string,
  *     addedAt: 'YYYY-MM-DD',
+ *     reviewAfter: 'YYYY-MM-DD',   // Phase A: 6-month cadence, parity with en_source_patches
  *     linkedIssue: number,
  *   }
+ *
+ * `reviewAfter` は `en_source_patches.mjs` と同じ 6 ヶ月 cadence で上流修復の再確認を
+ * 促す field。期限超過は `check_patch_review_cadence.mjs` が両 registry 横断で
+ * surface する (non-blocking warning)。
  *
  * @type {Readonly<Record<string, Readonly<{
  *   reason: string,
@@ -46,6 +51,7 @@
  *   expectedIssueType: string,
  *   expectedReason: string,
  *   addedAt: string,
+ *   reviewAfter: string,
  *   linkedIssue: number,
  * }>>>}
  */
@@ -62,6 +68,7 @@ export const SOURCE_SYNC_EXCLUSIONS = Object.freeze({
     expectedIssueType: 'snapshot-incomplete',
     expectedReason: 'extractor-empty',
     addedAt: '2026-04-09',
+    reviewAfter: '2026-10-09',
     linkedIssue: 247,
   }),
 });

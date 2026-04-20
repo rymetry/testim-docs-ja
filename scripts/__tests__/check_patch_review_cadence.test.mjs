@@ -16,6 +16,7 @@ import assert from 'node:assert/strict';
 
 let evaluatePatchReview;
 let collectOverduePatches;
+let collectOverdueSyncExclusions;
 let formatWarning;
 let main;
 
@@ -23,6 +24,7 @@ before(async () => {
   ({
     evaluatePatchReview,
     collectOverduePatches,
+    collectOverdueSyncExclusions,
     formatWarning,
     main,
   } = await import('../check_patch_review_cadence.mjs'));
@@ -111,12 +113,73 @@ describe('collectOverduePatches', () => {
 // ---------------------------------------------------------------------------
 
 describe('formatWarning', () => {
-  it('includes patch id, reviewAfter, and daysOverdue', () => {
+  it('includes patch id, reviewAfter, and daysOverdue (en_source_patches shape)', () => {
     const line = formatWarning({ id: 'UD-XXX', reviewAfter: '2020-01-01', daysOverdue: 42 });
     assert.ok(line.includes('UD-XXX'), `missing patch id: ${line}`);
     assert.ok(line.includes('2020-01-01'), `missing reviewAfter: ${line}`);
     assert.ok(line.includes('daysOverdue=42'), `missing daysOverdue: ${line}`);
     assert.ok(line.startsWith('[en_source_patches]'), `missing prefix: ${line}`);
+  });
+
+  it('includes slug, reviewAfter, and daysOverdue (source_sync_exclusions shape)', () => {
+    const line = formatWarning({
+      slug: 'some/slug',
+      reviewAfter: '2020-01-01',
+      daysOverdue: 42,
+    });
+    assert.ok(line.includes('slug=some/slug'), `missing slug: ${line}`);
+    assert.ok(line.startsWith('[source_sync_exclusions]'), `missing prefix: ${line}`);
+  });
+
+  it('prefers id over slug when both are set (disjoint shapes by contract)', () => {
+    const line = formatWarning({
+      id: 'UD-Y',
+      slug: 'should-not-appear',
+      reviewAfter: '2020-01-01',
+      daysOverdue: 1,
+    });
+    assert.ok(line.startsWith('[en_source_patches]'), `id must win: ${line}`);
+    assert.ok(line.includes('patch=UD-Y'));
+    assert.ok(!line.includes('should-not-appear'));
+  });
+
+  it('emits an explicit unknown-entry label when neither id nor slug is set', () => {
+    const line = formatWarning({ reviewAfter: '2020-01-01', daysOverdue: 7 });
+    assert.ok(line.startsWith('[registry-review-cadence]'), `missing prefix: ${line}`);
+    assert.ok(line.includes('entry=<unknown>'), `missing unknown marker: ${line}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// collectOverdueSyncExclusions (Phase A / Task 6)
+// ---------------------------------------------------------------------------
+
+describe('collectOverdueSyncExclusions', () => {
+  const FIXTURE_EXCLUSIONS = Object.freeze({
+    'a/future': Object.freeze({ reviewAfter: '2099-01-01' }),
+    'b/past': Object.freeze({ reviewAfter: '2020-01-01' }),
+    'c/past': Object.freeze({ reviewAfter: '2025-06-01' }),
+    'd/invalid': Object.freeze({ reviewAfter: 'whatever' }),
+  });
+
+  it('returns only the overdue entries keyed by slug', () => {
+    const nowMs = new Date('2026-04-17T00:00:00Z').getTime();
+    const overdue = collectOverdueSyncExclusions(FIXTURE_EXCLUSIONS, nowMs);
+    const slugs = overdue.map((e) => e.slug).sort();
+    assert.deepEqual(slugs, ['b/past', 'c/past']);
+  });
+
+  it('the live SOURCE_SYNC_EXCLUSIONS is currently not overdue', async () => {
+    const { SOURCE_SYNC_EXCLUSIONS } = await import(
+      '../lib/source_sync_exclusions.mjs'
+    );
+    const nowMs = new Date('2026-04-17T00:00:00Z').getTime();
+    const overdue = collectOverdueSyncExclusions(SOURCE_SYNC_EXCLUSIONS, nowMs);
+    assert.equal(
+      overdue.length,
+      0,
+      `unexpected overdue exclusions today: ${overdue.map((e) => e.slug).join(', ')}`,
+    );
   });
 });
 
@@ -125,12 +188,14 @@ describe('formatWarning', () => {
 // ---------------------------------------------------------------------------
 
 describe('main()', () => {
-  it('exits 0 with "no overdue" stdout when registry is clean', () => {
+  it('exits 0 with "no overdue" stdout when both registries are clean', () => {
     const stdoutLines = [];
     const stderrLines = [];
-    const registry = [Object.freeze({ id: 'ok', reviewAfter: '2099-01-01' })];
+    const patchRegistry = [Object.freeze({ id: 'ok', reviewAfter: '2099-01-01' })];
+    const exclusionsRegistry = { 'ok/slug': { reviewAfter: '2099-01-01' } };
     const result = main({
-      registry,
+      patchRegistry,
+      exclusionsRegistry,
       nowMs: new Date('2026-04-17T00:00:00Z').getTime(),
       stdout: (msg) => stdoutLines.push(msg),
       stderr: (msg) => stderrLines.push(msg),
@@ -142,22 +207,34 @@ describe('main()', () => {
     assert.ok(stdoutLines[0].includes('0 overdue'));
   });
 
-  it('still exits 0 when overdue entries exist (warning only, never a gate)', () => {
+  it('still exits 0 when overdue entries exist in either registry', () => {
     const stdoutLines = [];
     const stderrLines = [];
-    const registry = [
-      Object.freeze({ id: 'overdue-1', reviewAfter: '2020-01-01' }),
+    const patchRegistry = [
+      Object.freeze({ id: 'overdue-patch', reviewAfter: '2020-01-01' }),
       Object.freeze({ id: 'ok-1', reviewAfter: '2099-01-01' }),
     ];
+    const exclusionsRegistry = {
+      'overdue/exclusion': { reviewAfter: '2020-01-01' },
+      'ok/exclusion': { reviewAfter: '2099-01-01' },
+    };
     const result = main({
-      registry,
+      patchRegistry,
+      exclusionsRegistry,
       nowMs: new Date('2026-04-17T00:00:00Z').getTime(),
       stdout: (msg) => stdoutLines.push(msg),
       stderr: (msg) => stderrLines.push(msg),
     });
     assert.equal(result.exitCode, 0);
-    assert.equal(result.overdueCount, 1);
-    assert.equal(stderrLines.length, 1);
-    assert.ok(stderrLines[0].includes('overdue-1'));
+    assert.equal(result.overdueCount, 2);
+    assert.equal(stderrLines.length, 2);
+    assert.ok(
+      stderrLines.some((l) => l.includes('overdue-patch')),
+      'missing en_source_patches warning',
+    );
+    assert.ok(
+      stderrLines.some((l) => l.includes('overdue/exclusion')),
+      'missing source_sync_exclusions warning',
+    );
   });
 });

@@ -862,8 +862,27 @@ export function applyEnSourcePatches(html, slug, coverage = NOOP_PATCH_COVERAGE)
 }
 
 /**
+ * Build the all-patches seed for `byPatchIdStatus` so callers can enumerate
+ * every registry entry (including zero-hit patches) without consulting
+ * `EN_SOURCE_PATCHES` separately. Each value is `{ matched: false, hits: 0 }`
+ * by default and is upgraded to `matched: true` once a hit is recorded.
+ */
+function seedByPatchIdStatus() {
+  const seeded = {};
+  for (const patch of EN_SOURCE_PATCHES) {
+    seeded[patch.id] = { matched: false, hits: 0 };
+  }
+  return seeded;
+}
+
+/**
  * runtime coverage aggregator。run 単位で 1 個生成し、patch hit / mismatch を
  * record する。`snapshot()` で集計結果を返す。
+ *
+ * - `byPatchId`: Record<id, number> — hit 回数のみ (既存 shape, debug 出力互換)
+ * - `byPatchIdStatus`: Record<id, {matched, hits}> — **全 34 patch IDs を seed**。
+ *   hit の無かった patch も `{matched: false, hits: 0}` で必ず含まれるため、
+ *   stale detection (`check_upstream_recovery.mjs` 等) の enumeration 基盤として使える。
  *
  * @returns {{
  *   recordHit: (hit: {slug: string, patchId: string, hits: number}) => void,
@@ -872,6 +891,7 @@ export function applyEnSourcePatches(html, slug, coverage = NOOP_PATCH_COVERAGE)
  *     registryEntries: number,
  *     matchedHits: number,
  *     byPatchId: Record<string, number>,
+ *     byPatchIdStatus: Record<string, { matched: boolean, hits: number }>,
  *     bySlug: Record<string, number>,
  *     mismatches: Array<{slug: string, patchId: string, reason: string}>,
  *   },
@@ -888,21 +908,37 @@ export function createEnSourcePatchCoverage() {
       mismatches.push({ slug, patchId, reason });
     },
     snapshot() {
+      // snapshot() advertises a point-in-time view; we defensively copy every
+      // mutable surface so that subsequent recordHit/recordMismatch calls on
+      // the coverage instance cannot retroactively mutate an already-returned
+      // snapshot. (Callers that serialise the snapshot to JSON don't notice,
+      // but programmatic consumers would.)
       const byPatchId = {};
+      const byPatchIdStatus = seedByPatchIdStatus();
       const bySlug = {};
       let matchedHits = 0;
       for (const h of hits) {
         matchedHits += h.hits;
         byPatchId[h.patchId] = (byPatchId[h.patchId] ?? 0) + h.hits;
         bySlug[h.slug] = (bySlug[h.slug] ?? 0) + h.hits;
+        const status = byPatchIdStatus[h.patchId];
+        if (status) {
+          status.matched = true;
+          status.hits += h.hits;
+        } else {
+          // Defensive: a hit for a patchId not in the current registry.
+          // Surface it through byPatchIdStatus so reviewers can see the drift.
+          byPatchIdStatus[h.patchId] = { matched: true, hits: h.hits };
+        }
       }
-      return {
+      return Object.freeze({
         registryEntries: EN_SOURCE_PATCHES.length,
         matchedHits,
-        byPatchId,
-        bySlug,
-        mismatches: mismatches.slice(),
-      };
+        byPatchId: Object.freeze(byPatchId),
+        byPatchIdStatus: Object.freeze(byPatchIdStatus),
+        bySlug: Object.freeze(bySlug),
+        mismatches: mismatches.map((m) => ({ ...m })),
+      });
     },
   };
 }
@@ -918,6 +954,7 @@ export const NOOP_PATCH_COVERAGE = Object.freeze({
     registryEntries: EN_SOURCE_PATCHES.length,
     matchedHits: 0,
     byPatchId: {},
+    byPatchIdStatus: seedByPatchIdStatus(),
     bySlug: {},
     mismatches: [],
   }),
