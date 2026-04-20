@@ -1,12 +1,18 @@
-# Upstream Recovery Detection & Registry Lifecycle Management
+# Upstream Recovery Detection & Registry Lifecycle Management (Revision 2)
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans。Steps use checkbox (`- [ ]`)。新規 worktree 推奨 (branch: `claude/upstream-recovery-detection`)。本 plan は M2.5 全 merge 完了後、PR Z と独立 parallel で実行可能。
 
+> **Rev 2 (2026-04-20):** Rev 1 に対して Codex + self レビュー結果を反映。主要変更点:
+> - Rev 1 の Task 4 (新規 weekly workflow) → **削除**。既存 `sourceSyncHealth` / `sync-detection-issues.cjs` (`.github/workflows/scheduled-actionable.yml:115-135`, `detection_reports.mjs:1105-1153`) を拡張する方針に切替。
+> - Rev 1 の Task 6 (pull-requests.md cleanup 同 PR) → **別 PR に分離**。`source_parity_source_side_debt.test.mjs:47-55` が `pull-requests` seeded pin を強制しているため、同 PR では contract churn 大。
+> - **新 Task: `source_sync_exclusions` entries に `reviewAfter` 追加**。現状 `addedAt` のみで review cadence 不整合 (`en_source_patches` には `reviewAfter` あり)。Codex 指摘の Q5 対応。
+> - en_source_patches 撤廃 + extractor 移行 option (Rev 1 §D10 / Codex Q4) は scope 外と明示。別 plan candidates として Appendix 化。
+
 **Goal:** EN upstream 側の欠陥を許容する 2 つの registry (`source_sync_exclusions.mjs` / `en_source_patches.mjs`) に対して、**(A) upstream 修正の自動検知** と **(B) 登録解除忘れの persistent reminder** を両方整備する。既存の「baseline monotonic 非増加 / 最終 DoD 全 counter 0」は維持しつつ、registry entry が上流修正後に stale 化したまま放置されるリスクを排除する。
 
-**Architecture:** 既存 `patchCoverage` aggregator + `source-sync-status.json` を統合した `upstream-recovery-status.json` を新設。CI per-PR (non-blocking comment) + weekly cron workflow (tracking issue 維持) + test 拡張 の 3 段構え。registry entry 粒度の変更なし、既存 mechanism は温存。
+**Architecture:** `upstream-recovery-status.json` を新設し per-entry status を計算。既存 `docs-actionable-report.json` + `.github/scripts/sync-detection-issues.cjs` machinery に **`upstreamRecovery` family を追加**してまとめて扱う (新 workflow / 新 issue family 増設なし)。PR comment は既存 workflow 内で sticky (update-in-place) 出力。test 拡張で全 34 patches + sync_exclusions entries 網羅。
 
-**Tech Stack:** Node.js 20, node:test, GitHub Actions。
+**Tech Stack:** Node.js 20, node:test, GitHub Actions (既存 `scheduled-actionable.yml` 活用)。
 
 ---
 
@@ -241,9 +247,11 @@ feat(recovery): upstream-recovery-status.json 出力 + check:upstream-recovery C
 
 - [ ] **Step 1: 全 patch 網羅 stale-detection test 追加**
 
+**Rev 2 変更点:** Rev 1 は `assert.equal(stale.length, 0)` で gate fail させる設計だったが、design principle の "non-blocking" と矛盾 (self-review §A1)。Rev 2 では **warning-only mode** に変更 — `console.warn` で surface し、CI fail はしない。代わりに `upstream-recovery-status.json` / detection-family issue 経由で恒常的に可視化。
+
 ```js
-describe('en_source_patches stale detection (all registered patches)', () => {
-  it('every registered patch find string exists in each registered slug snapshot', () => {
+describe('en_source_patches stale detection (all registered patches) — non-gating', () => {
+  it('report patches whose find string is missing from target snapshots', () => {
     const stale = [];
     for (const patch of EN_SOURCE_PATCHES) {
       for (const slug of patch.slugs) {
@@ -255,18 +263,20 @@ describe('en_source_patches stale detection (all registered patches)', () => {
         }
       }
     }
-    assert.equal(
-      stale.length,
-      0,
-      `stale patches detected (EN likely fixed upstream):\n${JSON.stringify(stale, null, 2)}\n\n` +
-      `Action required:\n` +
-      `  1. Verify JA side is source-first correct without the patch\n` +
-      `  2. Remove stale entries from scripts/lib/en_source_patches.mjs\n` +
-      `  3. Update docs/superpowers/specs/upstream-defect-tracker.md`
-    );
+    // Non-gating: warn only. Enforcement is via detection-family issue + sticky PR comment.
+    if (stale.length > 0) {
+      console.warn(
+        `[stale en_source_patches] ${stale.length} entries — EN may be fixed upstream:\n` +
+        JSON.stringify(stale, null, 2) + '\n' +
+        'Action: verify JA source-first correctness, remove entry, update upstream-defect-tracker.md'
+      );
+    }
+    // Test always passes — do NOT assert stale.length === 0 here.
   });
 });
 ```
+
+**注意**: gate 化する必要が出た場合 (stale 放置が depression パターン化したら) は別途 policy 変更を議論。現時点では non-blocking で observability 優先。
 
 - [ ] **Step 2: sync_exclusions recovery test**
 
@@ -343,83 +353,82 @@ local で workflow YAML を GitHub Actions validator にかける (`actionlint` 
 
 ---
 
-## Task 4: Weekly tracking issue (Axis B, primary)
+## Task 4: Existing `sourceSyncHealth` / detection-family infra に統合 (Axis B, primary) — Rev 2
+
+**Rev 2 変更点:** Rev 1 の「新 workflow 追加」方針を撤廃し、既存の `docs-actionable-report.json` + `.github/scripts/sync-detection-issues.cjs` + `scheduled-actionable.yml` machinery を拡張する方針に変更。新 workflow / 新 issue 家族は作らない。
+
+**既存 infra 参照:**
+- `scripts/lib/detection_reports.mjs:1148` — `sourceSyncHealth` family の既存定義
+- `scripts/lib/detection_reports.mjs:293` — `['snapshotDiff', 'parityRegression', 'sourceSyncHealth', 'parityFollowup']` family enumeration
+- `.github/workflows/scheduled-actionable.yml:115-135` — weekly schedule + `syncDetectionIssues` 呼出し
+- `.github/scripts/sync-detection-issues.cjs` — detection-family marker (`<!-- detection-family: ... -->`) で既存 issue を find → update / create / close
 
 **Files:**
-- Create: `.github/workflows/upstream-recovery-tracking.yml`
+- Modify: `scripts/lib/detection_reports.mjs` — `upstreamRecovery` family を追加 (or `sourceSyncHealth` を拡張して `enPatchesRecovery` セクション含める)
+- Modify: `.github/scripts/sync-detection-issues.cjs` — 新 family marker を登録
+- (optional) `.github/workflows/scheduled-actionable.yml` — artifact upload list に `upstream-recovery-status.json` 追加
 
-- [ ] **Step 1: Workflow 定義**
+- [ ] **Step 1: detection-family の設計判断**
+
+2 案のうち選択:
+
+**A案: `sourceSyncHealth` family を拡張** — 既存の sync health issue に en_patches stale entries も併記する。1 issue で両 mechanism を一覧可能、mental model もっとも単純。
+- `detection_reports.mjs:1148-1153` の `sourceSyncHealth.sourceSideDebt` 配列に `en_source_patches` の stale entries を merge
+- `docs-actionable-report.json` schema は既存のまま拡張
+
+**B案: 新 `upstreamRecovery` family を追加** — sync vs patches の混合を避ける。
+- `detection_reports.mjs:293` の family list に `upstreamRecovery` を追加
+- 新 issue family marker `<!-- detection-family: upstream-recovery -->`
+- 既存 sync health と分離 (orthogonal に扱える)
+
+**推奨: A 案** — pull-requests が唯一の sync_exclusion であり、en_patches (34 件) と同じ画面で見た方が運用者の mental load が低い。ただし `docs-actionable-report.json` schema が膨張するので、shape は明確に separate keys (`sourceSyncHealth.excludedDebt[]` + `sourceSyncHealth.enPatchRecovery[]`) にする。
+
+- [ ] **Step 2: `detection_reports.mjs` 拡張**
+
+A 案実装の pseudocode:
+```js
+// scripts/lib/detection_reports.mjs — sourceSyncHealth family 内
+sourceSyncHealth: {
+  freshnessState: ...,
+  summary: ...,
+  sourceSideDebt: [...],           // 既存
+  recoveredPages: [...],           // 既存
+  enPatchRecovery: {               // Rev 2 追加
+    totalPatches: 34,
+    activePatches: 33,
+    stalePatches: 1,
+    stale: [
+      { id: 'UD-022', slugs: ['integrations/...'], addedAt: '2026-04-20', daysSinceAdded: 90 },
+    ],
+  },
+},
+```
+
+`shouldOpenIssue` 条件 (`detection_reports.mjs:895`) に `enPatchRecovery.stalePatches > 0` を追加。
+
+- [ ] **Step 3: sticky PR comment (Rev 2 追加)**
+
+既存の `scheduled-actionable.yml` は schedule 時のみ issue を sync する。PR context でも stale を可視化するため、**既存 `.github/workflows/parity-check.yml` (or equivalent) に non-blocking 1 step 追加**:
 
 ```yaml
-name: Upstream Recovery Tracking
-
-on:
-  schedule:
-    - cron: '0 0 * * 1'  # Monday 00:00 UTC = Monday 09:00 JST
-  workflow_dispatch:
-
-jobs:
-  track:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npm run check:snapshots:fetch  # refresh snapshots
-      - run: npm run check:upstream-recovery
-        continue-on-error: true
-      - name: Update or close tracking issue
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const status = JSON.parse(fs.readFileSync('upstream-recovery-status.json', 'utf8'));
-            const stale = [
-              ...status.mechanisms.en_source_patches.filter(e => e.status === 'stale'),
-              ...status.mechanisms.source_sync_exclusions.filter(e => e.status === 'stale'),
-            ];
-            const LABEL = 'upstream-recovery-tracking';
-            const issues = await github.paginate(
-              github.rest.issues.listForRepo,
-              { owner: context.repo.owner, repo: context.repo.repo, labels: LABEL, state: 'open' }
-            );
-            const existing = issues[0];
-            if (stale.length === 0) {
-              if (existing) {
-                await github.rest.issues.update({
-                  owner: context.repo.owner, repo: context.repo.repo,
-                  issue_number: existing.number,
-                  state: 'closed',
-                });
-              }
-              return;
-            }
-            const body = /* compose markdown from stale list */;
-            if (existing) {
-              await github.rest.issues.update({
-                owner: context.repo.owner, repo: context.repo.repo,
-                issue_number: existing.number,
-                body,
-              });
-            } else {
-              await github.rest.issues.create({
-                owner: context.repo.owner, repo: context.repo.repo,
-                title: '🧹 Upstream recovery tracking — stale registry entries',
-                labels: [LABEL],
-                body,
-              });
-            }
+- name: Upstream recovery — sticky PR comment
+  if: github.event_name == 'pull_request'
+  continue-on-error: true
+  uses: actions/github-script@v7
+  with:
+    script: |
+      // Use detection-family marker '<!-- upstream-recovery: sticky -->'
+      // Find existing comment → update in place. If none → create.
+      // If stalePatches === 0 → delete comment (cleanup when resolved).
 ```
 
-- [ ] **Step 2: Label 作成**
+sticky marker で **update-in-place**: 1 PR に 1 comment のみ、push ごとに内容更新。new comment per push を避ける。
 
-`.github` に label 定義 or manual 追加: `upstream-recovery-tracking` (color: `#fbca04`)
-
-- [ ] **Step 3: commit**
+- [ ] **Step 4: commit**
 
 ```
-ci(recovery): weekly tracking issue workflow for stale registry entries
+feat(recovery): extend sourceSyncHealth detection family with enPatchRecovery section
+                + sticky PR comment for stale registry entries
 ```
 
 ---
@@ -502,38 +511,65 @@ docs(recovery): 2-mechanism lifecycle + weekly triage procedure
 
 ---
 
-## Task 6: pull-requests 初期 cleanup (運用初回)
+## Task 6: `source_sync_exclusions` entries に `reviewAfter` 追加 (Rev 2 新 Task)
 
-**Context:** `source-sync-status.json` 現状: `testops/testops-version-control/pull-requests` の `fetchStatus: excluded-recovered` (EN upstream 修復済み可能性)。本 plan の運用 loop を実証するため、最初の cleanup として扱う。
+**Context:** Codex Q5 指摘の gap。`en_source_patches.mjs` は各 entry に `reviewAfter` (6 ヶ月 cadence) を持つが、`source_sync_exclusions.mjs:55-67` は `addedAt` のみで review cadence 非整合。本 Task で parity を取る。
 
-- [ ] **Step 1: snapshot 再 fetch + 人手検証**
+**Files:**
+- Modify: `scripts/lib/source_sync_exclusions.mjs` — `SOURCE_SYNC_EXCLUSIONS` の各 entry に `reviewAfter: 'YYYY-MM-DD'` を追加
+- Modify: `scripts/__tests__/source_parity_source_side_debt.test.mjs` — `reviewAfter` field 存在の shape test を追加
+- Modify: `scripts/check_patch_review_cadence.mjs` (`scripts/check_patch_review_cadence.mjs:4-9,83-94` 参照) — `source_sync_exclusions` entries も cadence check 対象に含める
+
+- [ ] **Step 1: registry に `reviewAfter` field 追加**
+
+```js
+// scripts/lib/source_sync_exclusions.mjs
+'testops/testops-version-control/pull-requests': Object.freeze({
+  ...existing fields,
+  addedAt: '2026-04-09',
+  reviewAfter: '2026-10-09',  // 6 months cadence, parity with en_source_patches
+  linkedIssue: 247,
+}),
+```
+
+- [ ] **Step 2: shape test**
+
+`scripts/__tests__/source_parity_source_side_debt.test.mjs` に invariant test 追加: 全 entry に `reviewAfter` field 存在 + `YYYY-MM-DD` format 確認。
+
+- [ ] **Step 3: cadence check script 拡張**
+
+`scripts/check_patch_review_cadence.mjs` を拡張し、`source_sync_exclusions` の `reviewAfter` 期限も集計対象に。90 日超 past-due → `upstreamRecovery` family に escalate。
+
+- [ ] **Step 4: commit**
 
 ```
-npm run check:snapshots:fetch -- --slug=testops/testops-version-control/pull-requests
+feat(recovery): add reviewAfter to source_sync_exclusions for cadence parity
 ```
-
-EN HTML を目視: MadCap の `<code>` block body collapse が消えているか確認。
-
-- [ ] **Step 2A: 修復確認済の場合**
-
-- `scripts/lib/source_sync_exclusions.mjs` から entry を削除
-- snapshot file を最新に更新
-- `npm run check:parity -- --slug=testops/testops-version-control/pull-requests` で 0 issues 確認
-- commit: `fix: remove pull-requests from source_sync_exclusions (upstream recovered)`
-
-- [ ] **Step 2B: 未修復の場合**
-
-- `source-sync-status.json` の `recoverySignal` field をメモ
-- `docs/superpowers/specs/upstream-defect-tracker.md` の UD-entry に "upstream still broken as of 2026-04-20" 等注記追記
-- 本 Task を skip
-
-- [ ] **Step 3: 運用 doc に cleanup 事例として追記**
-
-`docs/OPS_DESIGN.md` の weekly triage section に、pull-requests cleanup を最初の dry-run 事例として short paragraph 追加。
 
 ---
 
-## Task 7: E2E verification + PR
+## Task 7 (Rev 2 Appendix): pull-requests.md 初回 cleanup (**別 PR として分離**)
+
+**Rev 2 変更点:** Rev 1 では本 Task を同 PR に含めていたが、Codex Q6 指摘により **別 PR に分離**。理由:
+- `scripts/__tests__/source_parity_source_side_debt.test.mjs:47-55` が `pull-requests` を seeded debt として pin している
+- Registry 削除 = test 変更を伴い、recovery infrastructure PR と review scope が混合
+- infrastructure PR は stable (long-running review OK)、cleanup PR は upstream 状態依存 (mutable)
+
+**別 PR のスコープ:**
+- Branch: `claude/pull-requests-registry-removal` (新規)
+- 本 plan (infrastructure) が merge された後に実施
+- Steps:
+  1. snapshot 再 fetch + EN HTML 目視確認
+  2. 修復済なら: `SOURCE_SYNC_EXCLUSIONS` から entry 削除 + `source_parity_source_side_debt.test.mjs` の seeded pin を "at least 0 entries OK" に緩和 (or 別 seed に差し替え)
+  3. `npm run check:parity` で 0 issues 維持確認
+  4. `docs/superpowers/specs/upstream-defect-tracker.md` に archive 記録
+  5. 未修復なら: snapshot + `reviewAfter` 更新のみ (cleanup はさらに延期)
+
+本 plan の Task 1-6 とは independent、順序は: **本 plan merge → pull-requests cleanup PR**。
+
+---
+
+## Task 8: E2E verification + PR
 
 - [ ] **Step 1: local 全 gate 緑確認**
 
@@ -543,29 +579,31 @@ npm run check:parity && npm run check:snapshots:diff
 npm run check:upstream-recovery
 ```
 
-- [ ] **Step 2: dry-run workflow**
+- [ ] **Step 2: dry-run existing scheduled workflow**
 
 ```
-gh workflow run upstream-recovery-tracking.yml
+gh workflow run scheduled-actionable.yml -f debug=true
 ```
 
 実行ログで:
-- `upstream-recovery-status.json` が正しく生成されること
-- stale=0 なら tracking issue が close される (or 作成されない)
-- stale>0 なら issue が create/update される
+- `upstream-recovery-status.json` が artifact upload に含まれる
+- `docs-actionable-report.json` に `sourceSyncHealth.enPatchRecovery` section が出力される
+- Rev 2 の sticky PR comment が該当 PR に post される (PR trigger test)
 
 - [ ] **Step 3: PR 作成**
 
 ```
-feat(recovery): upstream recovery detection + registry lifecycle tracking
+feat(recovery): upstream recovery detection + registry lifecycle tracking (Rev 2)
 
 - check:upstream-recovery CLI + upstream-recovery-status.json
 - en_source_patches stale detection expanded to all 34 patches
-- weekly tracking issue workflow
-- PR comment for stale entries (non-blocking)
+- sourceSyncHealth detection-family に enPatchRecovery section 追加
+- sticky PR comment (update-in-place) for stale entries (non-blocking)
+- source_sync_exclusions に reviewAfter 追加 (cadence parity)
 - docs/PARITY_GUIDE §許容機構 2-mechanism lifecycle 明文化
-- pull-requests.md 最初の cleanup (Task 6 の結果反映)
 ```
+
+**注意**: pull-requests.md の registry 削除は含めない (Task 7 として別 PR)。
 
 - [ ] **Step 4: 4-reviewer gate (per docs/PARITY_GUIDE §J)**
 
@@ -576,16 +614,17 @@ feat(recovery): upstream recovery detection + registry lifecycle tracking
 
 ---
 
-## 完了条件 (all true)
+## 完了条件 (all true) — Rev 2
 
 - [ ] `upstream-recovery-status.json` schema が spec 通りに生成される
-- [ ] `en_source_patches_integration.test.mjs` が全 34 patches を網羅
-- [ ] `.github/workflows/upstream-recovery-tracking.yml` が weekly で実行される
-- [ ] PR comment が stale entry 存在時に non-blocking で post される
+- [ ] `en_source_patches_integration.test.mjs` が全 34 patches を網羅 (non-gating warning mode)
+- [ ] `sourceSyncHealth` detection-family に `enPatchRecovery` section が追加され、既存 `scheduled-actionable.yml` で週次 issue sync される (新 workflow 追加なし)
+- [ ] sticky PR comment (update-in-place) が stale entry 存在時に non-blocking で post される
+- [ ] `source_sync_exclusions` entries に `reviewAfter` field が追加され cadence check 対象になる
 - [ ] `docs/PARITY_GUIDE.md §許容機構` に 2-mechanism lifecycle が明記されている
-- [ ] `docs/OPS_DESIGN.md §定常運用` に weekly triage 手順がある
-- [ ] Task 6 が完了し pull-requests.md の状態が確定している
+- [ ] `docs/OPS_DESIGN.md §定常運用` に weekly triage 手順がある (既存 managed issue を check する form で)
 - [ ] 既存 DoD counter (baseline=0 / audit-signal=0 / inconclusive=0) が regression していない
+- [ ] `pull-requests.md` registry 削除は **別 PR (Task 7 scope)**。本 plan 完了条件には含めない。
 
 ---
 
@@ -610,11 +649,49 @@ feat(recovery): upstream recovery detection + registry lifecycle tracking
 - `docs/PARITY_GUIDE.md §PR-merge-gate-matrix §2` — 2-mechanism sanctioning
 - `scripts/lib/source_sync_exclusions.mjs` — 既存 recovery probe 実装
 - `scripts/lib/en_source_patches.mjs` — `createEnSourcePatchCoverage` の既存 API
+- `scripts/lib/detection_reports.mjs:1105-1153` — 既存 `sourceSyncHealth` family 実装 (Rev 2 で拡張対象)
+- `.github/workflows/scheduled-actionable.yml:115-135` — 既存 weekly scheduler (Rev 2 で活用)
+- `.github/scripts/sync-detection-issues.cjs` — 既存 detection-family marker / issue sync 実装
+- `scripts/__tests__/source_parity_source_side_debt.test.mjs:47-55` — `pull-requests` seeded pin (Rev 2 で Task 7 分離理由)
+- `scripts/check_patch_review_cadence.mjs:4-9,83-94` — 既存 `reviewAfter` cadence check (Rev 2 で拡張対象)
 - PR #357 (M2.5-A) / #358 (M2.5-B) / #359 (M2.5-C) — baseline=0 achievement context
 - `docs/superpowers/plans/2026-04-14-parity-phase4-schema-cleanup.md` — PR Z (次の主要 milestone)
 
 ---
 
+## Appendix A: Scope 外 (将来 plan candidates)
+
+以下は Rev 1 検討 / Rev 2 レビューで議論したが、本 plan では採用しない:
+
+### A.1 en_source_patches 撤廃 + extractor 移行
+
+構造的 artifact patches (UD-015/017/018A-C/019/020/021/022 等) を `preprocessEnHtml` の slug-independent rule に統合し registry を trim する option。**不採用** 理由 (Codex Q4 + self-review §D10):
+- 大半の patches は page-shape-specific で slug-scoping を失うと blast radius 拡大
+- 候補は ZWSP paragraph (UD-015/022) くらいに限定される
+- 別 plan `en_source_patches-trim` として今後検討可
+
+### A.2 pull-requests.md を en_source_patches に転換
+
+page-freeze を segment-patch に変換し mechanism 統一する option。**不採用** 理由 (Codex Q2 + self-review):
+- EN body が単一 `<code>` block に完全崩壊 — 本文再構築 patch は数百行規模
+- `en_source_patches` の design contract (literal find→replace) を逸脱
+- Snapshot overwrite 抑止は page-freeze の primary responsibility であり patch で代替不能
+
+### A.3 90-day hard CI block
+
+stale entry 累積防止のため "90 日経過で CI fail" option。**不採用** 理由 (Codex Q5):
+- 既存 cadence check (`check_patch_review_cadence.mjs`) が non-blocking 方針
+- Unrelated PR を stale entry で block するのは運用負荷大
+- 代替: sticky PR comment + weekly issue の persistent pressure で compliance を促す
+
+---
+
 ## Revision History
 
-- **Rev 1 (2026-04-20)**: 初版。user 要望の 2 軸 (A: EN 修正検知 / B: 削除忘れ検知) を単一 status computation + 3-channel surfacing で実現する設計。2-mechanism (source_sync_exclusions + en_source_patches) を前提とし、pull-requests.md の初回 cleanup も Task 6 として含める。
+- **Rev 1 (2026-04-20 AM)**: 初版。2 軸検知を単一 status computation + 3-channel surfacing (JSON + PR comment + 新 weekly workflow) で実現。Task 6 として pull-requests cleanup を同 PR 内に含める。
+- **Rev 2 (2026-04-20 PM)**: Codex + self-review 結果を反映。主要変更:
+  - **新 weekly workflow 追加を取り止め**、既存 `sourceSyncHealth` detection-family infra を拡張する方針に切替 (Codex Q3 — 既存 infra を見落としていた)
+  - **pull-requests cleanup を別 PR に分離** (Codex Q6 — seeded pin test との scope 混合回避)
+  - **新 Task 6: `source_sync_exclusions` entries に `reviewAfter` 追加** (Codex Q5 — cadence parity gap 解消)
+  - en_patches 撤廃 + extractor 移行 / 90-day hard CI block option を Appendix A に scope 外宣言
+  - Test 2 を non-gating warning mode に調整 (self-review §A1 — blocking vs non-blocking 矛盾解消)
