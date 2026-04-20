@@ -17,19 +17,15 @@ keywords:
   - 不具合通知
 ---
 
-## Testim と Slack の連携
+Testim は、指定した Slack チャンネルにバグの説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度とブラウザー、バグのスクリーンショットが含まれます。Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。開始前に、データの取り扱いについて [プライバシーポリシー](https://www.testim.io/privacy) を確認してください。
 
-Testim は、指定した Slack チャンネルにバグの説明を公開できます。投稿には、バグの詳細な説明、再現手順、画面解像度とブラウザー、バグのスクリーンショットが含まれます。Testim を Slack に接続するには、以下の手順でアクセス権限を付与します。
-
-開始前に、データの取り扱いについて [プライバシーポリシー](https://www.testim.io/privacy) を確認してください。
-
-:::info{title="PRO機能"}
-この機能は [Professional plan](https://www.testim.io/pricing/) 以上で利用できます。
+:::note
+これは pro 機能です。このフィーチャーは [Professional plan](https://www.testim.io/pricing/) 以上のプロジェクトで利用できます。詳細は [こちら](https://www.testim.io/pricing/) を確認してください。
 :::
 
-## Testim を Slack に接続する
+→ **Testim を Slack に接続するには:**
 
-1. `Settings > Bug Tracker` に移動します。
+1. **Settings > Bug Tracker** に移動します。
 2. Slack にログイン済みであることを確認し、**Slack** ロゴをクリックします。
 3. **Add to Slack** をクリックします。
 
@@ -42,8 +38,8 @@ Testim は、指定した Slack チャンネルにバグの説明を公開でき
 
 ![Slack channel の選択](/images/bug-tracker-settings/connecting-testim-to-slack/b42f2d6-slack1.PNG)
 
-**Select** ボタンは **Selected** に変わります。
+Select ボタンは **Selected** に変わります。
 
 ![Selected が表示された状態](/images/bug-tracker-settings/connecting-testim-to-slack/9781336-slack3.PNG)
 
-[バグ報告](/docs/test-management/bug-reporting) の手順に従って、bug capture を設定してください。
+[バグ報告](/docs/test-management/bug-reporting) ガイドの手順に従って、bug capture を設定してください。
