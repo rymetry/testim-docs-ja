@@ -638,34 +638,42 @@ describe('alignSegments — segment-shifted only fires with token destination ev
     assert.equal(shifted.length, 0, 'no exact shift diff should be emitted');
   });
 
-  it('returns inconclusive for a tokenless body swap with uniform paragraph lengths', () => {
-    // Even the fully ambiguous uniform-length case must not silently
-    // pass as a clean page.
+  it('returns inconclusive for a tokenless body swap under IDENTICAL adjacent headings', () => {
+    // Heading-distinctness prior (§5.3.N mechanism refinement, 2026-04-20):
+    // When two adjacent EN headings are identical at their leaf (e.g., two
+    // changelog entries titled "Bug fix"), body content is the sole
+    // disambiguation signal and uniform-length tokenless bodies genuinely
+    // preclude a conclusive green. The near-tie check must still fire in
+    // this identical-heading case to preserve the safety net.
     const en = [
-      makeHeading('A', 0, 'A'),
-      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
-      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
-      makeHeading('B', 0, 'B'),
-      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
-      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+      makeHeading('Bug fix', 0, 'Bug fix'),
+      makeSeg('Bug fix', 'paragraph', 0, 'Alpha one paragraph.'),
+      makeSeg('Bug fix', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeHeading('Bug fix', 0, 'Bug fix'),
+      makeSeg('Bug fix', 'paragraph', 0, 'Beta one paragraph.'),
+      makeSeg('Bug fix', 'paragraph', 1, 'Beta two paragraph.'),
     ];
     const ja = [
-      makeHeading('Aセクション', 0, 'Aセクション'),
+      makeHeading('バグ修正', 0, 'バグ修正'),
       // bodies swapped — but lengths are uniform, no length signal
-      makeSeg('Aセクション', 'paragraph', 0, 'ベータ 1 の段落です。'),
-      makeSeg('Aセクション', 'paragraph', 1, 'ベータ 2 の段落です。'),
-      makeHeading('Bセクション', 0, 'Bセクション'),
-      makeSeg('Bセクション', 'paragraph', 0, 'アルファ 1 の段落です。'),
-      makeSeg('Bセクション', 'paragraph', 1, 'アルファ 2 の段落です。'),
+      makeSeg('バグ修正', 'paragraph', 0, 'ベータ 1 の段落です。'),
+      makeSeg('バグ修正', 'paragraph', 1, 'ベータ 2 の段落です。'),
+      makeHeading('バグ修正', 0, 'バグ修正'),
+      makeSeg('バグ修正', 'paragraph', 0, 'アルファ 1 の段落です。'),
+      makeSeg('バグ修正', 'paragraph', 1, 'アルファ 2 の段落です。'),
     ];
     const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.diffs.length, 0);
-    assert.equal(result.inconclusive, true, 'uniform tokenless swap must not be silent green');
+    assert.equal(result.inconclusive, true, 'identical-heading tokenless swap must not be silent green');
     assert.match(result.inconclusiveReason, /cannot rule out a body swap/i);
   });
 
-  it('may return inconclusive for an aligned tokenless page when swap cannot be ruled out', () => {
-    // current と swapped の仮説が同程度なら inconclusive を返す。
+  it('passes as green for a tokenless page with DISTINCT adjacent headings (heading-distinctness prior)', () => {
+    // When adjacent EN headings differ at their leaf, source-first
+    // translation discipline anchors each body to its correct heading —
+    // no length-based swap signal is needed. This was previously flagged
+    // as inconclusive (over-detection) and is now resolved by the
+    // heading-distinctness prior in detectAmbiguousAdjacentTokenlessSwap.
     const en = [
       makeHeading('A', 0, 'A'),
       makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
@@ -684,32 +692,36 @@ describe('alignSegments — segment-shifted only fires with token destination ev
     ];
     const result = alignSegments(en, ja, { slug: 'test/fixture' });
     assert.equal(result.diffs.length, 0);
-    assert.equal(result.inconclusive, true);
+    assert.equal(result.inconclusive, false, 'distinct-heading tokenless page must pass as green under heading-distinctness prior');
   });
 
-  it('keeps unrelated exact diffs when a different adjacent tokenless pair is inconclusive', () => {
+  it('keeps unrelated exact diffs when a different adjacent tokenless pair has identical headings (inconclusive still fires)', () => {
+    // Heading-distinctness prior (§5.3.N): the A/B tokenless pair here uses
+    // identical EN headings ("Bug fix" twice) so body content is the sole
+    // disambiguation signal and near-tie still flags the page as
+    // inconclusive. The exact diff in section C must still be preserved.
     const en = [
-      makeHeading('A', 0, 'A'),
-      makeSeg('A', 'paragraph', 0, 'Alpha one paragraph.'),
-      makeSeg('A', 'paragraph', 1, 'Alpha two paragraph.'),
-      makeHeading('B', 0, 'B'),
-      makeSeg('B', 'paragraph', 0, 'Beta one paragraph.'),
-      makeSeg('B', 'paragraph', 1, 'Beta two paragraph.'),
+      makeHeading('Bug fix', 0, 'Bug fix'),
+      makeSeg('Bug fix', 'paragraph', 0, 'Alpha one paragraph.'),
+      makeSeg('Bug fix', 'paragraph', 1, 'Alpha two paragraph.'),
+      makeHeading('Bug fix', 0, 'Bug fix'),
+      makeSeg('Bug fix', 'paragraph', 0, 'Beta one paragraph.'),
+      makeSeg('Bug fix', 'paragraph', 1, 'Beta two paragraph.'),
       makeHeading('C', 0, 'C'),
       makeSeg('C', 'paragraph', 0, 'Use `--flag` here.'),
     ];
     const ja = [
-      makeHeading('A-ja', 0, 'A-ja'),
-      makeSeg('A-ja', 'paragraph', 0, 'ベータ 1 の段落です。'),
-      makeSeg('A-ja', 'paragraph', 1, 'ベータ 2 の段落です。'),
-      makeHeading('B-ja', 0, 'B-ja'),
-      makeSeg('B-ja', 'paragraph', 0, 'アルファ 1 の段落です。'),
-      makeSeg('B-ja', 'paragraph', 1, 'アルファ 2 の段落です。'),
+      makeHeading('バグ修正', 0, 'バグ修正'),
+      makeSeg('バグ修正', 'paragraph', 0, 'ベータ 1 の段落です。'),
+      makeSeg('バグ修正', 'paragraph', 1, 'ベータ 2 の段落です。'),
+      makeHeading('バグ修正', 0, 'バグ修正'),
+      makeSeg('バグ修正', 'paragraph', 0, 'アルファ 1 の段落です。'),
+      makeSeg('バグ修正', 'paragraph', 1, 'アルファ 2 の段落です。'),
       makeHeading('C-ja', 0, 'C-ja'),
       makeSeg('C-ja', 'paragraph', 0, 'ここで使います。'),
     ];
     const result = alignSegments(en, ja, { slug: 'test/fixture' });
-    assert.equal(result.inconclusive, true, 'A/B pair should still mark the page inconclusive');
+    assert.equal(result.inconclusive, true, 'identical-heading pair should still mark the page inconclusive');
     const gaps = result.diffs.filter((d) => d.type === 'segment-token-gap');
     assert.equal(gaps.length, 1, 'exact diff in section C must be preserved');
     assert.equal(gaps[0].sectionPath, 'C');

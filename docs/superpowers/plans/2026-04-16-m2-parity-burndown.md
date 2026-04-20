@@ -520,6 +520,62 @@ repo 内に GFM double-backtick content (` ``...`` `) が実在しないため�
 
 **goal alignment**: baseline → 0 の M2 ゴールに整合。**baseline 追加 = 0、allowlist 追加 = 0** を両立し、cascade は全て content-level JA 翻訳で吸収。検知精度 (EN(t) vs JA(t) diff2) は dilute なし。
 
+#### 5.3.8 tokenless-near-tie heading-distinctness prior (source-first alignment refinement)
+
+M2 最終盤の baseline burn-down で、PR I Stage B6 inconclusive の 11 entry のうち **6 entry が tokenless-near-tie category で baseline 凍結** 状態のまま残っていた。これは `detectAmbiguousAdjacentTokenlessSwap` (`scripts/lib/source_parity_align.mjs:449`) が adjacent tokenless bodies の length-near-tie を "cannot rule out body swap" として inconclusive に落とす保守的設計に由来する over-detection であり、**source-first 契約 (WRITING_GUIDE §Source-First 構造契約)** と整合しない:
+
+- 対象 6 slug: `advanced-editing/validations/add-network-validation` / `overview/changelog` / `running-tests/scheduler` / `running-tests/scheduler-mobile` / `salesforce-testing/changelog` / `test-management/revisions`
+- いずれも JA 翻訳は **正しい heading-body 対応** を保持しており (source-first 厳守)、body swap は実在しない
+- length-similarity の偶発的な near-tie (偶然同じ長さで翻訳された結果) を検知器が曖昧性と誤認し、永続 baseline 状態が発生
+
+**§5.3.8 mechanism change (1 箇所のみ)**:
+
+`detectAmbiguousAdjacentTokenlessSwap` の near-tie check を実行する直前に **heading-distinctness prior** を追加:
+
+```js
+// sectionPath の leaf segment (最末尾 heading) が異なる場合、
+// source-first translator discipline が position-preserving alignment を
+// 保証するため、length-similarity near-tie check を skip。
+const enHeadingI = sectionPathTail(enSections[i].sectionPath);
+const enHeadingJ = sectionPathTail(enSections[j].sectionPath);
+if (enHeadingI !== enHeadingJ) continue;
+```
+
+distinct heading 下では JA 翻訳者が body を heading ごと入れ替えることは source-first 契約違反 (WRITING_GUIDE §Source-First) であり、本来 occur しない。occur した場合でも以下の既存 detection mechanism が catch する:
+
+- `segment-untranslated` classifier: 誤った heading 下の英語 prose は glossary mask 失敗で検知
+- `segment-token-gap`: invariant token (URL / CLI flag) 含有 body は従来通り token-level で検知
+- `segment-shifted`: cross-section token overlap 証拠が強い場合は従来通り発火
+
+**tradeoff 受容**: translator が "正しい日本語で opposite の EN body を翻訳した" 極端 corner case のみ本検知器では missed。この corner case は source-first 契約の authoring-time 違反であり QA 段階で catch されるべき問題。classifier の detection precision dilution は発生しない (near-tie 検知が保守的すぎるだけで、精度不足ではない)。
+
+**scope lock (§5.3.8)**: 本修正は `detectAmbiguousAdjacentTokenlessSwap` の入口条件 1 箇所 (+3 行) + helper `sectionPathTail` (8 行) のみを対象とし、
+
+- `isTokenlessBody` / `pairwiseLengthSimilaritySum` / `TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN` 等の score mechanism は未変更
+- identical-heading case (changelog entries が両方 "Bug fix" 等) は near-tie check が従来通り fire (safety net 保全)
+- segment-shifted / segment-untranslated / segment-token-gap detection path は未変更
+
+**regression ガード**:
+
+- `scripts/__tests__/source_parity_align.test.mjs` の 2 既存 test を update:
+  - "returns inconclusive for a tokenless body swap with uniform paragraph lengths" → "returns inconclusive for a tokenless body swap under IDENTICAL adjacent headings" (fixture の heading を "A"/"B" distinct → "Bug fix"/"Bug fix" identical に変更、safety net 検証)
+  - "may return inconclusive for an aligned tokenless page when swap cannot be ruled out" → "passes as green for a tokenless page with DISTINCT adjacent headings (heading-distinctness prior)" (assertion を inconclusive→green に反転)
+- "keeps unrelated exact diffs when a different adjacent tokenless pair is inconclusive" → "keeps unrelated exact diffs when a different adjacent tokenless pair has identical headings (inconclusive still fires)" (A/B distinct → Bug fix/Bug fix identical、exact diff preservation は byte-identical)
+- `scripts/__tests__/source_parity_align_runtime.test.mjs` の "writes structured advisory queue metadata for tokenless-near-tie slug runs" を "writes empty advisory queue metadata for distinct-heading tokenless slug runs" に update (`add-network-validation` slug は distinct heading のため advisoryQueue = [] が正しい新 contract)
+
+**parity delta (vs origin/main)**:
+
+| metric                             | BEFORE (#352 merged) | AFTER (§5.3.8)    | delta   |
+| ---------------------------------- | -------------------- | ----------------- | ------- |
+| baseline entries                   | 23                   | **17**            | **-6**  |
+| baseline slugs                     | 15                   | **9**             | **-6**  |
+| baseline additions                 | —                    | 0                 | **0**   |
+| segment-inconclusive in baseline   | 7                    | **1**             | **-6**  |
+| tokenless-near-tie in baseline     | 6                    | **0**             | **-6**  |
+| active actionable files            | 0                    | 0                 | ±0      |
+
+**goal alignment**: §P2-5 Exit predicate の `(summary.issuesByType["segment-inconclusive"] ?? 0) = 0` に対し、残 inconclusive 1 件 (sealights heading-count-mismatch、別 PR で JA restructure) のみが blocker。本 mechanism refinement は **principle 1 (全 counter = 0)** と **principle 5 (許容機構 = broken EN 退避 ONE purpose)** の両方を尊重する: baseline/registry 永続残留で「ambiguity tolerance」を許容せず、algorithm を source-first contract に整合させることで正面突破した。
+
 ### 5.2 Source-first mechanical exceptions (M4 policy 補足)
 
 M4 で確立した "JA 独自構造禁止" policy は **content-level** の独自構造追加を禁止する。以下は **mechanical / parser-level** の例外であり、検知器 (`source_parity_structure`) が kind-multiset fingerprint 上で許容している既知パターン。plan に明示登録することで、後続 agent が JA 独自構造との混同 / loophole 化するのを防ぐ:

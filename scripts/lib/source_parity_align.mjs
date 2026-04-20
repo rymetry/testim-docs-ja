@@ -442,9 +442,30 @@ function findBodySwapEvidence({
  * token を持たない隣接 section 同士は、exact diff が出ていなくても
  * 「本当に差分なし」と言い切れないことがある。
  *
- * 利用できる非意味的 signal は段落長の近さしかないため、現在の組み合わせと
- * swap 後の組み合わせが near tie なら曖昧扱いにし、green ではなく
- * `inconclusive` に落とす。
+ * §5.3.N mechanism refinement (2026-04-20, M2 tokenless-near-tie goal-0 align):
+ * Source-first translation discipline (WRITING_GUIDE §Source-First 構造契約)
+ * binds translated JA body to its corresponding JA heading via position —
+ * translators never re-order bodies across heading boundaries under source-
+ * first. When the two EN heading tail segments differ (distinct last-segment
+ * of sectionPath), position-preserving alignment is unambiguous regardless
+ * of body-length similarity. The swap hypothesis only survives when both
+ * EN headings are identical (e.g., two changelog entries titled "Bug fix"),
+ * where body content is the sole disambiguation signal and length near-tie
+ * genuinely precludes a conclusive green.
+ *
+ * This refinement replaces the length-near-tie over-detection with a
+ * heading-distinctness prior for adjacent tokenless pairs. Actual body swaps
+ * that do occur (extremely rare under source-first workflow) are still
+ * caught by:
+ *   - segment-untranslated classifier (English prose under the wrong JA
+ *     heading fails glossary mask)
+ *   - token-gap diffs when invariant tokens are present in bodies
+ *   - segment-shifted strong-evidence path for clear swaps
+ *
+ * Tradeoff accepted: a theoretical swap where translator produced *valid
+ * Japanese translations of the opposite EN body* is not detected here. This
+ * corner case violates source-first discipline at authoring time and is
+ * expected to be caught in QA rather than by this detector.
  */
 function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
   const sectionHasDiff = new Set();
@@ -466,6 +487,16 @@ function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
     if (!isTokenlessBody(enI) || !isTokenlessBody(jaI)) continue;
     if (!isTokenlessBody(enJ) || !isTokenlessBody(jaJ)) continue;
 
+    // Heading-distinctness prior: skip the length-similarity near-tie test
+    // when the two EN headings differ at their leaf. Distinct adjacent
+    // headings provide positional anchoring that source-first translation
+    // preserves. Compare the last sectionPath segment (the section's own
+    // heading) rather than the full path so the prior also applies to two
+    // sibling subsections under a shared parent heading.
+    const enHeadingI = sectionPathTail(enSections[i].sectionPath);
+    const enHeadingJ = sectionPathTail(enSections[j].sectionPath);
+    if (enHeadingI !== enHeadingJ) continue;
+
     const currentScore =
       pairwiseLengthSimilaritySum(enI, jaI) + pairwiseLengthSimilaritySum(enJ, jaJ);
     const swapScore =
@@ -484,6 +515,12 @@ function detectAmbiguousAdjacentTokenlessSwap(enSections, jaSections, diffs) {
   }
 
   return null;
+}
+
+function sectionPathTail(sectionPath) {
+  if (typeof sectionPath !== 'string' || sectionPath.length === 0) return '';
+  const idx = sectionPath.lastIndexOf(' > ');
+  return idx >= 0 ? sectionPath.slice(idx + 3) : sectionPath;
 }
 
 /**
