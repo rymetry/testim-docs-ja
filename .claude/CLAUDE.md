@@ -76,9 +76,26 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 1. Self-check → Codex CLI review → fix → `npm run lint && npm run test && npm run build`
 2. When new patterns emerge, update the relevant guide (not just the affected file)
 
-## Parity Debt
+## Core Invariants (from `docs/SYSTEM_SPEC.md`)
 
-パリティ残債（baseline で凍結中の EN/JA 構造差分）の修正手順、頻出パターン、EN ソースの既知問題、並列エージェント委任時の注意点は **`docs/PARITY_GUIDE.md`** を参照。
+本プロジェクトのコア仕様。全作業はこれらの不変量を維持する方向で行う。
+
+**5-counter = 0 DoD**: 以下の 5 counter は全て 0 を維持する。
+
+1. `parity-baseline.json` `entries.length` === 0
+2. `parity-check-status.json` `summary.reportableActiveFiles` === 0
+3. `parity-check-status.json` `summary.baselinedIssues` === 0
+4. `parity-check-status.json` `summary.advisoryQueueIssues` === 0
+5. `parity-check-status.json` `summary.auditSignalIssues` === 0
+
+**2-mechanism suppression**: EN 上流欠陥の抑制は以下の 2 mechanism のみ。第三の mechanism は禁止。
+
+- Mechanism 1: page-level freeze (`scripts/lib/source_sync_exclusions.mjs`)
+- Mechanism 2: segment-level patch (`scripts/lib/en_source_patches.mjs`) → `docs/UPSTREAM_DEFECTS.md` に結線
+
+**Baseline 運用**: Schema v2, `entries.length === 0` を維持。新規 issue は baseline に逃がさず修正で解消する。
+
+詳細は **`docs/SYSTEM_SPEC.md`**、パリティ維持の運用手順は **`docs/PARITY_GUIDE.md`** を参照。
 
 ## Commit Style
 
