@@ -73,7 +73,7 @@ baseline 追加には **以下を全て満たす** 必要がある:
 
 ## 許容機構 (2-mechanism design)
 
-EN upstream の欠陥を JA side に mirror させず吸収するため、本 repo は **2 機構のみ**を採用する。どちらも **"broken-EN retreat" という ONE purpose** に属し、粒度が異なるだけ (第 3 の許容機構追加は禁止 / `feedback_baseline_zero_increase` 参照)。
+EN upstream の欠陥を JA side に mirror させず吸収するため、本 repo は **2 機構のみ**を採用する。どちらも **"broken-EN retreat" という ONE purpose** に属し、粒度が異なるだけ (第 3 の許容機構追加は禁止。`docs/SYSTEM_SPEC.md` §2-mechanism suppression design 参照)。
 
 ### Mechanism 1: page-level freeze (`scripts/lib/source_sync_exclusions.mjs`)
 
@@ -301,8 +301,7 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
 ### Source contract
 
 - `docs/SYSTEM_SPEC.md` §システム不変量 (suppression-lane contract, baseline 単調非増加原則)
-- memory `feedback_baseline_zero_increase.md` (monotonic non-increase principle)
-- memory `feedback_four_reviewer_gate.md` (review orchestration)
+- `.claude/CLAUDE.md` §Core Invariants (仕様変更ポリシー、5-counter DoD、2-mechanism 契約)
 
 ## EN ソース side の既知 artifact
 
