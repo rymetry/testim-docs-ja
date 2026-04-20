@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-20T04:28:58.098Z",
-  "generatedFromRunId": "2026-04-20T04:28:58.098Z#parity-check-status",
-  "rationale": "M2.5-A cascade cleanup — FileOrFilePath mechanism fix resolves WDA Errors structure and configuration-file-run-hooks preface via source-first mirror",
+  "generatedAt": "2026-04-20T04:40:02.329Z",
+  "generatedFromRunId": "2026-04-20T04:40:02.329Z#parity-check-status",
+  "rationale": "M2.5-B sealights comprehensive restructure — list-wrapped fences unwrapped, downstream cascade resolved",
   "entries": [
     {
       "slug": "advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor",
@@ -132,25 +132,6 @@
       "missingTokens": null,
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/sealights-integration",
-      "issueType": "segment-inconclusive",
-      "snapshotFingerprint": "sha256:4ed61073e9ae6755ac609cfd9090e38c3c449dbefe2921fb273db55825de41c7",
-      "reviewAfter": "2026-12-31",
-      "sectionPath": null,
-      "segmentKind": null,
-      "enSegmentIndex": null,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": null,
-      "missingTokens": null,
-      "inconclusiveCategory": "heading-count-mismatch",
-      "inconclusiveReason": "Heading count mismatch: EN has 15 headings, JA has 8",
       "sectionIndex": null,
       "structureCategory": null,
       "structureFingerprint": null,
