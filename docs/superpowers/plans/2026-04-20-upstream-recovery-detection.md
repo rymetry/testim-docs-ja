@@ -138,7 +138,7 @@ docs/DOCS_DATE_TRACKING.md に upstream-recovery-status.json 追記
 | Per-PR non-blocking comment | ✓ | ✓ | stale entry 存在時 |
 | Weekly GitHub tracking issue | △ (weekly 粒度) | ✓ (primary) | stale entry が 1+ の時 |
 
-**Axis A** は status JSON の `status: 'stale'` field で即時可視化。**Axis B** は weekly issue + PR comment で「削除するまで消えない」persistent 圧力を生む。
+**Axis A** は status JSON の `statusA: 'stale'` field で即時可視化。**Axis B** は `statusB: 'overdue'` field + sticky PR comment + sourceSyncHealth managed issue で「削除するまで消えない」persistent 圧力を生む。
 
 ### Entry 状態遷移
 
@@ -610,8 +610,8 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、以下
    - `en_source_patches_integration.test.mjs` が全 patch の `find` 存在を assert
    - `source-sync-status.json` の `fetchStatus: excluded-recovered` が page recovery を signal
 3. Upstream 修正時:
-   - PR comment が stale 状態を surface (non-blocking)
-   - Weekly workflow が `upstream-recovery-tracking` issue を維持
+   - sticky PR comment が stale 状態を surface (non-blocking)
+   - 既存 `scheduled-actionable.yml` が `sourceSyncHealth` managed issue (`enPatchRecovery` / `sourceSyncRecovery` section) を weekly update
 4. 人手削除:
    - registry entry を削除
    - `upstream-defect-tracker.md` の対応 entry を archive
@@ -629,13 +629,13 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、以下
 ```markdown
 ### Weekly: Upstream recovery triage
 
-1. `upstream-recovery-tracking` label の issue を確認
-2. 各 stale entry について:
+1. `sourceSyncHealth` managed issue (scheduled-actionable が weekly update) の `enPatchRecovery` / `sourceSyncRecovery` section を確認
+2. 各 stale / overdue entry について:
    a. 該当 slug の snapshot を手動で fetch し直す
    b. 現在の EN HTML で欠陥が消えているか目視確認
    c. 消えていれば registry から削除 → `upstream-defect-tracker.md` を archive 状態に更新
-   d. まだ消えていなければ issue コメントで状況記録 (workflow が次週再評価)
-3. 全 stale 解消後、workflow が自動で issue を close
+   d. まだ消えていなければ issue コメントで状況記録 (次週 run で再評価)
+3. 全 stale 解消後、`sourceSyncHealth` issue の当該 section が空になり、他 sync 問題も無ければ workflow が自動で issue を close
 ```
 
 - [ ] **Step 3: `docs/DOCS_DATE_TRACKING.md` 追記**
@@ -684,7 +684,7 @@ docs(recovery): 2-mechanism lifecycle + weekly triage procedure
 
 - [ ] **Step 3: cadence check script 拡張**
 
-`scripts/check_patch_review_cadence.mjs` を拡張し、`source_sync_exclusions` の `reviewAfter` 期限も集計対象に。90 日超 past-due → `upstreamRecovery` family に escalate。
+`scripts/check_patch_review_cadence.mjs` を拡張し、`source_sync_exclusions` の `reviewAfter` 期限も集計対象に。90 日超 past-due は `sourceSyncHealth.sourceSyncRecovery` section 経由で surface される (新 family 追加なし)。
 
 - [ ] **Step 4: commit**
 
@@ -733,20 +733,30 @@ gh workflow run scheduled-actionable.yml -f debug=true
 
 実行ログで:
 - `upstream-recovery-status.json` が artifact upload に含まれる
-- `docs-actionable-report.json` に `sourceSyncHealth.enPatchRecovery` section が出力される
-- Rev 2 の sticky PR comment が該当 PR に post される (PR trigger test)
+- `docs-actionable-report.json` に `sourceSyncHealth.enPatchRecovery` / `sourceSyncRecovery` section が出力される (Phase B で追加)
+- Phase B sticky PR comment が該当 PR に post される (PR trigger test)
 
-- [ ] **Step 3: PR 作成**
+- [ ] **Step 3: PR 作成 (Phase A / Phase B ごとに別 PR)**
 
+**Phase A PR**:
 ```
-feat(recovery): upstream recovery detection + registry lifecycle tracking (Rev 2)
+feat(recovery): Phase A — check_upstream_recovery.mjs + test 拡張 + reviewAfter parity
 
+- scripts/check_upstream_recovery.mjs (standalone aggregator)
 - check:upstream-recovery CLI + upstream-recovery-status.json
-- en_source_patches stale detection expanded to all 34 patches
-- sourceSyncHealth detection-family に enPatchRecovery section 追加
-- sticky PR comment (update-in-place) for stale entries (non-blocking)
+- en_source_patches_integration.test.mjs 全 34 patches slug-driven 網羅
+- check_patch_review_cadence.mjs を source_sync_exclusions にも拡張
 - source_sync_exclusions に reviewAfter 追加 (cadence parity)
-- docs/PARITY_GUIDE §許容機構 2-mechanism lifecycle 明文化
+```
+
+**Phase B PR** (PR Z merge 後):
+```
+feat(recovery): Phase B — detection_reports 統合 + sticky PR comment + docs
+
+- detection_reports.mjs に enPatchRecovery / sourceSyncRecovery section 追加
+- sticky PR comment (non-blocking, upsert, cleanup-on-resolved)
+- docs/PARITY_GUIDE §許容機構 + docs/OPS_DESIGN §定常運用 追記
+- docs/DOCS_DATE_TRACKING.md に upstream-recovery-status.json 追記
 ```
 
 **注意**: pull-requests.md の registry 削除は含めない (Task 7 として別 PR)。
@@ -760,7 +770,7 @@ feat(recovery): upstream recovery detection + registry lifecycle tracking (Rev 2
 
 ---
 
-## 完了条件 (all true) — Rev 2
+## 完了条件 (all true) — Rev 4 / Phase A + Phase B
 
 - [ ] `upstream-recovery-status.json` schema が spec 通りに生成される
 - [ ] `en_source_patches_integration.test.mjs` が全 34 patches を網羅 (non-gating warning mode)
