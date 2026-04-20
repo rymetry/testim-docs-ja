@@ -319,7 +319,20 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   1. Tricentis への報告 status 再確認
   2. Upstream fix 未完了なら reviewAfter を 3-6 ヶ月延長し本ファイルに rationale 追記
   3. Upstream fix 完了なら Removal SOP を実行
-- CI warning 化は follow-up (`parity-check-status.json.debug.patchCoverage` に `reviewAfter` を乗せて gate へ引き込む案あり)
+- Phase B 以降は `scripts/check_upstream_recovery.mjs` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
+
+## Registry triage log
+
+上流 defect の probe 結果を時系列で記録する。Phase A/B の `upstream-recovery-status.json` + 手動 triage から得られた事実のみ記載。
+
+### 2026-04-20 — `source_sync_exclusions: testops/testops-version-control/pull-requests`
+
+- **背景**: 2026-04-20 session で Plan Rev 4 §Task 7 (pull-requests registry cleanup) を triage
+- **Probe 実行**: `npm run check:snapshots:fetch -- --slug=testops/testops-version-control/pull-requests` を実行。snapshot file は registry ガードにより上書きされないが、`snapshot_update.mjs` が live HTML を fetch → extractor を走らせて `source-sync-status.json.pages[].recoveryProbe` を更新する
+- **Probe 出力 (`source-sync-status.json` から抜粋)**: `fetchStatus: 'excluded-broken'` / `recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true }` — `expectedMatch: true` は **今回 fetch した live HTML** が登録時の defect signature と一致することを示す (registry の declared status を echo しているのではなく、actual re-probe の結果)
+- **判定**: 登録時の破損パターン (MadCap が本文全体を単一 `<code>` ブロックに畳み込み、extractor が 0 segments を返す) が依然として live HTML に存在する
+- **Action**: `SOURCE_SYNC_EXCLUSIONS` entry を維持。`reviewAfter: 2026-10-09` は **未超過** (probe 時点 2026-04-20 から 171 日後) のため **延長せず現状維持** (Plan Step 5 の `reviewAfter` 更新は reviewAfter が超過した場合のみ適用される条件付き手順)。`scripts/__tests__/source_parity_source_side_debt.test.mjs` の seeded pin も変更なし
+- **次回 probe トリガー**: (A) `reviewAfter` 超過で `check_patch_review_cadence.mjs` が warn、または (B) `upstream-recovery-status.json.mechanisms.source_sync_exclusions[*].statusA === 'stale'` を観測したとき
 
 ## Related docs
 

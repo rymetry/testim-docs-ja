@@ -36,8 +36,9 @@
 6. 公開ページは原則 `.md` で管理し、特別な UI が必要な場合だけ `.mdx` を使う
 7. `docs/SIDEBAR_URLS.md` を seed URL とセクション分割の正本として扱う
 
-> **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0。baseline は「時限的 ack」であって「恒常許容」ではない。
+> **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0 / `snapshot-diff-status.json.summary.{changed, added, removed} = 0`。schema v2 (2026-04-20 cutover) 以降、baseline は期限概念なしの **明示的 paydown が必須な一時的凍結** として運用する (`priority` enum + 明示 PR による解消のみ、`reviewAfter` 期限超過による自動 refire は廃止)。
 > このゴールを達成するため、本ガイドは baseline を増やす方向の変更（JA 独自構造追加 / callout 改変 / Testim 用語翻訳）を全面禁止する。
+> EN 原文が壊れている場合の退避は `scripts/lib/source_sync_exclusions.mjs` (page-level) と `scripts/lib/en_source_patches.mjs` (segment-level) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
 >
 > **Source-first 例外の canonical registry**:
 >
