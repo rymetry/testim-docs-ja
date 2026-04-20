@@ -747,7 +747,7 @@ function buildParityFollowupBody({
       '## ベースライン残債',
       '',
       `- 合計: ${baselinedIssues} 件 (${baselinedFiles} ファイル)`,
-      '- EN 原文との既知の構造差分です。翻訳を修正して返済してください。',
+      '- EN 原文との既知の構造差分です。翻訳を修正して解消してください。',
     );
     if (sortedTypes.length > 0) {
       lines.push('- 種別別:');
@@ -823,7 +823,7 @@ function buildParityFollowupBody({
   if (expiringBaselineFiles && expiringBaselineFiles.length > 0) {
     lines.push('## 30 日以内に期限切れ', '');
     lines.push(
-      '> `reviewAfter` を越えて gate に戻る前に返済 PR を計画してください。',
+      '> `reviewAfter` を越えて gate に戻る前に解消 PR を計画してください。',
       '',
     );
     lines.push(

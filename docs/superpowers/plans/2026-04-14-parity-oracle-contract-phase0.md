@@ -203,14 +203,14 @@ EN upstream に由来する artifact の扱い（Phase 0 以降の契約）:
 **重要**: baseline は「未解決 issue の凍結」のみ。上記 normalize / mask / page-level exclusion で吸収される artifact は baseline の対象ではない。blanket に "方針だから baseline に入れる" は禁止。
 ```
 
-- [ ] **Step 2: §99 "残債の返済優先順位" を "bug backlog の返済優先順位" に reframe**
+- [ ] **Step 2: §99 "残債の解消優先順位" を "bug backlog の解消優先順位" に reframe**
 
 修正後:
 
 ```markdown
-## Bug backlog の返済優先順位
+## Bug backlog の解消優先順位
 
-Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 以降で以下の優先順位で返済する:
+Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 以降で以下の優先順位で解消する:
 
 | 種別 | 対応内容 | 難易度 |
 | ------ | ---------- | -------- |
@@ -221,7 +221,7 @@ Phase 0 後の baseline は「未解決バグの backlog」になる。Phase 1 �
 | segment-token-gap (URL normalize 後の残り) | CLI フラグ・内部リンクの欠落。ピンポイント修正 | 低 |
 | segment-inconclusive | tokenless-near-tie 等。自動判定の限界。手動確認 | 高 |
 
-Top 2 大物ファイルとロングテール (1-3 件ファイル 69 ファイル) はバッチ処理で返済する。
+Top 2 大物ファイルとロングテール (1-3 件ファイル 69 ファイル) はバッチ処理で解消する。
 ```
 
 - [ ] **Step 3: commit**
