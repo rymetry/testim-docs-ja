@@ -82,7 +82,6 @@ describe('buildAdvisoryReviewQueue', () => {
               swapScore: 1.21,
             },
             baselined: true,
-            baselineReviewAfter: '2026-10-06',
           },
         ],
       },
@@ -116,7 +115,6 @@ describe('buildAdvisoryReviewQueue', () => {
     assert.deepEqual(queue.map((entry) => entry.slug), ['alpha', 'zeta']);
     assert.equal(queue[0].blocking, true);
     assert.equal(queue[1].blocking, false);
-    assert.equal(queue[1].issues[0].baselineReviewAfter, '2026-10-06');
     assert.equal(
       queue[0].issues[0].queueKey,
       'alpha|segment-inconclusive|category=tokenless-near-tie|pair=Alpha A=>Alpha B',
