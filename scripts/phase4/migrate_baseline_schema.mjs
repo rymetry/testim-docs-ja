@@ -60,7 +60,12 @@ export function migrateEntry(entry) {
   for (const [key, value] of Object.entries(entry)) {
     if (!DROP_FIELDS.has(key)) out[key] = value;
   }
-  if (!out.priority) out.priority = 'medium';
+  // v1 never emits `priority`. We only default the field if it is missing
+  // (undefined) or null — other falsy values are preserved for `validateBaseline`
+  // to reject so we never silently overwrite an explicit caller-supplied value.
+  if (out.priority === undefined || out.priority === null) {
+    out.priority = 'medium';
+  }
   return out;
 }
 
@@ -72,9 +77,17 @@ export function migrateBaseline(baseline) {
   if (!baseline || typeof baseline !== 'object' || Array.isArray(baseline)) {
     throw new Error('migrateBaseline: input must be a baseline object');
   }
-  const entries = Array.isArray(baseline.entries)
-    ? baseline.entries.map(migrateEntry).filter((e) => e !== null)
-    : [];
+  // Fail-closed on malformed entries array (Codex C1 / R1):
+  // silently coercing a non-array to [] would hide data corruption upstream
+  // behind an empty but technically-valid v2 baseline.
+  if (!Array.isArray(baseline.entries)) {
+    throw new Error(
+      `migrateBaseline: baseline.entries must be an array (got ${
+        baseline.entries === null ? 'null' : typeof baseline.entries
+      })`,
+    );
+  }
+  const entries = baseline.entries.map(migrateEntry).filter((e) => e !== null);
   const existingRationale =
     typeof baseline.rationale === 'string' ? baseline.rationale : '';
   const rationale = existingRationale.includes('Phase 4 v2')
