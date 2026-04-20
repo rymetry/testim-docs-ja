@@ -163,4 +163,4 @@ Salesforce は、Sign-in with Salesforce（OAuth）ではなく、ユーザー�
 これには 2 つの可能な理由があります:
 
 - Salesforce ステップには、（Classic と Lightning の両方の）sObject のページレイアウトにあるフィールドのみが含まれます。Lightning アプリビルダーを使用してのみ追加されたフィールドは含まれません。Salesforce 管理者がページレイアウトからフィールドを除外したが、Lightning アプリビルダーを使用して[動的フォーム](https://help.salesforce.com/s/articleView?id=sf.dynamic_forms_overview.htm&type=5)を作成するときに追加した可能性があります。Salesforce ステップを使用するには、Salesforce セットアップでページレイアウトにフィールドを追加するか、テストを作成する際に Salesforce レコーダーを使用してください。
-- Salesforce ステップには、Salesforce 環境の接続に使用される Salesforce アカウントが`読み取り`権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する`読み取り`権限を持つ別の Salesforce アカウントで Salesforce 環境を再接続する必要がある場合があります。
+- Salesforce ステップには、Salesforce 環境の接続に使用される Salesforce アカウントが `read` 権限を持つフィールドのみが含まれます。ログイン中のアカウント内で目的のフィールドに必要な権限があるかどうかを確認するには、[権限検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-permission-validation)テストステップを追加して権限を確認してください。欠落しているフィールドを表示するには、関連する `read` 権限を持つ別の Salesforce アカウントで Salesforce 環境を再接続する必要がある場合があります。

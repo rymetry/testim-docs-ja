@@ -144,8 +144,8 @@ TST_CREDS.<keyName>.<'username'|'password'>
 
 パラメーターファイルは JSON 形式で定義されますが、この種の静的ファイルは暗号化された認証情報の使用をサポートしていません。**パラメーターファイルを暗号化された認証情報に対応させるには:**
 
-1. ファイル名の拡張子を `.json` から `.js` に変更します。例: `<file name>.js`
-2. 最初の行として `module.exports`= を追加します:
+1. ファイル名の拡張子を `.JS` に変更します（`.json` の代わり）。例: `<file name>.js`
+2. 最初の行として `module.exports=` を追加します:
 
 ```javascript
 module.exports = {
@@ -238,7 +238,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 npm i -g @testim/testim-cli && testim --token <token Id> --project <project Id> --grid "Testim-Grid" --label "label #2" --user-access-key <key Id>
 ```
 
-- **API** — [Testim REST API](/docs/administration/api-access) コール（例: POST /tests/run/{testId}）を作成し、`user-access-key` の値を `X-User-Access-Key` フィールドに追加します。
+- **API** — [Testim REST API](/docs/administration/api-access) コール（例: `POST /tests/run/{testId}`）を作成し、`user-access-key` の値を `X-User-Access-Key` フィールドに追加します。
 
 ![Test Data の暗号化された認証情報を含むテスト実行のまとめ](/images/project-user-management/encrypted-credentials/66a46aa-image_1.png)
 

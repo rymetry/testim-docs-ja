@@ -75,7 +75,7 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 
 `--token`: 上記を参照
 
-`--label`: これを使用して、指定したラベルを含む特定のテストを実行します
+`--label:` これを使用して、指定したラベルを含む特定のテストを実行します
 
 `--grid`: 上記を参照
 
@@ -86,7 +86,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 ```
 
 :::note{title="Web のみの注記"}
-グリッドで実行する代わりに、`--use-local-chrome-driver` を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode` `selenium` フラグも追加する必要があります。
+グリッドで実行する代わりに、`--use-local-chrome-driver` を使用することができます。このようにして、クリーンでエクステンション フリーの Chrome ブラウザで実行を確認できます。`--use-local-chrome-driver` が `--headless` と組み合わせて使用される場合、`--mode selenium` フラグも追加する必要があります。
 :::
 
 ## すべての CLI パラメーター
@@ -157,7 +157,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 #### ホスト
 
-`-h` または `--host` `<host-name>`、selenium グリッドを含むホスト名または IP。このコマンドは `--grid` コマンドをオーバーライドします。
+`-h` または `--host <host-name>`、selenium グリッドを含むホスト名または IP。このコマンドは `--grid` コマンドをオーバーライドします。
 
 ```shell
 --host seleniumhost
@@ -175,7 +175,7 @@ testim --label "<YOUR LABEL>" --token "<YOUR ACCESS TOKEN>" --project "<YOUR PRO
 
 レポートファイルのクラス名をオーバーライドするには、このパラメーターを追加します:
 
-`--override-report-file-classname` `com.someName`
+`--override-report-file-classname com.someName`
 
 #### ベース URL （Web のみ）
 

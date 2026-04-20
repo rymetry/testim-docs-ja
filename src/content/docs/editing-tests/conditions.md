@@ -209,7 +209,7 @@ AUT を開いて HTML 要素をパラメーターとして定義した場合は�
 
 ### Custom 条件を試してみましょう
 
-[こちらのサンプルテスト](http://bit.ly/2xFTMyW)を開くと、Login グループステップを含むテストが表示されます。Login ボタンを選択する HTML パラメーターを作成し、`return loginButton.innerText === 'LOG IN';` という Custom 条件を入力して、ボタンが可視かつ正しいテキストを表示しているときにのみログインステップを実行するように設定してみてください。
+[こちらのサンプルテスト](http://bit.ly/2xFTMyW)を開くと、Login グループステップを含むテストが表示されます。Login ボタンのテキストが「Log in」と表示されているときにのみログインステップを実行する Custom 条件を作成してみてください。まず HTML パラメーターを作成して Login ボタンを選択します。次に、条件 `“return loginButton.innerText === 'LOG IN';”` を入力します。
 
 ## Never run step 条件の設定
 

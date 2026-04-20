@@ -32,6 +32,6 @@ Appium 側の既知の制限により、稀に入力内容がすべてクリア�
 
 Testim Mobile では回避策として [カスタムアクションステップ](/docs/advanced-editing/custom-action-step-mobile) を使い、バックスペースキーを送信します。例:
 
-await DRIVER.sendKeys('bbbbbbb');
+`await DRIVER.sendKeys('bbbbbbb');`
 
 バックスペースの回数は任意の長さで指定できます。一般的な使用例としては、[テストデータ](/docs/advanced-editing/reusable-test-data) オブジェクト内で入力用に用意した文字列の長さと同じ回数を送信します。

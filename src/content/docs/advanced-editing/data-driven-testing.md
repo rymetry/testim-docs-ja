@@ -43,7 +43,7 @@ keywords:
 
     ![テストレベルのデータ設定例](/images/data-driven-testing/data-driven-testing/9037352-2024-01-24_16-13-40.png)
 
-  - **[外部ファイルにリンクされたデータオブジェクトの使用](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)** - 外部ソース（CSV、DB など）からのテストデータは、設定ファイルを使用して 1 つまたは複数のテストに渡すことができます。パラメーターは`return`セクション内（つまり**実行レベル**）または`overrideTestData`オブジェクト内（つまり**テストレベル**）のいずれかに配置できます。テストは CLI を使用して実行でき、この実行で設定ファイルを使用するフラグを追加します。
+  - **[外部ファイルにリンクされたデータオブジェクトの使用](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)** - 外部ソース（CSV、DB など）からのテストデータは、設定ファイルを使用して 1 つまたは複数のテストに渡すことができます。パラメーターは`return`セクション内（つまり**実行レベル**）または`overrideTestData object`内（つまり**テストレベル**）のいずれかに配置できます。テストは CLI を使用して実行でき、この実行で設定ファイルを使用するフラグを追加します。
 
 - **[パラメーターファイル経由](/docs/advanced-editing/parameters/json-parameters-file-parameters)** - パラメーターファイルは、パラメーターとその値を含む JSON ファイルです。これは、Visual Editor で定義されたデータセットを上書きするより簡単な方法です。ただし、**_実行レベルのスコープのみ_**を提供します。つまり、すべてのパラメーターとその値は、実行に含まれるすべてのテストで使用されます。テストは CLI を使用して実行でき、この実行でパラメーターファイルを使用するフラグを追加します。CLI コマンドは、実行に含まれるテストにパラメーターを渡します。
 

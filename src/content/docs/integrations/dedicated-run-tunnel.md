@@ -33,7 +33,7 @@ keywords:
 1. アプリケーションサーバーを起動します。
 2. CLI コマンドを実行するマシンが内部サーバー/localhost にアクセスできることを確認します。
 3. パラメーター（`--tunnel` - デフォルトのアプリケーションポート 80）を指定して[Testim CLI](/docs/running-tests/the-command-line-cli)を実行します
-4. ポート 80 以外のポートでアプリケーションを実行する場合は、パラメーター（`--tunnel-port \<APP PORT e.g. 80>`）を追加します
+4. ポート 80 以外のポートでアプリケーションを実行する場合は、パラメーター（`--tunnel-port <APP PORT e.g. 80>`）を追加します
 
 Testim CLI は、専用の tunnel address を指すようにアプリケーションの base URL を自動的に調整します。
 

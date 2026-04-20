@@ -38,7 +38,7 @@ keywords:
 作成した JSON ファイルは、[Testim CLI](/docs/running-tests/the-command-line-cli) の `--params-file` 引数で指定します。
 
 :::note
-`--params-file` に指定するパスはフルパスではなく相対パスである必要があります。
+`params-file` パスに設定する文字列パスは、フルパスではなく相対パスである必要があります。
 :::
 
 ```shell

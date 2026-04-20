@@ -65,7 +65,7 @@ keywords:
     アカウント管理のテスト
    </td>
    <td style="text-align: left;">
-    新しい Account を作成する。
+    `Create a new Account.`
    </td>
    <td style="text-align: left;">
     低
@@ -76,7 +76,7 @@ keywords:
     カスタム認証情報を使用したアカウント管理のテスト
    </td>
    <td style="text-align: left;">
-    以下のデータで Account を作成する。Account 名: `Account123`、親 Account: `Account123_Root`、UAN: `111`。Account `Account 123` は削除しない。
+    `Create an account with the following data: Account name: Account123, Parent account: Account123_Root UAN: 111, Do not delete the account Account 123.`
    </td>
    <td style="text-align: left;">
     中
@@ -87,7 +87,7 @@ keywords:
     アカウントと連絡先管理のテスト
    </td>
    <td style="text-align: left;">
-    新しい Account を作成し、その Account に新しい Contact を追加する。
+    `Create a new Account and add a new Contact for that Account.`
    </td>
    <td style="text-align: left;">
     低
@@ -98,7 +98,7 @@ keywords:
     商談管理のテスト
    </td>
    <td style="text-align: left;">
-    Account と Opportunity を作成し、Opportunity をすべての段階に進める。
+    `Create an Account and an Opportunity, progress the Opportunity through all stages.`
    </td>
    <td style="text-align: left;">
     中
@@ -109,7 +109,7 @@ keywords:
     アクティビティ管理のテスト（検証なし）
    </td>
    <td style="text-align: left;">
-    新しい Lead を作成し、Call をログに記録し、7 日間の Task を設定する。いずれの task も検証しない。
+    `Create a new Lead and log a Call and set a Task for 7 days time, do not validate either task.`
    </td>
    <td style="text-align: left;">
     中
@@ -118,4 +118,4 @@ keywords:
  </tbody>
 </table>
 
-\| リード変換のテスト（検証あり） \| 新しい Lead を作成し、新しい Account と Contact を伴う Opportunity に変換するまで、すべての段階を進める。新しい Opportunity、Account、Contact が作成され、Lead からフィールドが正しく反映されていることを検証する。 \| 高 \|
+\| リード変換のテスト（検証あり） \| `Create a new Lead, work through all stages to converting to an Opportunity with a new Account and Contact. Validate that a new Opportunity, Account and Contact are created, and the fields are correct from the Lead.` \| 高 \|

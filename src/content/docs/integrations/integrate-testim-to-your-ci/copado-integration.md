@@ -45,7 +45,7 @@ Copado からテストを自動化するには、Copado に[URL Callout ステ�
 
 9. **Dynamic URL Parameters**の選択を解除します。
 
-10. **URL** に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: https://api.testim.io/tests/run/234.
+10. **URL** に、REST API 呼び出しを入力し、URL の末尾にテスト、テストプラン、またはスイート ID を追加します。例: `https://api.testim.io/tests/run/234`。
 
 11. 以下のヘッダーを追加します:
 

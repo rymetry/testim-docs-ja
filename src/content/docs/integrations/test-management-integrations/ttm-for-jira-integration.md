@@ -154,8 +154,8 @@ TTM for Jira でテスト実行の結果を表示するには、リモートグ�
 
 Testim 発のテスト実行の名前は、以下の命名規則を使用します：
 
-- `Testim.io <ブランチ名> : <実行名>` **`<YYYY-MM-DD>`** または
-- `Testim.io <ブランチ名>` **`<YYYY-MM-DD>`**（実行名がない場合）
+- “Testim.io `<branchName> : <executionName>" <YYYY-MM-DD>` または
+- “Testim.io `<branchName>” <YYYY-MM-DD>`（実行名がない場合）
 
 :::info{title="注意"}
 データは UTC 日付を反映します。

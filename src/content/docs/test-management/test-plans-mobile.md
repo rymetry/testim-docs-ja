@@ -72,7 +72,7 @@ keywords:
 
 テストプランを実行するには、次のように CLI コマンドでプラン名を指定する必要があります:
 
-コマンド: --test-plan "Test Plan Demo"
+`--test-plan "Test Plan Demo"`
 
 :::note
 CLI に別のグリッド名を追加すると、プランで定義されたグリッドが上書きされます。

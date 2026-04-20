@@ -23,7 +23,7 @@ keywords:
 - `KEYCODE_BACK (4)` – 戻る操作でキーボードを閉じる（フォーム送信はしない）
 - `KEYCODE_ENTER (66)` – フィールド種別に応じて Done/Next をトリガー
 
-以下は Back ボタン相当を送ってキーボードを閉じる例です。
+以下は、Appium の `pressKeyCode` メソッドを使って Back ボタンを擬似送信し、キーボードを閉じる例です。
 
 ```javascript
 // Trigger Android KEYCODE_BACK to hide keyboard
