@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/render_upstream_recovery_comment.mjs
+// scripts/detection/render_upstream_recovery_comment.mjs
 /**
  * Render the sticky PR comment body for upstream recovery signals.
  *

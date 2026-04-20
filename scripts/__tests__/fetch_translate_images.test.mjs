@@ -1,5 +1,5 @@
 /**
- * tests for scripts/fetch_translate_images.mjs
+ * tests for scripts/pipeline/fetch_translate_images.mjs
  *
  * The implementation must:
  * - Export: rewriteDocLinks, getUntranslatedList, getAllPagesList, getDiffPagesList, parseMode

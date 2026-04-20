@@ -505,13 +505,13 @@ export function parseArgs(argv) {
 function printUsage() {
   console.error('Usage:');
   console.error(
-    '  node scripts/generate_parity_baseline.mjs --regenerate [--rationale="..."]',
+    '  node scripts/detection/generate_parity_baseline.mjs --regenerate [--rationale="..."]',
   );
   console.error(
-    '  node scripts/generate_parity_baseline.mjs --slug=overview/foo,overview/bar [--rationale="..."]',
+    '  node scripts/detection/generate_parity_baseline.mjs --slug=overview/foo,overview/bar [--rationale="..."]',
   );
   console.error(
-    '  node scripts/generate_parity_baseline.mjs --types=section-structure-mismatch,segment-order-mismatch [--rationale="..."]',
+    '  node scripts/detection/generate_parity_baseline.mjs --types=section-structure-mismatch,segment-order-mismatch [--rationale="..."]',
   );
   console.error('');
   console.error(

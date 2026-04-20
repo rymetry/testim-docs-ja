@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/check_patch_review_cadence.mjs
+// scripts/detection/check_patch_review_cadence.mjs
 /**
  * Registry review cadence monitor (non-blocking).
  *
@@ -13,7 +13,7 @@
  * fail on them.
  *
  * Usage:
- *   node scripts/check_patch_review_cadence.mjs
+ *   node scripts/detection/check_patch_review_cadence.mjs
  *   npm run check:patch-review
  *
  * Also re-exports the core logic (`collectOverduePatches`, `formatWarning`)

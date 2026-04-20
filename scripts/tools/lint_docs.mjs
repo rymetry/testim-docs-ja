@@ -2,8 +2,8 @@
  * lint_docs.mjs — WRITING_GUIDE compliance checker for src/content/docs/**\/*.md
  *
  * Usage:
- *   node scripts/lint_docs.mjs             # lint all docs
- *   node scripts/lint_docs.mjs --path=...  # lint specific file/glob
+ *   node scripts/tools/lint_docs.mjs             # lint all docs
+ *   node scripts/tools/lint_docs.mjs --path=...  # lint specific file/glob
  */
 import fs from 'node:fs';
 import path from 'node:path';

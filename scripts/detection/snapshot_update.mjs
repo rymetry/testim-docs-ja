@@ -9,10 +9,10 @@
  * `--dry-run` でも fetch metadata として `source-sync-status.json` は必ず書き出す。
  *
  * Usage:
- *   node scripts/snapshot_update.mjs                   # all pages
- *   node scripts/snapshot_update.mjs --section="Overview"
- *   node scripts/snapshot_update.mjs --slug=overview/testim-overview
- *   node scripts/snapshot_update.mjs --dry-run
+ *   node scripts/detection/snapshot_update.mjs                   # all pages
+ *   node scripts/detection/snapshot_update.mjs --section="Overview"
+ *   node scripts/detection/snapshot_update.mjs --slug=overview/testim-overview
+ *   node scripts/detection/snapshot_update.mjs --dry-run
  */
 
 import fs from 'node:fs';

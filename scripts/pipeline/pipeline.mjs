@@ -2,7 +2,7 @@
  * pipeline.mjs — Orchestration entry point for the Testim Docs JA pipeline
  *
  * Usage:
- *   node scripts/pipeline.mjs [--mode=full|diff]
+ *   node scripts/pipeline/pipeline.mjs [--mode=full|diff]
  */
 import fs from 'node:fs';
 import path from 'node:path';

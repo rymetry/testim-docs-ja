@@ -810,7 +810,7 @@ function buildParityFollowupBody({
     }
     lines.push(
       '',
-      '対応: `node scripts/generate_parity_baseline.mjs --slug=<slug>` で該当 slug を再生成すると孤立エントリーが削除されます。',
+      '対応: `node scripts/detection/generate_parity_baseline.mjs --slug=<slug>` で該当 slug を再生成すると孤立エントリーが削除されます。',
       '',
     );
   }
@@ -931,7 +931,7 @@ function buildParityFollowup(parity, options = {}) {
 /**
  * Build the `enPatchRecovery` / `sourceSyncRecovery` sections consumed by
  * `sourceSyncHealth` (Phase B, Task 4). The aggregator in
- * `scripts/check_upstream_recovery.mjs` emits `upstream-recovery-status.json`
+ * `scripts/detection/check_upstream_recovery.mjs` emits `upstream-recovery-status.json`
  * with per-entry `statusA` (active/stale/unknown) and `statusB`
  * (current/overdue). Here we collapse that into family-level counters plus
  * small arrays of stale/overdue entries for inclusion in the issue body.
@@ -1043,7 +1043,7 @@ export const UPSTREAM_RECOVERY_STICKY_MARKER = '<!-- upstream-recovery: sticky -
  * payload. Returns `null` when there are no stale / overdue signals, so the
  * caller knows to delete any existing sticky comment. This is the **single
  * source of truth** for sticky-comment markdown — the CI workflow reads the
- * output of `scripts/render_upstream_recovery_comment.mjs` (which calls this)
+ * output of `scripts/detection/render_upstream_recovery_comment.mjs` (which calls this)
  * rather than re-implementing the filtering inline (see PR #363 code review).
  *
  * @param {object|null|undefined} upstreamRecovery — parsed upstream-recovery-status.json

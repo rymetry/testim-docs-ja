@@ -5,10 +5,10 @@
  * and generate a change report.
  *
  * Usage:
- *   node scripts/snapshot_diff.mjs
- *   node scripts/snapshot_diff.mjs --section="Overview"
- *   node scripts/snapshot_diff.mjs --slug=overview/testim-overview
- *   node scripts/snapshot_diff.mjs --json
+ *   node scripts/detection/snapshot_diff.mjs
+ *   node scripts/detection/snapshot_diff.mjs --section="Overview"
+ *   node scripts/detection/snapshot_diff.mjs --slug=overview/testim-overview
+ *   node scripts/detection/snapshot_diff.mjs --json
  */
 
 import { execFileSync } from 'node:child_process';

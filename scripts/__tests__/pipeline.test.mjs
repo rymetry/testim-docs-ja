@@ -1,5 +1,5 @@
 /**
- * tests for scripts/pipeline.mjs
+ * tests for scripts/pipeline/pipeline.mjs
  *
  * Exported API:
  *   parseArgs(argv: string[]): { mode: string, section: string | null, resume: boolean }

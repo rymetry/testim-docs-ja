@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/check_upstream_recovery.mjs
+// scripts/detection/check_upstream_recovery.mjs
 /**
  * Upstream recovery detection — standalone aggregator (Phase A).
  *
@@ -77,7 +77,7 @@ export function daysUntil(dateStr, nowMs = Date.now()) {
 
 /**
  * Overdue predicate with same-day semantics aligned to
- * `scripts/check_patch_review_cadence.mjs::evaluatePatchReview` (Codex C1):
+ * `scripts/detection/check_patch_review_cadence.mjs::evaluatePatchReview` (Codex C1):
  *
  *   - `reviewAfter` is a YYYY-MM-DD string, parsed as UTC midnight by
  *     `new Date(...)` per ES2015+.

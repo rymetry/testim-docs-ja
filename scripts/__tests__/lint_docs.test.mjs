@@ -1,5 +1,5 @@
 /**
- * tests for scripts/lint_docs.mjs
+ * tests for scripts/tools/lint_docs.mjs
  *
  * Exported API:
  *   lintContent(content: string, filePath: string, context?: LintContext): LintError[]

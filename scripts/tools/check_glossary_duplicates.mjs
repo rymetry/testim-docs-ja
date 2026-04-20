@@ -12,8 +12,8 @@
  *   (c) Whitespace-normalized duplicate — hard error
  *
  * Usage:
- *   node scripts/check_glossary_duplicates.mjs          # lint mode, exit 2 on duplicate
- *   node scripts/check_glossary_duplicates.mjs --list   # list all duplicates without exit
+ *   node scripts/tools/check_glossary_duplicates.mjs          # lint mode, exit 2 on duplicate
+ *   node scripts/tools/check_glossary_duplicates.mjs --list   # list all duplicates without exit
  *
  * Exit codes:
  *   0 — no duplicates

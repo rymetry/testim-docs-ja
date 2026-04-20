@@ -2,7 +2,7 @@
  * find_untranslated.mjs — Find untranslated English text in JA files.
  *
  * Usage:
- *   node scripts/find_untranslated.mjs [--slug=<slug>] [--limit=<N>]
+ *   node scripts/detection/find_untranslated.mjs [--slug=<slug>] [--limit=<N>]
  *
  * Exit codes:
  *   0 — 正常終了（0 件も含む）

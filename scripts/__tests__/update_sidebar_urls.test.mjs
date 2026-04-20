@@ -1,5 +1,5 @@
 /**
- * tests for scripts/update_sidebar_urls_from_live.mjs
+ * tests for scripts/pipeline/update_sidebar_urls_from_live.mjs
  *
  * The implementation must:
  * - Export: normalizeUrl, parseExistingStatusMap, buildOutput, extractUrls, fetchSitemap, main
