@@ -1,10 +1,17 @@
 /**
- * Tests for the frozen baseline mechanism.
+ * Tests for the frozen baseline mechanism (schema v2).
  *
  * Pure-function tests for schema validation, lookup key generation, and
  * page-level invalidation. The integration into check_source_parity.mjs
  * lives in source_parity_acknowledgements.test.mjs (summary accounting)
  * and the runtime tests.
+ *
+ * v2 変更点:
+ * - `reviewAfter` 概念は撤去 (expired / expiringSoon も含む)
+ * - BASELINE_ELIGIBLE_TYPES は JA-actionable 7 type のみ
+ *   (segment-inconclusive / snapshot-incomplete / source-unusable を除外)
+ * - `inconclusiveCategory` / `inconclusiveReason` / `usabilityReason` は entry schema から除去
+ * - `priority` (high/medium/low, required, default 'medium') / `note` (任意, <=500) を追加
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,11 +21,10 @@ import {
   buildBaselineKey,
   buildBaselineKeyFromEntry,
   tagIssuesWithBaseline,
-  isBaselineExpired,
   BASELINE_ELIGIBLE_TYPES,
-  INCONCLUSIVE_CATEGORIES,
   STRUCTURE_CATEGORIES,
-  USABILITY_REASONS,
+  PRIORITY_VALUES,
+  NOTE_MAX_LENGTH,
   computeStructureFingerprint,
 } from '../lib/source_parity_baseline.mjs';
 
@@ -39,9 +45,7 @@ const validMissingEntry = {
   jaSourceFingerprint: null,
   missingTokens: null,
   snapshotFingerprint: VALID_FINGERPRINT,
-  inconclusiveCategory: null,
-  inconclusiveReason: null,
-  reviewAfter: '2026-10-06',
+  priority: 'medium',
 };
 
 const validExtraEntry = {
@@ -55,25 +59,7 @@ const validExtraEntry = {
   jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
   missingTokens: null,
   snapshotFingerprint: VALID_FINGERPRINT,
-  inconclusiveCategory: null,
-  inconclusiveReason: null,
-  reviewAfter: '2026-10-06',
-};
-
-const validInconclusiveEntry = {
-  slug: 'testops/pull-requests',
-  issueType: 'segment-inconclusive',
-  sectionPath: null,
-  segmentKind: null,
-  enSegmentIndex: null,
-  jaSegmentIndex: null,
-  enSourceFingerprint: null,
-  jaSourceFingerprint: null,
-  missingTokens: null,
-  snapshotFingerprint: VALID_FINGERPRINT,
-  inconclusiveCategory: 'heading-count-mismatch',
-  inconclusiveReason: 'Heading count mismatch: EN has 0 headings, JA has 5',
-  reviewAfter: '2026-10-06',
+  priority: 'medium',
 };
 
 const validTokenGapEntry = {
@@ -87,23 +73,31 @@ const validTokenGapEntry = {
   jaSourceFingerprint: null,
   missingTokens: ['--proxy'],
   snapshotFingerprint: VALID_FINGERPRINT,
-  inconclusiveCategory: null,
-  inconclusiveReason: null,
-  reviewAfter: '2026-10-06',
+  priority: 'medium',
 };
 
 // ---------------------------------------------------------------------------
 // constants
 // ---------------------------------------------------------------------------
 
-describe('BASELINE_ELIGIBLE_TYPES', () => {
-  it('contains all baseline-eligible segment types', () => {
+describe('BASELINE_ELIGIBLE_TYPES (v2 — JA-actionable 7 type)', () => {
+  it('contains all JA-actionable segment types', () => {
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-missing'));
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-extra'));
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-shifted'));
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-untranslated'));
     assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-token-gap'));
-    assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-inconclusive'));
+  });
+
+  it('contains structure mismatch types (2)', () => {
+    assert.ok(BASELINE_ELIGIBLE_TYPES.has('section-structure-mismatch'));
+    assert.ok(BASELINE_ELIGIBLE_TYPES.has('segment-order-mismatch'));
+  });
+
+  it('does NOT contain v1-only types (advisory / source debt)', () => {
+    assert.ok(!BASELINE_ELIGIBLE_TYPES.has('segment-inconclusive'));
+    assert.ok(!BASELINE_ELIGIBLE_TYPES.has('snapshot-incomplete'));
+    assert.ok(!BASELINE_ELIGIBLE_TYPES.has('source-unusable'));
   });
 
   it('does NOT contain repo-local issue types', () => {
@@ -112,19 +106,18 @@ describe('BASELINE_ELIGIBLE_TYPES', () => {
     assert.ok(!BASELINE_ELIGIBLE_TYPES.has('untranslated'));
   });
 
-  it('contains structure-mismatch / source-unusable types', () => {
-    for (const type of [
-      'section-structure-mismatch',
-      'segment-order-mismatch',
-      'snapshot-incomplete',
-      'source-unusable',
-    ]) {
-      assert.equal(
-        BASELINE_ELIGIBLE_TYPES.has(type),
-        true,
-        `${type} must be in BASELINE_ELIGIBLE_TYPES`,
-      );
-    }
+  it('has exactly 7 eligible types in v2', () => {
+    assert.equal(BASELINE_ELIGIBLE_TYPES.size, 7);
+  });
+});
+
+describe('PRIORITY_VALUES', () => {
+  it('lists high/medium/low in order', () => {
+    assert.deepEqual([...PRIORITY_VALUES], ['high', 'medium', 'low']);
+  });
+
+  it('is frozen', () => {
+    assert.equal(Object.isFrozen(PRIORITY_VALUES), true);
   });
 });
 
@@ -137,7 +130,7 @@ describe('validateBaseline — structure mismatch entries', () => {
       slug: 'running-tests/the-command-line-cli',
       issueType: 'section-structure-mismatch',
       snapshotFingerprint: VALID_SNAPSHOT_FP,
-      reviewAfter: '2026-10-06',
+      priority: 'medium',
       sectionIndex: 7,
       sectionPath: 'CLI Installation > Basic CLI command',
       structureCategory: 'kind-multiset',
@@ -149,7 +142,7 @@ describe('validateBaseline — structure mismatch entries', () => {
   it('accepts a valid section-structure-mismatch entry (kind-multiset)', () => {
     const entry = baseStructureEntry();
     assert.doesNotThrow(() =>
-      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      validateBaseline({ schemaVersion: 2, entries: [entry] }),
     );
   });
 
@@ -159,14 +152,14 @@ describe('validateBaseline — structure mismatch entries', () => {
       structureCategory: 'content-order',
     });
     assert.doesNotThrow(() =>
-      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      validateBaseline({ schemaVersion: 2, entries: [entry] }),
     );
   });
 
   it('accepts a structure entry with empty string sectionPath (preface section)', () => {
     const entry = baseStructureEntry({ sectionPath: '' });
     assert.doesNotThrow(() =>
-      validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      validateBaseline({ schemaVersion: 2, entries: [entry] }),
     );
   });
 
@@ -174,7 +167,7 @@ describe('validateBaseline — structure mismatch entries', () => {
     const entry = baseStructureEntry();
     delete entry.sectionIndex;
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /sectionIndex/,
     );
   });
@@ -182,7 +175,7 @@ describe('validateBaseline — structure mismatch entries', () => {
   it('throws on non-integer sectionIndex', () => {
     const entry = baseStructureEntry({ sectionIndex: 1.5 });
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /sectionIndex/,
     );
   });
@@ -190,7 +183,7 @@ describe('validateBaseline — structure mismatch entries', () => {
   it('throws on negative sectionIndex', () => {
     const entry = baseStructureEntry({ sectionIndex: -1 });
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /sectionIndex/,
     );
   });
@@ -198,7 +191,7 @@ describe('validateBaseline — structure mismatch entries', () => {
   it('throws on string sectionIndex', () => {
     const entry = baseStructureEntry({ sectionIndex: '7' });
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /sectionIndex/,
     );
   });
@@ -207,7 +200,7 @@ describe('validateBaseline — structure mismatch entries', () => {
     const entry = baseStructureEntry();
     delete entry.sectionPath;
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /sectionPath/,
     );
   });
@@ -215,7 +208,7 @@ describe('validateBaseline — structure mismatch entries', () => {
   it('throws on invalid structureCategory enum', () => {
     const entry = baseStructureEntry({ structureCategory: 'unknown' });
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /structureCategory/,
     );
   });
@@ -223,79 +216,9 @@ describe('validateBaseline — structure mismatch entries', () => {
   it('throws on malformed structureFingerprint (not sha256 hex)', () => {
     const entry = baseStructureEntry({ structureFingerprint: 'not-a-hash' });
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /structureFingerprint/,
     );
-  });
-});
-
-// ---------------------------------------------------------------------------
-// validateBaseline — source unusable entries
-//
-// source unusable は page 粒度の issue。identity surface は usabilityReason
-// のみ (§3.3)。sectionPath / structureCategory / structureFingerprint は
-// 持たない。
-// ---------------------------------------------------------------------------
-
-describe('validateBaseline — source unusable entries', () => {
-  const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
-
-  function baseSourceUnusableEntry(overrides = {}) {
-    return {
-      slug: 'salesforce-testing/faq',
-      issueType: 'source-unusable',
-      snapshotFingerprint: VALID_SNAPSHOT_FP,
-      reviewAfter: '2026-10-06',
-      usabilityReason: 'escaped-details-residue',
-      ...overrides,
-    };
-  }
-
-  it('accepts a valid source-unusable entry (escaped-details-residue)', () => {
-    const entry = baseSourceUnusableEntry();
-    assert.doesNotThrow(() =>
-      validateBaseline({ schemaVersion: 1, entries: [entry] }),
-    );
-  });
-
-  it('accepts a valid snapshot-incomplete entry (shallow-snapshot)', () => {
-    const entry = baseSourceUnusableEntry({
-      issueType: 'snapshot-incomplete',
-      usabilityReason: 'shallow-snapshot',
-    });
-    assert.doesNotThrow(() =>
-      validateBaseline({ schemaVersion: 1, entries: [entry] }),
-    );
-  });
-
-  it('throws on invalid usabilityReason enum', () => {
-    const entry = baseSourceUnusableEntry({ usabilityReason: 'unknown' });
-    assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
-      /usabilityReason/,
-    );
-  });
-
-  it('throws on missing usabilityReason', () => {
-    const entry = baseSourceUnusableEntry();
-    delete entry.usabilityReason;
-    assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
-      /usabilityReason/,
-    );
-  });
-});
-
-describe('INCONCLUSIVE_CATEGORIES', () => {
-  it('contains the three valid categories', () => {
-    assert.ok(INCONCLUSIVE_CATEGORIES.has('heading-count-mismatch'));
-    assert.ok(INCONCLUSIVE_CATEGORIES.has('align-exception'));
-    assert.ok(INCONCLUSIVE_CATEGORIES.has('tokenless-near-tie'));
-  });
-
-  it('does NOT contain unknown categories', () => {
-    assert.ok(!INCONCLUSIVE_CATEGORIES.has('unknown'));
-    assert.ok(!INCONCLUSIVE_CATEGORIES.has('null'));
   });
 });
 
@@ -306,11 +229,11 @@ describe('INCONCLUSIVE_CATEGORIES', () => {
 describe('validateBaseline', () => {
   it('accepts a valid baseline with mixed entry types', () => {
     const parsed = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: '2026-04-06T03:00:00Z',
       generatedFromRunId: '2026-04-06T03:00:00Z#abcd1234',
       rationale: 'preview baseline',
-      entries: [validMissingEntry, validExtraEntry, validInconclusiveEntry],
+      entries: [validMissingEntry, validExtraEntry, validTokenGapEntry],
     };
     const result = validateBaseline(parsed);
     assert.equal(result, parsed);
@@ -320,21 +243,45 @@ describe('validateBaseline', () => {
     assert.throws(() => validateBaseline({ entries: [] }), /schemaVersion/);
   });
 
-  it('throws on unsupported schemaVersion', () => {
+  it('throws on unsupported schemaVersion (v1 rejected after cutover)', () => {
     assert.throws(
-      () => validateBaseline({ schemaVersion: 2, entries: [] }),
+      () => validateBaseline({ schemaVersion: 1, entries: [] }),
       /schemaVersion/,
     );
   });
 
   it('throws on missing entries array', () => {
-    assert.throws(() => validateBaseline({ schemaVersion: 1 }), /entries/);
+    assert.throws(() => validateBaseline({ schemaVersion: 2 }), /entries/);
   });
 
   it('throws on unknown issueType (not in BASELINE_ELIGIBLE_TYPES)', () => {
     const entry = { ...validMissingEntry, issueType: 'paragraph-count-mismatch' };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /issueType/,
+    );
+  });
+
+  it('rejects segment-inconclusive (not baseline-able in v2)', () => {
+    const entry = { ...validMissingEntry, issueType: 'segment-inconclusive' };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /issueType/,
+    );
+  });
+
+  it('rejects snapshot-incomplete (source debt — not baseline-able in v2)', () => {
+    const entry = { ...validMissingEntry, issueType: 'snapshot-incomplete' };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /issueType/,
+    );
+  });
+
+  it('rejects source-unusable (source debt — not baseline-able in v2)', () => {
+    const entry = { ...validMissingEntry, issueType: 'source-unusable' };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /issueType/,
     );
   });
@@ -342,7 +289,7 @@ describe('validateBaseline', () => {
   it('throws on invalid snapshotFingerprint format', () => {
     const entry = { ...validMissingEntry, snapshotFingerprint: 'not-a-hash' };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /snapshotFingerprint/,
     );
   });
@@ -350,7 +297,7 @@ describe('validateBaseline', () => {
   it('throws on segment-missing entry without enSegmentIndex', () => {
     const entry = { ...validMissingEntry, enSegmentIndex: null };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /enSegmentIndex/,
     );
   });
@@ -358,7 +305,7 @@ describe('validateBaseline', () => {
   it('throws on segment-missing entry without enSourceFingerprint', () => {
     const entry = { ...validMissingEntry, enSourceFingerprint: null };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /enSourceFingerprint/,
     );
   });
@@ -366,7 +313,7 @@ describe('validateBaseline', () => {
   it('throws on segment-extra entry without jaSegmentIndex', () => {
     const entry = { ...validExtraEntry, jaSegmentIndex: null };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /jaSegmentIndex/,
     );
   });
@@ -374,7 +321,7 @@ describe('validateBaseline', () => {
   it('throws on segment-extra entry without jaSourceFingerprint', () => {
     const entry = { ...validExtraEntry, jaSourceFingerprint: null };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /jaSourceFingerprint/,
     );
   });
@@ -387,7 +334,7 @@ describe('validateBaseline', () => {
       jaSegmentIndex: null,
     };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /jaSegmentIndex/,
     );
   });
@@ -401,47 +348,79 @@ describe('validateBaseline', () => {
       enSourceFingerprint: null,
       jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
     };
-    const parsed = { schemaVersion: 1, entries: [entry] };
+    const parsed = { schemaVersion: 2, entries: [entry] };
     assert.doesNotThrow(() => validateBaseline(parsed));
   });
 
   it('throws on segment-token-gap entry without missingTokens', () => {
     const entry = { ...validTokenGapEntry, missingTokens: null };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
       /missingTokens/,
     );
   });
 
-  it('throws on segment-inconclusive entry with unknown inconclusiveCategory', () => {
-    const entry = { ...validInconclusiveEntry, inconclusiveCategory: 'unknown' };
+  // ------------------------------------------------------------------
+  // v2: priority (required enum) / note (optional, <=500 chars)
+  // ------------------------------------------------------------------
+
+  it('throws on missing priority', () => {
+    const entry = { ...validMissingEntry };
+    delete entry.priority;
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
-      /inconclusiveCategory/,
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /priority/,
     );
   });
 
-  it('throws on segment-inconclusive entry with null inconclusiveCategory', () => {
-    const entry = { ...validInconclusiveEntry, inconclusiveCategory: null };
+  it('throws on invalid priority enum value', () => {
+    const entry = { ...validMissingEntry, priority: 'urgent' };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
-      /inconclusiveCategory/,
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /priority/,
     );
   });
 
-  it('throws on reviewAfter that is not strict YYYY-MM-DD', () => {
-    const entry = { ...validMissingEntry, reviewAfter: '2026-10-6' };
-    assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
-      /reviewAfter/,
+  it('accepts priority=high', () => {
+    const entry = { ...validMissingEntry, priority: 'high' };
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 2, entries: [entry] }),
     );
   });
 
-  it('throws on reviewAfter that is an impossible calendar date', () => {
-    const entry = { ...validMissingEntry, reviewAfter: '2026-02-31' };
+  it('accepts priority=low', () => {
+    const entry = { ...validMissingEntry, priority: 'low' };
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 2, entries: [entry] }),
+    );
+  });
+
+  it('accepts optional note (empty or short string)', () => {
+    const entry = { ...validMissingEntry, note: 'awaiting upstream fix' };
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 2, entries: [entry] }),
+    );
+  });
+
+  it('accepts entry without note field (optional)', () => {
+    assert.doesNotThrow(() =>
+      validateBaseline({ schemaVersion: 2, entries: [validMissingEntry] }),
+    );
+  });
+
+  it('throws on note that exceeds NOTE_MAX_LENGTH (500)', () => {
+    const entry = { ...validMissingEntry, note: 'x'.repeat(NOTE_MAX_LENGTH + 1) };
     assert.throws(
-      () => validateBaseline({ schemaVersion: 1, entries: [entry] }),
-      /reviewAfter/,
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /note/,
+    );
+  });
+
+  it('throws on non-string note', () => {
+    const entry = { ...validMissingEntry, note: 123 };
+    assert.throws(
+      () => validateBaseline({ schemaVersion: 2, entries: [entry] }),
+      /note/,
     );
   });
 });
@@ -501,30 +480,13 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
       jaSourceFingerprint: JA_SEGMENT_FINGERPRINT,
       missingTokens: null,
       snapshotFingerprint: VALID_FINGERPRINT,
-      inconclusiveCategory: null,
-      inconclusiveReason: null,
-      reviewAfter: '2026-10-06',
+      priority: 'medium',
     };
     const issueKey = buildBaselineKey('overview/example', issue);
     const entryKey = buildBaselineKeyFromEntry(entry);
     assert.equal(issueKey, entryKey);
     assert.ok(issueKey.includes('|ja|'));
     assert.ok(!issueKey.includes('|en|'));
-  });
-
-  it('uses inconclusiveCategory only for segment-inconclusive', () => {
-    const issue = {
-      type: 'segment-inconclusive',
-      sectionPath: null,
-      segmentKind: null,
-      enSegmentIndex: null,
-      jaSegmentIndex: null,
-      inconclusiveCategory: 'heading-count-mismatch',
-    };
-    const issueKey = buildBaselineKey('testops/pull-requests', issue);
-    const entryKey = buildBaselineKeyFromEntry(validInconclusiveEntry);
-    assert.equal(issueKey, entryKey);
-    assert.match(issueKey, /heading-count-mismatch/);
   });
 
   it('uses enSegmentIndex (NOT jaSegmentIndex) for segment-shifted', () => {
@@ -574,12 +536,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry', () => {
 });
 
 // ---------------------------------------------------------------------------
-// buildBaselineKey / buildBaselineKeyFromEntry の対称性
-//
-// runtime 側 (buildBaselineKey) は毎回 computeStructureFingerprint を呼んで
-// fingerprint を derive するのに対し、disk 側 (buildBaselineKeyFromEntry) は
-// 事前計算された structureFingerprint を読むだけ。両者が必ず同じ key を
-// 返すことが baseline matching の前提。
+// buildBaselineKey / buildBaselineKeyFromEntry の対称性 (structure mismatch)
 // ---------------------------------------------------------------------------
 
 describe('buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', () => {
@@ -602,7 +559,7 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', ()
       slug,
       issueType: issue.type,
       snapshotFingerprint: PAGE_FP,
-      reviewAfter: '2026-10-06',
+      priority: 'medium',
       sectionIndex: issue.sectionIndex,
       sectionPath: issue.sectionPath,
       structureCategory: issue.structureCategory,
@@ -645,10 +602,6 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', ()
     const slug = 'some/page';
     const issueA = makeStructureIssue({ sectionIndex: 3 });
     const issueB = makeStructureIssue({ sectionIndex: 7 });
-    // 同一 slug / 同一 sectionPath / 同一 structureCategory / 同一 kinds
-    // でも sectionIndex が違えば別 key になる必要がある。machine identity
-    // に sectionIndex を必須にすることで、同一ページ内で sectionPath が
-    // 衝突したときに baseline が silently 誤った section を覆うのを防ぐ。
     assert.notEqual(
       buildBaselineKey(slug, issueA),
       buildBaselineKey(slug, issueB),
@@ -673,42 +626,6 @@ describe('buildBaselineKey / buildBaselineKeyFromEntry (structure mismatch)', ()
     const issueB = makeStructureIssue({
       enKinds: ['paragraph', 'heading'],
     });
-    assert.notEqual(
-      buildBaselineKey(slug, issueA),
-      buildBaselineKey(slug, issueB),
-    );
-  });
-});
-
-describe('buildBaselineKey / buildBaselineKeyFromEntry (source unusable)', () => {
-  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
-
-  it('runtime key and entry key match (escaped-details-residue)', () => {
-    const slug = 'salesforce-testing/faq';
-    const issue = {
-      type: 'source-unusable',
-      usabilitySignals: { reason: 'escaped-details-residue' },
-    };
-    const entry = {
-      slug,
-      issueType: 'source-unusable',
-      snapshotFingerprint: PAGE_FP,
-      reviewAfter: '2026-10-06',
-      usabilityReason: 'escaped-details-residue',
-    };
-    assert.equal(buildBaselineKey(slug, issue), buildBaselineKeyFromEntry(entry));
-  });
-
-  it('distinguishes different usabilityReason values', () => {
-    const slug = 'some/page';
-    const issueA = {
-      type: 'snapshot-incomplete',
-      usabilitySignals: { reason: 'shallow-snapshot' },
-    };
-    const issueB = {
-      type: 'snapshot-incomplete',
-      usabilitySignals: { reason: 'extractor-empty' },
-    };
     assert.notEqual(
       buildBaselineKey(slug, issueA),
       buildBaselineKey(slug, issueB),
@@ -822,18 +739,19 @@ describe('tagIssuesWithBaseline', () => {
     assert.equal(result.tagged[0].baselined, undefined);
   });
 
-  it('retains baselined match but annotates expired reviewAfter', () => {
+  it('tagIssuesWithBaseline only adds baselined: true (no expiry tags in v2)', () => {
     const issues = [makeIssue()];
     const result = tagIssuesWithBaseline(
       'overview/example',
       issues,
       [validMissingEntry],
       VALID_FINGERPRINT,
-      '2026-10-07',
     );
     assert.equal(result.tagged[0].baselined, true);
-    assert.equal(result.tagged[0].baselineReviewAfter, '2026-10-06');
-    assert.equal(result.tagged[0].baselineExpired, true);
+    // v2: baselineReviewAfter / baselineExpired / baselineExpiringSoon は付けない
+    assert.equal(result.tagged[0].baselineReviewAfter, undefined);
+    assert.equal(result.tagged[0].baselineExpired, undefined);
+    assert.equal(result.tagged[0].baselineExpiringSoon, undefined);
   });
 
   it('does not mutate input arrays (immutable)', () => {
@@ -879,23 +797,8 @@ describe('tagIssuesWithBaseline', () => {
   });
 });
 
-describe('isBaselineExpired', () => {
-  it('returns false on the reviewAfter date itself', () => {
-    assert.equal(isBaselineExpired(validMissingEntry, '2026-10-06'), false);
-  });
-
-  it('returns true after reviewAfter passes', () => {
-    assert.equal(isBaselineExpired(validMissingEntry, '2026-10-07'), true);
-  });
-});
-
 // ---------------------------------------------------------------------------
 // tagIssuesWithBaseline contract for structure mismatch
-//
-// runtime 側から baseline entry にマッチする挙動を pin する。
-// tagIssuesWithBaseline 本体は generic contract なので新しい分岐は
-// 入らないはずだが、BASELINE_ELIGIBLE_TYPES / buildBaselineKey の拡張が
-// 下流まで波及していることを explicit に pin する。
 // ---------------------------------------------------------------------------
 
 describe('tagIssuesWithBaseline (structure mismatch)', () => {
@@ -920,7 +823,7 @@ describe('tagIssuesWithBaseline (structure mismatch)', () => {
       slug,
       issueType: issue.type,
       snapshotFingerprint: PAGE_FP,
-      reviewAfter: '2026-10-06',
+      priority: 'medium',
       sectionIndex: issue.sectionIndex,
       sectionPath: issue.sectionPath,
       structureCategory: issue.structureCategory,
@@ -963,11 +866,6 @@ describe('tagIssuesWithBaseline (structure mismatch)', () => {
   });
 
   it('two sections with identical path/fingerprint but different sectionIndex are tagged independently', () => {
-    // 同一ページに section A (index=3) と section B (index=7) があり、
-    // 両方が同じ sectionPath + 同じ structureFingerprint を出すケース。
-    // baseline が A にしか付いていないとき、B は untagged のままになる
-    // 必要がある。sectionIndex が identity に含まれていないと、両方が
-    // 同じ key になって A の baseline が B にも silently 被さってしまう。
     const slug = 'some/page';
     const sharedOverrides = {
       sectionPath: 'Shared heading',
@@ -983,58 +881,8 @@ describe('tagIssuesWithBaseline (structure mismatch)', () => {
   });
 });
 
-describe('tagIssuesWithBaseline (source unusable)', () => {
-  const PAGE_FP = 'sha256:' + 'f'.repeat(64);
-
-  it('tags a matching source-unusable issue by usabilityReason', () => {
-    const slug = 'salesforce-testing/faq';
-    const issue = {
-      type: 'source-unusable',
-      severity: 'actionable',
-      detail: 'source snapshot is unusable (escaped-details-residue)',
-      usabilitySignals: { reason: 'escaped-details-residue' },
-    };
-    const entry = {
-      slug,
-      issueType: 'source-unusable',
-      snapshotFingerprint: PAGE_FP,
-      reviewAfter: '2026-10-06',
-      usabilityReason: 'escaped-details-residue',
-    };
-    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
-    assert.equal(result.tagged[0].baselined, true);
-    assert.equal(result.invalidated, false);
-  });
-
-  it('does NOT tag when usabilityReason mismatches', () => {
-    const slug = 'salesforce-testing/faq';
-    const issue = {
-      type: 'source-unusable',
-      severity: 'actionable',
-      detail: 'source snapshot is unusable',
-      usabilitySignals: { reason: 'extractor-empty' },
-    };
-    const entry = {
-      slug,
-      issueType: 'source-unusable',
-      snapshotFingerprint: PAGE_FP,
-      reviewAfter: '2026-10-06',
-      usabilityReason: 'escaped-details-residue',
-    };
-    const result = tagIssuesWithBaseline(slug, [issue], [entry], PAGE_FP);
-    assert.equal(result.tagged[0].baselined, undefined);
-  });
-});
-
 // ---------------------------------------------------------------------------
-// STRUCTURE_CATEGORIES / USABILITY_REASONS
-//
-// 新 4 type (section-structure-mismatch / segment-order-mismatch /
-// snapshot-incomplete / source-unusable) を baseline 可能にするため、
-// structureCategory / usabilityReason の allowlist を frozen Set で pin する。
-// emitter 側 (source_parity_structure.mjs / source_parity_source_usability.mjs)
-// の出力と同一の enum を参照することで、validateBaseline / buildBaselineKey
-// の identity 検証を decouple する。
+// STRUCTURE_CATEGORIES
 // ---------------------------------------------------------------------------
 
 describe('STRUCTURE_CATEGORIES', () => {
@@ -1056,31 +904,8 @@ describe('STRUCTURE_CATEGORIES', () => {
   });
 });
 
-describe('USABILITY_REASONS', () => {
-  it('contains the 3 known unusable reasons', () => {
-    assert.ok(USABILITY_REASONS.has('shallow-snapshot'));
-    assert.ok(USABILITY_REASONS.has('escaped-details-residue'));
-    assert.ok(USABILITY_REASONS.has('extractor-empty'));
-    assert.equal(USABILITY_REASONS.size, 3);
-  });
-
-  it('is frozen (regression guard against accidental mutation)', () => {
-    assert.equal(Object.isFrozen(USABILITY_REASONS), true);
-  });
-
-  it('does NOT contain unrelated values', () => {
-    assert.ok(!USABILITY_REASONS.has(''));
-    assert.ok(!USABILITY_REASONS.has('unknown'));
-  });
-});
-
 // ---------------------------------------------------------------------------
 // computeStructureFingerprint
-//
-// structure mismatch の baseline identity key 用に、enKinds / jaKinds /
-// structureCategory / contentPermutation を sha256 hex に畳み込む helper。
-// 生の配列を baseline entry に保存すると JSON が肥大化し、downstream の
-// 生データアクセス手段が増えるため、derived fingerprint 1 本に集約する。
 // ---------------------------------------------------------------------------
 
 describe('computeStructureFingerprint', () => {
@@ -1230,9 +1055,6 @@ describe('computeStructureFingerprint', () => {
 
 // ---------------------------------------------------------------------------
 // computeOrphanBaselineEntries helper
-//
-// tagIssuesWithBaseline が返す matchedKeys を使って「runtime に一致しない
-// baseline entry」= orphan を抽出する純粋関数。
 // ---------------------------------------------------------------------------
 
 describe('computeOrphanBaselineEntries', () => {
@@ -1259,9 +1081,7 @@ describe('computeOrphanBaselineEntries', () => {
       jaSourceFingerprint: null,
       missingTokens: null,
       snapshotFingerprint: FP,
-      reviewAfter: '2026-10-01',
-      inconclusiveCategory: null,
-      inconclusiveReason: null,
+      priority: 'medium',
     };
   }
 
@@ -1279,7 +1099,7 @@ describe('computeOrphanBaselineEntries', () => {
   it('returns [] when every entry matched a runtime issue', () => {
     const entries = [segmentMissingEntry(0), segmentMissingEntry(1)];
     const issues = [segmentMissingIssue(0), segmentMissingIssue(1)];
-    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP);
     const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
     assert.deepEqual(orphans, []);
   });
@@ -1288,7 +1108,7 @@ describe('computeOrphanBaselineEntries', () => {
     const entries = [segmentMissingEntry(0), segmentMissingEntry(1), segmentMissingEntry(2)];
     // runtime issue は idx=0 のみ
     const issues = [segmentMissingIssue(0)];
-    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP);
     const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
     assert.equal(orphans.length, 2);
     assert.deepEqual(
@@ -1303,9 +1123,8 @@ describe('computeOrphanBaselineEntries', () => {
       { ...segmentMissingEntry(0), slug: 'other/page' },
     ];
     const issues = []; // nothing matches
-    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP);
     const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
-    // 'other/page' entry は現在の slug の orphan ではない
     assert.equal(orphans.length, 1);
     assert.equal(orphans[0].slug, SLUG);
   });
@@ -1314,12 +1133,9 @@ describe('computeOrphanBaselineEntries', () => {
     const entries = [segmentMissingEntry(0), segmentMissingEntry(1)];
     const issues = [segmentMissingIssue(0), segmentMissingIssue(1)];
     const OTHER_FP = 'sha256:' + '3'.repeat(64);
-    // invalidated === true のケースは matchedKeys === Set() になる
-    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, OTHER_FP, '2026-04-09');
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, OTHER_FP);
     assert.equal(tagResult.invalidated, true);
     assert.equal(tagResult.matchedKeys.size, 0);
-    // helper は invalidated を受け取らないので、呼び出し側が invalidated 時は
-    // orphan 集計をスキップする契約。helper 自体は entries をそのまま返す。
     const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
     assert.equal(
       orphans.length,
@@ -1331,7 +1147,7 @@ describe('computeOrphanBaselineEntries', () => {
   it('orphan entries retain their original fields (identity preserved)', () => {
     const entries = [segmentMissingEntry(0)];
     const issues = [];
-    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP, '2026-04-09');
+    const tagResult = tagIssuesWithBaseline2(SLUG, issues, entries, FP);
     const orphans = computeOrphanBaselineEntries(SLUG, entries, tagResult.matchedKeys);
     assert.equal(orphans.length, 1);
     assert.equal(orphans[0].slug, SLUG);
@@ -1374,10 +1190,10 @@ describe('summary orphanBaselineEntries counter', () => {
   it('propagates a provided orphan count + byType breakdown', () => {
     const summary = summarizeParityResults([], {
       orphanBaselineEntries: 3,
-      orphanBaselineByType: { 'segment-inconclusive': 3 },
+      orphanBaselineByType: { 'segment-missing': 3 },
     });
     assert.equal(summary.orphanBaselineEntries, 3);
-    assert.deepEqual(summary.orphanBaselineByType, { 'segment-inconclusive': 3 });
+    assert.deepEqual(summary.orphanBaselineByType, { 'segment-missing': 3 });
   });
 
   it('defaults to 0 / {} when no orphan metadata is passed (backward compat)', () => {
