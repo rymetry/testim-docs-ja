@@ -401,7 +401,7 @@ function normalizeEscapedCallouts(html) {
  *   4. `applyEnSourcePatches` — literal find→replace patches for broken
  *      upstream EN snapshot fragments (slug-scope, opt-in via options.slug)
  *
- * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md
+ * Plan: docs/SYSTEM_SPEC.md §システム不変量
  *
  * @param {string} html - Raw MadCap Flare HTML from EN snapshot
  * @param {{slug?: string|null, patchCoverage?: object}} [options]

@@ -12,7 +12,7 @@
  * running a full `npm run check:parity` pass (which is slow and touches the
  * whole repo).
  *
- * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md §5
+ * Plan: docs/SYSTEM_SPEC.md §システム不変量
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -362,7 +362,7 @@ describe('en_source_patches stale detection (全 34 patch IDs / slug-driven / no
       console.warn(
         `[stale en_source_patches] ${stale.length} of ${EN_SOURCE_PATCHES.length} patches — ` +
           `EN may be fixed upstream:\n${JSON.stringify(stale, null, 2)}\n` +
-          'Action: verify JA source-first correctness, remove entry, update upstream-defect-tracker.md',
+          'Action: verify JA source-first correctness, remove entry, update UPSTREAM_DEFECTS.md',
       );
     }
     // Sanity: the surface of the check grew beyond the original Bundle 1
@@ -405,7 +405,7 @@ describe('source_sync_exclusions recovery status (Task 2 Phase A / non-gating)',
       console.warn(
         `[stale source_sync_exclusions] ${stale.length} entr(ies) — upstream may be fixed:\n` +
           `${stale.map((s) => `  - ${s.slug}`).join('\n')}\n` +
-          'Action: verify EN snapshot manually, then remove registry entry + upstream-defect-tracker archive.',
+          'Action: verify EN snapshot manually, then remove registry entry + UPSTREAM_DEFECTS.md archive.',
       );
     }
     // Non-gating: weekly workflow (scheduled-actionable.yml) is primary

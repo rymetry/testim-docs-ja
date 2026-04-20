@@ -138,7 +138,7 @@ upstream 英語原文自体が broken で parity comparator の前提を満た�
 | `snapshot-diff-status.json` | 変更検知結果（ページごとの差分分類） |
 | `source-sync-status.json` | fetch metadata + freshness + source-side debt カウンタ (`excludedPages` など) |
 | `parity-check-status.json` | ローカル parity チェック結果 |
-| `upstream-recovery-status.json` | `en_source_patches` + `source_sync_exclusions` の per-entry status (Axis A: `active` / `stale` / `unknown` / Axis B: `current` / `overdue`)。`npm run check:upstream-recovery` で生成。`.gitignore` 対象で CI artifact として保存される。Schema は `docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md` |
+| `upstream-recovery-status.json` | `en_source_patches` + `source_sync_exclusions` の per-entry status (Axis A: `active` / `stale` / `unknown` / Axis B: `current` / `overdue`)。`npm run check:upstream-recovery` で生成。`.gitignore` 対象で CI artifact として保存される。Schema は `docs/SYSTEM_SPEC.md §上流回復検出` |
 | `docs-actionable-report.json` | Issue 作成用レポート (`sourceSyncHealth.enPatchRecovery` / `sourceSyncRecovery` subsection に上記 upstream-recovery-status の派生データを含む) |
 | `docs-update-summary.md` | 人間向けサマリー（`## ソース側 debt` セクションを含む） |
 | `docs-audit-manifest.json` | レビュー計画用マニフェスト |

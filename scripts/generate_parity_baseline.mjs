@@ -115,10 +115,10 @@ export function loadSnapshotDiffStatus(filePath = SNAPSHOT_DIFF_PATH) {
  * Pre-regen fail-closed gate for full `--regenerate` mode.
  *
  * Enforces the invariants documented in
- *   `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` §2
+ *   `docs/SYSTEM_SPEC.md §システム不変量`
  *   "PR Z entry fail-closed invariants" (A'.4)
  * and
- *   `docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §4
+ *   `docs/SYSTEM_SPEC.md §システム不変量`
  *   "baseline 再生成 (pre-regen fail-closed gate, I)"
  *
  * A full regeneration from a run that fails any predicate is invalid —
@@ -184,7 +184,7 @@ export function assertPreRegenGate(status, snapshotDiff) {
     throw new Error(
       'baseline-regen-gate: FAIL\n' +
         failures.map((f) => `  - ${f}`).join('\n') +
-        '\nSee docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md §2 (PR Z entry fail-closed invariants)',
+        '\nSee docs/SYSTEM_SPEC.md §システム不変量 (PR Z entry fail-closed invariants)',
     );
   }
 }

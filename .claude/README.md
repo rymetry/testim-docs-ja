@@ -72,10 +72,13 @@ codex でこのブランチの変更をレビューして
 
 | 何を知りたいか | 参照先 |
 |---|---|
+| プロジェクト仕様全体 | `docs/SYSTEM_SPEC.md` |
 | コンテンツルール全般 | `docs/WRITING_GUIDE.md` |
 | 翻訳ワークフロー・用語 | `docs/TRANSLATION_GUIDE.md` |
 | 運用フロー・CI・レビュー | `docs/OPS_DESIGN.md` |
+| パリティ維持・gate matrix | `docs/PARITY_GUIDE.md` |
 | ページ一覧・構造 | `docs/SIDEBAR_URLS.md` |
+| EN upstream 欠陥管理 | `docs/UPSTREAM_DEFECTS.md` |
 
 ## 新しい Skill を追加するとき
 

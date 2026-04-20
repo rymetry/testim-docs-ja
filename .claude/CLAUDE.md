@@ -52,12 +52,14 @@ Full reference: `scripts/README.md`
 
 ## Authority Sources
 
-- **`docs/SIDEBAR_URLS.md`** — Master list of all documentation URLs, categories, and page ordering. Single source of truth for what pages exist and their structure.
+- **`docs/SYSTEM_SPEC.md`** — Project specification summary: architecture, detection system, invariants, document index.
 - **`docs/WRITING_GUIDE.md`** — Authoritative rules for content formatting, frontmatter, links, callouts, source-first structure contract (heading mapping, `:fa-arrow-right:` handling, `<details>` preservation, JA-only section removal), Testim terminology English retention.
 - **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
-- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop.
+- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop, review checklists.
+- **`docs/PARITY_GUIDE.md`** — Parity maintenance: 2-mechanism suppression design, gate matrix, parallel agent delegation.
 - **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection: HTML snapshot format, sidebar JSON structure, diff classification, CI workflow, and translation sync process.
-- **`docs/PARITY_GUIDE.md`** — Parity debt patterns, EN source artifacts, fix workflow, and parallel agent delegation checklist.
+- **`docs/SIDEBAR_URLS.md`** — Master list of all documentation URLs, categories, and page ordering. Single source of truth for what pages exist and their structure.
+- **`docs/UPSTREAM_DEFECTS.md`** — Active upstream EN defect registry (UD-001..UD-022), allocation protocol, removal SOP.
 - **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
 
 ## Content Rules
@@ -74,9 +76,35 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 1. Self-check → Codex CLI review → fix → `npm run lint && npm run test && npm run build`
 2. When new patterns emerge, update the relevant guide (not just the affected file)
 
-## Parity Debt
+## Core Invariants (from `docs/SYSTEM_SPEC.md`)
 
-パリティ残債（baseline で凍結中の EN/JA 構造差分）の修正手順、頻出パターン、EN ソースの既知問題、並列エージェント委任時の注意点は **`docs/PARITY_GUIDE.md`** を参照。
+本プロジェクトのコア仕様。全作業はこれらの不変量を維持する方向で行う。
+
+**仕様変更ポリシー**: 以下に該当する変更は、必ずユーザーに提案し承認を得てから実施すること。提案自体は歓迎する。
+
+- 不変量の値や条件を変更する（例: counter の期待値を 0 以外にする、gate predicate を緩和する）
+- suppression mechanism を追加・廃止する（2-mechanism 契約の変更）
+- baseline 運用ルールを変更する（例: entries > 0 を許容する方針転換）
+- `docs/SYSTEM_SPEC.md` または `docs/PARITY_GUIDE.md` の仕様記述を書き換える
+
+以下は承認不要（通常の運用作業）: GLOSSARY/INVARIANT_TOKENS への用語・パターン追加、content 修正による parity issue 解消、EN source patch の追加・削除。
+
+**5-counter = 0 DoD**: 以下の 5 counter は全て 0 を維持する。
+
+1. `parity-baseline.json` `entries.length` === 0
+2. `parity-check-status.json` `summary.reportableActiveFiles` === 0
+3. `parity-check-status.json` `summary.baselinedIssues` === 0
+4. `parity-check-status.json` `summary.advisoryQueueIssues` === 0
+5. `parity-check-status.json` `summary.auditSignalIssues` === 0
+
+**2-mechanism suppression**: EN 上流欠陥の抑制は以下の 2 mechanism のみ。第三の mechanism は禁止。
+
+- Mechanism 1: page-level freeze (`scripts/lib/source_sync_exclusions.mjs`)
+- Mechanism 2: segment-level patch (`scripts/lib/en_source_patches.mjs`) → `docs/UPSTREAM_DEFECTS.md` に結線
+
+**Baseline 運用**: Schema v2, `entries.length === 0` を維持。新規 issue は baseline に逃がさず修正で解消する。
+
+詳細は **`docs/SYSTEM_SPEC.md`**、パリティ維持の運用手順は **`docs/PARITY_GUIDE.md`** を参照。
 
 ## Commit Style
 

@@ -1,8 +1,10 @@
+<!-- markdownlint-disable MD038 MD060 -->
+
 # Upstream Defect Tracker
 
 - **Status**: Active (v2, 2026-04-20 — Reserved IDs table added, proposal B')
 - **Owner**: Testim JA Docs parity subsystem
-- **Related**: `scripts/lib/en_source_patches.mjs`, `docs/superpowers/plans/2026-04-17-en-source-patches-layer.md`
+- **Related**: `scripts/lib/en_source_patches.mjs`, `docs/PARITY_GUIDE.md`
 
 ## Reserved IDs (proposal B', Codex Round-3 approved)
 
@@ -307,7 +309,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 2. **Reproducibility**: EN HTML snapshot を grep して literal match で `find` 文字列を確定する。preprocessEnHtml の他 normalize (`normalizeEscapedCallouts` / `normalizeEscapedFaqDetails` / `unescapeDetails`) を通った後の HTML 形で書く
 3. **Idempotency check**: `replace` が `find` を部分文字列として含まない (test で自動検証)
 4. **Slug scope**: 影響する slug を列挙し、`slugs: Object.freeze([...])` に登録
-5. **Linked defect anchor**: 本ファイルに `## UD-NNN: <summary>` セクションを追加し、`linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-NNN'` で refer
+5. **Linked defect anchor**: 本ファイルに `## UD-NNN: <summary>` セクションを追加し、`linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-NNN'` で refer
 6. **Tests**: `scripts/__tests__/en_source_patches.test.mjs` に application test と mismatch test を追加
 7. **Baseline regen**: `node scripts/generate_parity_baseline.mjs --regenerate --rationale="add UD-NNN patch"`、新規追加 0 を確認
 8. **Upstream report**: Tricentis への報告 ticket 起票、本ファイルの "Tricentis upstream report status" を更新
@@ -336,6 +338,6 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 
 ## Related docs
 
-- `docs/superpowers/plans/2026-04-17-en-source-patches-layer.md` — 設計計画 (v4 Codex APPROVED)
-- `docs/PARITY_GUIDE.md` — parity 一般ガイド、本 tracker への参照を追加
+- `docs/PARITY_GUIDE.md` — パリティ維持ガイド、本 tracker への参照あり
+- `docs/SYSTEM_SPEC.md` — プロジェクト仕様サマリ
 - `scripts/README.md` — scripts/ commands と entry_points

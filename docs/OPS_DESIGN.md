@@ -186,7 +186,7 @@ npm run test && npm run build
    c. 消えていれば:
       - `en_source_patches` 系: `scripts/lib/en_source_patches.mjs` から entry を削除
       - `source_sync_exclusions` 系: `scripts/lib/source_sync_exclusions.mjs` から entry を削除 + `scripts/__tests__/source_parity_source_side_debt.test.mjs` の seeded pin を調整
-      - どちらも `docs/superpowers/specs/upstream-defect-tracker.md` の対応 entry を archive 状態に更新
+      - どちらも `docs/UPSTREAM_DEFECTS.md` の対応 entry を archive 状態に更新
       - `npm run check:parity` が 0 issues を維持していることを確認
    d. まだ消えていなければ managed issue にコメントで状況記録 (次週 run で再評価)
 3. overdue entry (`statusB: 'overdue'`) は `reviewAfter` 延長でなく **paydown PR** で対応する (`priority='high'` を付与して順位付け)
@@ -448,7 +448,7 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 - representative fixture は clean page 群だけを対象にし、source-side debt ページは別テストで扱う
 - `testops/testops-version-control/pull-requests` は source-side debt registry で管理し、snapshot fetch 時に上書きしない
 - 代表ページ、clean sentinel、source unusable fixture、source-side debt fixture はそれぞれ専用テストで契約を固定する
-- 詳細な経緯や過去のレビュー履歴は [IMPLEMENTATION_HISTORY.md](./IMPLEMENTATION_HISTORY.md) に集約する
+- 詳細な経緯や過去のレビュー履歴は git 履歴を参照
 
 ### source-side debt 運用手順
 
@@ -483,67 +483,233 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 local で snapshot fetch をしていない限り `freshnessState: broken` なので、
 `result` は `inconclusive` のままで正常。CI 環境のみ `result: pass` が期待される。
 
-## Rollback Playbook（Phase 4 PR Z atomic cutover / M4 追加 2026-04-16）
+## 付録 A: レビューチェックリスト
 
-Phase 4 の atomic schema cutover (PR Z) を実施後、以下の rollback 条件に該当した場合の手順。rollback は **schema v1 の状態に完全復帰** することを目標とする。
+以下の手順で英語記事と日本語翻訳ファイルを実行手順を厳守して比較検証してください。
 
-### Rollback トリガー
+### 対象
 
-| 状況 | rollback 要否 |
-| --- | --- |
-| PR Z merge 直後に `reportableActiveFiles > 0` 発生 | 必須（revert merge commit） |
-| baseline schema v2 が期待件数 = 0 に収束しない | 必須（schema 再設計） |
-| `orphanBaselineEntries > 0` が検知される | 要確認（detector 仕様変更の可能性） |
-| `advisoryQueueIssues > 3` の異常増加 | 要調査（rollback は最終手段） |
-| CI でビルド不能 | 必須（即時 revert） |
+- 英語記事: SIDEBAR_URLS.md の {SECTION_NAME} セクション配下の全記事
+- 日本語ファイル: `src/content/docs/{FOLDER_NAME}` 配下の md ファイル
 
-### Rollback 手順
+### 実行手順
 
-```bash
-# 1. PR Z merge commit を特定
-git log --oneline main -10 | grep "PR Z"
+1. SIDEBAR_URLS.mdファイルから{SECTION_NAME}セクションの全記事URLリストを取得
+2. 各URLのパス名に対応するmdファイルを特定（パスベースで解決）
+   - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `src/content/docs/overview/testim-overview.md`
+3. 英語記事と日本語mdファイルのペアごとに以下の検証項目を確認
+4. 記事本文内のリンクを確認し、content/docs内に対応する日本語mdファイルがあれば内部リンクに変更
+5. プロジェクトディレクトリで`npm run lint`を実行してlintエラーを確認
 
-# 2. main に戻った状態で revert commit を作成
-git checkout main
-git pull --ff-only origin main
-git revert -m 1 <PR-Z-merge-SHA>      # merge commit の revert (mainline=1)
+### 検証項目
 
-# 3. baseline schema v1 の復元
-git checkout <PR-Z-merge-SHA>^ -- parity-baseline.json
-git add parity-baseline.json
-git commit --amend --no-edit
+#### Frontmatter
 
-# 4. 検証
-npm run check:parity                   # フルラン
-npm run test
-npm run build
+frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の「frontmatter 必須ルール」セクションを参照。レビュー時は特に以下を確認:
 
-# 5. 期待値
-#    - baseline schema v1 形式 (entries/generatedAt/generatedFromRunId 等)
-#    - reportableActiveFiles === 0
-#    - 新たな orphan entry なし
+- [ ] `title`: 原文から適切に日本語翻訳されているか
+- [ ] `description`: 記事の要約が日本語で適切に記載されているか（プレースホルダ禁止）
+- [ ] `updated`: 英語原文の日付に追従しているか（JA 編集日に変更しないこと。詳細は `DOCS_DATE_TRACKING.md` 参照）
+- [ ] `sourceUrl`: `https://docs.tricentis.com/testim/content/.../{slug}.htm` 形式で設定されているか
+- [ ] `keywords`: 記事内容に基づいた日本語検索キーワードが設定されているか（上限 10 件）
 
-# 6. push
-git push origin main
-```
+#### 本文
 
-### schema v1 ↔ v2 cutover の不整合対策
+- [ ] 英語記事の全内容が日本語に翻訳されているか(見出し、段落、リスト、コードブロックのコメント等すべて)
+- [ ] 原文の本文が要約に置き換わっていないか（原文の手順や説明が削られていないか）
+- [ ] 原文にある callout が日本語版にも反映されているか
+- [ ] 原文にあるコンテンツ画像がすべてローカル記事に埋め込まれているか
+- [ ] 画像ファイルの存在確認だけでなく、本文中の配置順も原文と一致しているか
+- [ ] 本文末尾に更新日(updated, 最終更新日等)の記載がないか
+- [ ] 記事内のリンクが適切に処理されているか
+  - 外部リンク(`https://docs.tricentis.com/testim/content/...`)で、対応する日本語 md ファイルが `src/content/docs/` 配下に存在する場合、内部リンクに変更されているか
+  - 例: `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` → `/docs/overview/testim-overview` (該当mdファイルが存在する場合)
+  - 対応する日本語ファイルが存在しない場合は、元の外部リンクのまま維持
 
-- **v2 内部参照の残存**: PR Z で導入した `scripts/lib/source_parity_baseline_v2.mjs` (仮) がテストから参照されている場合、`check_source_parity.mjs` が v1 schema を検出して feature-flag で v2 code path を skip する必要がある
-- **baseline file の schema マイグレーション**: revert 後に `parity-baseline.json` の `schemaVersion` フィールドが v2 のまま残った場合、手動で v1 に戻す (`schemaVersion: 1`)
-- **CI workflow の切り戻し**: PR Z で `.github/workflows/parity.yml` が更新されていた場合、v1 時代の workflow YAML を git show で復元
+#### ファイル全体
 
-### Rollback 後の再着手
+- [ ] プロジェクト全体で`npm run lint`を実行した際にエラーが出ないか
 
-- PR Z で発見した問題を plan `docs/superpowers/plans/2026-04-14-parity-phase4-schema-cleanup.md` に追記
-- 次回 PR Z 着手前に M2 Stage B7 の burn-down 完了 (`baseline.entries === 0`) を entry criteria にする
-- schema v2 の設計見直し (backward compat 層の要否、feature flag 期間等) を別 plan 文書で行う
+### sourceUrl と画像の扱い
 
-### Rollback の責任分界
+- `sourceUrl` は frontmatter の記録項目ではなく、本文 QA の比較元
+- `public/images/...` に画像が存在しても、Markdown から参照されていなければ未完了
+- 原文の画像が 3 枚なら、日本語ページでも原則 3 枚を本文に配置していること
+- 装飾画像やロゴを除外した場合は、その理由をレビュー時に説明できること
 
-| 対象 | rollback 範囲 | 範囲外（別対応） |
-| --- | --- | --- |
-| `parity-baseline.json` | schema v1 に戻す | baseline 件数の一時増加は burn-down で対応 |
-| `scripts/lib/source_parity*.mjs` | v2 追加モジュールを削除 | 既存 v1 モジュールのバグ修正は別 PR |
-| `.github/workflows/parity.yml` | v1 時代の YAML に戻す | 新規 CI 改善は別 PR |
-| `src/content/docs/**` | 触らない | 翻訳内容の変更は M2 の範疇 |
+### ルーティングとリンク規則
+
+ルーティングはパスベースで、フォルダ構造が URL に反映される（例: `src/content/docs/administration/groups.md` → `/docs/administration/groups`）。
+
+内部リンクの形式・変換ルールの詳細は `docs/WRITING_GUIDE.md` の「内部リンク規則」セクションを参照。
+
+要点:
+- 正しい形式: `/docs/{folder}/{slug}`（パスベース）
+- `https://docs.tricentis.com/testim/content/.../{slug}.htm` は対応する JA ファイルが存在する場合 `/docs/{folder}/{slug}` に変換する
+- 対応する JA ファイルが存在しない場合は元の外部リンクを維持する
+
+### 出力形式
+
+検証結果を以下の形式で報告してください:
+
+#### 検証サマリー
+
+- 検証対象ファイル数: X件
+- 問題なし: Y件
+- 問題あり: Z件
+- keywords未設定: Z件
+- リンク変更が必要: Z件
+
+#### 問題なしのファイル
+
+- ファイル名のリスト
+
+#### 問題があるファイル
+
+各ファイルについて:
+
+- **ファイル名**: `xxx.md`
+- **URL**: (対応する英語記事URL)
+- **問題点**:
+  - 具体的な問題の説明
+  - 期待値と実際の値の比較(該当する場合)
+
+#### keywords未設定または要改善のファイル
+
+各ファイルについて:
+
+- **ファイル名**: `xxx.md`
+- **現状**: (現在のkeywords、未設定の場合は「未設定」)
+- **提案**: 記事内容に基づいた推奨キーワード(最大10件)
+
+#### リンク変更が必要なファイル
+
+各ファイルについて:
+
+- **ファイル名**: `xxx.md`
+- **変更すべきリンク**:
+  - 現在: `https://docs.tricentis.com/testim/content/{category}/example.htm`
+  - 変更後: `/docs/{category}/example`
+
+#### Lintエラー
+
+(あれば記載、なければ「エラーなし」)
+
+<!-- 使い方はコンテキストに本ファイルを指定し、以下を指定してプロンプトに入力して実行 -->
+<!--
+## Input
+- SECTION_NAME: xxxx
+- FOLDER_NAME: yyyy
+-->
+
+## 付録 B: 並列レビューエージェントテンプレート
+
+対象 PR に対して以下のエージェントチームを作成してください。
+
+PR_NUMBER = #{85, 86, 87, 88, 89, 90, 91}
+
+### リードの行動ルール（厳守）
+
+あなたはチームリードとして以下の役割のみを行うこと:
+
+- gh pr view {PR_NUMBER} でPRの概要と変更ファイル一覧を取得
+- gh pr diff {PR_NUMBER} で差分を取得し、各チームメイトに担当観点を割り当て
+- チームメイトの発見事項を統合し、最終レビューコメントを作成
+- gh pr review {PR_NUMBER} でレビュー結果を投稿
+- モデル: Claude Ops 4.6
+
+以下の行為は禁止:
+
+- 自分でファイルを読んでレビューする
+- Bash, Edit, Write ツールの直接使用
+- チームメイトの担当観点に口を出す
+
+すべてのレビュー作業はチームメイトに委譲すること。
+
+### チームメイト: 3名
+
+**Teammate 1 - 翻訳品質レビュアー:**
+
+役割: 日本語の自然さと原文との整合性チェック
+モデル: Claude sonnet 4.6
+
+手順:
+
+1. PRの変更ファイル一覧を取得
+2. 各変更ファイルの sourceUrl から WebFetch で英語原文を取得
+3. 原文と日本語版を突合し以下をチェック:
+   - 欠落セクション・段落はないか
+   - 誤訳・意味のずれはないか
+   - 不自然な日本語表現（「開かれています」→「利用できます」等）
+   - Testim製品名・プラン名が英語のまま維持されているか
+4. `docs/TRANSLATION_GUIDE.md` の既知パターンに該当する問題がないか
+5. 発見事項を重大度（error / warning / suggestion）付きでリードに報告
+   報告形式: ファイル名、行番号、問題内容、修正案
+
+**Teammate 2 - フォーマットレビュアー:**
+
+役割: マークダウン構造とサイト固有フォーマットのチェック（Source-First 構造契約前提）
+モデル: Claude sonnet 4.6
+
+手順:
+
+1. PRの変更ファイルを読み込み
+2. `docs/WRITING_GUIDE.md` のフォーマットルールに基づき以下をチェック:
+   - Source-First 構造契約に準拠しているか:
+     - 見出し: 1st H1 → frontmatter title:、2nd+ H1 → H2 降格、H2/H3/H4 維持
+     - リスト: マーカーは `-`、ネストレベルは原文準拠
+     - テーブル: 行数・列数が原文と一致
+   - callout記法が :::形式に正しく変換されているか
+   - 内部リンクがパスベース /docs/{folder}/{slug} 形式になっているか
+   - 画像が正しく埋め込まれているか（パス、alt text）
+   - frontmatter（title, description, sidebar等）が正しいか
+   - 見出しレベルの構造が適切か
+3. 発見事項を重大度付きでリードに報告
+   報告形式: ファイル名、行番号、問題内容、修正案
+
+**Teammate 3 - ビルド検証担当:**
+
+役割: ビルド・リント・テストの実行と結果報告
+モデル: Claude sonnet 4.6
+
+手順:
+
+1. PRのブランチをチェックアウト: gh pr checkout {PR_NUMBER}
+2. npm install（必要な場合）
+3. 以下を順番に実行し結果を記録:
+   a. npm run lint
+   b. npm run test
+   c. npm run build
+4. エラーがあれば該当箇所を特定し、原因を分析
+5. 結果をリードに報告（pass/fail + エラー詳細）
+   報告形式: コマンド、結果（pass/fail）、エラー内容（あれば）
+
+### リードの最終作業
+
+3名の報告を統合し、以下の形式でPRにレビューコメントを投稿:
+
+#### レビュー結果サマリー
+
+- 翻訳品質: {問題数} 件（error: X, warning: Y, suggestion: Z）
+- フォーマット: {問題数} 件
+- ビルド検証: pass / fail
+
+#### 詳細
+
+##### 翻訳品質
+
+（Teammate 1 の報告内容）
+
+#### フォーマット
+
+（Teammate 2 の報告内容）
+
+#### ビルド検証
+
+（Teammate 3 の報告内容）
+
+#### 判定
+
+- 問題なし → Approve
+- warning のみ → Approve + コメント
+- error あり → Request Changes

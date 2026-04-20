@@ -283,5 +283,5 @@ Pull Requestは以下の観点でレビューされます：
 参考ドキュメント：
 
 - [WRITING_GUIDE.md](./docs/WRITING_GUIDE.md) - 執筆ガイド
-- [DOCS_REVIEW.md](./docs/DOCS_REVIEW.md) - レビュー手順
+- [OPS_DESIGN.md](./docs/OPS_DESIGN.md) - 運用設計・レビュー手順
 - [README.md](./README.md) - プロジェクト概要
