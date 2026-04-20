@@ -7,7 +7,7 @@
  * patch を slug-scope で管理する。`applyEnSourcePatches(html, slug, coverage)`
  * は preprocessEnHtml から呼ばれる (Phase 3)。
  *
- * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md
+ * Plan: docs/SYSTEM_SPEC.md §システム不変量
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -56,8 +56,8 @@ describe('en_source_patches registry schema', () => {
       assert.ok(typeof e.replace === 'string', `${e.id}: replace is string`);
       assert.ok(typeof e.rationale === 'string' && e.rationale.length > 0, `${e.id}: rationale non-empty`);
       assert.ok(
-        typeof e.linkedDefect === 'string' && e.linkedDefect.includes('upstream-defect-tracker.md#'),
-        `${e.id}: linkedDefect must reference upstream-defect-tracker.md#<anchor>`,
+        typeof e.linkedDefect === 'string' && e.linkedDefect.includes('UPSTREAM_DEFECTS.md#'),
+        `${e.id}: linkedDefect must reference UPSTREAM_DEFECTS.md#<anchor>`,
       );
       assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(e.addedAt), `${e.id}: addedAt YYYY-MM-DD`);
       assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(e.reviewAfter), `${e.id}: reviewAfter YYYY-MM-DD`);

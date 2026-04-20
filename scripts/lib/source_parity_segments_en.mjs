@@ -45,7 +45,7 @@ const COL_TAG_RE = /<col\b[^>]*\/?>/gi;
  * Phase 4 Task 4.1 inventory の `intentionalDivergenceCandidates` に基づく
  * 初期値。slug の追加 / 削除は **本定数を先に更新** すること (docs に先に書かない)。
  *
- * 詳細: `docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md` §8。
+ * 詳細: `docs/SYSTEM_SPEC.md §システム不変量`。
  */
 export const CALLOUT_NORMALIZATION_SLUGS = Object.freeze(
   new Set(['administration/api-access']),

@@ -133,7 +133,7 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
 - [scripts/README.md](./scripts/README.md) - スクリプトの詳しい使い方
 - [DOCS_DATE_TRACKING.md](./docs/DOCS_DATE_TRACKING.md) - スナップショット変更検知の仕様
-- [DOCS_REVIEW.md](./docs/DOCS_REVIEW.md) - ドキュメントレビュー手順
+- [OPS_DESIGN.md](./docs/OPS_DESIGN.md) - 運用設計・レビュー手順
 
 ## 🏆 ライセンス
 

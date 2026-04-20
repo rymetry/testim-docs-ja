@@ -20,8 +20,7 @@
  * for reuse from inside `check_source_parity.mjs` (non-blocking warning
  * emission at run start) and from unit tests.
  *
- * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md §B2
- *       docs/superpowers/plans/2026-04-20-upstream-recovery-detection.md §Task 6
+ * Plan: docs/SYSTEM_SPEC.md §システム不変量
  */
 
 import { EN_SOURCE_PATCHES } from './lib/en_source_patches.mjs';

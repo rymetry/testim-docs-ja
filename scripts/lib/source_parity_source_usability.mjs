@@ -7,7 +7,7 @@
  *
  * 比較可能なら null を返す。I/O は一切しない。
  *
- * 設計書: docs/superpowers/specs/2026-04-08-issue-247-pr3-source-usability-design.md
+ * 設計書: docs/SYSTEM_SPEC.md §システム不変量
  */
 
 import { preprocessEnHtml } from './turndown.mjs';

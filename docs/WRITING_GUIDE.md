@@ -42,8 +42,8 @@
 >
 > **Source-first 例外の canonical registry**:
 >
-> - **Mechanical exceptions (parser-level)**: kind-multiset fingerprint 上で検知器が許容する既知 pattern (flat-list split / arrow-fusion 段落融合 等) は [`docs/superpowers/plans/2026-04-16-m2-parity-burndown.md` §5.2](./superpowers/plans/2026-04-16-m2-parity-burndown.md) に登録。個別 PR の自由裁量で追加禁止 (reviewer 承認 + plan 明示登録の security L2 gate)
-> - **Mechanism-pending carve-outs**: content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch / EN self-link artifact 等) は同 plan §5.3 に `§5.3.N` 形式で登録。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL — §5.3.N proposal]` マーカー経由で提案する ([PARITY_GUIDE.md §並列エージェント委任チェックリスト](./PARITY_GUIDE.md#並列エージェント委任チェックリスト) 参照)
+> - **Mechanical exceptions (parser-level)**: kind-multiset fingerprint 上で検知器が許容する既知 pattern (flat-list split / arrow-fusion 段落融合 等) は [PARITY_GUIDE.md §Source-first 例外の canonical registry](./PARITY_GUIDE.md#source-first-例外の-canonical-registry) に登録。個別 PR の自由裁量で追加禁止 (reviewer 承認 + registry 明示登録の security L2 gate)
+> - **Mechanism-pending carve-outs**: content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch / EN self-link artifact 等) は同 registry に登録。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL]` マーカー経由で提案する ([PARITY_GUIDE.md §並列エージェント委任チェックリスト](./PARITY_GUIDE.md#並列エージェント委任チェックリスト) 参照)
 > - **Wave 2 実績 pattern**: P2-2 で確立した 8 pattern の catalog は [PARITY_GUIDE.md §Wave 2 実績 pattern catalog](./PARITY_GUIDE.md#wave-2-実績-pattern-catalog) に一覧化、翻訳観点は [TRANSLATION_GUIDE.md §5.5 Source-first 翻訳パターン](./TRANSLATION_GUIDE.md#55-source-first-翻訳パターンwave-2-確立) 参照
 
 ---
@@ -186,7 +186,7 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
 - **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
 - 段落境界・リスト境界・見出し境界は原文に完全に一致させる（1 段落→2 段落分割、1 callout→2 callout 分割等は禁止）
-- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `scripts/lib/en_source_patches.mjs` の slug-scope patch layer (literal find→replace at `preprocessEnHtml` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer-route-w-2026-04-17) と [`docs/superpowers/specs/upstream-defect-tracker.md`](./superpowers/specs/upstream-defect-tracker.md) を参照
+- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `scripts/lib/en_source_patches.mjs` の slug-scope patch layer (literal find→replace at `preprocessEnHtml` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
 
 ### 唯一の許容差分（HEREだけ）
 

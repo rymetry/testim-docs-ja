@@ -19,8 +19,7 @@
  *   - `defectClass` は 4 enum のみ: `typo` | `href-miswire` | `madcap-artifact`
  *     | `stale-reference` (reviewer gate / machine-check 用)。
  *
- * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md
- * Upstream tracker: docs/superpowers/specs/upstream-defect-tracker.md
+ * Upstream defect tracker: docs/UPSTREAM_DEFECTS.md
  *
  * @module en_source_patches
  */
@@ -57,7 +56,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     rationale:
       'MadCap authoring typo: missing space between "-" and "this" in ' +
       'Verify list item intro (plain-leading variant). Upstream report pending.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-001',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-001',
     addedAt: '2026-04-17',
     reviewAfter: '2026-10-17',
   }),
@@ -74,7 +73,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     rationale:
       'MadCap authoring typo: missing space between "-" and "this" in ' +
       'Verify list item intro (strong-leading variant). Upstream report pending.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-001',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-001',
     addedAt: '2026-04-17',
     reviewAfter: '2026-10-17',
   }),
@@ -87,7 +86,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     rationale:
       'Upstream MadCap href miswire: Log out list entry links to launchapp.htm ' +
       'instead of logout.htm. JA content already points to correct sfdc-step-logout.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-002',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-002',
     addedAt: '2026-04-17',
     reviewAfter: '2026-10-17',
   }),
@@ -102,7 +101,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'Feature was renamed to turbo-mode and canonical URL moved to docs.tricentis.com/testim. ' +
       'JA content already uses modern /docs/testops/turbo-mode per WRITING_GUIDE §91-109/§192; ' +
       'normalizeUrlToken converts the patched relative .htm path to the same /docs/testops/turbo-mode token.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-004',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-004',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -121,7 +120,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'page Slack integration section. JA uses a JA-local anchor (#スケジューラーを-slack-と統合する) ' +
       'per WRITING_GUIDE §192; normalizeUrlToken strips fragments from /docs/ URLs, so the patched ' +
       'scheduler.htm → resolves to /docs/running-tests/scheduler which matches JA.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-004',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-004',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -140,7 +139,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'no longer exists in JA (JA uses canonical /docs/running-tests/configuration-file-run-hooks per ' +
       'WRITING_GUIDE §91-109). Patch aligns display-text with modern canonical path so normalizeUrlToken ' +
       'emits the same token from both sides.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-005',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -161,7 +160,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '(applied to raw https://...#frag URLs) retains them, so preserving the fragment would introduce ' +
       'an asymmetric token pair. The href-derived token (already fragment-stripped during extraction) ' +
       'carries the same /docs/ path, so fragment loss is harmless for parity gating.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-005',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -179,7 +178,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'URL emits a stale /docs/loops#using-the-loop-iterator-parameter invariant token that no longer ' +
       'exists in JA. Patch aligns display-text with modern canonical path WITHOUT the fragment (see ' +
       'UD-005B rationale for the fragment-asymmetry explanation).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-005',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -196,7 +195,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'Patch rewrites to the correct relative .htm path (exports-parameters.htm is a sibling of ' +
       'parameter-override-rules.htm in the parameters folder), which normalizeUrlToken resolves to ' +
       '/docs/advanced-editing/parameters/exports-parameters matching JA.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-005',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -213,7 +212,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '../parameters/ directory hop so normalizeUrlToken resolves to /docs/advanced-editing/parameters ' +
       'matching JA. Literal find is anchored with "and the" preamble to disambiguate from the identical ' +
       'href in the list item below (patched by UD-005F).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-005',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -228,7 +227,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'test begins:" list item. Display text "params-file\'s parameters" disambiguates the occurrence ' +
       'from the preface paragraph. After patch, normalizeUrlToken emits /docs/advanced-editing/parameters ' +
       'matching JA.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-005',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-005',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -244,7 +243,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'correct "- variable name" form (e.g. "Extract value - variable name" at index 0). Without the ' +
       'space, extractInvariantTokens flag regex emits a bogus "-variable" token that JA (which uses ' +
       'em-dash "— 変数名") does not have. Patch adds the missing space to match the adjacent items.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-006',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-006',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -261,7 +260,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'resolves it to the non-existent slug "index". Patch prepends the ../the-command-line-cli/ ' +
       'directory hop so normalizeUrlToken resolves to /docs/running-tests/the-command-line-cli, ' +
       'matching JA once JA content is restored to include the CLI command link.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-008',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-008',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -276,7 +275,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'create the variable...". Without the space, extractInvariantTokens dotRe regex emits a bogus ' +
       '"step.This" dotted-path token that JA (natural prose with a proper sentence break) does not ' +
       'have. Patch inserts the missing space.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-007',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-007',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -302,7 +301,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'per WRITING_GUIDE §192, causing segment-extra + segment-missing pairs in the parity gate. ' +
       'Patched relative path `../grid-management.htm` normalizes to the same ' +
       '`/docs/integrations/grid-management` token as JA.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-009',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-009',
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
@@ -333,7 +332,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'surfacing as a `segment-inconclusive` [heading-count-mismatch] entry for the slug. Patch rewrites ' +
       'the broken <p> to a canonical <h2> + <p> pair matching sibling heading anchors; parity counts ' +
       'converge to 3 on both sides.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-010',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -361,7 +360,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'symptom surfaces as a `step-count-mismatch` audit signal (EN=7, JA=6) for section #2. Patch ' +
       'strips the leading "\u200b5. " prefix so the content remains as prose (matching JA) but is no ' +
       'longer counted as a numbered step by extractStepCounts.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-010',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -387,7 +386,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'leading "\u200b2. " prefix in EN so both sides converge to 11 after normalization. JA content ' +
       'is updated in the same PR to remove the matching "​2. " prefix so segment-level comparison ' +
       'lines up (plain paragraph = plain paragraph).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-010',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -404,7 +403,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'just the adjacent occurrence for "Select your repository" (step-sub-label 3). Without this ' +
       'patch, UD-010C alone would still leave a 1-step EN=12 / JA=11 mismatch. Both patches together ' +
       'bring step-count to 11/11. Rationale, impact, and JA-side sync strategy are identical to UD-010C.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-010',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -429,7 +428,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'Without this patch, normalizeUrlToken emits `/docs/index` for EN vs the full canonical slug ' +
       'for JA, leaving token-overlap at 0 so the callout-body LCS pair fails (segment-missing + ' +
       'segment-extra). Same defect class as UD-005E/F/008/009 (bare `index.htm` self-reference).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-012',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-012',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -445,7 +444,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'links to `/docs/advanced-editing/parameters`. Patch prepends the explicit `../parameters/` ' +
       'hop so normalizeUrlToken resolves to the same canonical `/docs/advanced-editing/parameters` ' +
       'path as JA. Same defect class as UD-005E/F (parameter-override-rules) on the sibling preface.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-013',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-013',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -461,7 +460,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'links to `/docs/editing-tests/groups`. Patch prepends the explicit `../groups/` hop so ' +
       'normalizeUrlToken resolves to the same canonical `/docs/editing-tests/groups` path as JA. ' +
       'Same defect class as UD-005E/F/008/013.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-014',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-014',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -478,7 +477,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'callout-body, paragraph] vs JA [paragraph, callout-body]. The ZWSP has no user-visible content ' +
       'and is an authoring residue (same ZWSP pattern as UD-010A/B/C/D and UD-011). Patch strips it ' +
       'so EN body structure collapses to [paragraph, callout-body] matching JA. No information loss.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-015',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-015',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -509,7 +508,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '</td>…<td class="…-Column2-Body1"><p…>Web</p> anchor scopes the literal to row 6,1 only (row ' +
       '7,1 uses Column2-Body2). Same defect class as UD-005 family (MadCap-specific markup that ' +
       'survives turndown without code-equivalent semantics).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-016',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-016',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -533,7 +532,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '`<span class="FileOrFilePath">`. Same defect class and mechanism as UD-016A, but scoped to ' +
       'row 7,1 via the Column2-Body2 anchor (alternating table-row body class). Patch rewrites the ' +
       'span to `<code>` so the HTML-table extractor wraps it in backticks matching JA.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-016',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-016',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -556,7 +555,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'visual spacing, no semantic boundary) so paragraph-count and segment-count both agree at one ' +
       'paragraph, matching JA. Same defect class as other MadCap authoring-artifact patches ' +
       '(UD-010/UD-011/UD-015).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-017',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-017',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -582,11 +581,11 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '(JA=1), producing a paragraph-count-mismatch signal. alignSegments ' +
       'also extracts the EN `<p>` as a segment-paragraph that has no ' +
       'semantically meaningful JA counterpart. Patch strips the broken ' +
-      'paragraph at the HTML boundary (upstream-defect-tracker.md UD-003 ' +
+      'paragraph at the HTML boundary (UPSTREAM_DEFECTS.md UD-003 ' +
       'Option A). JA side drops the mirror line so both bodies converge to ' +
       '"section ends at `</table>`". Same defect class as UD-015/UD-017 ' +
       '(MadCap authoring residue with no user-visible content).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-003',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-003',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -618,7 +617,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '<code>FLAG</code></li>, which turndown serializes as `* `FLAG`` — a real bullet that the ' +
       'coarse counter recognizes, matching JA exactly. Same defect class as UD-015/UD-017 ' +
       '(MadCap authoring residue that inflates coarse counts while segment alignment already works).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-018',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-018',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -641,7 +640,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'full rationale: list-wrapped codeSnippet scaffolding trips the coarse bullet-count heuristic ' +
       'via FENCE_LINE_RE matching the bullet-led triple-backtick opening, while JA uses a real ' +
       'inline-code bullet. Patch collapses to minimal <li><code>FLAG</code></li>.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-018',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-018',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -664,7 +663,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'for the full rationale: list-wrapped codeSnippet scaffolding trips the coarse bullet-count ' +
       'heuristic via FENCE_LINE_RE matching the bullet-led triple-backtick opening, while JA uses ' +
       'a real inline-code bullet. Patch collapses to minimal <li><code>FLAG</code></li>.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-018',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-018',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -694,7 +693,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       '(top-level EN=14/JA=13, §7 EN=7/JA=6). Patch lifts the <img> out of the <li> to match the ' +
       'sibling 90023bd pattern; extractStepCounts drops to 6 for §7 (13 total), extractSegments emits an ' +
       '"image" segment between ordered-list-item indexes 3 and 4 aligning with JA.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-019',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-019',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -728,7 +727,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'entry). Patch lifts the <img> out of the <li> to a sibling <p> after the closing </ul>, mirroring ' +
       'JA shape. After the patch, EN markdown has 5 bullets + standalone image, aligning with JA. No ' +
       'information loss: the image is preserved one DOM node later.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-020',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-020',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -752,7 +751,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'intact because backticks are stripped from textNorm on both sides (symmetric), preserving the ' +
       'paragraph textNorm match. Same defect class as UD-015/UD-017 (MadCap authoring artifacts that ' +
       'survive turndown asymmetrically).',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-021',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-021',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
@@ -777,7 +776,7 @@ export const EN_SOURCE_PATCHES = Object.freeze([
       'trailing `\u200B \u200B` line (pure authoring residue, no user-visible content). Same pattern ' +
       'as UD-015 (config-file-run-hooks ZWSP-only paragraph) — pure authoring-tool residue with ' +
       'no information loss.',
-    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-022',
+    linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-022',
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),

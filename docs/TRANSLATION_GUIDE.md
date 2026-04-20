@@ -43,7 +43,7 @@
 | `segment-untranslated` | Testim UI 用語以外の英語 prose 残留 |
 | `segment-token-gap` | CLI flag / URL / 数値 token の欠落 |
 
-**これらの issue は必ず「JA を EN に追従させる」方向で解消する。baseline で許容してはならない。** 詳細は [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) と [PARITY_GUIDE.md M2 burn-down recipe](./PARITY_GUIDE.md) を参照。Wave 2 (P2-2) で確立済の具体的翻訳 pattern は [§5.5 Source-first 翻訳パターン](#55-source-first-翻訳パターンwave-2-確立) を参照。
+**これらの issue は必ず「JA を EN に追従させる」方向で解消する。baseline で許容してはならない。** 詳細は [WRITING_GUIDE.md §Source-First 構造契約](./WRITING_GUIDE.md) と [PARITY_GUIDE.md パリティ維持ガイド](./PARITY_GUIDE.md) を参照。Wave 2 (P2-2) で確立済の具体的翻訳 pattern は [§5.5 Source-first 翻訳パターン](#55-source-first-翻訳パターンwave-2-確立) を参照。
 
 ## 1. 準備：公式サイトの構造を確認
 

@@ -16,8 +16,8 @@
  *     (parity gate の挙動を変更しない — baseline=0 regression 禁止)
  *   - 新 detector / issue type / workflow は追加しない (既存 infra の拡張のみ)
  *
- * Plan: docs/superpowers/plans/2026-04-20-upstream-recovery-detection.md §Task 1
- * Spec: docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md
+ * Plan: docs/SYSTEM_SPEC.md §システム不変量
+ * Spec: docs/SYSTEM_SPEC.md §システム不変量
  *
  * @module check_upstream_recovery
  */

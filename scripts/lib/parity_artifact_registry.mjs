@@ -17,14 +17,14 @@
  *     カウンタと registry entry 数を返す。`NOOP_COVERAGE` は test / 呼び出し
  *     側で coverage 集計が不要なときのデフォルト。
  *
- * Spec: docs/superpowers/specs/2026-04-14-parity-phase4-final-goal.md
+ * Spec: docs/SYSTEM_SPEC.md §システム不変量
  *
  * @module parity_artifact_registry
  */
 
 /**
  * 初期 entries。Task 4.1 inventory (2026-04-15) に基づく。
- * inventory: docs/superpowers/specs/2026-04-14-parity-phase4-residual-inventory.json
+ * inventory: (Phase 4 Task 4.1, 2026-04-15)
  */
 export const ARTIFACT_REGISTRY = Object.freeze([
   Object.freeze({

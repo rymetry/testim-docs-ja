@@ -9,7 +9,7 @@
  *   - warning formatter shape
  *   - main() exit code is always 0 (monitoring, not gate)
  *
- * Plan: docs/superpowers/plans/2026-04-17-en-source-patches-layer.md §B2
+ * Plan: docs/SYSTEM_SPEC.md §システム不変量
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';

@@ -52,12 +52,14 @@ Full reference: `scripts/README.md`
 
 ## Authority Sources
 
-- **`docs/SIDEBAR_URLS.md`** — Master list of all documentation URLs, categories, and page ordering. Single source of truth for what pages exist and their structure.
+- **`docs/SYSTEM_SPEC.md`** — Project specification summary: architecture, detection system, invariants, document index.
 - **`docs/WRITING_GUIDE.md`** — Authoritative rules for content formatting, frontmatter, links, callouts, source-first structure contract (heading mapping, `:fa-arrow-right:` handling, `<details>` preservation, JA-only section removal), Testim terminology English retention.
 - **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
-- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop.
+- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop, review checklists.
+- **`docs/PARITY_GUIDE.md`** — Parity maintenance: 2-mechanism suppression design, gate matrix, parallel agent delegation.
 - **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection: HTML snapshot format, sidebar JSON structure, diff classification, CI workflow, and translation sync process.
-- **`docs/PARITY_GUIDE.md`** — Parity debt patterns, EN source artifacts, fix workflow, and parallel agent delegation checklist.
+- **`docs/SIDEBAR_URLS.md`** — Master list of all documentation URLs, categories, and page ordering. Single source of truth for what pages exist and their structure.
+- **`docs/UPSTREAM_DEFECTS.md`** — Active upstream EN defect registry (UD-001..UD-022), allocation protocol, removal SOP.
 - **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
 
 ## Content Rules
