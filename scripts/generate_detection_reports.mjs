@@ -65,7 +65,7 @@ function main() {
     console.log(`  パリティ結果: ${actionableReport.result ?? '不明'}`);
     const followup = actionableReport.parityFollowup;
     console.log(
-      `  パリティフォローアップ: 期限切れ=${followup.summary.baselineDebt.expiredBaselineEntries} 30日以内期限切れ=${followup.summary.baselineDebt.expiringBaselineEntries30d ?? 0} 無効化=${followup.summary.baselineDebt.baselineInvalidatedSlugCount} ブロッキング=${followup.summary.advisoryQueue.blockingItems}`,
+      `  パリティフォローアップ: ベースライン=${followup.summary.baselineDebt.baselinedIssues ?? 0} 無効化=${followup.summary.baselineDebt.baselineInvalidatedSlugCount ?? 0} ブロッキング=${followup.summary.advisoryQueue.blockingItems ?? 0}`,
     );
     // source-side debt の件数も CLI 出力に含める
     const debt = actionableReport.sourceSyncHealth?.sourceSideDebt;

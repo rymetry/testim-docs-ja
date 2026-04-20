@@ -642,23 +642,16 @@ function buildTopBaselinedPages(files, maxEntries) {
       const baselinedIssues = (file.issues ?? []).filter((issue) => issue.baselined === true);
       if (baselinedIssues.length === 0) return null;
 
-      const expiredBaselineEntries = baselinedIssues.filter(
-        (issue) => issue.baselineExpired === true,
-      ).length;
-
       return {
         file: file.file,
         slug: fileToSlug(file.file),
         issueCount: baselinedIssues.length,
-        expiredBaselineEntries,
       };
     })
     .filter(Boolean)
     .sort((left, right) => {
       const issueDiff = right.issueCount - left.issueCount;
       if (issueDiff !== 0) return issueDiff;
-      const expiredDiff = right.expiredBaselineEntries - left.expiredBaselineEntries;
-      if (expiredDiff !== 0) return expiredDiff;
       return left.file.localeCompare(right.file);
     })
     .slice(0, maxEntries);
@@ -707,8 +700,6 @@ function formatAdvisoryQueueScope(scope) {
 
 function buildParityFollowupBody({
   summary,
-  expiredBaselineFiles,
-  expiringBaselineFiles,
   baselineInvalidatedSlugs,
   blockingAdvisoryItems,
   advisoryQueueIssues,
@@ -726,8 +717,6 @@ function buildParityFollowupBody({
     '',
     `- チェック日時: ${summary.checkedAt ?? '不明'}`,
     `- ベースライン済み: ${summary.baselinedIssues ?? 0} 件 (${summary.baselinedFiles ?? 0} ファイル)`,
-    `- 期限切れベースライン: ${summary.expiredBaselineEntries ?? 0}`,
-    `- 30 日以内期限切れ予定: ${summary.expiringBaselineEntries30d ?? 0}`,
     `- 無効化されたベースライン slug: ${baselineInvalidatedSlugs.length}`,
     '',
   ];
@@ -807,36 +796,6 @@ function buildParityFollowupBody({
     );
   }
 
-  if (expiredBaselineFiles.length > 0) {
-    lines.push('## 期限切れベースラインエントリー', '');
-    lines.push(
-      formatList(
-        expiredBaselineFiles.map((f) => {
-          const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
-          return `\`${f.file}\` (${f.count} 件${rv})`;
-        }),
-      ),
-    );
-    lines.push('');
-  }
-
-  if (expiringBaselineFiles && expiringBaselineFiles.length > 0) {
-    lines.push('## 30 日以内に期限切れ', '');
-    lines.push(
-      '> `reviewAfter` を越えて gate に戻る前に解消 PR を計画してください。',
-      '',
-    );
-    lines.push(
-      formatList(
-        expiringBaselineFiles.map((f) => {
-          const rv = f.reviewAfter ? ` — reviewAfter: ${f.reviewAfter}` : '';
-          return `\`${f.file}\` (${f.count} 件${rv})`;
-        }),
-      ),
-    );
-    lines.push('');
-  }
-
   if (baselineInvalidatedSlugs.length > 0) {
     lines.push('## 無効化されたベースライン slug', '');
     lines.push(
@@ -871,8 +830,6 @@ function buildParityFollowup(parity, options = {}) {
   const advisoryQueue = parity.advisoryQueue ?? [];
   const advisoryQueueScope = parity.advisoryQueueScope ?? null;
 
-  const expiredBaselineEntries = summary.expiredBaselineEntries ?? 0;
-  const expiringBaselineEntries30d = summary.expiringBaselineEntries30d ?? 0;
   const baselineInvalidatedSlugs = summary.baselineInvalidatedSlugs ?? [];
   const advisoryQueueIssues = summary.advisoryQueueIssues ?? 0;
   const advisoryQueueFiles = summary.advisoryQueueFiles ?? 0;
@@ -894,45 +851,9 @@ function buildParityFollowup(parity, options = {}) {
 
   const shouldOpenIssue =
     baselinedIssues > 0 ||
-    expiredBaselineEntries > 0 ||
-    expiringBaselineEntries30d > 0 ||
     baselineInvalidatedSlugs.length > 0 ||
     hasBlockingAdvisory;
 
-  const expiredBaselineFiles = [];
-  const expiringBaselineFiles = [];
-  for (const file of files) {
-    const expired = (file.issues ?? []).filter(
-      (i) => i.baselined === true && i.baselineExpired === true,
-    );
-    if (expired.length > 0) {
-      expiredBaselineFiles.push({
-        file: file.file,
-        count: expired.length,
-        reviewAfter:
-          expired.map((i) => i.baselineReviewAfter).filter(Boolean)[0] ?? null,
-      });
-    }
-    const expiring = (file.issues ?? []).filter(
-      (i) => i.baselined === true && i.baselineExpiringSoon === true,
-    );
-    if (expiring.length > 0) {
-      expiringBaselineFiles.push({
-        file: file.file,
-        count: expiring.length,
-        reviewAfter:
-          expiring.map((i) => i.baselineReviewAfter).filter(Boolean)[0] ?? null,
-      });
-    }
-  }
-  expiredBaselineFiles.sort((a, b) => b.count - a.count);
-  expiringBaselineFiles.sort((a, b) => {
-    // review 期限が近い順に並べ、期限切れの崖を先頭から見えるようにする。
-    if ((a.reviewAfter ?? '') !== (b.reviewAfter ?? '')) {
-      return (a.reviewAfter ?? '') < (b.reviewAfter ?? '') ? -1 : 1;
-    }
-    return b.count - a.count;
-  });
   const reviewHints = {
     topBaselinedPages: buildTopBaselinedPages(files, maxEntries),
     tokenlessNearTieExamples: buildTokenlessNearTieExamples(advisoryQueue, maxEntries),
@@ -944,8 +865,6 @@ function buildParityFollowup(parity, options = {}) {
     ? withFamilyMarker(
         buildParityFollowupBody({
           summary,
-          expiredBaselineFiles: expiredBaselineFiles.slice(0, maxEntries),
-          expiringBaselineFiles: expiringBaselineFiles.slice(0, maxEntries),
           baselineInvalidatedSlugs,
           blockingAdvisoryItems:
             isComplete === true ? blockingAdvisoryItems.slice(0, maxEntries) : [],
@@ -972,10 +891,6 @@ function buildParityFollowup(parity, options = {}) {
       baselineDebt: {
         baselinedIssues: summary.baselinedIssues ?? 0,
         baselinedFiles: summary.baselinedFiles ?? 0,
-        expiredBaselineEntries,
-        expiredBaselineFiles,
-        expiringBaselineEntries30d,
-        expiringBaselineFiles,
         baselineInvalidatedSlugs,
         baselineInvalidatedSlugCount: baselineInvalidatedSlugs.length,
       },
@@ -1317,7 +1232,6 @@ export function renderSummaryMarkdown(_snapshot, parity, actionableReport, audit
     '## パリティフォローアップ',
     '',
     `- ベースライン済み: ${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedIssues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.baselineDebt?.baselinedFiles ?? 0} ファイル)`,
-    `- 期限切れベースライン: ${actionableReport.parityFollowup?.summary?.baselineDebt?.expiredBaselineEntries ?? 0}`,
     `- 無効化された slug: ${(actionableReport.parityFollowup?.summary?.baselineDebt?.baselineInvalidatedSlugs ?? []).length}`,
     `- アドバイザリキュー: ${actionableReport.parityFollowup?.summary?.advisoryQueue?.issues ?? 0} 件 (${actionableReport.parityFollowup?.summary?.advisoryQueue?.files ?? 0} ファイル, ${actionableReport.parityFollowup?.summary?.advisoryQueue?.blockingItems ?? 0} ブロッキング; ${formatAdvisoryQueueScope(actionableReport.parityFollowup?.summary?.advisoryQueue?.advisoryQueueScope ?? null)})`,
     '',

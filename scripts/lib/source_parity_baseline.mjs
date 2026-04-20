@@ -1,5 +1,5 @@
 /**
- * Frozen baseline mechanism。
+ * Frozen baseline mechanism (schema v2 / Phase 4 final).
  *
  * baseline は cutover 時点の既存 drift を凍結する仕組み。ack は「人がレビュー
  * して了承した例外」、baseline は「cutover 時点の既知 debt」で意味も生成方法
@@ -7,6 +7,14 @@
  *
  * 純粋関数のみ。filesystem I/O は呼び出し側 (check_source_parity.mjs /
  * generate_parity_baseline.mjs) が行う。loadBaselineFile だけ薄い fs wrapper。
+ *
+ * v2 変更点 (Phase 4):
+ * - `reviewAfter` 概念を撤去 (期限切れ / expiringSoon も含めて全廃)
+ * - BASELINE_ELIGIBLE_TYPES を JA-actionable 7 type に縮約
+ *   (segment-inconclusive / snapshot-incomplete / source-unusable を除外)
+ * - `inconclusiveCategory` / `inconclusiveReason` / `usabilityReason` は
+ *   entry schema から除去 (runtime issue 側にのみ保持)
+ * - `priority` (high/medium/low, default medium) / `note` (任意 free-text) を追加
  *
  * @module source_parity_baseline
  */
@@ -16,20 +24,16 @@ import { createHash } from 'node:crypto';
 
 import {
   STRUCTURE_MISMATCH_TYPES,
-  SOURCE_UNUSABLE_TYPES,
 } from './source_parity_types.mjs';
 
 /**
- * frozen baseline 対象になる issue type。
+ * frozen baseline 対象になる issue type (schema v2)。
  *
- * structure mismatch (section-structure-mismatch /
- * segment-order-mismatch) と source unusable (snapshot-incomplete /
- * source-unusable) を baseline 可能にした。identity key は segment-*
- * ファミリとは別系統で、structure 系は sectionIndex + structureCategory +
- * structureFingerprint、source unusable 系は usabilityReason のみで同定
- * する (§3.2 / §3.3)。`source-unusable` / `snapshot-incomplete` は gate
- * には載らないが (翻訳者責任外な source 側 debt)、ack / baseline で人手
- * 管理できる枠を提供する。
+ * JA-actionable な 7 type のみ。期限管理 / advisory の混在を避けるため
+ * segment-inconclusive (advisory) / snapshot-incomplete / source-unusable
+ * (source 側 debt) は eligibility から外した。identity key は
+ * `buildBaselineKey` / `buildBaselineKeyFromEntry` で segment 系 vs
+ * structure 系で分岐する。
  *
  * @type {ReadonlySet<string>}
  */
@@ -40,22 +44,17 @@ export const BASELINE_ELIGIBLE_TYPES = Object.freeze(
     'segment-shifted',
     'segment-untranslated',
     'segment-token-gap',
-    'segment-inconclusive',
     'section-structure-mismatch',
     'segment-order-mismatch',
-    'snapshot-incomplete',
-    'source-unusable',
   ]),
 );
 
 /**
  * `generate_parity_baseline --types` で受け入れる issueType の allowlist。
- * BASELINE_ELIGIBLE_TYPES より狭く、structure/source-unusable migration
- * 対象 (structure mismatch + source unusable) の 4 type のみを許可する。
  *
- * これより広くすると `--types` が既存 segment-* entry を touch できて
- * しまい、reviewAfter の意図しない shift を起こす (§7.4 の意図と反する)。
- * 逆にこれより狭くすると partial migration 自体が不可能になる。
+ * v2 では structure mismatch 2 type のみ。segment-* は `--regenerate` で
+ * 全再構築するのが基本運用で、`--types` による partial regenerate は
+ * structure family の migration 時のみ使う契約。
  *
  * `--types=` を空で渡した場合 (silent no-op が起きる入力パターン) も
  * `validateTypesArg` で reject される。
@@ -66,10 +65,22 @@ export const TYPES_ARG_ALLOWLIST = Object.freeze(
   new Set([
     'section-structure-mismatch',
     'segment-order-mismatch',
-    'snapshot-incomplete',
-    'source-unusable',
   ]),
 );
+
+/**
+ * baseline entry が取りうる priority 値 (schema v2)。
+ * default は `medium`。generator / validator は in order で strict match する。
+ *
+ * @type {readonly ['high', 'medium', 'low']}
+ */
+export const PRIORITY_VALUES = Object.freeze(['high', 'medium', 'low']);
+
+/**
+ * baseline entry に付与できる free-text note の最大長 (v2)。
+ * @type {number}
+ */
+export const NOTE_MAX_LENGTH = 500;
 
 /**
  * `generate_parity_baseline.mjs --types=<csv>` の引数を検証する純粋関数。
@@ -130,18 +141,6 @@ export const STRUCTURE_CATEGORIES = Object.freeze(
 );
 
 /**
- * source unusable baseline 対象の usabilityReason 列。
- * `source_parity_source_usability.mjs::buildIssue` の reason と 1:1 で対応
- * する enum。emitter 側が新しい reason を追加する際はこちらも同期する
- * 必要がある (test で pin)。
- *
- * @type {ReadonlySet<string>}
- */
-export const USABILITY_REASONS = Object.freeze(
-  new Set(['shallow-snapshot', 'escaped-details-residue', 'extractor-empty']),
-);
-
-/**
  * structure mismatch issue の payload から
  * `structureFingerprint` (sha256:<64 hex>) を derive する純粋関数。
  *
@@ -189,21 +188,6 @@ export function computeStructureFingerprint({
   return 'sha256:' + createHash('sha256').update(raw).digest('hex');
 }
 
-/**
- * `segment-inconclusive` の構造化カテゴリ。free text の `inconclusiveReason` は
- * baseline 同定に使わず、必ずこの enum で同定する。
- *
- * @type {ReadonlySet<string>}
- */
-export const INCONCLUSIVE_CATEGORIES = Object.freeze(
-  new Set([
-    'heading-count-mismatch',
-    'align-exception',
-    'tokenless-near-tie',
-  ]),
-);
-
-const REVIEW_AFTER_RE = /^\d{4}-\d{2}-\d{2}$/;
 const FINGERPRINT_RE = /^sha256:[0-9a-f]{64}$/;
 
 function isValidFingerprint(value) {
@@ -224,7 +208,7 @@ function missingTokensSignature(value) {
 }
 
 /**
- * Validate a parsed parity-baseline.json object.
+ * Validate a parsed parity-baseline.json object (schema v2).
  * Throws a descriptive Error on any schema violation.
  *
  * @param {unknown} parsed
@@ -234,8 +218,8 @@ export function validateBaseline(parsed) {
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
     throw new Error('Baseline file must be a JSON object');
   }
-  if (parsed.schemaVersion !== 1) {
-    throw new Error(`Unsupported baseline schemaVersion: ${parsed.schemaVersion}`);
+  if (parsed.schemaVersion !== 2) {
+    throw new Error(`Unsupported baseline schemaVersion: ${parsed.schemaVersion} (expected 2)`);
   }
   if (!Array.isArray(parsed.entries)) {
     throw new Error('Baseline must have an "entries" array');
@@ -266,19 +250,21 @@ export function validateBaseline(parsed) {
       throw new Error(`${prefix}: invalid "snapshotFingerprint" — must be sha256:<64 hex>`);
     }
 
-    if (typeof entry.reviewAfter !== 'string' || !REVIEW_AFTER_RE.test(entry.reviewAfter)) {
-      throw new Error(`${prefix}: invalid "reviewAfter" — must be strict YYYY-MM-DD`);
-    }
-    const [year, month, day] = entry.reviewAfter.split('-').map(Number);
-    const roundTrip = new Date(Date.UTC(year, month - 1, day));
-    if (
-      roundTrip.getUTCFullYear() !== year ||
-      roundTrip.getUTCMonth() + 1 !== month ||
-      roundTrip.getUTCDate() !== day
-    ) {
+    // v2: priority (required, enum) / note (optional, <= 500 chars)
+    if (!PRIORITY_VALUES.includes(entry.priority)) {
       throw new Error(
-        `${prefix}: "reviewAfter" "${entry.reviewAfter}" is not a valid calendar date`,
+        `${prefix}: invalid "priority" — must be one of ${PRIORITY_VALUES.join(', ')}`,
       );
+    }
+    if (entry.note !== undefined && entry.note !== null) {
+      if (typeof entry.note !== 'string') {
+        throw new Error(`${prefix}: "note" must be a string when present`);
+      }
+      if (entry.note.length > NOTE_MAX_LENGTH) {
+        throw new Error(
+          `${prefix}: "note" exceeds ${NOTE_MAX_LENGTH} characters (got ${entry.note.length})`,
+        );
+      }
     }
 
     // issueType ごとに、baseline の同定に必要な構造化フィールドを検証する。
@@ -310,27 +296,6 @@ export function validateBaseline(parsed) {
       if (!isValidFingerprint(entry.structureFingerprint)) {
         throw new Error(
           `${prefix}: ${entry.issueType} entry must have valid structureFingerprint (sha256:<64 hex>)`,
-        );
-      }
-    } else if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
-      // page 単位の unusable 判定は usabilityReason だけで同定する。
-      if (
-        typeof entry.usabilityReason !== 'string' ||
-        !USABILITY_REASONS.has(entry.usabilityReason)
-      ) {
-        throw new Error(
-          `${prefix}: ${entry.issueType} entry must have usabilityReason in ` +
-            `${[...USABILITY_REASONS].join(', ')}`,
-        );
-      }
-    } else if (entry.issueType === 'segment-inconclusive') {
-      if (
-        typeof entry.inconclusiveCategory !== 'string' ||
-        !INCONCLUSIVE_CATEGORIES.has(entry.inconclusiveCategory)
-      ) {
-        throw new Error(
-          `${prefix}: segment-inconclusive entry must have inconclusiveCategory in ` +
-            `${[...INCONCLUSIVE_CATEGORIES].join(', ')}`,
         );
       }
     } else if (entry.issueType === 'segment-extra' || entry.issueType === 'segment-untranslated') {
@@ -402,56 +367,15 @@ export function loadBaselineFile(filePath) {
  */
 const JA_OWNED_TYPES = new Set(['segment-extra', 'segment-untranslated']);
 
-export function isBaselineExpired(entry, today) {
-  if (typeof today !== 'string' || !REVIEW_AFTER_RE.test(today)) return false;
-  return today > entry.reviewAfter;
-}
-
-/**
- * baseline 期限の事前警告日数。
- */
-export const BASELINE_EXPIRY_WARNING_DAYS = 30;
-
-/**
- * Returns true when an entry's `reviewAfter` is within
- * `BASELINE_EXPIRY_WARNING_DAYS` of `today` (inclusive of the boundary)
- * but the entry has not yet expired.
- *
- * Both inputs MUST be strict YYYY-MM-DD strings; this function does not
- * accept Date objects so callers cannot accidentally introduce timezone
- * drift.
- *
- * @param {object} entry
- * @param {string} today — strict YYYY-MM-DD
- * @returns {boolean}
- */
-export function isBaselineExpiringSoon(entry, today) {
-  if (typeof today !== 'string' || !REVIEW_AFTER_RE.test(today)) return false;
-  if (typeof entry.reviewAfter !== 'string' || !REVIEW_AFTER_RE.test(entry.reviewAfter)) {
-    return false;
-  }
-  if (today > entry.reviewAfter) return false;
-  const [ty, tm, td] = today.split('-').map(Number);
-  const [ry, rm, rd] = entry.reviewAfter.split('-').map(Number);
-  const todayUtc = Date.UTC(ty, tm - 1, td);
-  const reviewUtc = Date.UTC(ry, rm - 1, rd);
-  const diffDays = Math.floor((reviewUtc - todayUtc) / 86400000);
-  return diffDays >= 0 && diffDays <= BASELINE_EXPIRY_WARNING_DAYS;
-}
-
 /**
  * Build a stable lookup key from an issue object.
  *
- * Key rules:
+ * Key rules (schema v2):
  *   - JA-owned (segment-extra, segment-untranslated):
- *       `slug + issueType + sectionPath + segmentKind + jaSegmentIndex`
+ *       `slug + issueType + sectionPath + segmentKind + jaSegmentIndex + jaSourceFingerprint`
  *   - EN-owned (segment-missing, segment-shifted, segment-token-gap):
- *       `slug + issueType + sectionPath + segmentKind + enSegmentIndex`
- *   - segment-inconclusive: `slug + issueType + inconclusiveCategory`
- *
- * The free-text `inconclusiveReason` is intentionally NOT used as part of
- * the key — it changes with wording tweaks and would silently break the
- * baseline match. Use the structured `inconclusiveCategory` enum instead.
+ *       `slug + issueType + sectionPath + segmentKind + enSegmentIndex + enSourceFingerprint`
+ *   - structure mismatch: `slug + issueType + sectionIndex + structureCategory + structureFingerprint`
  *
  * @param {string} slug
  * @param {object} issue
@@ -470,13 +394,6 @@ export function buildBaselineKey(slug, issue) {
       `${slug}|${issue.type}|idx=${issue.sectionIndex ?? '_null_'}|` +
       `cat=${issue.structureCategory ?? '_null_'}|sfp=${fp}`
     );
-  }
-  if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
-    const reason = issue.usabilitySignals?.reason ?? '_null_';
-    return `${slug}|${issue.type}|reason=${reason}`;
-  }
-  if (issue.type === 'segment-inconclusive') {
-    return `${slug}|${issue.type}|category=${issue.inconclusiveCategory ?? '_null_'}`;
   }
   if (JA_OWNED_TYPES.has(issue.type)) {
     return (
@@ -519,12 +436,6 @@ export function buildBaselineKeyFromEntry(entry) {
       `cat=${entry.structureCategory ?? '_null_'}|sfp=${entry.structureFingerprint ?? '_null_'}`
     );
   }
-  if (SOURCE_UNUSABLE_TYPES.has(entry.issueType)) {
-    return `${entry.slug}|${entry.issueType}|reason=${entry.usabilityReason ?? '_null_'}`;
-  }
-  if (entry.issueType === 'segment-inconclusive') {
-    return `${entry.slug}|${entry.issueType}|category=${entry.inconclusiveCategory ?? '_null_'}`;
-  }
   if (JA_OWNED_TYPES.has(entry.issueType)) {
     return (
       `${entry.slug}|${entry.issueType}|${entry.sectionPath ?? ''}|${entry.segmentKind ?? ''}|ja|` +
@@ -559,11 +470,14 @@ export function buildBaselineKeyFromEntry(entry) {
  *
  * Returns a fresh array — does not mutate inputs.
  *
+ * v2 契約: `issue.baselined === true` を付与するだけ (期限管理 / tagging
+ * metadata は全廃)。フィルタ側は `isFrozenByBaseline(issue) ≡
+ * issue.baselined === true` で判定する。
+ *
  * @param {string} slug
  * @param {object[]} issues
  * @param {object[]} baselineEntries — full entries array, may include other slugs
  * @param {string|null} currentSnapshotFingerprint
- * @param {string|null} [today]
  * @returns {{ tagged: object[], invalidated: boolean, matchedKeys: Set<string> }}
  */
 export function tagIssuesWithBaseline(
@@ -571,7 +485,6 @@ export function tagIssuesWithBaseline(
   issues,
   baselineEntries,
   currentSnapshotFingerprint,
-  today = null,
 ) {
   const slugEntries = baselineEntries.filter((e) => e.slug === slug);
 
@@ -607,19 +520,8 @@ export function tagIssuesWithBaseline(
     }
     const key = buildBaselineKey(slug, issue);
     if (entryKeyIndex.has(key)) {
-      const entry = entryKeyIndex.get(key);
       matchedKeys.add(key);
-      const taggedIssue = {
-        ...issue,
-        baselined: true,
-        baselineReviewAfter: entry.reviewAfter,
-      };
-      if (isBaselineExpired(entry, today)) {
-        taggedIssue.baselineExpired = true;
-      } else if (isBaselineExpiringSoon(entry, today)) {
-        taggedIssue.baselineExpiringSoon = true;
-      }
-      return taggedIssue;
+      return { ...issue, baselined: true };
     }
     return { ...issue };
   });

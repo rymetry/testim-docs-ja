@@ -82,14 +82,12 @@ before(() => {
     enSourceFingerprint: 'sha256:' + '9'.repeat(64),
     jaSourceFingerprint: null,
     missingTokens: null,
-    inconclusiveCategory: null,
-    inconclusiveReason: null,
     sectionIndex: null,
     structureCategory: null,
     structureFingerprint: null,
-    usabilityReason: null,
     snapshotFingerprint: fp,
-    reviewAfter: '2027-01-01',
+    // v2 schema: priority required, reviewAfter / inconclusive* / usability* gone.
+    priority: 'medium',
   });
   writeFileSync(BASELINE_TMP, JSON.stringify(baseline, null, 2) + '\n');
 });

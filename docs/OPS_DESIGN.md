@@ -380,27 +380,24 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
    - 再生成 diff を含む PR を起こし、PR description に必ず justification を記載:
      - なぜ翻訳追従でなく rebaseline を選んだか
      - 想定される paydown のタイミング
-     - `reviewAfter` を継承するか延長するか（延長する場合は理由）
+     - `priority` を `high`/`medium`/`low` のどれに設定したか（`medium` 以外なら理由）
 
 **重要**: rebaseline を「snapshot 変更時の自動的な逃げ道」にしてはならない。原則は常に **翻訳追従が第一**。rebaseline は justification がある例外的ケースに限る。
 
 ### Baseline 運用ルール
 
-- `parity-baseline.json` は cutover 時点の既知 drift を凍結したもの
-- 新規発生の segment-* issue は baseline に載らず即 gate fail
-- baseline entries は `reviewAfter` を持つ。期限を過ぎた entry は **gate に再突入する** (`isFrozenByBaseline` が `false` を返し、`isReportableParityIssue` が `true` を返す)。`scripts/__tests__/source_parity_issue_state.test.mjs` の "still accepts expired baseline on non-coarse actionable issues (refire)" が固定する
-- 大量 entry が同じ `reviewAfter` に集中すると cliff failure になるため、`generate_parity_baseline.mjs` は slug ハッシュで `reviewAfter` を分散させる (staggered expiry)
-- `parityFollowup` issue が **30 日以内に expire する entry** を事前警告として出す。CLI の `expiring baseline entries: N` も同様
-- baseline paydown は明示的な PR で実施する（段階的縮小）。期限切れによる自動再点火に頼ってはいけない
+- `parity-baseline.json` は schema v2 (Phase 4 cutover 以降)。`reviewAfter` による期限管理は撤廃し、`priority` (`high`/`medium`/`low`) と `note` で paydown 優先度を表現する
+- Phase 4 完了時点で `entries.length === 0` を維持する。新規発生の segment-* / structure issue は baseline に載らず即 gate fail — 翻訳追従 / artifact registry / normalizer / extractor / alignment / source lock のいずれかで解消する
+- `isFrozenByBaseline(issue) ≡ issue.baselined === true` — 期限概念は撤廃されたので、baseline に載った entry は明示的に削除するまで gate を抑止し続ける。paydown は **必ず明示的な PR** として行う (段階的縮小 / rebaseline のいずれか)
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
-- `tokenless-near-tie` baseline エントリは `--include-advisory` review queue として triage する
+- `tokenless-near-tie` は baseline 対象外 (schema v2 で `segment-inconclusive` は `BASELINE_ELIGIBLE_TYPES` から除外)。`--include-advisory` review queue として triage する
 
 ### Phase 0 後の baseline 運用（2026-04-14 以降）
 
 baseline は bug backlog として運用する:
 
-- 新規 issue は原則として baseline に追加しない。修正するか、glossary / normalize / page-level exclusion のいずれかで説明可能に除外する
-- `reviewAfter` フィールドは既存 entry の互換性のため残すが、新規 entry では不要（Phase 4 で schema から削除予定）
+- 新規 issue は原則として baseline に追加しない。修正するか、glossary / normalize / artifact registry / page-level exclusion のいずれかで説明可能に除外する
+- schema v2 では entry に `priority` (`high`/`medium`/`low`) と任意 `note` を付与する。paydown の優先順位決定はこれらで行う
 - Quarterly review は「方針再検討」ではなく「残 backlog の burn-down 進捗確認」として実施
 - 再生成手順: `npm run check:parity` と `node scripts/generate_parity_baseline.mjs`
 

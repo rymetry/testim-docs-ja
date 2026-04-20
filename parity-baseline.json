@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-04-20T04:59:53.111Z",
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-20T07:39:59.796Z",
   "generatedFromRunId": "2026-04-20T04:59:53.111Z#parity-check-status",
-  "rationale": "M2.5-C content burndown — source-first mirror",
+  "rationale": "M2.5-C content burndown — source-first mirror / Phase 4 v2",
   "entries": []
 }

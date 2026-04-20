@@ -236,9 +236,9 @@ describe('summarizeParityResults', () => {
     assert.equal(summary.activeFiles, 0);
     assert.equal(summary.baselinedIssues, 2);
     assert.equal(summary.baselinedFiles, 1);
-    assert.deepEqual(summary.baselinedByInconclusiveCategory, {
-      'heading-count-mismatch': 1,
-    });
+    // schema v2: baselinedByInconclusiveCategory は撤去済 (segment-inconclusive は
+    // BASELINE_ELIGIBLE_TYPES に入らないため tagIssuesWithBaseline が baselined:true を
+    // 付けない。本 fixture は前 schema の挙動確認用に合成された in-memory fixture)
   });
 
 });

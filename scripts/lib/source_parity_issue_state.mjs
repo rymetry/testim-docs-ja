@@ -14,7 +14,7 @@ export function isValidAcknowledgedIssue(issue) {
 }
 
 export function isFrozenByBaseline(issue) {
-  return issue.baselined === true && issue.baselineExpired !== true;
+  return issue.baselined === true;
 }
 
 export function isActiveParityIssue(issue) {

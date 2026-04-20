@@ -135,7 +135,6 @@ describe('isCoarseAuditSignal', () => {
         type: 'step-count-mismatch',
         severity: 'signal',
         baselined: true,
-        baselineExpired: true,
       }),
       true,
     );
@@ -209,13 +208,12 @@ describe('isReportableParityIssue rejects coarse signals', () => {
     );
   });
 
-  it('rejects coarse signal even when baseline is expired', () => {
+  it('rejects coarse signal even when baselined: true (coarse stays non-reportable)', () => {
     assert.equal(
       isReportableParityIssue({
         type: 'heading-mismatch',
         severity: 'signal',
         baselined: true,
-        baselineExpired: true,
       }),
       false,
     );
@@ -253,27 +251,14 @@ describe('isReportableParityIssue rejects coarse signals', () => {
     );
   });
 
-  it('still rejects non-expired baseline on actionable issues', () => {
+  it('still rejects baselined actionable issues (baselined === frozen in v2)', () => {
     assert.equal(
       isReportableParityIssue({
         type: 'segment-missing',
         severity: 'actionable',
         baselined: true,
-        baselineExpired: false,
       }),
       false,
-    );
-  });
-
-  it('still accepts expired baseline on non-coarse actionable issues (refire)', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'segment-missing',
-        severity: 'actionable',
-        baselined: true,
-        baselineExpired: true,
-      }),
-      true,
     );
   });
 
@@ -301,16 +286,16 @@ describe('isReportableParityIssue rejects coarse signals', () => {
 // existing predicates remain unchanged for non-coarse issues
 
 describe('existing predicates unchanged for non-coarse issues', () => {
-  it('isFrozenByBaseline stays the same', () => {
-    assert.equal(
-      isFrozenByBaseline({ baselined: true, baselineExpired: false }),
-      true,
-    );
+  it('isFrozenByBaseline is a pure baselined-truthy check (no expiry in v2)', () => {
+    assert.equal(isFrozenByBaseline({ baselined: true }), true);
+    // v2: baselineExpired tag is no longer emitted. Legacy stray flags must
+    // not change the result — baselined: true alone freezes the issue.
     assert.equal(
       isFrozenByBaseline({ baselined: true, baselineExpired: true }),
-      false,
+      true,
     );
     assert.equal(isFrozenByBaseline({ baselined: false }), false);
+    assert.equal(isFrozenByBaseline({}), false);
   });
 
   it('isValidAcknowledgedIssue stays the same', () => {
@@ -342,7 +327,7 @@ describe('existing predicates unchanged for non-coarse issues', () => {
 
   it('isNonBlockingParityIssue stays the same', () => {
     assert.equal(
-      isNonBlockingParityIssue({ baselined: true, baselineExpired: false }),
+      isNonBlockingParityIssue({ baselined: true }),
       true,
     );
     assert.equal(
@@ -460,7 +445,6 @@ describe('isStructureMismatchIssue', () => {
         type: 'segment-order-mismatch',
         severity: 'actionable',
         baselined: true,
-        baselineExpired: false,
       }),
       true,
     );
@@ -602,21 +586,8 @@ describe('isReportableParityIssue — structure mismatch / source unusable', () 
         type: 'segment-order-mismatch',
         severity: 'actionable',
         baselined: true,
-        baselineExpired: false,
       }),
       false,
-    );
-  });
-
-  it('expired baseline on a structure mismatch IS reportable', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'section-structure-mismatch',
-        severity: 'actionable',
-        baselined: true,
-        baselineExpired: true,
-      }),
-      true,
     );
   });
 
@@ -650,19 +621,6 @@ describe('isReportableParityIssue — structure mismatch / source unusable', () 
         type: 'snapshot-incomplete',
         severity: 'actionable',
         baselined: true,
-        baselineExpired: false,
-      }),
-      false,
-    );
-  });
-
-  it('expired baseline on a source-unusable is STILL non-reportable', () => {
-    assert.equal(
-      isReportableParityIssue({
-        type: 'source-unusable',
-        severity: 'actionable',
-        baselined: true,
-        baselineExpired: true,
       }),
       false,
     );
@@ -738,7 +696,6 @@ describe('isAdvisoryOnlyParityIssue — source unusable only', () => {
         type: 'snapshot-incomplete',
         severity: 'actionable',
         baselined: true,
-        baselineExpired: false,
       }),
       false,
     );

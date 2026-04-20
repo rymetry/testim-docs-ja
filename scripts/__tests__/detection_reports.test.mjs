@@ -492,50 +492,6 @@ describe('buildActionableReport', () => {
     assert.equal(report.parityRegression.summary.issueCount, 0);
   });
 
-  it('does NOT re-light parity issue for expired-baseline on coarse signal', () => {
-    // Same intent via the baseline path.
-    const snapshot = {
-      checkedAt: '2026-03-19T00:00:00Z',
-      summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
-      changes: [],
-      sidebar: { changed: false, addedPages: [], removedPages: [] },
-    };
-    const parity = {
-      summary: {
-        checkedAt: '2026-03-19T00:00:00Z',
-        actionableFiles: 0,
-        signalFiles: 1,
-        errorFiles: 0,
-        activeActionableFiles: 0,
-        activeFiles: 1,
-        activeErrorFiles: 0,
-        expiredBaselineEntries: 1,
-        issuesByType: { 'heading-mismatch': 1 },
-        issuesBySeverity: { signal: 1 },
-      },
-      files: [
-        {
-          file: 'src/content/docs/example.md',
-          issues: [
-            {
-              type: 'heading-mismatch',
-              severity: 'signal',
-              detail: 'expired baseline coarse',
-              baselined: true,
-              baselineExpired: true,
-            },
-          ],
-        },
-      ],
-      advisoryQueue: [],
-      advisoryQueueScope: null,
-    };
-
-    const report = buildActionableReport(snapshot, parity, []);
-    assert.equal(report.parityRegression.shouldOpenIssue, false);
-    assert.equal(report.parityRegression.summary.issueCount, 0);
-  });
-
   it('filters acknowledged issues out of top entries but keeps active ones on the same file', () => {
     const snapshot = {
       checkedAt: '2026-03-19T00:00:00Z',
@@ -763,7 +719,6 @@ describe('renderSummaryMarkdown', () => {
           baselineDebt: {
             baselinedIssues: 1,
             baselinedFiles: 1,
-            expiredBaselineEntries: 1,
             baselineInvalidatedSlugs: ['overview/page-a'],
           },
           advisoryQueue: {
@@ -889,7 +844,6 @@ describe('parityFollowup in buildActionableReport', () => {
       errorFiles: 0,
       baselinedIssues: 0,
       baselinedFiles: 0,
-      expiredBaselineEntries: 0,
       baselineInvalidatedSlugs: [],
       advisoryQueueIssues: 0,
       advisoryQueueFiles: 0,
@@ -916,14 +870,28 @@ describe('parityFollowup in buildActionableReport', () => {
     assert.equal(report.parityFollowup.body, '');
   });
 
-  it('shouldOpenIssue = true when expiredBaselineEntries > 0', () => {
+  it('shouldOpenIssue = true when baselinedIssues > 0', () => {
     const parity = {
       ...cleanParity,
-      summary: { ...cleanParity.summary, expiredBaselineEntries: 3 },
+      summary: {
+        ...cleanParity.summary,
+        baselinedIssues: 3,
+        baselinedFiles: 1,
+      },
+      files: [
+        {
+          file: 'src/content/docs/overview/page-a.md',
+          issues: [
+            { type: 'segment-missing', severity: 'actionable', baselined: true, detail: 'frozen1' },
+            { type: 'segment-extra', severity: 'actionable', baselined: true, detail: 'frozen2' },
+            { type: 'segment-shifted', severity: 'actionable', baselined: true, detail: 'frozen3' },
+          ],
+        },
+      ],
     };
     const report = buildActionableReport(emptySnapshot, parity, []);
     assert.equal(report.parityFollowup.shouldOpenIssue, true);
-    assert.equal(report.parityFollowup.summary.baselineDebt.expiredBaselineEntries, 3);
+    assert.equal(report.parityFollowup.summary.baselineDebt.baselinedIssues, 3);
   });
 
   it('shouldOpenIssue = true when baselineInvalidatedSlugs has entries', () => {
@@ -987,7 +955,8 @@ describe('parityFollowup in buildActionableReport', () => {
       ...cleanParity,
       summary: {
         ...cleanParity.summary,
-        expiredBaselineEntries: 1,
+        // baselineInvalidatedSlugs triggers parityFollowup to open.
+        baselineInvalidatedSlugs: ['overview/page-a'],
         advisoryQueueIssues: 2,
         advisoryQueueFiles: 1,
       },
@@ -998,10 +967,7 @@ describe('parityFollowup in buildActionableReport', () => {
             {
               type: 'segment-missing',
               severity: 'actionable',
-              baselined: true,
-              baselineExpired: true,
-              baselineReviewAfter: '2026-03-01',
-              detail: 'expired',
+              detail: 'invalidated slug re-fire',
             },
           ],
         },
@@ -1058,16 +1024,20 @@ describe('parityFollowup in buildActionableReport', () => {
     ]);
   });
 
-  it('parityFollowup body contains expired baseline file details', () => {
+  it('parityFollowup body contains baselined file details', () => {
     const parity = {
       ...cleanParity,
-      summary: { ...cleanParity.summary, expiredBaselineEntries: 2 },
+      summary: {
+        ...cleanParity.summary,
+        baselinedIssues: 2,
+        baselinedFiles: 1,
+      },
       files: [
         {
           file: 'src/content/docs/overview/page-a.md',
           issues: [
-            { type: 'segment-missing', severity: 'actionable', baselined: true, baselineExpired: true, baselineReviewAfter: '2026-03-01', detail: 'expired' },
-            { type: 'segment-extra', severity: 'actionable', baselined: true, baselineExpired: true, detail: 'expired2' },
+            { type: 'segment-missing', severity: 'actionable', baselined: true, detail: 'frozen' },
+            { type: 'segment-extra', severity: 'actionable', baselined: true, detail: 'frozen2' },
           ],
         },
       ],
@@ -1186,7 +1156,6 @@ describe('parityFollowup sourceUnusable subsection exposure', () => {
       errorFiles: 0,
       baselinedIssues: 0,
       baselinedFiles: 0,
-      expiredBaselineEntries: 0,
       baselineInvalidatedSlugs: [],
       advisoryQueueIssues: 0,
       advisoryQueueFiles: 0,
@@ -1247,7 +1216,8 @@ describe('parityFollowup sourceUnusable subsection exposure', () => {
       ...cleanParity,
       summary: {
         ...cleanParity.summary,
-        expiredBaselineEntries: 1,
+        baselinedIssues: 1,
+        baselinedFiles: 1,
         snapshotUnusableIssues: 4,
         snapshotUnusableFiles: 2,
         snapshotUnusableByType: { 'snapshot-incomplete': 3, 'source-unusable': 1 },
@@ -1260,9 +1230,7 @@ describe('parityFollowup sourceUnusable subsection exposure', () => {
               type: 'segment-missing',
               severity: 'actionable',
               baselined: true,
-              baselineExpired: true,
-              baselineReviewAfter: '2026-03-01',
-              detail: 'expired',
+              detail: 'frozen',
             },
           ],
         },
@@ -1285,7 +1253,8 @@ describe('parityFollowup sourceUnusable subsection exposure', () => {
       ...cleanParity,
       summary: {
         ...cleanParity.summary,
-        expiredBaselineEntries: 1,
+        baselinedIssues: 1,
+        baselinedFiles: 1,
         snapshotUnusableIssues: 0,
         snapshotUnusableFiles: 0,
         snapshotUnusableByType: {},
@@ -1298,8 +1267,7 @@ describe('parityFollowup sourceUnusable subsection exposure', () => {
               type: 'segment-missing',
               severity: 'actionable',
               baselined: true,
-              baselineExpired: true,
-              detail: 'expired',
+              detail: 'frozen',
             },
           ],
         },
@@ -1364,7 +1332,6 @@ describe('renderSummaryMarkdown structure / source unusable sections', () => {
           baselineDebt: {
             baselinedIssues: 0,
             baselinedFiles: 0,
-            expiredBaselineEntries: 0,
             baselineInvalidatedSlugs: [],
           },
           advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
@@ -1431,7 +1398,7 @@ describe('renderSummaryMarkdown structure / source unusable sections', () => {
       },
       parityFollowup: {
         summary: {
-          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, expiredBaselineEntries: 0, baselineInvalidatedSlugs: [] },
+          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, baselineInvalidatedSlugs: [] },
           advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
           sourceUnusable: {
             snapshotUnusableIssues: 0,
@@ -1500,40 +1467,14 @@ describe('parityRegression excludes non-expired baselined issues', () => {
     assert.deepEqual(report.parityRegression.summary.issuesBySeverity, {});
   });
 
-  it('opens parity issue when baselined issue has expired', () => {
+  it('baselined issue is NEVER in parityRegression topEntries (v2: no expiry)', () => {
+    // v2: baselined:true alone freezes the issue — there is no expiry path to
+    // re-fire it. Non-baselined active issues still appear.
     const parity = {
       summary: {
         checkedAt: '2026-04-07T00:00:00Z',
         actionableFiles: 1,
         errorFiles: 0,
-        expiredBaselineEntries: 1,
-        activeActionableFiles: 1,
-        activeFiles: 1,
-        baselineInvalidatedSlugs: [],
-      },
-      files: [
-        {
-          file: 'src/content/docs/overview/page-a.md',
-          issues: [
-            { type: 'segment-missing', severity: 'actionable', baselined: true, baselineExpired: true, detail: 'expired' },
-          ],
-        },
-      ],
-      advisoryQueue: [],
-      advisoryQueueScope: null,
-    };
-    const report = buildActionableReport(emptySnapshot, parity, []);
-    assert.equal(report.parityRegression.shouldOpenIssue, true);
-    assert.equal(report.parityRegression.summary.issueCount, 1);
-  });
-
-  it('baselined issue is NOT in parityRegression topEntries but expired baselined IS', () => {
-    const parity = {
-      summary: {
-        checkedAt: '2026-04-07T00:00:00Z',
-        actionableFiles: 1,
-        errorFiles: 0,
-        expiredBaselineEntries: 1,
         activeActionableFiles: 1,
         baselineInvalidatedSlugs: [],
       },
@@ -1542,7 +1483,7 @@ describe('parityRegression excludes non-expired baselined issues', () => {
           file: 'src/content/docs/overview/page-a.md',
           issues: [
             { type: 'segment-missing', severity: 'actionable', baselined: true, detail: 'frozen — must not appear' },
-            { type: 'segment-extra', severity: 'actionable', baselined: true, baselineExpired: true, detail: 'expired — must appear' },
+            { type: 'segment-extra', severity: 'actionable', detail: 'active — must appear' },
           ],
         },
       ],
@@ -1878,23 +1819,23 @@ describe('parityRegression excludes coarse audit signals', () => {
     assert.equal(report.parityRegression.summary.issueCount, 0);
   });
 
-  it('coarse-only file does not appear in parityRegression even with expired baseline', () => {
+  it('coarse-only file with baselined: true still does not appear in parityRegression', () => {
+    // v2: baselined:true always freezes. Coarse signals are also non-reportable
+    // by type regardless of baseline state.
     const parity = {
       summary: {
         checkedAt: '2026-04-07T00:00:00Z',
         actionableFiles: 0,
-        expiredBaselineEntries: 1,
       },
       files: [
         {
-          file: 'src/content/docs/expired-baseline-coarse.md',
+          file: 'src/content/docs/baselined-coarse.md',
           issues: [
             {
               type: 'heading-mismatch',
               severity: 'signal',
-              detail: 'expired baseline',
+              detail: 'frozen coarse',
               baselined: true,
-              baselineExpired: true,
             },
           ],
         },
@@ -2032,7 +1973,7 @@ describe('family count and audit manifest invariants', () => {
       parityRegression: { summary: { issueCount: 0 } },
       parityFollowup: {
         summary: {
-          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, expiredBaselineEntries: 0, baselineInvalidatedSlugs: [] },
+          baselineDebt: { baselinedIssues: 0, baselinedFiles: 0, baselineInvalidatedSlugs: [] },
           advisoryQueue: { issues: 0, files: 0, blockingItems: 0, advisoryQueueScope: null },
         },
       },

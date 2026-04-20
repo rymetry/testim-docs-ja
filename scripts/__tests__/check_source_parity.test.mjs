@@ -134,11 +134,10 @@ describe('CLI coverage helpers', () => {
     assert.equal(isValidAcknowledgedIssue({ acknowledged: false, ackExpired: false }), false);
   });
 
-  it('treats non-expired baselines and valid acknowledgements as non-blocking', () => {
+  it('treats baselined issues and valid acknowledgements as non-blocking', () => {
     assert.equal(isNonBlockingIssue({ baselined: true }), true);
     assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: false }), true);
-    // 期限切れ baseline は再び blocking 扱いに戻る。
-    assert.equal(isNonBlockingIssue({ baselined: true, baselineExpired: true }), false);
+    // v2: baseline expiry is gone — baselined:true always freezes the issue.
     assert.equal(isNonBlockingIssue({ acknowledged: true, ackExpired: true }), false);
     assert.equal(isNonBlockingIssue({ severity: 'actionable' }), false);
   });
@@ -166,17 +165,6 @@ describe('CLI coverage helpers', () => {
       allCovered: true,
       icon: '⏸️',
       suffix: ' (covered by baseline/ack)',
-    });
-  });
-
-  it('treats expired baselines as blocking for console coverage', () => {
-    // 期限切れ baseline は console coverage でも blocking に戻す。
-    const state = getConsoleCoverageState([{ baselined: true, baselineExpired: true }]);
-    assert.deepEqual(state, {
-      allAcked: false,
-      allCovered: false,
-      icon: '❌',
-      suffix: '',
     });
   });
 
@@ -244,7 +232,6 @@ describe('CLI coverage helpers', () => {
           type: 'section-structure-mismatch',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
         { type: 'segment-missing', severity: 'actionable' },
       ]);
@@ -262,7 +249,6 @@ describe('CLI coverage helpers', () => {
           type: 'section-structure-mismatch',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
       ]);
       assert.deepEqual(state, {
@@ -296,7 +282,6 @@ describe('CLI coverage helpers', () => {
           type: 'section-structure-mismatch',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
         { type: 'source-unusable', severity: 'actionable' },
       ]);
@@ -308,36 +293,17 @@ describe('CLI coverage helpers', () => {
       });
     });
 
-    it('expired baseline on structure-mismatch → icon ❌, suffix "" (re-fire)', () => {
-      const state = getConsoleCoverageState([
-        {
-          type: 'section-structure-mismatch',
-          severity: 'actionable',
-          baselined: true,
-          baselineExpired: true,
-        },
-      ]);
-      assert.deepEqual(state, {
-        allAcked: false,
-        allCovered: false,
-        icon: '❌',
-        suffix: '',
-      });
-    });
-
     it('structure-mismatch + source-unusable both baselined → icon ⏸️, suffix " (covered by baseline/ack)"', () => {
       const state = getConsoleCoverageState([
         {
           type: 'section-structure-mismatch',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
         {
           type: 'source-unusable',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
       ]);
       assert.deepEqual(state, {
@@ -451,12 +417,13 @@ describe('CLI coverage helpers', () => {
 
     it('baselined snapshot-incomplete 単独 → " (covered by baseline/ack)"', () => {
       // baseline 経路も advisory より優先。
+      // (schema v2 では baselineExpired/baselineReviewAfter は emit されないので
+      //  fixture にも付けない — `baselined: true` のみが gate state を駆動する)
       const state = getConsoleCoverageState([
         {
           type: 'snapshot-incomplete',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
       ]);
       assert.deepEqual(state, {
@@ -576,7 +543,7 @@ describe('computeExitCode (gate uses reportableActive counters)', () => {
     assert.equal(computeExitCode(summary, null), 0);
   });
 
-  it('returns 0 for coarse-only with expired baseline', () => {
+  it('returns 0 for coarse-only baselined run (baselined:true freezes the audit signal)', () => {
     const summary = {
       reportableActiveFiles: 0,
       reportableActiveActionableFiles: 0,
@@ -585,7 +552,7 @@ describe('computeExitCode (gate uses reportableActive counters)', () => {
       activeFiles: 1,
       activeActionableFiles: 0,
       activeErrorFiles: 0,
-      expiredBaselineEntries: 1,
+      baselinedIssues: 1,
     };
     assert.equal(computeExitCode(summary, 'actionable'), 0);
     assert.equal(computeExitCode(summary, 'any'), 0);
@@ -796,6 +763,29 @@ describe('parity-check-status.json — debug.artifactCoverage emit (Phase 4)', (
       assert.equal(typeof ac.matchedHits, 'number');
       assert.ok(typeof ac.bySlug === 'object' && ac.bySlug !== null);
       assert.ok(typeof ac.byToken === 'object' && ac.byToken !== null);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// v2 cutover: debug.baselineSchemaVersion must be 2
+// ---------------------------------------------------------------------------
+
+describe('parity-check-status.json — debug.baselineSchemaVersion is 2 (v2 cutover)', () => {
+  it('status.debug.baselineSchemaVersion === 2 when baseline is loaded', async () => {
+    const { default: main } = await import('../check_source_parity.mjs');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'parity-baseline-schema-'));
+    const outputPath = path.join(tmp, 'parity-check-status.json');
+    try {
+      await main({ outputPath });
+      const status = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+      assert.equal(
+        status.debug?.baselineSchemaVersion,
+        2,
+        'debug.baselineSchemaVersion must reflect v2 after cutover',
+      );
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

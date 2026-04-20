@@ -36,11 +36,11 @@ import {
  *     snapshot / source 起因で comparator が成立しないページ用の独立 counter。
  *     翻訳差分と混ぜずに別枠で集計し、gate には載せない。
  *
- *   baselinedIssues / baselinedFiles / baselinedByType /
- *   baselinedByInconclusiveCategory / expiredBaselineEntries
- *     Frozen drift accounting。parity-baseline.json が cutover 前の
- *     segment-* drift を active gate から除外する。期限切れ baseline は
- *     gate に refire する (isFrozenByBaseline / isReportableParityIssue 参照)。
+ *   baselinedIssues / baselinedFiles / baselinedByType
+ *     Frozen drift accounting (schema v2)。parity-baseline.json が cutover
+ *     前の segment-* / structure drift を active gate から除外する。v2 では
+ *     期限概念を廃止し、`isFrozenByBaseline(issue) ≡ issue.baselined === true`
+ *     に縮約している (isReportableParityIssue 参照)。
  *
  * @param {object[]} results
  * @param {object} [orphanMeta] 呼び出し側で集計した orphan baseline entry の情報。
@@ -51,7 +51,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
   const issuesByType = {};
   const issuesBySeverity = {};
   const baselinedByType = {};
-  const baselinedByInconclusiveCategory = {};
   const auditSignalsByType = {};
   const structureMismatchByType = {};
   const snapshotUnusableByType = {};
@@ -66,8 +65,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
   let expiredAcknowledgements = 0;
   let baselinedIssues = 0;
   let baselinedFiles = 0;
-  let expiredBaselineEntries = 0;
-  let expiringBaselineEntries30d = 0;
   let reportableActiveFiles = 0;
   let reportableActiveActionableFiles = 0;
   let auditSignalIssues = 0;
@@ -98,18 +95,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
       if (isBaselined) {
         baselinedIssues += 1;
         baselinedByType[issue.type] = (baselinedByType[issue.type] || 0) + 1;
-        if (issue.baselineExpired === true) {
-          expiredBaselineEntries += 1;
-        } else if (issue.baselineExpiringSoon === true) {
-          expiringBaselineEntries30d += 1;
-        }
-        if (
-          issue.type === 'segment-inconclusive' &&
-          typeof issue.inconclusiveCategory === 'string'
-        ) {
-          baselinedByInconclusiveCategory[issue.inconclusiveCategory] =
-            (baselinedByInconclusiveCategory[issue.inconclusiveCategory] || 0) + 1;
-        }
         hasBaselined = true;
       }
 
@@ -200,9 +185,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
     baselinedIssues,
     baselinedFiles,
     baselinedByType,
-    baselinedByInconclusiveCategory,
-    expiredBaselineEntries,
-    expiringBaselineEntries30d,
     // audit / reportable counters
     reportableActiveFiles,
     reportableActiveActionableFiles,
