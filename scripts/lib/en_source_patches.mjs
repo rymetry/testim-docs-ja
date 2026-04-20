@@ -306,6 +306,65 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     addedAt: '2026-04-18',
     reviewAfter: '2026-10-18',
   }),
+  Object.freeze({
+    id: 'UD-010A-codeship-broken-h2-paragraph',
+    slugs: Object.freeze([
+      'integrations/integrate-testim-to-your-ci/codeship-integration',
+    ]),
+    defectClass: 'madcap-artifact',
+    find:
+      '<p>\u200b## Run with external Selenium Grid<br /> When your app is deployed on a publicly ' +
+      'available server, you can run your tests on an external Selenium Grid. In that case, you ' +
+      "don't need the local Selenium Server (webdriver-manager), so just add these lines to the " +
+      'setup commands section:</p>',
+    replace:
+      '<h2><a name="run-with-external-selenium-grid"></a>Run with external Selenium Grid</h2>' +
+      '<p>When your app is deployed on a publicly available server, you can run your tests on ' +
+      "an external Selenium Grid. In that case, you don't need the local Selenium Server " +
+      '(webdriver-manager), so just add these lines to the setup commands section:</p>',
+    rationale:
+      'Upstream MadCap authoring artifact: the third section heading ("Run with external Selenium Grid") ' +
+      'was serialized into a single <p> element whose text content begins with a zero-width space (U+200B) ' +
+      'followed by a literal markdown-style "## " prefix and then fused with the following body paragraph ' +
+      'via a <br /> line break, instead of the expected <h2><a name="..."></a>Heading</h2> + separate <p>. ' +
+      'Adjacent sections on the same page ("Project configuration" / "Run with local Selenium Grid") use ' +
+      'the correct <h2>-with-anchor shape, so the broken third heading is clearly a MadCap source-side ' +
+      'serialization defect. Symptom: `extractHeadingSequence` counts EN=2 while JA has 3 H2 headings, ' +
+      'surfacing as a `segment-inconclusive` [heading-count-mismatch] entry for the slug. Patch rewrites ' +
+      'the broken <p> to a canonical <h2> + <p> pair matching sibling heading anchors; parity counts ' +
+      'converge to 3 on both sides.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-010B-parameters-for-groups-broken-step-paragraph',
+    slugs: Object.freeze(['advanced-editing/parameters/parameters-for-groups']),
+    defectClass: 'madcap-artifact',
+    find:
+      "<p>\u200b5. Enter a value in the field below the parameter name. If the value is a constant " +
+      "string value use ' ' around it. For example, 'guest'. This value will be available in this " +
+      'test only (i.e., the value will not be shared across tests.</p>',
+    replace:
+      "<p>Enter a value in the field below the parameter name. If the value is a constant string " +
+      "value use ' ' around it. For example, 'guest'. This value will be available in this test " +
+      'only (i.e., the value will not be shared across tests.</p>',
+    rationale:
+      'Upstream MadCap authoring artifact: step 5 of the "Adding Parameters to a Group" ordered list ' +
+      'was serialized as an orphan <p> element interleaved between <li value="4"> and <li value="5"> ' +
+      '(where the list item with value="5" carries different content — "Repeat steps 4-5 to add ' +
+      'additional parameters"). The orphan <p> begins with a zero-width space (U+200B) followed by ' +
+      'a literal "5. " step-number prefix, which turndown converts to a Markdown paragraph whose ' +
+      'first line matches `extractStepCounts` "^\\d+\\.\\s" regex, inflating the EN step count from ' +
+      '6 (the correct <li value> count) to 7. JA is already correctly structured as 6 numbered steps ' +
+      'with the translated value-entry guidance folded into a prose paragraph between steps, so the ' +
+      'symptom surfaces as a `step-count-mismatch` audit signal (EN=7, JA=6) for section #2. Patch ' +
+      'strips the leading "\u200b5. " prefix so the content remains as prose (matching JA) but is no ' +
+      'longer counted as a numbered step by extractStepCounts.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
 ]);
 
 /**
