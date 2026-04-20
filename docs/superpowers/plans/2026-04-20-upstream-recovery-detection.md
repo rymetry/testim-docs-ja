@@ -1,18 +1,29 @@
-# Upstream Recovery Detection & Registry Lifecycle Management (Revision 2)
+# Upstream Recovery Detection & Registry Lifecycle Management (Revision 3)
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans。Steps use checkbox (`- [ ]`)。新規 worktree 推奨 (branch: `claude/upstream-recovery-detection`)。本 plan は M2.5 全 merge 完了後、PR Z と独立 parallel で実行可能。
+> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans。Steps use checkbox (`- [ ]`)。新規 worktree 推奨 (branch: `claude/upstream-recovery-detection`)。本 plan は **PR Z merge 後**に実行推奨 (理由は §Dependencies 参照)。
 
-> **Rev 2 (2026-04-20):** Rev 1 に対して Codex + self レビュー結果を反映。主要変更点:
-> - Rev 1 の Task 4 (新規 weekly workflow) → **削除**。既存 `sourceSyncHealth` / `sync-detection-issues.cjs` (`.github/workflows/scheduled-actionable.yml:115-135`, `detection_reports.mjs:1105-1153`) を拡張する方針に切替。
-> - Rev 1 の Task 6 (pull-requests.md cleanup 同 PR) → **別 PR に分離**。`source_parity_source_side_debt.test.mjs:47-55` が `pull-requests` seeded pin を強制しているため、同 PR では contract churn 大。
-> - **新 Task: `source_sync_exclusions` entries に `reviewAfter` 追加**。現状 `addedAt` のみで review cadence 不整合 (`en_source_patches` には `reviewAfter` あり)。Codex 指摘の Q5 対応。
-> - en_source_patches 撤廃 + extractor 移行 option (Rev 1 §D10 / Codex Q4) は scope 外と明示。別 plan candidates として Appendix 化。
+> **Rev 3 (2026-04-20 夜):** 第三者独立レビューにより判明した 3 つの HIGH finding を反映した大幅 scale-down:
+> - **HIGH-1 既存インフラ過小評価**: `scripts/check_patch_review_cadence.mjs:53-77` が既存。`scripts/check_source_parity.mjs:376` から毎 run 呼ばれ、`reviewAfter` 経過 en_patch を `console.warn` 出力 (non-blocking)。**Axis B for en_source_patches は既に機能している**。Rev 2 は新規 Axis B を提案していたが、実態は既存 cadence check の拡張で十分。
+> - **HIGH-2 PR Z との衝突**: Rev 2 は「独立並列実行可」と宣言しつつ `check_source_parity.mjs` / `PARITY_GUIDE.md` / `OPS_DESIGN.md` を変更対象に含めており、PR Z (Task 4.5-4.8) と owner 衝突。**推奨順序を「PR Z 完了後」に変更**。`check_upstream_recovery.mjs` は完全 standalone に修正。
+> - **HIGH-3 patch count 誤差**: 実測で 34 patch IDs / 42 patch-to-slug bindings / 34 unique slugs (Rev 2 の "26 unique slugs" は誤り、"8 → 26 拡張" の数字も誤り)。
+> 
+> その他の revisions:
+> - `check_patch_review_cadence.mjs` を拡張して `SOURCE_SYNC_EXCLUSIONS` も scan 対象に (新 task)
+> - test 拡張を slug-driven loop に (preprocessEnHtml は slug ごとに全 applicable patches を一括適用するため)
+> - Appendix B: Pattern D (unified debt catalog) を中期的進化パスとして明記
 
-**Goal:** EN upstream 側の欠陥を許容する 2 つの registry (`source_sync_exclusions.mjs` / `en_source_patches.mjs`) に対して、**(A) upstream 修正の自動検知** と **(B) 登録解除忘れの persistent reminder** を両方整備する。既存の「baseline monotonic 非増加 / 最終 DoD 全 counter 0」は維持しつつ、registry entry が上流修正後に stale 化したまま放置されるリスクを排除する。
+> **Rev 2 (2026-04-20 PM):** [履歴 — Revision History §参照]
+> **Rev 1 (2026-04-20 AM):** [履歴 — Revision History §参照]
 
-**Architecture:** `upstream-recovery-status.json` を新設し per-entry status を計算。既存 `docs-actionable-report.json` + `.github/scripts/sync-detection-issues.cjs` machinery に **`upstreamRecovery` family を追加**してまとめて扱う (新 workflow / 新 issue family 増設なし)。PR comment は既存 workflow 内で sticky (update-in-place) 出力。test 拡張で全 34 patches + sync_exclusions entries 網羅。
+**Goal:** EN upstream 欠陥を許容する 2 registry (`source_sync_exclusions.mjs` / `en_source_patches.mjs`) に対して、**(A) upstream 修正の自動検知** と **(B) 登録解除忘れの persistent reminder** を、**既存 infrastructure の拡張として**整備する。registry が上流修正後に stale 化したまま放置されるリスクを排除する。
 
-**Tech Stack:** Node.js 20, node:test, GitHub Actions (既存 `scheduled-actionable.yml` 活用)。
+**Architecture:** 本 plan は既存信号の **integration + expansion** のみ。新 workflow / 新 issue family / 新 CI job は追加しない。
+
+既存 Axis B for en_patches (`check_patch_review_cadence.mjs` + `check_source_parity.mjs:376` の `console.warn` 統合) を **`SOURCE_SYNC_EXCLUSIONS` へも広げ**、両 registry の `reviewAfter` overdue を同じ channel で扱う。Axis A for en_patches (現在 `TARGET_SLUG_SNAPSHOTS` 8/34 slugs カバー) を **全 34 patch IDs へ拡張**。
+
+`upstream-recovery-status.json` は両 registry の既存信号 (`reviewAfter` / `fetchStatus: 'excluded-recovered'` / `patch.find` 不在) を集約した **derived view**。ゼロからの status computation ではない。将来 Pattern D (unified debt catalog) へ移行する bridge として設計。
+
+**Tech Stack:** Node.js 20, node:test, GitHub Actions (既存 `scheduled-actionable.yml` 活用)。新 workflow 追加なし。
 
 ---
 
@@ -101,96 +112,132 @@ docs/DOCS_DATE_TRACKING.md に upstream-recovery-status.json 追記
 
 ---
 
-## 重要ファイルマップ
+## 重要ファイルマップ (Rev 3)
 
 ### 新規
 
-- `scripts/check_upstream_recovery.mjs` — 両 registry の status を統合計算、`upstream-recovery-status.json` 書き出し
-- `upstream-recovery-status.json` — runtime 出力 (`.gitignore` 対象、ただし CI artifact として保存)
-- `.github/workflows/upstream-recovery-tracking.yml` — weekly cron workflow
-- `docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md` — status JSON schema + lifecycle 状態遷移図 (設計仕様)
+- `scripts/check_upstream_recovery.mjs` — **完全 standalone** aggregator。既存信号 (`check_patch_review_cadence` 出力 / `source-sync-status.json.pages[].fetchStatus` / snapshot の `patch.find` 存在) を読み取り `upstream-recovery-status.json` を derive するのみ。`check_source_parity.mjs` には触らない
+- `upstream-recovery-status.json` — derived view (`.gitignore` 対象、CI artifact として保存)
+- `docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md` — status JSON schema + lifecycle 状態遷移図
 
 ### 変更
 
-- `scripts/lib/en_source_patches.mjs` — `createEnSourcePatchCoverage` を拡張し per-patch `{matched, hits, lastSeenAt}` を記録
-- `scripts/check_source_parity.mjs` — 末尾で `upstream-recovery-status.json` の `en_source_patches` section を書き出す (or 新 script を invoke)
-- `scripts/__tests__/en_source_patches_integration.test.mjs` — `TARGET_SLUG_SNAPSHOTS` (8 slugs) → **全 EN_SOURCE_PATCHES entries (34/26 slugs) 網羅**に拡張
-- `scripts/lib/source_sync_exclusions.mjs` — getter 追加 (`getRecoveryStatus(slug)`) で `fetchStatus` 読み出しを統一
-- `docs/PARITY_GUIDE.md` — §許容機構 に 2-mechanism + lifecycle section 追加
-- `docs/OPS_DESIGN.md` — §定常運用 に weekly triage ステップ追加
-- `docs/DOCS_DATE_TRACKING.md` — `upstream-recovery-status.json` の責務 + schema を記載
+- `scripts/check_patch_review_cadence.mjs` — **既存 cadence check を `SOURCE_SYNC_EXCLUSIONS` エントリにも拡張**。現在は `EN_SOURCE_PATCHES` のみ scan → 両 registry 対応に。`collectOverdueDebt(registry)` として一般化
+- `scripts/lib/source_sync_exclusions.mjs` — 各 entry に `reviewAfter: 'YYYY-MM-DD'` field を追加 (`en_source_patches` との cadence parity)
+- `scripts/lib/en_source_patches.mjs` — `createEnSourcePatchCoverage` の snapshot shape に `byPatchId: {[id]: {matched, hits}}` を追加 (全 34 patch IDs 列挙)
+- `scripts/__tests__/en_source_patches_integration.test.mjs` — `TARGET_SLUG_SNAPSHOTS` (8 slugs) を **全 34 unique slugs / 42 patch-to-slug bindings** へ拡張。**loop 構造は slug-driven** (`preprocessEnHtml(raw, {slug, patchCoverage})` を slug ごとに 1 回 invoke、per-patch status は coverage aggregator から導出)
+- `scripts/__tests__/source_parity_source_side_debt.test.mjs` — `reviewAfter` field 存在の shape test 追加
+- `scripts/lib/detection_reports.mjs` — `sourceSyncHealth` に `enPatchRecovery` / `sourceSyncRecovery` サマリ section 追加 (既存 family 内拡張、**新 family 追加なし**)
 - `package.json` — `"check:upstream-recovery": "node scripts/check_upstream_recovery.mjs"` script 追加
-- `.gitignore` — `upstream-recovery-status.json` を追加 (CI artifact のみ保存)
+- `.gitignore` — `upstream-recovery-status.json` を追加
+
+### **変更対象外** (Rev 3 で削除)
+
+- `scripts/check_source_parity.mjs` — PR Z (`docs/superpowers/plans/2026-04-14-parity-phase4-schema-cleanup.md §Task 4.6.1`) が primary owner。本 plan では touch しない
+- `docs/PARITY_GUIDE.md` / `docs/OPS_DESIGN.md` — PR Z owner。本 plan 完了後に別 PR でまとめて更新 (PR Z と conflict しない section 限定)
+- `.github/workflows/*` — 新 workflow 追加なし。既存 `scheduled-actionable.yml` が既に `upstream-recovery-status.json` を artifact upload できる (Task 3 で手順追加)
 
 ---
 
 ## Task 1: Status infrastructure (Axis A 基盤)
 
+**Rev 3 変更点:** `check_source_parity.mjs` への介入を完全削除。`check_upstream_recovery.mjs` は standalone aggregator として既存信号のみ消費。
+
 **Files:**
 - Create: `scripts/check_upstream_recovery.mjs`
 - Create: `docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md`
-- Modify: `scripts/lib/en_source_patches.mjs`
-- Modify: `scripts/check_source_parity.mjs`
-- Modify: `package.json`
+- Modify: `scripts/lib/en_source_patches.mjs` (patchCoverage の byPatchId field 追加のみ)
+- Modify: `package.json` (script 追加)
+- **NOT modified**: `scripts/check_source_parity.mjs` (PR Z owner)
 
 - [ ] **Step 1: Spec 起票**
 
 `docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md` に以下を記載:
 - Entry 状態遷移図 (`active` → `stale` → `removed`)
-- `upstream-recovery-status.json` schema (両 mechanism 統合 shape)
-- `stale` 判定条件 (en_patches: `find` 不在 / sync_exclusions: `fetchStatus === 'excluded-recovered'`)
-- `unknown` fail-closed policy
+- `upstream-recovery-status.json` schema
+- status 判定条件:
+  - en_patches: `patch.find` 不在 → `stale` (Axis A) / `reviewAfter` 期限超 → `overdue` (Axis B)
+  - sync_exclusions: `source-sync-status.json.pages[].fetchStatus === 'excluded-recovered'` → `stale` (Axis A) / `reviewAfter` 期限超 → `overdue` (Axis B)
+- `unknown` fail-closed policy (snapshot fetch 失敗 / source-sync-status.json 不在 時)
 
 - [ ] **Step 2: `createEnSourcePatchCoverage` 拡張**
 
 現行 shape: `{matchedHits, bySlug, mismatches}` → 拡張 shape: `{matchedHits, bySlug, byPatchId: {[id]: {matched: boolean, hits: number}}, mismatches}`
 
-単体 test を `scripts/__tests__/en_source_patches.test.mjs` に追加:
-- `coverage.record()` が `byPatchId[id]` を更新すること
-- `coverage.snapshot().byPatchId` が all registered patches を列挙 (not just hit ones)
+重要: aggregator 生成時に **全 34 patch IDs を seed** (hit 無しでも entry 存在、initialized to `{matched: false, hits: 0}`)。これにより stale 検知が可能。
 
-- [ ] **Step 3: `check_upstream_recovery.mjs` 実装**
+単体 test を `scripts/__tests__/en_source_patches.test.mjs` に追加:
+- `coverage.snapshot().byPatchId` が全 34 ID を enumerate (hit しなかった patch も `matched: false` で含む)
+
+- [ ] **Step 3: `check_upstream_recovery.mjs` 実装 (Rev 3 標準形)**
 
 ```js
-// scripts/check_upstream_recovery.mjs — pseudocode
-import { EN_SOURCE_PATCHES, createEnSourcePatchCoverage } from './lib/en_source_patches.mjs';
+// scripts/check_upstream_recovery.mjs — standalone aggregator
+// NO dependency on check_source_parity.mjs. Reads existing signals only.
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import {
+  EN_SOURCE_PATCHES,
+  createEnSourcePatchCoverage,
+} from './lib/en_source_patches.mjs';
 import { SOURCE_SYNC_EXCLUSIONS } from './lib/source_sync_exclusions.mjs';
 import { preprocessEnHtml } from './lib/turndown.mjs';
 
+const SNAPSHOTS_ROOT = 'snapshots/en/content';
+
+function daysSince(dateStr) { /* ... */ }
+function daysUntil(dateStr) { /* ... */ }
+
+// Axis A: EN upstream 修正検知 (en_patches)
+// slug-driven loop: preprocessEnHtml は slug ごとに全 applicable patches を
+// 1 回で適用するため、unique slug を回して per-slug 1 call。
+// per-patch status は coverage aggregator から導出。
 function computeEnPatchStatus() {
   const coverage = createEnSourcePatchCoverage();
-  for (const patch of EN_SOURCE_PATCHES) {
-    for (const slug of patch.slugs) {
-      const path = `snapshots/en/content/${slug}.html`;
-      if (!existsSync(path)) continue;
-      const raw = readFileSync(path, 'utf8');
-      preprocessEnHtml(raw, { slug, patchCoverage: coverage });
-    }
+  const uniqueSlugs = new Set(EN_SOURCE_PATCHES.flatMap((p) => [...p.slugs]));
+  for (const slug of uniqueSlugs) {
+    const path = join(SNAPSHOTS_ROOT, `${slug}.html`);
+    if (!existsSync(path)) continue;
+    const raw = readFileSync(path, 'utf8');
+    preprocessEnHtml(raw, { slug, patchCoverage: coverage });
   }
   const snap = coverage.snapshot();
-  return EN_SOURCE_PATCHES.map(p => ({
-    id: p.id,
-    slugs: [...p.slugs],
-    status: snap.byPatchId[p.id]?.matched ? 'active' : 'stale',
-    hits: snap.byPatchId[p.id]?.hits ?? 0,
-    addedAt: p.addedAt,
-    daysSinceAdded: daysSince(p.addedAt),
-  }));
+  return EN_SOURCE_PATCHES.map((p) => {
+    const cov = snap.byPatchId[p.id] ?? { matched: false, hits: 0 };
+    const overdue = daysSince(p.reviewAfter) > 0;
+    return {
+      id: p.id,
+      slugs: [...p.slugs],
+      statusA: cov.matched ? 'active' : 'stale',  // Axis A
+      statusB: overdue ? 'overdue' : 'current',   // Axis B
+      hits: cov.hits,
+      addedAt: p.addedAt,
+      reviewAfter: p.reviewAfter,
+      daysUntilReview: daysUntil(p.reviewAfter),
+    };
+  });
 }
 
+// Axis A: EN upstream 修正検知 (sync_exclusions) — 既存 fetchStatus を読む
 function computeSyncExclusionStatus() {
-  const syncStatus = JSON.parse(readFileSync('source-sync-status.json', 'utf8'));
-  return Object.keys(SOURCE_SYNC_EXCLUSIONS).map(slug => {
-    const entry = SOURCE_SYNC_EXCLUSIONS[slug];
-    const fetched = syncStatus.pages.find(p => p.slug === slug);
+  let syncPages = [];
+  if (existsSync('source-sync-status.json')) {
+    syncPages = JSON.parse(readFileSync('source-sync-status.json', 'utf8')).pages ?? [];
+  }
+  return Object.entries(SOURCE_SYNC_EXCLUSIONS).map(([slug, entry]) => {
+    const fetched = syncPages.find((p) => p.slug === slug);
     const fetchStatus = fetched?.fetchStatus ?? 'unknown';
+    const overdue = entry.reviewAfter ? daysSince(entry.reviewAfter) > 0 : false;
     return {
       slug,
-      status: fetchStatus === 'excluded-recovered' ? 'stale' :
-              fetchStatus === 'excluded-broken' ? 'active' : 'unknown',
+      statusA:
+        fetchStatus === 'excluded-recovered' ? 'stale' :
+        fetchStatus === 'excluded-broken' ? 'active' : 'unknown',
+      statusB: overdue ? 'overdue' : 'current',
       fetchStatus,
       addedAt: entry.addedAt,
-      daysSinceAdded: daysSince(entry.addedAt),
+      reviewAfter: entry.reviewAfter ?? null,  // Task 6 で追加予定
+      daysUntilReview: entry.reviewAfter ? daysUntil(entry.reviewAfter) : null,
     };
   });
 }
@@ -199,20 +246,21 @@ function main() {
   const enPatches = computeEnPatchStatus();
   const syncExclusions = computeSyncExclusionStatus();
   const allEntries = [
-    ...enPatches.map(e => ({...e, mechanism: 'en_source_patches'})),
-    ...syncExclusions.map(e => ({...e, mechanism: 'source_sync_exclusions'})),
+    ...enPatches.map((e) => ({ ...e, mechanism: 'en_source_patches' })),
+    ...syncExclusions.map((e) => ({ ...e, mechanism: 'source_sync_exclusions' })),
   ];
-  const staleCount = allEntries.filter(e => e.status === 'stale').length;
-  const unknownCount = allEntries.filter(e => e.status === 'unknown').length;
+  const staleCount = allEntries.filter((e) => e.statusA === 'stale').length;
+  const overdueCount = allEntries.filter((e) => e.statusB === 'overdue').length;
+  const unknownCount = allEntries.filter((e) => e.statusA === 'unknown').length;
   const output = {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
     summary: {
       totalEntries: allEntries.length,
       activeEntries: allEntries.length - staleCount - unknownCount,
-      staleEntries: staleCount,
+      staleEntries: staleCount,       // Axis A signal
+      overdueEntries: overdueCount,   // Axis B signal
       unknownEntries: unknownCount,
-      oldestStaleEntry: /* ... */,
     },
     mechanisms: {
       en_source_patches: enPatches,
@@ -220,9 +268,18 @@ function main() {
     },
   };
   writeFileSync('upstream-recovery-status.json', JSON.stringify(output, null, 2));
-  process.exit(staleCount > 0 || unknownCount > 0 ? 1 : 0);
+  // Non-blocking exit (no process.exit(1)): consumers decide via JSON
+  return output;
 }
+
+main();
 ```
+
+**重要な Rev 3 設計**:
+- **slug-driven loop** (patches per slug は preprocessEnHtml が一括適用): HIGH-3 finding 対応
+- **Axis A と Axis B を独立 field に分離** (`statusA` / `statusB`): 混同回避
+- `overdue` は既存 `check_patch_review_cadence.mjs` 判定ロジックと align
+- Non-blocking exit: consumer が JSON 読んで判断
 
 - [ ] **Step 4: package.json script 追加 + .gitignore**
 
@@ -240,34 +297,38 @@ feat(recovery): upstream-recovery-status.json 出力 + check:upstream-recovery C
 
 ---
 
-## Task 2: Test coverage expansion (Axis A, 既存 gap)
+## Task 2: Test coverage expansion (Axis A — 全 34 patch IDs / 42 bindings 網羅, 既存 gap)
+
+**Rev 3 変更点:**
+- patch count 修正: 34 patch IDs / **42 patch-to-slug bindings** / 34 unique slugs (Rev 2 "26 unique slugs" は誤り)
+- Loop 構造を **slug-driven** に: `preprocessEnHtml(raw, {slug, patchCoverage})` は slug ごとに全 applicable patches を 1 回で適用するため、unique slug を回して per-slug 1 call すれば coverage aggregator が per-patch 状態を返す。patch-driven だと同じ slug に対して重複 preprocess 呼び出しになる
+- 既存 TARGET_SLUG_SNAPSHOTS test とは共存 (既存は hit-count assertion、本 test は stale surfacing)
 
 **Files:**
 - Modify: `scripts/__tests__/en_source_patches_integration.test.mjs`
 
-- [ ] **Step 1: 全 patch 網羅 stale-detection test 追加**
-
-**Rev 2 変更点:** Rev 1 は `assert.equal(stale.length, 0)` で gate fail させる設計だったが、design principle の "non-blocking" と矛盾 (self-review §A1)。Rev 2 では **warning-only mode** に変更 — `console.warn` で surface し、CI fail はしない。代わりに `upstream-recovery-status.json` / detection-family issue 経由で恒常的に可視化。
+- [ ] **Step 1: 全 34 patch 網羅 stale-detection test 追加 (slug-driven)**
 
 ```js
-describe('en_source_patches stale detection (all registered patches) — non-gating', () => {
-  it('report patches whose find string is missing from target snapshots', () => {
-    const stale = [];
-    for (const patch of EN_SOURCE_PATCHES) {
-      for (const slug of patch.slugs) {
-        const snapshotPath = join(SNAPSHOTS_ROOT, `${slug}.html`);
-        if (!existsSync(snapshotPath)) continue;  // MIA snapshot は別 gate で検知
-        const raw = readFileSync(snapshotPath, 'utf8');
-        if (!raw.includes(patch.find)) {
-          stale.push({ id: patch.id, slug, daysSinceAdded: daysSince(patch.addedAt) });
-        }
-      }
+describe('en_source_patches stale detection (全 34 patch IDs / 42 bindings) — non-gating', () => {
+  it('report patches whose find string is missing from any of their registered snapshots', () => {
+    const coverage = createEnSourcePatchCoverage();
+    const uniqueSlugs = new Set(EN_SOURCE_PATCHES.flatMap((p) => [...p.slugs]));
+    for (const slug of uniqueSlugs) {
+      const snapshotPath = join(SNAPSHOTS_ROOT, `${slug}.html`);
+      if (!existsSync(snapshotPath)) continue;
+      const raw = readFileSync(snapshotPath, 'utf8');
+      preprocessEnHtml(raw, { slug, patchCoverage: coverage });
     }
-    // Non-gating: warn only. Enforcement is via detection-family issue + sticky PR comment.
+    const snap = coverage.snapshot();
+    const stale = EN_SOURCE_PATCHES
+      .filter((p) => !snap.byPatchId[p.id]?.matched)
+      .map((p) => ({ id: p.id, slugs: [...p.slugs], reviewAfter: p.reviewAfter }));
+    // Non-gating: warn only. Enforcement is via upstream-recovery-status.json + sticky PR comment.
     if (stale.length > 0) {
       console.warn(
-        `[stale en_source_patches] ${stale.length} entries — EN may be fixed upstream:\n` +
-        JSON.stringify(stale, null, 2) + '\n' +
+        `[stale en_source_patches] ${stale.length} of ${EN_SOURCE_PATCHES.length} patches — ` +
+        `EN may be fixed upstream:\n${JSON.stringify(stale, null, 2)}\n` +
         'Action: verify JA source-first correctness, remove entry, update upstream-defect-tracker.md'
       );
     }
@@ -628,18 +689,37 @@ feat(recovery): upstream recovery detection + registry lifecycle tracking (Rev 2
 
 ---
 
-## Dependencies / Ordering vs PR Z
+## Dependencies / Ordering vs PR Z (Rev 3 改訂)
 
-### 本 plan と PR Z の依存関係
+### 本 plan と PR Z の依存関係 (HIGH-2 finding 対応)
 
-- **独立**: 本 plan は `parity-baseline.json.schemaVersion` を触らない。PR Z の schema v2 cutover とは orthogonal。
-- **推奨順序**: 本 plan を先行実施。PR Z 実行中に stale entry が積もる可能性を事前に抑止できる。
-- **並列実行可**: worktree を別に切れば M2.5 merge 後に同時進行可能。
+**Rev 3 変更点:** Rev 2 の「並列実行可」宣言を撤回。実態として以下の衝突あり:
 
-### PR Z 完了後の考慮
+| File | PR Z owner | 本 plan Rev 2 | 衝突 |
+|---|---|---|---|
+| `scripts/check_source_parity.mjs` | Task 4.6.1 が書き換え | Task 1 で status 書き出し追加 | YES |
+| `docs/PARITY_GUIDE.md` | Task 4.7 で全面更新 | Task 5 で §許容機構 追加 | YES |
+| `docs/OPS_DESIGN.md` | Task 4.7 で schema v2 言及更新 | Task 5 で定常運用追加 | YES |
 
-- PR Z で baseline 形式が v1→v2 に変わるが、本 plan の `upstream-recovery-status.json` は baseline file を参照しないため影響なし
-- PR Z 完了後、本 plan の Task 5 で更新した `docs/PARITY_GUIDE.md` の schema 言及を v2 に追従させる必要あり (本 plan の scope 外、PR Z Task 4.7 で吸収)
+Rev 3 でこれらの衝突ファイルは **本 plan の変更対象から削除** (重要ファイルマップ §変更対象外 参照)。代わりに:
+
+- `scripts/check_upstream_recovery.mjs` を **完全 standalone** にし、`check_source_parity.mjs` には触らない
+- `PARITY_GUIDE.md` / `OPS_DESIGN.md` の更新は **PR Z merge 後に別 PR** で実施 (PR Z の v2 schema 言及と整合させた上で追記)
+
+### 推奨順序 (Rev 3)
+
+```
+[M2.5 merged] → [PR Z (schema v2 cutover)] → [本 plan implementation] → [pull-requests cleanup PR]
+```
+
+理由:
+- PR Z は `check_source_parity.mjs` / schema / docs に大規模変更を入れる。本 plan を先行させると PR Z merge 時に rebase conflict
+- 本 plan が既存 `check_patch_review_cadence.mjs` を拡張する際、PR Z で schema 変更が入っても `reviewAfter` field は v1/v2 両方で存在し続ける (破壊的変更なし)
+- pull-requests cleanup は本 plan の infrastructure 完成後 (`upstream-recovery-status.json` + weekly surfacing が運用 loop の材料)
+
+### 並列実行を許容する例外
+
+doc 更新を全て省略 + `check_source_parity.mjs` 触らないなら PR Z と並列可。ただし **PR Z の schema v2 命名に合わせた docs 更新は必須で、それは本 plan 完了後になる**。
 
 ---
 
@@ -679,10 +759,81 @@ page-freeze を segment-patch に変換し mechanism 統一する option。**不
 
 ### A.3 90-day hard CI block
 
-stale entry 累積防止のため "90 日経過で CI fail" option。**不採用** 理由 (Codex Q5):
+stale entry 累積防止のため "90 日経過で CI fail" option。**不採用** 理由 (Codex Q5 + 第三者 review Finding 7):
 - 既存 cadence check (`check_patch_review_cadence.mjs`) が non-blocking 方針
 - Unrelated PR を stale entry で block するのは運用負荷大
+- 現 registry 規模 (1 sync_exclusion + 34 en_patches = 35 entries) では over-engineering
 - 代替: sticky PR comment + weekly issue の persistent pressure で compliance を促す
+- **Escalation path (将来 entry 数 >100 に膨らんだ場合)**: `docs/PARITY_GUIDE.md` に "registry 規模 >100 で `overdueDays > 180` の entry がある場合、registry-touching PR のみ blocking 化を検討" と 1 文明記
+
+---
+
+## Appendix B: Pattern D — Unified Debt Catalog (中期的進化パス)
+
+**第三者 review で提案された中期 vision。本 plan で採用せず、後続 plan の topic。**
+
+### 動機
+
+現状は 2 registry (`source_sync_exclusions` page-level / `en_source_patches` segment-level) が **パイプラインの異なるレイヤー**で動作する:
+
+```
+EN live HTML
+  ↓
+[snapshot_update]  ← source_sync_exclusions はここで効く (fetch/write 制御)
+  ↓
+snapshots/en/content/*.html
+  ↓
+[preprocessEnHtml] ← en_source_patches はここで効く (HTML transform)
+  ↓
+turndown → parity comparison
+```
+
+両者は **責務が異なる** ため統合は表面的な単純化にしかならない (Codex 第三者 review の unanimous conclusion)。
+
+### Pattern D の姿
+
+execution plane は 2 本 (snapshot_update / preprocessEnHtml) 残しつつ、**control plane を 1 本化**:
+
+```js
+// scripts/lib/upstream_debt_catalog.mjs (Pattern D)
+export const UPSTREAM_DEBT_CATALOG = Object.freeze([
+  {
+    slug: 'testops/.../pull-requests',
+    strategy: 'freeze',         // page-level retreat
+    defectClass: 'body-collapse',
+    linkedDefect: '...',
+    addedAt: '2026-04-09',
+    reviewAfter: '2026-10-09',
+  },
+  {
+    slug: 'advanced-editing/api-testing',
+    strategy: 'patch',          // segment-level repair
+    patchId: 'UD-017',
+    find: '...',
+    replace: '...',
+    defectClass: 'madcap-artifact',
+    linkedDefect: '...',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  },
+]);
+
+// snapshot_update reads entries where strategy === 'freeze'
+// preprocessEnHtml reads entries where strategy === 'patch'
+// check_upstream_recovery reads all entries → unified view
+```
+
+### Pattern D への移行トリガー
+
+以下のいずれかが発生したら検討:
+
+- `source_sync_exclusions` が 3+ slug に増え、管理コストが無視できなくなる
+- 新 strategy (例: baseline freeze、class-level retreat) 追加議論
+- 本 plan の `upstream-recovery-status.json` 運用を 6 ヶ月続けて、出力 shape が安定した時
+
+### Rev 3 plan における Pattern D bridge
+
+本 plan の `upstream-recovery-status.json` schema (`mechanisms.en_source_patches` / `mechanisms.source_sync_exclusions` を **equal-level fields** として出力) は、Pattern D に移行した際 **そのまま `catalog` section に畳めるように**設計。schema 拡張時の migration cost を最小化。
 
 ---
 
@@ -695,3 +846,11 @@ stale entry 累積防止のため "90 日経過で CI fail" option。**不採用
   - **新 Task 6: `source_sync_exclusions` entries に `reviewAfter` 追加** (Codex Q5 — cadence parity gap 解消)
   - en_patches 撤廃 + extractor 移行 / 90-day hard CI block option を Appendix A に scope 外宣言
   - Test 2 を non-gating warning mode に調整 (self-review §A1 — blocking vs non-blocking 矛盾解消)
+- **Rev 3 (2026-04-20 夜)**: 第三者独立レビュー結果を反映。**大幅 scale-down**:
+  - **HIGH-1 既存 cadence infra 過小評価**: `check_patch_review_cadence.mjs:53-77` が既に en_patches の `reviewAfter` Axis B を実装済、`check_source_parity.mjs:376` から毎 run 呼ばれ `console.warn` で non-blocking surface している。Rev 2 は新規 Axis B を提案していたが、実態は既存機構を `SOURCE_SYNC_EXCLUSIONS` にも広げるだけで十分。
+  - **HIGH-2 PR Z との衝突**: Rev 2 は「並列実行可」と宣言しつつ `check_source_parity.mjs` / `PARITY_GUIDE.md` / `OPS_DESIGN.md` を変更対象に含めており、PR Z (Task 4.5-4.8) と owner 衝突。**推奨順序を「PR Z 完了後」に変更**、`check_upstream_recovery.mjs` を完全 standalone 化、conflict ファイルを変更対象から削除。
+  - **HIGH-3 patch count 誤差**: 実測で 34 patch IDs / **42 patch-to-slug bindings** / **34 unique slugs** (Rev 2 の "26 unique slugs" / "8 → 26 拡張" は誤り)。Test 拡張 loop を **slug-driven** に変更 (per-slug 1 preprocessEnHtml call + coverage aggregator から per-patch status 導出)。
+  - **Axis A と Axis B を独立 field に**: `statusA: active|stale` と `statusB: current|overdue` を分離。混同防止。
+  - **Appendix B: Pattern D (unified debt catalog)** を中期進化パスとして明記。`upstream-recovery-status.json` schema を Pattern D への bridge として設計。
+  - 第三者 review finding 6: `reviewAfter` を status output に統合 (`daysUntilReview` / `overdue` field 追加)。
+  - 第三者 review finding 7: registry 規模 >100 + overdueDays >180 の escalation path を PARITY_GUIDE に 1 文明記 (Appendix A.3)。
