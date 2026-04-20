@@ -76,6 +76,32 @@ export function daysUntil(dateStr, nowMs = Date.now()) {
 }
 
 /**
+ * Overdue predicate with same-day semantics aligned to
+ * `scripts/check_patch_review_cadence.mjs::evaluatePatchReview` (Codex C1):
+ *
+ *   - `reviewAfter` is a YYYY-MM-DD string, parsed as UTC midnight by
+ *     `new Date(...)` per ES2015+.
+ *   - Overdue when `nowMs > reviewAfterMs` **strictly** — the review day
+ *     itself (nowMs === reviewAfterMs) is *not* overdue (inclusive boundary).
+ *   - Invalid / missing dates fail-safe to `false`.
+ *
+ * Using this helper instead of `daysSince(...) > 0` keeps both detectors
+ * aligned even when nowMs lands partway through the review day (e.g. 12:00
+ * UTC on reviewAfter — cadence would flag overdue, the old daysSince check
+ * would not).
+ *
+ * @param {string | null | undefined} dateStr
+ * @param {number} nowMs
+ * @returns {boolean}
+ */
+export function isReviewOverdue(dateStr, nowMs = Date.now()) {
+  if (typeof dateStr !== 'string' || dateStr.length === 0) return false;
+  const parsed = new Date(dateStr).getTime();
+  if (!Number.isFinite(parsed)) return false;
+  return nowMs > parsed;
+}
+
+/**
  * Load existing source-sync-status.json (if present). Absent file is a legitimate
  * local-development state and must degrade gracefully — callers treat missing
  * data as `fetchStatus: 'unknown'`.
@@ -113,8 +139,20 @@ function uniquePatchSlugs(patches = EN_SOURCE_PATCHES) {
  * Returns per-patch rows with `statusA` (active/stale/unknown), `statusB`
  * (current/overdue), hits count, and cadence metadata.
  *
+ * **Note on the `patches` parameter (Codex C2):** this argument is used only
+ * for the outer enumeration loop (slug collection + result shaping). The
+ * actual hit detection happens inside `preprocessEnHtml`, which reads the
+ * *live* `EN_SOURCE_PATCHES` constant — not the injected `patches`. Unit
+ * tests therefore inject synthetic patches to exercise stale / unknown
+ * branches only; the `active` branch requires real registered slugs and is
+ * covered by `en_source_patches_integration.test.mjs`. Production callers
+ * should omit `patches` to use the default (live registry) and stay
+ * consistent with the hit-detection layer.
+ *
  * @param {number} nowMs
  * @param {string} snapshotsRoot
+ * @param {ReadonlyArray<object>} [patches] — override the enumeration list
+ *   (tests only; does NOT change hit detection — see note above)
  */
 export function computeEnPatchStatus({
   nowMs = Date.now(),
@@ -150,7 +188,9 @@ export function computeEnPatchStatus({
     } else {
       statusA = status.matched ? 'active' : 'stale';
     }
-    const statusB = daysSince(patch.reviewAfter, nowMs) > 0 ? 'overdue' : 'current';
+    // Use isReviewOverdue (not daysSince(...) > 0) so same-day semantics
+    // match check_patch_review_cadence.mjs (Codex C1).
+    const statusB = isReviewOverdue(patch.reviewAfter, nowMs) ? 'overdue' : 'current';
     return {
       id: patch.id,
       mechanism: 'en_source_patches',
@@ -199,10 +239,9 @@ export function computeSyncExclusionStatus({
     } else {
       statusA = 'unknown';
     }
-    const statusB =
-      entry.reviewAfter && daysSince(entry.reviewAfter, nowMs) > 0
-        ? 'overdue'
-        : 'current';
+    // isReviewOverdue matches check_patch_review_cadence.mjs same-day semantics
+    // (Codex C1). Missing reviewAfter is treated as not-overdue (fail-safe).
+    const statusB = isReviewOverdue(entry.reviewAfter, nowMs) ? 'overdue' : 'current';
     return {
       slug,
       mechanism: 'source_sync_exclusions',

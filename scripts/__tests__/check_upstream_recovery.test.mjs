@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import {
   daysSince,
   daysUntil,
+  isReviewOverdue,
   computeEnPatchStatus,
   computeSyncExclusionStatus,
   buildUpstreamRecoveryStatus,
@@ -39,6 +40,37 @@ describe('daysSince / daysUntil', () => {
   it('daysUntil returns null for missing / invalid dates', () => {
     assert.equal(daysUntil(null, NOW), null);
     assert.equal(daysUntil('not-a-date', NOW), null);
+  });
+});
+
+describe('isReviewOverdue — same-day boundary aligned with cadence check (Codex C1)', () => {
+  it('returns false on the reviewAfter day at UTC midnight (inclusive boundary)', () => {
+    const nowMs = new Date('2026-04-17T00:00:00Z').getTime();
+    assert.equal(isReviewOverdue('2026-04-17', nowMs), false);
+  });
+
+  it('returns true later on the reviewAfter day (e.g. 12:00 UTC)', () => {
+    // Previously daysSince(...) > 0 would have returned false here (floor of
+    // 12h/24h = 0). isReviewOverdue matches check_patch_review_cadence.mjs::
+    // evaluatePatchReview which flags overdue as soon as nowMs > parsedMs.
+    const nowMs = new Date('2026-04-17T12:00:00Z').getTime();
+    assert.equal(isReviewOverdue('2026-04-17', nowMs), true);
+  });
+
+  it('returns true the day after reviewAfter', () => {
+    const nowMs = new Date('2026-04-18T00:00:00Z').getTime();
+    assert.equal(isReviewOverdue('2026-04-17', nowMs), true);
+  });
+
+  it('returns false when reviewAfter is in the future', () => {
+    assert.equal(isReviewOverdue('2026-06-01', NOW), false);
+  });
+
+  it('returns false for missing or invalid dates (fail-safe)', () => {
+    assert.equal(isReviewOverdue(null, NOW), false);
+    assert.equal(isReviewOverdue(undefined, NOW), false);
+    assert.equal(isReviewOverdue('', NOW), false);
+    assert.equal(isReviewOverdue('not-a-date', NOW), false);
   });
 });
 
