@@ -349,7 +349,16 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
     }
   });
 
-  it('writes structured advisory queue metadata for tokenless-near-tie slug runs', () => {
+  it('writes empty advisory queue metadata for distinct-heading tokenless slug runs (heading-distinctness prior)', () => {
+    // §5.3.N mechanism refinement (2026-04-20): `add-network-validation` has
+    // adjacent tokenless sections with DISTINCT leaf headings
+    // ("Validate all the image requests" vs "Validate a single request"),
+    // so the heading-distinctness prior in
+    // detectAmbiguousAdjacentTokenlessSwap suppresses the former
+    // tokenless-near-tie inconclusive. Advisory queue is empty but the
+    // slug-scope metadata (filters, isComplete, totals) still writes
+    // correctly — that scope plumbing is what this integration test
+    // primarily asserts end-to-end.
     if (existsSync(STATUS_PATH)) copyFileSync(STATUS_PATH, STATUS_BACKUP_PATH);
 
     try {
@@ -370,8 +379,8 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       );
       const data = JSON.parse(readFileSync(STATUS_PATH, 'utf8'));
 
-      assert.equal(data.summary.advisoryQueueIssues, 1);
-      assert.equal(data.summary.advisoryQueueFiles, 1);
+      assert.equal(data.summary.advisoryQueueIssues, 0);
+      assert.equal(data.summary.advisoryQueueFiles, 0);
       assert.equal(data.summary.advisoryQueueComplete, false);
       assert.equal(data.summary.advisoryQueueScopeType, 'slug');
       assert.deepEqual(data.advisoryQueueScope.filters, {
@@ -381,29 +390,7 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
       assert.equal(data.advisoryQueueScope.isComplete, false);
       assert.equal(data.advisoryQueueScope.checkedFiles, 1);
       assert.ok(data.advisoryQueueScope.totalFiles >= 1);
-
-      const entry = data.advisoryQueue.find(
-        (item) => item.slug === 'advanced-editing/validations/add-network-validation',
-      );
-      assert.ok(entry, 'expected add-network-validation page in advisory queue');
-      assert.equal(entry.issueCount, 1);
-      const issue = entry.issues[0];
-      assert.equal(
-        issue.queueKey,
-        'advanced-editing/validations/add-network-validation|segment-inconclusive|category=tokenless-near-tie|pair=Network Validation > Network Validation Examples > Validate all the image requests=>Network Validation > Network Validation Examples > Validate a single request',
-      );
-      assert.equal(
-        issue.leftSectionPath,
-        'Network Validation > Network Validation Examples > Validate all the image requests',
-      );
-      assert.equal(
-        issue.rightSectionPath,
-        'Network Validation > Network Validation Examples > Validate a single request',
-      );
-      assert.equal(typeof issue.currentScore, 'number');
-      assert.equal(typeof issue.swapScore, 'number');
-      assert.ok(issue.currentScore > 0);
-      assert.ok(issue.swapScore > 0);
+      assert.deepEqual(data.advisoryQueue, []);
     } finally {
       if (existsSync(STATUS_BACKUP_PATH)) {
         copyFileSync(STATUS_BACKUP_PATH, STATUS_PATH);
