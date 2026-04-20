@@ -98,7 +98,11 @@ export function extractStepCounts(body) {
     const trimmed = line.trim();
 
     // Markdown の pipe table 行は、セル内の記号を箇条書きとして数えない。
-    if (/^\|/.test(trimmed)) continue;
+    // §5.3.9: recognize both unescaped `|` (EN turndown output) and `\|`
+    // (JA UD-003 broken-row-mirror pattern) so pipe-table rows are skipped
+    // symmetrically on both sides. Without this, JA-side `\|...\|` rows
+    // are counted as paragraphs while EN-side `|...|` rows are not.
+    if (/^\\?\|/.test(trimmed)) continue;
 
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
       inCallout = true;
@@ -224,7 +228,11 @@ export function extractBulletCounts(body) {
     const trimmed = line.trim();
 
     // Markdown の pipe table 行は、セル内の記号を箇条書きとして数えない。
-    if (/^\|/.test(trimmed)) continue;
+    // §5.3.9: recognize both unescaped `|` (EN turndown output) and `\|`
+    // (JA UD-003 broken-row-mirror pattern) so pipe-table rows are skipped
+    // symmetrically on both sides. Without this, JA-side `\|...\|` rows
+    // are counted as paragraphs while EN-side `|...|` rows are not.
+    if (/^\\?\|/.test(trimmed)) continue;
 
     if (/^:::(note|warning|info|tip|caution|danger)/.test(trimmed)) {
       inCallout = true;
@@ -351,7 +359,7 @@ export function classifyLine(line, state = {}) {
     nextState.inParagraph = false;
     return { kind: 'image', nextState };
   }
-  if (/^\|/.test(trimmed)) {
+  if (/^\\?\|/.test(trimmed)) {
     nextState.inParagraph = false;
     return { kind: 'markdown-table', nextState };
   }

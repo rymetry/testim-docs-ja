@@ -72,7 +72,7 @@ Auto grouping は、プロジェクト全体のテストから重複したステ
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/bdbe859-Screen_Shot_2020-10-27_at_11.58.10.png)
 
-### 自動グルーピング候補の編集（Editing the auto-grouping suggestion）
+## 自動グルーピング候補の編集（Editing the auto-grouping suggestion）
 
 **自動グルーピング候補を編集するには:**
 

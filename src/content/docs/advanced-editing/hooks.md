@@ -166,11 +166,11 @@ Before/After each step フックは、テスト内の「各ステップの直前
  </tbody>
 </table>
 
-### テスト構成からフックを作成する {#creating-hooks-via-the-test-configuration}
+## テスト構成からフックを作成する {#creating-hooks-via-the-test-configuration}
 
 Test Configuration Hooks は、プロパティパネル／構成リスト画面／テストの既定構成から作成できます。
 
-#### プロパティパネルからフックを作成する {#creating-hooks-via-the-properties-panel}
+### プロパティパネルからフックを作成する {#creating-hooks-via-the-properties-panel}
 
 テストの**プロパティパネル**から作成できるフック:
 
@@ -216,7 +216,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/603e29d-propertiespanel.gif)
 
-#### Configuration List 画面からフックを作成する {#creating-hooks-via-the-configuration-list-screen}
+### Configuration List 画面からフックを作成する {#creating-hooks-via-the-configuration-list-screen}
 
 **Configuration List** 画面からは、次のフックを作成できます。
 
@@ -254,7 +254,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/0cbe19a-configlist.gif)
 
-#### Default Configuration 設定からフックを作成する {#creating-hooks-via-the-default-configuration-setting}
+### Default Configuration 設定からフックを作成する {#creating-hooks-via-the-default-configuration-setting}
 
 **Default Configuration からフックを作成するには:**
 
@@ -287,7 +287,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c475584-defaultconfig.gif)
 
-### Test Configuration Hooks の実行パラメーター {#test-configuration-hooks-run-parameters}
+## Test Configuration Hooks の実行パラメーター {#test-configuration-hooks-run-parameters}
 
 一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメーターが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
 
@@ -338,7 +338,7 @@ Hooks を含むテストを実行すると、エディター上でさまざま�
 Turbo Mode でテストを実行している場合、不要なデータ保存を避けるためフックの表示は制限されます。Turbo Mode では、フックが可視化されるのは失敗した実行のみです。
 :::
 
-### Before/After each step フックの可視化 {#viewing-before-after-each-step-hooks}
+## Before/After each step フックの可視化 {#viewing-before-after-each-step-hooks}
 
 Before/After each step フックが設定されているステップには、実行後にステップ上へ「Hook」ボタンが表示されます（ステップにカーソルを合わせたときに表示）。
 
@@ -378,7 +378,7 @@ Hook ボタンをクリックすると、そのステップに紐づいている
 Hook ステップの **View Screenshot** をクリックしてサイドバイサイド表示を見る場合、Baseline（基準画像）は表示されず、結果側のみが表示されます。
 :::
 
-### Before/After test フックの可視化 {#viewing-before-after-test-hooks}
+## Before/After test フックの可視化 {#viewing-before-after-test-hooks}
 
 Before/After test フックはテストごとに 1 回、テストの開始前／終了後に実行されます。実行後、最初のステップ（Setup ステップ）にカーソルを合わせると「Hook」ボタンが表示されます。
 
@@ -402,7 +402,7 @@ Hook ボタンをクリックすると、テスト前後に実行された共有
 Hook ステップのスクリーンショットをサイドバイサイド表示した場合、Baseline 側は表示されず、結果側のみ表示されます。
 :::
 
-### 成功／失敗条件により実行されなかったフックの確認 {#viewing-hooks-that-did-not-run-due-to-success-failure-conditions}
+## 成功／失敗条件により実行されなかったフックの確認 {#viewing-hooks-that-did-not-run-due-to-success-failure-conditions}
 
 フック作成時に、ステップ／グループが成功した場合のみ／失敗した場合のみ実行するように条件を設定できます。この条件により実行されなかったフックは、青いドットでマークされます。
 
@@ -416,7 +416,7 @@ Hook ステップのスクリーンショットをサイドバイサイド表示
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/bd7554b-2023-01-10_13-46-41.png)
 
-### フックに関連するエラーの確認 {#viewing-errors-related-to-hooks}
+## フックに関連するエラーの確認 {#viewing-errors-related-to-hooks}
 
 テスト実行後にエラーが発生した場合、そのエラーがフックステップに起因することがあります。フックステップでエラーが発生した場合、関連ステップの左側（before each step / before test のフックエラー）または右側（after each step / after test のフックエラー）に赤いドットが表示されます。
 
