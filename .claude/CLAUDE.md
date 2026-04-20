@@ -1,31 +1,31 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本ファイルは Claude Code (claude.ai/code) がこのリポジトリで作業する際のガイダンスを提供する。
 
-## Project Overview
+## プロジェクト概要
 
-Japanese localization of Testim Help Documentation (docs.tricentis.com/testim). Built with Astro 6, Tailwind CSS v4, TypeScript, and React (for search UI only). Deployed on Vercel. All responses and content should be in Japanese.
+Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ローカライゼーション。Astro 6、Tailwind CSS v4、TypeScript、React（検索 UI のみ）で構築。Vercel にデプロイ。全レスポンス・コンテンツは日本語で記述する。
 
-## Common Commands
+## コマンド一覧
 
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Dev server at http://localhost:4321 |
-| `npm run build` | Production build (runs `astro check` + build) |
-| `npm run check` | TypeScript/Astro type checking only |
-| `npm run lint` | All lint (`lint:md` + `lint:docs`) |
-| `npm run lint:docs` | WRITING_GUIDE compliance (frontmatter, links, callouts, feature names, image existence) |
-| `npm run lint:fix` | Auto-fix markdown lint issues |
-| `npm run format` | Format with Prettier (Astro, TS, MD) |
-| `npm run test` | Run tests in `scripts/__tests__/` |
-| `npm run check:parity` | Source parity check (structure, tables, acknowledgements, EN normalization) |
-| `npm run check:snapshots` | EN HTML snapshot fetch + diff (change detection) |
-| `npm run check:snapshots:fetch` | Fetch EN HTML snapshots only |
-| `npm run check:snapshots:diff` | Diff committed vs working tree snapshots only |
-| `npm run docs:sync-sidebar` | Update SIDEBAR_URLS.md from MadCap Flare TOC data |
-| `npm run docs:pipeline` | Run full doc sync pipeline (fetch, translate, etc.) |
+| コマンド | 用途 |
+|---------|------|
+| `npm run dev` | 開発サーバー (http://localhost:4321) |
+| `npm run build` | プロダクションビルド (`astro check` + build) |
+| `npm run check` | TypeScript/Astro 型チェックのみ |
+| `npm run lint` | 全 lint (`lint:md` + `lint:docs`) |
+| `npm run lint:docs` | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在） |
+| `npm run lint:fix` | Markdown lint の自動修正 |
+| `npm run format` | Prettier フォーマット (Astro, TS, MD) |
+| `npm run test` | `scripts/__tests__/` のテスト実行 |
+| `npm run check:parity` | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化） |
+| `npm run check:snapshots` | EN HTML スナップショット取得 + diff（変更検出） |
+| `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ |
+| `npm run check:snapshots:diff` | コミット済み vs ワーキングツリーのスナップショット diff のみ |
+| `npm run docs:sync-sidebar` | MadCap Flare TOC データから SIDEBAR_URLS.md を更新 |
+| `npm run docs:pipeline` | フルドキュメント同期パイプライン実行（取得、翻訳等） |
 
-**Single-page commands:**
+**単一ページコマンド:**
 
 ```bash
 npm run check:parity -- --slug=overview/testim-overview
@@ -33,50 +33,76 @@ npm run check:snapshots:diff -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 ```
 
-Full reference: `scripts/README.md`
+全コマンドリファレンス: `scripts/README.md`
 
-## Architecture
+## アーキテクチャ
 
-- **Content**: Markdown files in `src/content/docs/` organized by category folders. Schema defined in `src/content.config.ts` (Zod validation).
-- **Routing**: Single dynamic route `src/pages/docs/[...slug].astro` — slug is the path relative to `src/content/docs/` (e.g., `overview/testim-overview.md` → `/docs/overview/testim-overview`). Legacy basename URLs are redirected via `buildRedirectMap()` in `astro.config.mjs`.
-- **Navigation**: Built from `src/lib/docs.ts` `buildNavigation()` — groups by `category` frontmatter, ordered by `docs/SIDEBAR_URLS.md`.
-- **Search**: Client-side MiniSearch in `src/components/SearchModal.tsx` (React), with data from `/api/search.json`.
-- **Layout**: `src/layouts/DocsLayout.astro` wraps all doc pages with sidebar (`src/components/navigation/NavSidebar.astro`) and TOC (`TableOfContents.astro`).
-- **Auth mode**: `BASIC_AUTH_ENABLED` env var toggles between SSR+auth (review) and static (production). See `src/middleware.ts`.
-- **Doc pipeline**: `scripts/pipeline.mjs` orchestrates the full translation workflow: fetch EN sources → generate placeholders (`generate_untranslated_placeholders.mjs`) → prepare LLM tasks (`prepare_llm_tasks.mjs`) → apply LLM translations (`apply_llm_translations.mjs`). Checkpoint-based resume via `scripts/.checkpoint`.
-- **Snapshot pipeline**:
-  - **Content**: Extracts `#mc-main-content` from each EN page HTML, saves to `snapshots/en/content/{folder}/{basename}.html`.
-  - **Sidebar**: Parses MadCap Flare TOC data (`scripts/lib/madcap_toc.mjs`), saves to `snapshots/en/sidebar.json`.
-  - **Parity comparison**: Converts HTML snapshots to Markdown via `turndown`, then compares structure with JA translations.
-  - **Source-side debt**: broken upstream EN ソースは `scripts/lib/source_sync_exclusions.mjs` の registry で隔離し、snapshot 上書きを抑止して `source-sync-status.json` の `excludedPages` counter で可視化する (詳細は `docs/DOCS_DATE_TRACKING.md`)。
+- **コンテンツ**: `src/content/docs/` にカテゴリフォルダで整理された Markdown ファイル。スキーマは `src/content.config.ts`（Zod バリデーション）で定義。
+- **ルーティング**: 単一動的ルート `src/pages/docs/[...slug].astro` — slug は `src/content/docs/` からの相対パス（例: `overview/testim-overview.md` → `/docs/overview/testim-overview`）。レガシー basename URL は `astro.config.mjs` の `buildRedirectMap()` でリダイレクト。
+- **ナビゲーション**: `src/lib/docs.ts` の `buildNavigation()` で構築 — `category` frontmatter でグループ化、`docs/SIDEBAR_URLS.md` で順序決定。
+- **検索**: `src/components/SearchModal.tsx`（React）でクライアントサイド MiniSearch を実装。データは `/api/search.json` から。
+- **レイアウト**: `src/layouts/DocsLayout.astro` が全ドキュメントページをサイドバー（`src/components/navigation/NavSidebar.astro`）と目次（`TableOfContents.astro`）で包む。
+- **認証モード**: 環境変数 `BASIC_AUTH_ENABLED` で SSR+認証（レビュー用）と静的（本番）を切り替え。`src/middleware.ts` 参照。
+- **ドキュメントパイプライン**: `scripts/pipeline.mjs` が翻訳ワークフロー全体をオーケストレーション: EN ソース取得 → プレースホルダー生成 (`generate_untranslated_placeholders.mjs`) → LLM タスク準備 (`prepare_llm_tasks.mjs`) → LLM 翻訳適用 (`apply_llm_translations.mjs`)。`scripts/.checkpoint` によるチェックポイントベースのレジューム対応。
+- **スナップショットパイプライン**:
+  - **Content**: 各 EN ページ HTML から `#mc-main-content` を抽出、`snapshots/en/content/{folder}/{basename}.html` に保存。
+  - **Sidebar**: MadCap Flare TOC データをパース（`scripts/lib/madcap_toc.mjs`）、`snapshots/en/sidebar.json` に保存。
+  - **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換し、JA 翻訳と構造比較。
+  - **ソース側負債**: 壊れた上流 EN ソースは `scripts/lib/source_sync_exclusions.mjs` の registry で隔離し、スナップショット上書きを抑止して `source-sync-status.json` の `excludedPages` counter で可視化する（詳細は `docs/DOCS_DATE_TRACKING.md`）。
 
-## Authority Sources
+## 権威ソース
 
-- **`docs/SYSTEM_SPEC.md`** — Project specification summary: architecture, detection system, invariants, document index.
-- **`docs/WRITING_GUIDE.md`** — Authoritative rules for content formatting, frontmatter, links, callouts, source-first structure contract (heading mapping, `:fa-arrow-right:` handling, `<details>` preservation, JA-only section removal), Testim terminology English retention.
-- **`docs/TRANSLATION_GUIDE.md`** — Translation workflow, natural Japanese guidelines, NG/OK patterns, terminology table.
-- **`docs/OPS_DESIGN.md`** — Operational design: sync/diff/translate/QA flow, review policy, feedback loop, review checklists.
-- **`docs/PARITY_GUIDE.md`** — Parity maintenance: 2-mechanism suppression design, gate matrix, parallel agent delegation.
-- **`docs/DOCS_DATE_TRACKING.md`** — Snapshot-based change detection: HTML snapshot format, sidebar JSON structure, diff classification, CI workflow, and translation sync process.
-- **`docs/SIDEBAR_URLS.md`** — Master list of all documentation URLs, categories, and page ordering. Single source of truth for what pages exist and their structure.
-- **`docs/UPSTREAM_DEFECTS.md`** — Active upstream EN defect registry (UD-001..UD-022), allocation protocol, removal SOP.
-- **`scripts/README.md`** — Full reference for all scripts, commands, parity check types, and npm script mappings.
+- **`docs/SYSTEM_SPEC.md`** — プロジェクト仕様サマリ: アーキテクチャ、検出システム、不変量、ドキュメントインデックス。
+- **`docs/WRITING_GUIDE.md`** — コンテンツフォーマットの権威ルール: frontmatter、リンク、callout、source-first 構造契約（見出しマッピング、`:fa-arrow-right:` 処理、`<details>` 保持、JA 独自セクション除去）、Testim 用語の英語保持。
+- **`docs/TRANSLATION_GUIDE.md`** — 翻訳ワークフロー、自然な日本語ガイドライン、NG/OK パターン、用語テーブル。
+- **`docs/OPS_DESIGN.md`** — 運用設計: sync/diff/translate/QA フロー、レビューポリシー、フィードバックループ、レビューチェックリスト。
+- **`docs/PARITY_GUIDE.md`** — パリティ維持: 2-mechanism suppression 設計、gate マトリクス、並列エージェント委譲。
+- **`docs/DOCS_DATE_TRACKING.md`** — スナップショットベース変更検出: HTML スナップショット形式、サイドバー JSON 構造、diff 分類、CI ワークフロー、翻訳同期プロセス。
+- **`docs/SIDEBAR_URLS.md`** — 全ドキュメント URL、カテゴリ、ページ順序のマスターリスト。ページの存在と構造の単一真実源。
+- **`docs/UPSTREAM_DEFECTS.md`** — アクティブな上流 EN 欠陥レジストリ（UD-001..UD-022）、割当プロトコル、除去 SOP。
+- **`scripts/README.md`** — 全スクリプト、コマンド、パリティチェック種別、npm スクリプトマッピングの完全リファレンス。
 
-## Content Rules
+## コンテンツルール
 
-Content rules are defined in the authority sources. Do not duplicate rules here — refer to:
+コンテンツルールは権威ソースで定義されている。ここでルールを重複させない — 以下を参照:
 
-- **`docs/WRITING_GUIDE.md`** for frontmatter, internal links (`/docs/{slug}`), callouts (`:::`), source-first structure contract (heading mapping, `:fa-arrow-right:` → bold text, `<details>` preservation, JA-only section removal), Testim terminology English retention
-- **`docs/TRANSLATION_GUIDE.md`** for natural Japanese, NG/OK patterns, terminology table, media handling
+- **`docs/WRITING_GUIDE.md`**: frontmatter、内部リンク (`/docs/{slug}`)、callout (`:::`)、source-first 構造契約（見出しマッピング、`:fa-arrow-right:` → 太字、`<details>` 保持、JA 独自セクション除去）、Testim 用語の英語保持
+- **`docs/TRANSLATION_GUIDE.md`**: 自然な日本語、NG/OK パターン、用語テーブル、メディア処理
 
-## Review & Feedback
+## 開発スタイル
 
-Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summary:
+- TDD で開発する（探索 → Red → Green → Refactoring）
+- KPI やカバレッジ目標が与えられたら、達成するまで試行する
+- 不明瞭な指示は質問して明確にする
 
-1. Self-check → Codex CLI review → fix → `npm run lint && npm run test && npm run build`
-2. When new patterns emerge, update the relevant guide (not just the affected file)
+## コード設計
 
-## Core Invariants (from `docs/SYSTEM_SPEC.md`)
+- 関心の分離を保つ
+- 状態とロジックを分離する
+- 可読性と保守性を重視する
+- コントラクト層（API/型）を厳密に定義し、実装層は再生成可能に保つ
+- 静的検査可能なルールはプロンプトではなく、その環境の linter か ast-grep で記述する
+
+## 言語
+
+- 公開リポジトリではドキュメントやコミットメッセージを英語で記述する
+
+## スキル作成
+
+新規 skill を作るとき、配置先を次の指針で決める:
+
+- **project 固有** (`.claude/skills/` に配置): 特定リポのドメイン知識・規約・ファイルレイアウトに依存し、他リポで使う見込みがない
+- **グローバル** (`~/.claude/skills/` に配置): 言語・ツール横断、複数リポで再利用可能、運用ノウハウ
+- **判断不能なとき**: ユーザーに質問してから作成（後から移動するとパス参照が壊れやすい）
+
+## レビュー & フィードバック
+
+レビューワークフローとフィードバックループは **`docs/OPS_DESIGN.md`** で定義。要約:
+
+1. セルフチェック → Codex CLI レビュー → 修正 → `npm run lint && npm run test && npm run build`
+2. 新しいパターンが見つかったら、影響ファイルだけでなく関連ガイドを更新する
+
+## コア不変量 (`docs/SYSTEM_SPEC.md` より)
 
 本プロジェクトのコア仕様。全作業はこれらの不変量を維持する方向で行う。
 
@@ -106,6 +132,6 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 
 詳細は **`docs/SYSTEM_SPEC.md`**、パリティ維持の運用手順は **`docs/PARITY_GUIDE.md`** を参照。
 
-## Commit Style
+## コミットスタイル
 
-Prefix: `docs:`, `feat:`, `fix:`, etc. Branch naming: `claude/{topic}`.
+Prefix: `docs:`, `feat:`, `fix:`, etc. ブランチ命名: `claude/{topic}`.

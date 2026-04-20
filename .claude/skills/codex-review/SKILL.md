@@ -1,156 +1,155 @@
 ---
 name: codex-review
 description: |
-  Use OpenAI's Codex CLI for code review, design consultation, bug investigation, and copy review.
-  Brings a second AI perspective to complement Claude's own analysis for more thorough coverage.
-  Triggers: "codex", "ask codex", "consult codex", "code review", "review this code",
-  "second opinion", "another perspective", "get another AI's take", "analyze with codex",
-  "design consultation", "investigate bug", "refactoring suggestions", "UI/UX review"
-  Use cases: Any time the user wants OpenAI Codex's perspective on code or technical decisions.
-  Specifically: (1) code review & quality analysis, (2) bug investigation & root cause analysis,
-  (3) architecture & design consultation, (4) refactoring proposals, (5) UI/UX design evaluation,
-  (6) copy & messaging review, (7) technical problem investigation.
-  Even if the user phrases it vaguely like "take a look at this code" or "what do you think of this
-  implementation", consider using this skill whenever the request involves code-related consultation.
+  OpenAI Codex CLI を使ったコードレビュー・技術分析スキル。
+  Claude の分析に異なるモデルの視点を加え、レビュー網羅性を向上させる。
+  用途: (1) コードレビュー・品質分析, (2) バグ調査・根本原因分析,
+  (3) アーキテクチャ・設計相談, (4) リファクタリング提案, (5) UI/UX 評価,
+  (6) コピー・メッセージングレビュー, (7) 技術的問題の調査。
+  トリガー: "codex", "codex に聞いて", "セカンドオピニオン", "別の視点",
+  "コードレビュー", "レビューして", "設計相談", "バグ調査"
 ---
 
-# Codex CLI Skill
+# Codex CLI スキル
 
-Run code reviews and technical analyses non-interactively via OpenAI's Codex CLI.
-The goal is to complement Claude's own analysis with a different model's perspective — different
-models catch different things, so "two sets of eyes" improves review coverage.
+OpenAI Codex CLI を非対話モードで実行し、コードレビューや技術分析を行う。
+Claude 自身の分析と異なるモデルの視点を組み合わせることで、レビューの網羅性を高める。
 
-## Prerequisites Check
+## 前提条件チェック
 
-Always verify the following before attempting to run Codex:
+実行前に必ず確認:
 
 ```bash
-# 1. Is Codex CLI installed?
+# 1. Codex CLI がインストールされているか
 which codex || echo "NOT_INSTALLED"
 
-# 2. Is authentication configured?
-# Requires either CODEX_API_KEY env var or prior `codex login`
+# 2. 認証が設定されているか
+# CODEX_API_KEY 環境変数 または事前の `codex login` が必要
 ```
 
-**If Codex CLI is not installed**:
-Tell the user: "Codex CLI is not installed in this environment. You can install it with
-`npm i -g @openai/codex`, or I can help with an alternative approach."
-Do not attempt to force execution.
+**未インストールの場合**:
+「Codex CLI がインストールされていません。`npm i -g @openai/codex` でインストールできます。」と案内する。強制実行しない。
 
-**If authentication fails**:
-Guide the user through authentication. In non-interactive environments, the `CODEX_API_KEY`
-environment variable must be set.
+**認証エラーの場合**:
+`CODEX_API_KEY` 環境変数の設定を案内する。
 
-## Command Syntax
+## コマンド構文
 
-Codex CLI requires global flags (sandbox, approval policy, model) to be placed **before** the
-`exec` subcommand. Getting this order wrong causes silent failures or unexpected behavior.
+グローバルフラグ（sandbox、承認ポリシー、モデル）は `exec` サブコマンドの**前**に置く。順序を間違えるとサイレントに失敗する。
 
-### Basic Form (Read-Only Analysis)
+### 基本形（読み取り専用分析）
 
 ```bash
-codex -s read-only exec -C <project_directory> "<prompt>"
+codex -s read-only exec -C <プロジェクトディレクトリ> "<プロンプト>"
 ```
 
-### Flag Reference
+### フラグリファレンス
 
-| Flag | Position | Purpose |
-|------|----------|---------|
-| `-s read-only` | Global (before `exec`) | Sets sandbox to read-only. Use this for analysis and review — it prevents accidental modifications to project files. |
-| `-C <dir>` | `exec` flag | Sets the working root directory (equivalent to `--cd`) |
-| `--json` | `exec` flag | Outputs JSONL event stream. Use when you need to parse results programmatically. |
-| `-o <file>` | `exec` flag | Writes the final output to a file. Useful for long analysis results that need post-processing. |
-| `--model <model>` | Global | Specifies which model to use. Default is gpt-5.4 (recommended for most tasks). |
-| `--skip-git-repo-check` | `exec` flag | Allows execution outside a Git repository. |
+| フラグ | 位置 | 用途 |
+|--------|------|------|
+| `-s read-only` | グローバル（`exec` の前） | sandbox を読み取り専用に設定。分析・レビュー用 |
+| `-C <dir>` | `exec` フラグ | 作業ルートディレクトリを指定 |
+| `--json` | `exec` フラグ | JSONL イベントストリームで出力。プログラム的なパース用 |
+| `-o <file>` | `exec` フラグ | 最終出力をファイルに書き出す。長い分析結果向け |
+| `--model <model>` | グローバル | モデル指定。デフォルトは gpt-5.4 |
+| `--skip-git-repo-check` | `exec` フラグ | Git リポジトリ外での実行を許可 |
 
-### When Code Modifications Are Needed
+### コード修正が必要な場合
 
 ```bash
-codex --full-auto exec -C <project_directory> "<prompt>"
+codex --full-auto exec -C <プロジェクトディレクトリ> "<プロンプト>"
 ```
 
-`--full-auto` enables a workspace-writable sandbox. Only use this when you actually want Codex
-to modify files. For pure analysis and review, `-s read-only` is sufficient and safer.
+`--full-auto` はワークスペース書き込み可能な sandbox を有効化する。ファイル変更が必要な場合のみ使用。純粋な分析には `-s read-only` を使う。
 
-## Prompt Construction
+## プロンプト構築
 
-### Template
-
-Build every Codex prompt using this structure:
+### テンプレート
 
 ```
-[Role assignment (if needed)]
-[Request details]
-[Scope or evaluation criteria (if applicable)]
+[役割指定（必要なら）]
+[依頼内容]
+[スコープまたは評価基準（該当する場合）]
 
 No confirmation or questions needed. Provide concrete suggestions, fixes, and code examples proactively.
 ```
 
-The closing instruction **must always be appended**. Without it, Codex tends to ask clarifying
-questions or stop short of actionable output, which defeats the purpose of non-interactive execution.
+末尾の指示は**必ず付与する**。これがないと Codex は確認質問で止まったり、具体的な出力を返さない。
 
-### Principles for Effective Prompts
+### 効果的なプロンプトの原則
 
-- **Define a specific scope**: "Review the auth module's error handling" produces far better results than "Review everything"
-- **Specify evaluation criteria**: Security, performance, maintainability — tell Codex what matters most
-- **Provide context**: Background like "This is a Next.js + TypeScript SaaS application" significantly improves accuracy
+- **スコープを限定する**: 「auth モジュールのエラーハンドリングをレビュー」は「全部レビュー」より精度が高い
+- **評価基準を明示する**: セキュリティ、パフォーマンス、保守性 — 何を重視するか伝える
+- **コンテキストを与える**: 「Astro + TypeScript のドキュメントサイト」のような背景情報が精度を上げる
+- **役割指定の判断**: 専門分野が明確なタスク（セキュリティ、アクセシビリティ等）では "You are a security expert." のように追加する。汎用レビューやコピーレビューでは省略してよい
+- **`-o` オプションの使い分け**: プロジェクト全体を対象とする包括的分析（技術的負債の棚卸し等）では `-o /tmp/codex-review.md` でファイル保存する。単一モジュールや特定観点の分析は標準出力で十分
 
-## Command Examples by Use Case
+## ユースケース別コマンド例
 
-### Code Review
+### コードレビュー
 ```bash
 codex -s read-only exec -C /path/to/project \
   "Review this project's code. Focus on security risks, performance bottlenecks, and maintainability issues. No confirmation or questions needed. Provide concrete fixes with code examples proactively."
 ```
 
-### Bug Investigation
+### バグ調査
 ```bash
 codex -s read-only exec -C /path/to/project \
   "Investigate the 500 error that occurs after session timeout in the authentication flow. Identify the relevant files and analyze the root cause. No confirmation or questions needed. Provide the root cause and concrete fixes proactively."
 ```
 
-### Architecture Analysis
+### アーキテクチャ分析
 ```bash
 codex -s read-only exec -C /path/to/project \
   "Analyze this project's architecture. Evaluate dependency structure, separation of concerns, and scalability. No confirmation or questions needed. Provide improvement proposals proactively."
 ```
 
-### UI/UX Design Review
+### UI/UX デザインレビュー
 ```bash
 codex -s read-only exec -C /path/to/project \
   "Evaluate this project's UI from a designer's perspective. Analyze visual hierarchy, spacing rhythm, color contrast and accessibility, interaction consistency, and cognitive load. No confirmation or questions needed. Provide concrete improvements with code examples proactively."
 ```
 
-### Save Output to File (for lengthy analyses)
+### コピー・メッセージングレビュー
+```bash
+codex -s read-only exec -C /path/to/project \
+  "Review the user-facing text in this project (error messages, button labels, onboarding copy, notification text). Evaluate clarity, tone consistency, and accessibility. No confirmation or questions needed. Provide concrete rewrites proactively."
+```
+
+### リファクタリング提案
+```bash
+codex -s read-only exec -C /path/to/project \
+  "Analyze this module for refactoring opportunities. Focus on code duplication, overly complex functions, and tight coupling. No confirmation or questions needed. Provide concrete refactoring steps with before/after code proactively."
+```
+
+### 出力をファイルに保存（長い分析向け）
 ```bash
 codex -s read-only exec -C /path/to/project \
   -o /tmp/codex-review.md \
   "Comprehensively analyze the technical debt in this project. No confirmation or questions needed. Provide a prioritized refactoring plan proactively."
 ```
 
-### Resume Session (follow-up questions or deeper analysis)
+### セッション再開（追加質問・深掘り）
 ```bash
 codex exec resume --last \
   "Regarding the auth module issue from the previous analysis, provide a more detailed fix. No confirmation or questions needed."
 ```
 
-## Execution Steps
+## 実行ステップ
 
-1. **Check prerequisites**: Run `which codex` to verify installation. If not found, inform the user and stop.
-2. **Identify the target directory**: Confirm the path specified by the user, or locate uploaded files.
-3. **Construct the prompt**: Combine the user's request + relevant evaluation criteria + the mandatory closing instruction for proactive output.
-4. **Execute the command**: Use `-s read-only` for analysis-only tasks, `--full-auto` when modifications are needed.
-5. **Report results with synthesis**: Summarize Codex's output and add Claude's own perspective.
+1. **前提条件チェック**: `which codex` でインストール確認。なければ案内して停止。
+2. **対象ディレクトリ特定**: ユーザー指定のパスを確認、またはアップロードファイルを検出。
+3. **プロンプト構築**: ユーザーの依頼 + 評価基準 + 末尾の非対話指示を組み合わせる。
+4. **コマンド実行**: 分析のみなら `-s read-only`、修正が必要なら `--full-auto`。
+5. **結果を統合して報告**: Codex の出力をそのまま伝えるのではなく、Claude の視点と統合する。
 
-Step 5 is critical: don't just relay Codex's output verbatim. Synthesize the two perspectives —
-e.g., "Codex flagged X, and I agree because... However, I'd also add that..." This integration
-of viewpoints is the core value of using this skill.
+ステップ 5 が最重要: Codex の出力をそのまま中継しない。2 つの視点を統合する — 例えば「Codex は X を指摘しており、私も同意します。理由は...。加えて Y も検討すべきです」。この視点の統合がスキルの核心的価値。
 
-## Troubleshooting
+## トラブルシューティング
 
-| Symptom | Cause & Resolution |
-|---------|--------------------|
-| `codex: command not found` | Not installed. Guide user to run `npm i -g @openai/codex` |
-| Authentication error | `CODEX_API_KEY` not set. Guide user to configure the environment variable |
-| Timeout | Project may be too large. Narrow the prompt scope to specific modules or files |
-| Git repository error | Codex expects to run inside a Git repo. Add `--skip-git-repo-check` or run `git init` in the target directory |
+| 症状 | 原因と対処 |
+|------|-----------|
+| `codex: command not found` | 未インストール。`npm i -g @openai/codex` を案内 |
+| 認証エラー | `CODEX_API_KEY` 未設定。環境変数の設定を案内 |
+| タイムアウト | プロジェクトが大きすぎる。プロンプトのスコープを特定モジュール・ファイルに絞る |
+| Git リポジトリエラー | `--skip-git-repo-check` を追加、または対象ディレクトリで `git init` |
