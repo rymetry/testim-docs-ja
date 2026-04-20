@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate parity-baseline.json from parity-check-status.json.
+ * Generate parity-baseline.json from parity-check-status.json (schema v2).
  *
  * frozen baseline 機構の生成側。input は直前の `check:parity` 実行
  * 結果 (`parity-check-status.json`) と各 slug の現 EN snapshot fingerprint。
@@ -11,22 +11,27 @@
  * Modes:
  *   --regenerate              既存 parity-baseline.json を完全上書き
  *   --slug=<csv>              指定 slug のエントリのみ削除 → 再生成 → マージ
+ *   --types=<csv>             指定 issueType のエントリのみ再生成 (structure 系のみ許可)
  *   --rationale=<text>        rationale フィールドを明示的に指定
- *   --review-after=<YYYY-MM-DD>  reviewAfter を明示的に指定（省略時は 6 ヶ月後）
+ *
+ * v2 変更点:
+ *   - `--review-after` option 廃止 (reviewAfter field 自体が v2 で削除)
+ *   - 出力 schemaVersion=2
+ *   - segment-inconclusive / snapshot-incomplete / source-unusable は
+ *     baseline 対象外 (BASELINE_ELIGIBLE_TYPES に含まれない)
+ *   - priority: 'medium' default を全 entry に付与
  *
  * @module generate_parity_baseline
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 import { ROOT_DIR } from './lib/project.mjs';
 import {
   BASELINE_ELIGIBLE_TYPES,
   STRUCTURE_CATEGORIES,
-  USABILITY_REASONS,
   computeStructureFingerprint,
   validateBaseline,
   loadBaselineFile,
@@ -34,7 +39,6 @@ import {
 } from './lib/source_parity_baseline.mjs';
 import {
   STRUCTURE_MISMATCH_TYPES,
-  SOURCE_UNUSABLE_TYPES,
 } from './lib/source_parity_types.mjs';
 import { computeSnapshotFingerprint } from './lib/source_parity_acknowledgements.mjs';
 
@@ -42,82 +46,6 @@ const STATUS_PATH = path.join(ROOT_DIR, 'parity-check-status.json');
 const BASELINE_PATH = path.join(ROOT_DIR, 'parity-baseline.json');
 const SNAPSHOT_DIFF_PATH = path.join(ROOT_DIR, 'snapshot-diff-status.json');
 const SNAPSHOTS_DIR = path.join(ROOT_DIR, 'snapshots', 'en', 'content');
-
-const DEFAULT_REVIEW_MONTHS = 6;
-/**
- * Window over which baseline reviewAfter dates are spread out so that the
- * cliff of mass-expiry never happens. Slug N's reviewAfter is offset by
- * `hash(slug) % STAGGER_WINDOW_DAYS` days from the base date.
- */
-const STAGGER_WINDOW_DAYS = 90;
-
-/**
- * Compute the base reviewAfter date — `monthsAhead` months after `now`.
- * Plain UTC math, format strict YYYY-MM-DD.
- *
- * @param {Date} now
- * @param {number} [monthsAhead]
- * @returns {string}
- */
-export function defaultReviewAfter(now, monthsAhead = DEFAULT_REVIEW_MONTHS) {
-  const d = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + monthsAhead, now.getUTCDate()),
-  );
-  return formatYmd(d);
-}
-
-function formatYmd(d) {
-  const yyyy = d.getUTCFullYear().toString();
-  const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(d.getUTCDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-/**
- * Add `days` days to a strict YYYY-MM-DD date string.
- *
- * @param {string} ymd
- * @param {number} days
- * @returns {string}
- */
-function addDays(ymd, days) {
-  const [year, month, day] = ymd.split('-').map(Number);
-  const utc = Date.UTC(year, month - 1, day) + days * 86400000;
-  return formatYmd(new Date(utc));
-}
-
-/**
- * Deterministic per-slug offset, used to stagger reviewAfter dates so that
- * a single calendar day cannot expire the entire baseline at once.
- *
- * The offset is `sha256(slug)` interpreted as a hex prefix, taken mod
- * `STAGGER_WINDOW_DAYS`. Same input → same offset, no global state.
- *
- * @param {string} slug
- * @returns {number} integer in [0, STAGGER_WINDOW_DAYS)
- */
-export function staggeredOffsetDays(slug) {
-  const hex = createHash('sha256').update(slug).digest('hex').slice(0, 12);
-  const value = Number.parseInt(hex, 16);
-  return value % STAGGER_WINDOW_DAYS;
-}
-
-/**
- * Compute the staggered reviewAfter date for a single slug. Builds the
- * base 6-month date from `now`, then offsets it by the slug's deterministic
- * stagger.
- *
- * @param {string} slug
- * @param {Date} now
- * @param {string} [explicitReviewAfter] — if non-null, returned verbatim
- *   (CLI override)
- * @returns {string}
- */
-export function staggeredReviewAfter(slug, now, explicitReviewAfter = null) {
-  if (explicitReviewAfter) return explicitReviewAfter;
-  const base = defaultReviewAfter(now);
-  return addDays(base, staggeredOffsetDays(slug));
-}
 
 /**
  * Convert a parity-check-status.json file path to a slug.
@@ -286,31 +214,19 @@ export function buildFingerprintMap(snapshotsDir = SNAPSHOTS_DIR) {
 }
 
 /**
- * Build a baseline from a parsed parity-check-status.json object.
+ * Build a baseline from a parsed parity-check-status.json object (schema v2).
  *
  * @param {object} status — parsed parity-check-status.json
  * @param {Map<string, string>} fingerprintMap — slug → sha256
- * @param {{ runId: string, generatedAt: string, reviewAfter: string, rationale: string }} meta
+ * @param {{ runId: string, generatedAt: string, rationale: string }} meta
  * @returns {object} baseline ready for serializeBaseline
  */
 export function buildBaselineFromStatus(status, fingerprintMap, meta) {
   const entries = [];
-  // baseDate drives the staggered reviewAfter computation. When the user
-  // passes --review-after, every entry uses the override verbatim (no
-  // stagger) so they can lock the whole baseline to one day for testing
-  // or planned cutovers. Otherwise we anchor on the run's checkedAt and
-  // offset per slug.
-  const baseDate = new Date(meta.generatedAt);
   for (const file of status.files ?? []) {
     const slug = fileEntryToSlug(file.file);
     const fingerprint = fingerprintMap.get(slug);
     if (!fingerprint) continue; // defensive: no snapshot, skip
-
-    const reviewAfterForSlug = staggeredReviewAfter(
-      slug,
-      baseDate,
-      meta.reviewAfterOverride ?? null,
-    );
 
     for (const issue of file.issues ?? []) {
       if (!BASELINE_ELIGIBLE_TYPES.has(issue.type)) continue;
@@ -319,7 +235,7 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         slug,
         issueType: issue.type,
         snapshotFingerprint: fingerprint,
-        reviewAfter: reviewAfterForSlug,
+        priority: 'medium',
         sectionPath: null,
         segmentKind: null,
         enSegmentIndex: null,
@@ -327,13 +243,10 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         enSourceFingerprint: null,
         jaSourceFingerprint: null,
         missingTokens: null,
-        inconclusiveCategory: null,
-        inconclusiveReason: null,
-        // structure mismatch / source unusable 用フィールド
+        // structure mismatch 用フィールド
         sectionIndex: null,
         structureCategory: null,
         structureFingerprint: null,
-        usabilityReason: null,
       };
 
       if (STRUCTURE_MISMATCH_TYPES.has(issue.type)) {
@@ -364,22 +277,8 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
         entries.push(entry);
         continue;
       }
-      if (SOURCE_UNUSABLE_TYPES.has(issue.type)) {
-        // page 粒度の source unusable detector。
-        // identity surface: usabilityReason のみ。
-        const reason = issue.usabilitySignals?.reason ?? null;
-        if (typeof reason !== 'string' || !USABILITY_REASONS.has(reason)) {
-          continue;
-        }
-        entry.usabilityReason = reason;
-        entries.push(entry);
-        continue;
-      }
 
-      if (issue.type === 'segment-inconclusive') {
-        entry.inconclusiveCategory = issue.inconclusiveCategory ?? null;
-        entry.inconclusiveReason = issue.inconclusiveReason ?? null;
-      } else if (issue.type === 'segment-extra' || issue.type === 'segment-untranslated') {
+      if (issue.type === 'segment-extra' || issue.type === 'segment-untranslated') {
         // JA-owned diffs — use jaSegmentIndex as the anchor.
         if (
           typeof issue.jaSegmentIndex !== 'number' ||
@@ -436,7 +335,7 @@ export function buildBaselineFromStatus(status, fingerprintMap, meta) {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: meta.generatedAt,
     generatedFromRunId: meta.runId,
     rationale: meta.rationale,
@@ -449,7 +348,7 @@ export function buildGenerationMeta(status, args) {
   const generatedAt = checkedAt;
   let defaultRationale;
   if (args.regenerate) {
-    defaultRationale = 'frozen baseline — regenerated with staggered reviewAfter';
+    defaultRationale = 'frozen baseline — regenerated (schema v2)';
   } else if (args.types) {
     defaultRationale =
       `frozen baseline — partial regeneration by type: ${args.types.join(', ')}`;
@@ -461,10 +360,6 @@ export function buildGenerationMeta(status, args) {
   return {
     runId: `${checkedAt}#parity-check-status`,
     generatedAt,
-    // Per-entry reviewAfter is computed in buildBaselineFromStatus from
-    // (baseDate, slug). The CLI override is forwarded as
-    // reviewAfterOverride and disables the stagger when set.
-    reviewAfterOverride: args.reviewAfter ?? null,
     rationale: args.rationale ?? defaultRationale,
   };
 }
@@ -474,7 +369,6 @@ export function buildGenerationMeta(status, args) {
  *
  * structure mismatch 系は sectionIndex を sectionPath より先に使うことで、
  * 同一ページ内で sectionPath が衝突しても stable に並ぶ。
- * source unusable 系は usabilityReason で補助 sort する。
  */
 function sortEntries(entries) {
   return [...entries].sort((a, b) => {
@@ -491,23 +385,12 @@ function sortEntries(entries) {
       const bFp = b.structureFingerprint ?? '';
       return aFp < bFp ? -1 : aFp > bFp ? 1 : 0;
     }
-    if (SOURCE_UNUSABLE_TYPES.has(a.issueType)) {
-      const aReason = a.usabilityReason ?? '';
-      const bReason = b.usabilityReason ?? '';
-      return aReason < bReason ? -1 : aReason > bReason ? 1 : 0;
-    }
     const aSec = a.sectionPath ?? '';
     const bSec = b.sectionPath ?? '';
     if (aSec !== bSec) return aSec < bSec ? -1 : 1;
     const aKind = a.segmentKind ?? '';
     const bKind = b.segmentKind ?? '';
     if (aKind !== bKind) return aKind < bKind ? -1 : 1;
-    if (a.issueType === 'segment-inconclusive') {
-      const aCat = a.inconclusiveCategory ?? '';
-      const bCat = b.inconclusiveCategory ?? '';
-      if (aCat !== bCat) return aCat < bCat ? -1 : 1;
-      return 0;
-    }
     if (a.issueType === 'segment-extra' || a.issueType === 'segment-untranslated') {
       const aIdx = a.jaSegmentIndex ?? -1;
       const bIdx = b.jaSegmentIndex ?? -1;
@@ -571,7 +454,7 @@ export function mergePartialBaseline(existing, slugsToReplace, newEntries, meta)
   const slugSet = new Set(slugsToReplace);
   const preserved = existing.entries.filter((e) => !slugSet.has(e.slug));
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: meta.generatedAt,
     generatedFromRunId: meta.generatedFromRunId,
     rationale: meta.rationale,
@@ -583,10 +466,7 @@ export function mergePartialBaseline(existing, slugsToReplace, newEntries, meta)
  * `--types=<csv>` partial mode 用のマージヘルパー。
  *
  * 指定 issueType の既存エントリだけを削除し、新しい entries とマージする。
- * 指定外の issueType のエントリは bit-identical で保持する。これにより、
- * 既存 segment-* エントリの `reviewAfter` を意図せず shift させずに、
- * 新 4 type (structure mismatch / source unusable) のエントリだけを
- * 追加生成できる。
+ * 指定外の issueType のエントリは bit-identical で保持する。
  *
  * @param {object} existing — loadBaselineFile の戻り値
  * @param {string[]} typesToReplace — 置換対象の issueType (例: ['section-structure-mismatch'])
@@ -598,7 +478,7 @@ export function mergePartialBaselineByType(existing, typesToReplace, newEntries,
   const preserved = existing.entries.filter((e) => !typeSet.has(e.issueType));
   const filteredNew = newEntries.filter((e) => typeSet.has(e.issueType));
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: meta.generatedAt,
     generatedFromRunId: meta.generatedFromRunId,
     rationale: meta.rationale,
@@ -613,21 +493,19 @@ export function mergePartialBaselineByType(existing, typesToReplace, newEntries,
 export function parseArgs(argv) {
   const slugArg = argv.find((arg) => arg.startsWith('--slug='));
   const rationaleArg = argv.find((arg) => arg.startsWith('--rationale='));
-  const reviewAfterArg = argv.find((arg) => arg.startsWith('--review-after='));
   const typesArg = argv.find((arg) => arg.startsWith('--types='));
   return {
     regenerate: argv.includes('--regenerate'),
     slugs: slugArg ? slugArg.slice('--slug='.length).split(',').filter(Boolean) : null,
     types: typesArg ? typesArg.slice('--types='.length).split(',').filter(Boolean) : null,
     rationale: rationaleArg ? rationaleArg.slice('--rationale='.length) : null,
-    reviewAfter: reviewAfterArg ? reviewAfterArg.slice('--review-after='.length) : null,
   };
 }
 
 function printUsage() {
   console.error('Usage:');
   console.error(
-    '  node scripts/generate_parity_baseline.mjs --regenerate [--rationale="..."] [--review-after=YYYY-MM-DD]',
+    '  node scripts/generate_parity_baseline.mjs --regenerate [--rationale="..."]',
   );
   console.error(
     '  node scripts/generate_parity_baseline.mjs --slug=overview/foo,overview/bar [--rationale="..."]',
@@ -640,12 +518,23 @@ function printUsage() {
     '  --types is mutually exclusive with --regenerate and --slug. It re-generates only entries',
   );
   console.error(
-    '  for the specified issue types, leaving other entries (incl. their reviewAfter) untouched.',
+    '  for the specified issue types, leaving other entries untouched.',
   );
 }
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  // v2: --review-after was removed entirely. Reject stale invocations to
+  // force callers (scripts, docs) to drop the obsolete flag instead of
+  // silently ignoring it.
+  const obsoleteReviewAfter = process.argv.slice(2).find((a) => a.startsWith('--review-after'));
+  if (obsoleteReviewAfter) {
+    console.error(
+      `❌ --review-after is removed in schema v2 (${obsoleteReviewAfter}). ` +
+        'Drop the flag — baseline entries no longer carry a reviewAfter field.',
+    );
+    return 1;
+  }
   if (!args.regenerate && !args.slugs && !args.types) {
     printUsage();
     return 1;
@@ -699,10 +588,10 @@ async function main() {
     // partial-by-type mode。
     // 指定 issueType の issue だけから entry を生成し、既存 baseline と
     // mergePartialBaselineByType でマージする。指定外 (segment-*) は
-    // bit-identical で残る (reviewAfter 含む)。
+    // bit-identical で残る。
     const newBaseline = buildBaselineFromStatus(status, fingerprintMap, meta);
     let existing = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: meta.generatedAt,
       generatedFromRunId: '',
       rationale: '',
@@ -723,7 +612,7 @@ async function main() {
     };
     const newBaseline = buildBaselineFromStatus(filtered, fingerprintMap, meta);
     let existing = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: meta.generatedAt,
       generatedFromRunId: '',
       rationale: '',

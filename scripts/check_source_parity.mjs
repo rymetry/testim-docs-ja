@@ -299,11 +299,11 @@ function loadAcknowledgementsFile(filePath = ACKNOWLEDGEMENTS_PATH) {
 
 /**
  * `parity-baseline.json` を読み込み、validation 済み payload を返す。
- * file が無ければ空の structure を返す。
+ * file が無ければ空の structure (schema v2) を返す。
  */
 function loadBaselineFileSafe(filePath = BASELINE_PATH) {
   if (!fs.existsSync(filePath)) {
-    return { schemaVersion: 1, entries: [] };
+    return { schemaVersion: 2, entries: [] };
   }
   return loadBaselineFile(filePath);
 }
@@ -343,7 +343,7 @@ export async function checkSourceParity({
 
   // frozen baseline をロード。acknowledgement とは別ファイル / 別意味で管理する。
   // テストでは baselinePath を差し替えて隔離実行できる。
-  let baselineData = { schemaVersion: 1, entries: [] };
+  let baselineData = { schemaVersion: 2, entries: [] };
   try {
     baselineData = loadBaselineFileSafe(baselinePath);
   } catch (error) {
@@ -593,7 +593,6 @@ export async function checkSourceParity({
         issues,
         baselineData.entries,
         snapshotFingerprint,
-        today,
       );
       issues = baselineResult.tagged;
       if (baselineResult.invalidated) {
@@ -633,8 +632,7 @@ export async function checkSourceParity({
         const tags = [];
         if (issue.acknowledged && !issue.ackExpired) tags.push('⏸');
         if (issue.acknowledged && issue.ackExpired) tags.push('⚠expired');
-        if (issue.baselined && issue.baselineExpired) tags.push('🧊expired-baseline');
-        else if (issue.baselined) tags.push('🧊baseline');
+        if (issue.baselined) tags.push('🧊baseline');
         const issueTag = tags.length > 0 ? ` ${tags.join(' ')}` : '';
         console.log(
           `   [${issue.type}/${issue.severity}]${location}${issueTag} ${detail}${artifactNote}`,
@@ -650,10 +648,7 @@ export async function checkSourceParity({
           );
         }
         if (issue.baselined) {
-          const baselineState = issue.baselineExpired ? 'expired' : 'active';
-          console.log(
-            `     ↳ baseline: ${baselineState} (review: ${issue.baselineReviewAfter ?? 'n/a'})`,
-          );
+          console.log('     ↳ baseline: frozen');
         }
       }
       console.log('');
@@ -767,6 +762,7 @@ export async function checkSourceParity({
     advisoryQueueScope,
     advisoryQueue,
     debug: {
+      baselineSchemaVersion: baselineData.schemaVersion,
       maskCoverage: maskCoverage.toJSON(),
       artifactCoverage: artifactCoverage.snapshot(),
       patchCoverage: patchCoverage.snapshot(),
@@ -806,14 +802,6 @@ export async function checkSourceParity({
     }
     if (summary.expiredAcknowledgements > 0) {
       console.log(`expired acknowledgements: ${summary.expiredAcknowledgements} 件`);
-    }
-    if (summary.expiredBaselineEntries > 0) {
-      console.log(`expired baseline entries: ${summary.expiredBaselineEntries} 件`);
-    }
-    if (summary.expiringBaselineEntries30d > 0) {
-      console.log(
-        `expiring baseline entries (≤30 日): ${summary.expiringBaselineEntries30d} 件`,
-      );
     }
     console.log('\n問題種別:');
     for (const [type, count] of Object.entries(summary.issuesByType)) {
@@ -893,13 +881,11 @@ export async function checkSourceParity({
         const state = entry.blocking ? 'blocking review' : 'baselined review';
         console.log(`  ${entry.slug ?? entry.file} (${state})`);
         for (const issue of entry.issues) {
-          const review = issue.baselineReviewAfter ? ` review=${issue.baselineReviewAfter}` : '';
-          const expired = issue.baselineExpired ? ' expired-baseline' : '';
           const pair =
             issue.leftSectionPath && issue.rightSectionPath
               ? ` pair="${issue.leftSectionPath}" <-> "${issue.rightSectionPath}"`
               : '';
-          console.log(`    - ${issue.detail}${review}${expired}${pair}`);
+          console.log(`    - ${issue.detail}${pair}`);
         }
       }
     }

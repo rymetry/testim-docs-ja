@@ -121,8 +121,6 @@ export function buildAdvisoryReviewQueue(results) {
           baselined: issue.baselined === true,
           acknowledged: issue.acknowledged === true,
           ackExpired: issue.ackExpired === true,
-          baselineReviewAfter: issue.baselineReviewAfter ?? null,
-          baselineExpired: issue.baselineExpired === true,
         };
       });
 

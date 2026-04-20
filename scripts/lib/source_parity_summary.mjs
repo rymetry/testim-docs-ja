@@ -66,8 +66,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
   let expiredAcknowledgements = 0;
   let baselinedIssues = 0;
   let baselinedFiles = 0;
-  let expiredBaselineEntries = 0;
-  let expiringBaselineEntries30d = 0;
   let reportableActiveFiles = 0;
   let reportableActiveActionableFiles = 0;
   let auditSignalIssues = 0;
@@ -98,11 +96,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
       if (isBaselined) {
         baselinedIssues += 1;
         baselinedByType[issue.type] = (baselinedByType[issue.type] || 0) + 1;
-        if (issue.baselineExpired === true) {
-          expiredBaselineEntries += 1;
-        } else if (issue.baselineExpiringSoon === true) {
-          expiringBaselineEntries30d += 1;
-        }
         if (
           issue.type === 'segment-inconclusive' &&
           typeof issue.inconclusiveCategory === 'string'
@@ -201,8 +194,6 @@ export function summarizeParityResults(results, orphanMeta = {}) {
     baselinedFiles,
     baselinedByType,
     baselinedByInconclusiveCategory,
-    expiredBaselineEntries,
-    expiringBaselineEntries30d,
     // audit / reportable counters
     reportableActiveFiles,
     reportableActiveActionableFiles,
