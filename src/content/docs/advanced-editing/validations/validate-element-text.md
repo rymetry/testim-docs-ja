@@ -178,7 +178,7 @@ Testim は Expected Value 入力フィールドでの Regex をサポートし�
 
 2 つの値のいずれかに一致するかを検証します。例えば param1 = "Hello"、param2 = "World" の場合、"Hello" または "World" でパスします：
 
-式: `new RegExp("^" + "(?:" + param1 + "_" + "|" + param2 + "_)" + "$")`
+式: `new RegExp("^" + "(?:" + param1 + "" + "|" + param2 + ")" + "$")`
 
 ### 不一致の検証（Not Equal Validation）
 

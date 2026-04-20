@@ -136,6 +136,17 @@ function isCodeSnippetDiv(node) {
   return /\bcodeSnippet(?:Body)?\b/.test(cls);
 }
 
+/**
+ * Return true when an element's `class` attribute contains the given class name
+ * as a whitespace-delimited token.
+ */
+function hasClass(node, className) {
+  const cls = node?.attrs?.class;
+  if (!cls || typeof cls !== 'string') return false;
+  const re = new RegExp(`(?:^|\\s)${className}(?:\\s|$)`);
+  return re.test(cls);
+}
+
 // ---------------------------------------------------------------------------
 // HTML entity decoding (covers the subset MadCap produces)
 // ---------------------------------------------------------------------------
@@ -374,6 +385,17 @@ function renderInlineText(node, buffer) {
     } else {
       buffer.push(label);
     }
+    return;
+  }
+
+  // MadCap `<span class="FileOrFilePath">...</span>` semantically represents an
+  // inline file/path literal. Render it backtick-wrapped so its text becomes an
+  // invariant token (same treatment as `<code>`), letting JA side mirror the
+  // shape with backticks without triggering `segment-token-gap`.
+  if (tag === 'span' && hasClass(node, 'FileOrFilePath')) {
+    const inner = [];
+    for (const child of node.children) renderInlineText(child, inner);
+    buffer.push('`', inner.join('').trim(), '`');
     return;
   }
 

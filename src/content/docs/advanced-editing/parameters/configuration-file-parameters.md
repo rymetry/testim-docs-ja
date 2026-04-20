@@ -24,7 +24,7 @@ keywords:
 
 ## 設定ファイルでの定義 {#defining-parameters-in-a-configuration-file}
 
-[設定ファイル](/docs/running-tests/configuration-file-run-hooks) の `beforeSuite` / `beforeTest` の戻り値で、スイート／テスト単位のパラメーターを定義できます。例：
+[設定ファイル](/docs/running-tests/configuration-file-run-hooks) を作成し、ファイル内の beforeSuite/beforeTest 関数でスイート／テスト単位のパラメーターを定義します。以下の例では、`beforeSuite` と `beforeTest` を使って `user name` と `password` を定義します。
 
 ```javascript
 exports.config = {
@@ -92,7 +92,7 @@ beforeSuite: function () {
 } //add comma here if there are more functions after beforeSuite
 ```
 
-後続のデータセットで一部のパラメーターが欠けている場合（例: 2 つ目に `password` が無い）、前のデータセットの値が引き継がれます。
+後続のデータセットで一部のデータセットパラメーターが欠けている場合、例えば 2 つ目のデータセットに password が含まれていない場合（つまり `password: walrus` が含まれていない場合）、Testim は 1 つ目のデータセットのパラメーターデータ（つまり `belle`）を使用します。
 
 ## 実行レベル: `return` で一括指定
 
@@ -101,7 +101,7 @@ beforeSuite: function () {
 1. 設定ファイルを作成／編集します。
 2. `beforeSuite` または `beforeTest` の `return` にパラメーターと値を記述します。
 
-例（beforeSuite に追加）：
+以下は、`beforeSuite` フックに追加したテストデータの例です。このテストデータは、実行に含まれるすべてのテストで同一となります:
 
 ```javascript
 exports.config = {
@@ -115,7 +115,7 @@ exports.config = {
 };
 ```
 
-例（beforeTest に追加）：
+以下は、`beforeTest` フックに追加したテストデータの例です。このテストデータは、実行に含まれるすべてのテストで同一となります:
 
 ```javascript
 exports.config = {
@@ -138,7 +138,8 @@ exports.config = {
 
 ## グローバルエクスポートパラメーター
 
-"afterSuite" 関数では、その実行でエクスポートされたグローバルパラメーターを使用できます。構文: suite.exportsGlobal.\<param_name\>
+"afterSuite" 関数では、その実行でエクスポートされたグローバルパラメーターを使用できます。
+構文: `suite.exportsGlobal.<param_name>`
 
 ## CLI での指定
 

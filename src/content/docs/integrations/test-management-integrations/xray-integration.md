@@ -77,7 +77,7 @@ Testim と Xray の統合を設定した後、Testim の特定のテストを Xr
 ## テストの実行と Xray での Testim テスト結果の表示
 
 Xray でテスト実行の結果を表示するには、リモートグリッドのみを使用して Testim でマッピングされたテストを実行する必要があります。Testim でマッピングされたテストを実行すると、テスト結果が関連する Xray プロジェクトのプロジェクトボードの「To Do」列の適切なテスト実行の下に表示されます。\
-実行の名前は `"<Testim実行名><UTC時刻>"` です。
+実行の名前は `“<Testim execution name><UTC time>”` です。
 
 :::info
 Xray 側のテストの **issue type（課題タイプ）** は [Test](https://docs.getxray.app/display/ON/Enabling+Xray+Issue+Types) である必要があります。\

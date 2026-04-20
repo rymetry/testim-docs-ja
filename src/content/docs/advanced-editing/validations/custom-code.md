@@ -219,7 +219,7 @@ return equal;
 JavaScript の Promise を使うと、一定時間（ミリ秒）後に resolve / reject するコードを記述できます。真なら resolve されステップはパス、偽なら reject され失敗になります。以下は概念説明のためのシンプルな例（パラメーターは使用しません）。（10 秒後にパスします）
 
 :::info
-検証が失敗した場合、`reject()` に渡した文字列はステップのプロパティパネルに表示されます。
+検証が失敗した場合、`reject( )` 関数呼び出しに含めたテキストはステップのプロパティパネルに表示されます。
 :::
 
 ![Promise 検証のコード例](/images/validations/custom-code/ba1832e-Testim_290.png)

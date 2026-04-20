@@ -124,7 +124,7 @@ SECRETS.<keyName>
 **パラメーターファイルをシークレット対応にするには:**
 
 1. ファイル名を `.JS` 拡張子に変更します（`.json` の代わりに）。例 - `<file name>.js`
-2. 最初の行として `module.exports`= を追加します:
+2. 最初の行として `module.exports=` を追加します:
 
 ```json
 module.exports = {

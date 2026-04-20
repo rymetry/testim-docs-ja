@@ -24,7 +24,7 @@ Testim を Jira に接続するには、まず Jira にログインする必要�
 
 1. **Settings > Bug Tracker** に移動します。
 2. **Jira** が選択されており、すでに Jira にログイン済みであることを確認します。
-3. **Host** フィールドに Jira サイトの URL を入力します。例えば https://\<yourcompany\>.atlassian.net です。
+3. **Host** フィールドに Jira サイトの URL を入力します。例えば https://`<yourcompany>`.atlassian.net. です。
 
 ![Jira の Host field](/images/bug-tracker-settings/connecting-testim-to-jira/f26f1c9-jira1.PNG)
 

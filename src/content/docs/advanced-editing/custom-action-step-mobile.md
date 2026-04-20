@@ -21,10 +21,10 @@ keywords:
 事前定義ステップにないアクションや検証を行いたい場合に、Appium を用いたスクリプトを実行できる「カスタムアクション（モバイル）」ステップを使用します。複数のモバイルコマンドをバッチ実行でき、JS パラメーターも利用可能です。カスタムアクション（モバイル）は TMA でのみ完全にサポートされます。サードパーティのグリッドでは未サポートです（例）：
 
 - Browserstack では、サーバーが `--allow-insecure` オプション付きで起動していない旨のエラーメッセージが返ります。
-- Headspin では、コマンド処理中にキーボードを非表示にできない旨の不明なサーバー側エラーメッセージが返ります。
+- Headspin では次が返ります: `An unknown server-side error occurred while processing the command. Original error: The software keyboard cannot be hidden`
 
 :::note{title="ローカル実行の前提条件"}
-物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: tricentis-mobile-agent start -e
+物理デバイス／エミュレータでローカル実行する場合、テスト実行前に端末で次のコマンドを実行してください: `tricentis-mobile-agent start -e`
 :::
 
 ## VMG でサポートされる Appium メソッド

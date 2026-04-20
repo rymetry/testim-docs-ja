@@ -250,10 +250,24 @@ const TOKENLESS_SWAP_AMBIGUITY_RELATIVE_MARGIN = 0.01;
  * 存在するかで判定する。この関数は内部的に glossary_mask に委譲する薄い
  * wrapper だが、旧 API shape を保って align 側の呼び出しコードを変えない。
  *
- * @param {string} text JA 側の正規化済み text (`createSegment` 由来)
+ * @param {object} segment JA segment。`textNorm` と `tokensInvariant` を参照する
  */
-function looksUntranslated(text) {
-  if (typeof text !== 'string') return false;
+function looksUntranslated(segment) {
+  if (!segment || typeof segment.textNorm !== 'string') return false;
+  // `normalizeSegmentText` は inline-code の backtick を剥いでしまうため、
+  // `classifySegment` の backtick pre-strip では textNorm 上に埋め込まれた
+  // invariant token content (EN そのままの長文エラー等) を除去できない。
+  // ここでは `tokensInvariant` (backtick content / URL / CLI flag 等) を
+  // textNorm から後付け除去してから分類器に渡し、invariant 内部の英語
+  // prose が segment-untranslated を誤発火させないようにする。
+  let text = segment.textNorm;
+  const tokens = Array.isArray(segment.tokensInvariant) ? segment.tokensInvariant : [];
+  for (const token of tokens) {
+    if (typeof token !== 'string' || token.length === 0) continue;
+    const needle = token.toLowerCase();
+    if (!needle || !text.includes(needle)) continue;
+    text = text.split(needle).join(' ');
+  }
   const cls = classifySegment(text);
   return !cls.isFullyMasked;
 }
@@ -586,7 +600,7 @@ function alignSection(enSection, jaSection, crossSectionInfo, artifactCtx) {
   for (let j = 0; j < jaBody.length; j++) {
     if (jaMatchedIndices.has(j)) continue;
     const seg = jaBody[j];
-    if (looksUntranslated(seg.textNorm)) {
+    if (looksUntranslated(seg)) {
       diffs.push(diffUntranslated(enSection, seg, j));
     } else {
       diffs.push(diffExtra(enSection, seg, j));
@@ -621,7 +635,7 @@ function alignSection(enSection, jaSection, crossSectionInfo, artifactCtx) {
       diffs.push(diffTokenGap(enSection, enSeg, jaSeg, enIdx, jaIdx, missingTokens));
     }
 
-    if (looksUntranslated(jaSeg.textNorm)) {
+    if (looksUntranslated(jaSeg)) {
       diffs.push(diffUntranslated(enSection, jaSeg, jaIdx, enSeg, enIdx));
     }
   }

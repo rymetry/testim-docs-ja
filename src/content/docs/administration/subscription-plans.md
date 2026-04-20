@@ -152,7 +152,7 @@ Test Editorを通じて開始されるローカル実行は、これらの使用
   </tr>
   <tr>
    <td style="text-align: left;">
-    host=localhost/127.0.0.1 を指定して
+    `host=localhost/127.0.0.1` を指定して
     <strong>
      CLI
     </strong>
@@ -167,7 +167,7 @@ Test Editorを通じて開始されるローカル実行は、これらの使用
   </tr>
   <tr>
    <td style="text-align: left;">
-    host=localhost/127.0.0.1 を指定して
+    `host=localhost/127.0.0.1` を指定して
     <strong>
      グリッド上のTest Editor
     </strong>

@@ -67,7 +67,7 @@ console.log(x); // prints "local"
 
 動的にパラメーター群を読み込みます。Node.js で実行されるカスタム JS が使えるため、DB や CSV など任意のソースから読み込めます。サンプルは[こちら](/docs/advanced-editing/data-driven-testing)。Notes:
 
-1. `beforeTest` と `beforeSuite` は配列（複数データセット）の返却をサポートしません。配列を返すとオブジェクトに準じて扱われます。
+1. `beforeTest` と `beforeSuite` は配列（複数データセット）の返却をサポートしません。配列を渡すとオブジェクトとして扱われます（このコンテキストでは、`return ["x", "y" "z"]` はほぼ `return {1: "x", 2: "y", ;3:"z"})` と等価です）。
 2. `beforeSuite` と `overrideTestData` の両方で同名パラメーターを指定した場合は `beforeSuite` が優先されます。
 
 `beforeSuite` でテストデータを上書きする例：
