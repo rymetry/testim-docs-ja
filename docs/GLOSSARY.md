@@ -361,6 +361,7 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Tricentis Test Management for Jira | TTM for Jira の完全表記 |
 | TDC | Tricentis Device Cloud 略称 |
 | qTest API | qTest の API |
+| webdriver-manager | npm パッケージ名 (Selenium WebDriver バイナリを取得する CLI) |
 
 ## [Tier B] 画面 / UI 領域
 

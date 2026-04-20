@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-20T01:19:08.291Z",
-  "generatedFromRunId": "2026-04-20T01:19:08.291Z#parity-check-status",
-  "rationale": "frozen baseline — partial regeneration for integrations/bug-tracker-settings/connecting-testim-to-jira, integrations/bug-tracker-settings/connecting-testim-to-slack, integrations/bug-tracker-settings/connecting-testim-to-trello",
+  "generatedAt": "2026-04-20T01:39:25.520Z",
+  "generatedFromRunId": "2026-04-20T01:39:25.520Z#parity-check-status",
+  "rationale": "frozen baseline — partial regeneration for integrations/integrate-testim-to-your-ci/codeship-integration, advanced-editing/parameters/parameters-for-groups, advanced-editing/hooks, advanced-editing/parameters, editing-tests/search-within-a-test",
   "entries": [
     {
       "slug": "advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor",
@@ -35,49 +35,6 @@
       "enSourceFingerprint": null,
       "jaSourceFingerprint": "sha256:9f9f565647fe27495ed900972424b34856c6a62eeb7248bb2b80a95c625a3f5c",
       "missingTokens": null,
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/hooks",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:95f061a56e749fd8b40900235f7188609b5035701a835f0f50782ac9a947696f",
-      "reviewAfter": "2026-12-26",
-      "sectionPath": "Creating Hooks via the Config File",
-      "segmentKind": "paragraph",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:7b72784eb1c893a1cd6e5d7eadb8f28c056e4e30808b4110944437482df235a2",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "/docs/configuration-file-parameters#defining-parameters-in-a-configuration-file",
-        "/docs/configuration-file-run-hooks"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "advanced-editing/parameters",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:96c304afb2270f34fea71175d3d6a9a91d02ff0e2bdede035cb8cadd5439d4bc",
-      "reviewAfter": "2026-12-09",
-      "sectionPath": "Predefined (out of the box) parameters > Testim Iterator Parameter",
-      "segmentKind": "paragraph",
-      "enSegmentIndex": 1,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:00cd123c4a4f18c23b913e8d1a3a78611465fa8d8ac667d4dcd93cf8545d35cc",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "/docs/loops#using-the-loop-iterator-parameter"
-      ],
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
       "sectionIndex": null,
@@ -181,27 +138,6 @@
       "usabilityReason": null
     },
     {
-      "slug": "editing-tests/search-within-a-test",
-      "issueType": "segment-token-gap",
-      "snapshotFingerprint": "sha256:b9bf0557753653df0c2c3874bf6ae6bc1b7c45402938f677270fd38ff999d8cd",
-      "reviewAfter": "2026-12-19",
-      "sectionPath": "Understanding the search results > Search limitations",
-      "segmentKind": "unordered-list-item",
-      "enSegmentIndex": 2,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": "sha256:fc34d167c39974716c99cdda2452dd46a6c8e61c4e5e54da35e5ee5571f88c13",
-      "jaSourceFingerprint": null,
-      "missingTokens": [
-        "-variable"
-      ],
-      "inconclusiveCategory": null,
-      "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
       "slug": "editing-tests/steps",
       "issueType": "segment-untranslated",
       "snapshotFingerprint": "sha256:1fad4c0943ea00b629dd551c91418964045be5731b591e5a383ca496454e13f1",
@@ -215,25 +151,6 @@
       "missingTokens": null,
       "inconclusiveCategory": null,
       "inconclusiveReason": null,
-      "sectionIndex": null,
-      "structureCategory": null,
-      "structureFingerprint": null,
-      "usabilityReason": null
-    },
-    {
-      "slug": "integrations/integrate-testim-to-your-ci/codeship-integration",
-      "issueType": "segment-inconclusive",
-      "snapshotFingerprint": "sha256:96499dba24701bf25dedfa3a46e14cb2af35277d2fbf6f2873b60b31e4b343b2",
-      "reviewAfter": "2026-11-20",
-      "sectionPath": null,
-      "segmentKind": null,
-      "enSegmentIndex": null,
-      "jaSegmentIndex": null,
-      "enSourceFingerprint": null,
-      "jaSourceFingerprint": null,
-      "missingTokens": null,
-      "inconclusiveCategory": "heading-count-mismatch",
-      "inconclusiveReason": "Heading count mismatch: EN has 2 headings, JA has 3",
       "sectionIndex": null,
       "structureCategory": null,
       "structureFingerprint": null,

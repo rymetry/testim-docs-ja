@@ -427,6 +427,74 @@ describe('applyEnSourcePatches (UD-001 / UD-002 application)', () => {
     );
   });
 
+  it('applies UD-010A rewriting codeship broken <p>## heading → proper <h2>', () => {
+    const html =
+      '<p>\u200b## Run with external Selenium Grid<br /> When your app is deployed on a publicly ' +
+      'available server, you can run your tests on an external Selenium Grid. In that case, you ' +
+      "don't need the local Selenium Server (webdriver-manager), so just add these lines to the " +
+      'setup commands section:</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'integrations/integrate-testim-to-your-ci/codeship-integration',
+      cov,
+    );
+    assert.ok(
+      out.includes('<h2><a name="run-with-external-selenium-grid"></a>Run with external Selenium Grid</h2>'),
+      'patch must emit proper <h2>-with-anchor for the third section heading',
+    );
+    assert.ok(
+      out.includes('<p>When your app is deployed'),
+      'body paragraph must be preserved as a separate <p> element',
+    );
+    assert.equal(
+      out.includes('\u200b##'),
+      false,
+      'ZWSP + literal ## prefix must be removed',
+    );
+    assert.equal(
+      out.includes('<br /> When your app'),
+      false,
+      'MadCap <br /> line break between broken heading and body must be gone',
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-010A-codeship-broken-h2-paragraph'],
+      1,
+    );
+  });
+
+  it('applies UD-010B stripping parameters-for-groups broken step-5 prefix', () => {
+    const html =
+      "<p>\u200b5. Enter a value in the field below the parameter name. If the value is a constant " +
+      "string value use ' ' around it. For example, 'guest'. This value will be available in this " +
+      'test only (i.e., the value will not be shared across tests.</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'advanced-editing/parameters/parameters-for-groups',
+      cov,
+    );
+    assert.ok(
+      out.includes('<p>Enter a value in the field below the parameter name.'),
+      'paragraph content must survive with the "\u200b5. " prefix stripped',
+    );
+    assert.equal(
+      out.includes('\u200b5.'),
+      false,
+      'ZWSP + "5. " step-number prefix must be removed',
+    );
+    // Sanity: extractStepCounts regex /^\d+\.\s/ would no longer match the paragraph
+    // (the leading character is now capital "E", not a digit).
+    assert.ok(
+      out.match(/<p>[^<]/) && !out.match(/<p>\u200b?\d+\.\s/),
+      'patched paragraph must not start with a markdown-style step-number prefix',
+    );
+    assert.equal(
+      cov.snapshot().byPatchId['UD-010B-parameters-for-groups-broken-step-paragraph'],
+      1,
+    );
+  });
+
   it('does NOT apply UD-001A on sfdc-step-edit (slug mismatch)', () => {
     const html = '<p>Verify -this action verifies x</p>';
     const cov = createEnSourcePatchCoverage();
