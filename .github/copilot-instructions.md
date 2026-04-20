@@ -2,64 +2,142 @@
 
 ## プロジェクト概要
 
-- 目標は `https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm` の日本語版を構築し、最新情報を Markdown ベースで提供すること。
-- 英語原文との差分を最小化しつつ、日本人ユーザーが理解しやすい表現と情報設計に置き換える。
+Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ローカライゼーション。英語原文との構造的パリティを維持しつつ、日本人ユーザーが理解しやすい表現で提供する。Vercel にデプロイ。
 
-## 技術スタック / アーキテクチャ
+## 技術スタック
 
-- フロントエンドは Astro + TypeScript を採用し、パフォーマンスと SEO を両立する静的サイト生成を前提とする。
-- スタイリングは Tailwind CSS v4 を利用する。
-- フォントは Noto Sans JP を読み込み、可読性を確保する。
-- コンテンツは Markdown ファイルで管理し、`src/content/docs/` ディレクトリに格納する。
+- **フレームワーク**: Astro 6 + TypeScript（静的サイト生成。Basic 認証有効時は SSR）
+- **スタイリング**: Tailwind CSS v4
+- **フォント**: Noto Sans JP（Astro 組み込みフォントシステム経由で `fontsource` から読み込み）
+- **React**: 検索 UI のみ (`src/components/SearchModal.tsx`, `src/components/search/`)
+- **Markdown 処理**: remark-gfm, remark-directive, remark-callout-directives, Shiki (`github-dark-dimmed`)
+- **デプロイ**: Vercel（`@astrojs/vercel` アダプター）
+
+## アーキテクチャ
+
+- **コンテンツ**: `src/content/docs/` にカテゴリフォルダで整理された Markdown。スキーマは `src/content.config.ts`（Zod）で定義。
+- **ルーティング**: 単一動的ルート `src/pages/docs/[...slug].astro`。レガシー basename URL は `astro.config.mjs` の `buildRedirectMap()` でリダイレクト。
+- **ナビゲーション**: `src/lib/docs.ts` の `buildNavigation()` で構築 — `category` frontmatter でグループ化、`docs/SIDEBAR_URLS.md` で順序決定。
+- **検索**: `src/components/SearchModal.tsx`（React）でクライアントサイド MiniSearch を実装。データは `/api/search.json` エンドポイントから。
+- **レイアウト**: `src/layouts/DocsLayout.astro` が全ドキュメントページをサイドバー（`NavSidebar.astro`）と目次（`TableOfContents.astro`）で包む。
+- **認証モード**: 環境変数 `BASIC_AUTH_ENABLED` で SSR+認証（レビュー用）と静的（本番）を切り替え。`src/middleware.ts` 参照。
+
+## スクリプト構成
+
+`scripts/` は機能別に 4 ディレクトリに整理:
+
+| ディレクトリ | 責務 |
+| ------------ | ------ |
+| `scripts/detection/` | パリティチェック、スナップショット取得/差分、変更検出 |
+| `scripts/pipeline/` | 翻訳パイプライン: EN ソース取得 → プレースホルダー → LLM タスク → 翻訳適用 |
+| `scripts/tools/` | lint、正規化、frontmatter 同期などのユーティリティ |
+| `scripts/lib/` | 共有ライブラリ（パリティ解析、turndown、MadCap TOC パーサー等） |
+
+## コマンド一覧
+
+| コマンド | 用途 |
+| --------- | ------ |
+| `npm run dev` | 開発サーバー (http://localhost:4321) |
+| `npm run build` | プロダクションビルド (`astro check` + build) |
+| `npm run check` | TypeScript/Astro 型チェックのみ |
+| `npm run lint` | 全 lint (`lint:md` + `lint:docs`) |
+| `npm run lint:docs` | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在） |
+| `npm run lint:fix` | Markdown lint の自動修正 |
+| `npm run format` | Prettier フォーマット (Astro, TS, MD) |
+| `npm run test` | `scripts/__tests__/` のテスト実行 |
+| `npm run check:parity` | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化） |
+| `npm run check:snapshots` | EN HTML スナップショット取得 + diff（変更検出） |
+| `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ |
+| `npm run check:snapshots:diff` | コミット済み vs ワーキングツリーのスナップショット diff のみ |
+| `npm run docs:sync-sidebar` | MadCap Flare TOC データから SIDEBAR_URLS.md を更新 |
+| `npm run docs:pipeline` | フルドキュメント同期パイプライン実行（取得、翻訳等） |
+
+**単一ページコマンド:**
+
+```bash
+npm run check:parity -- --slug=overview/testim-overview
+npm run check:snapshots:diff -- --slug=overview/testim-overview
+npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
+```
+
+全コマンドリファレンス: `scripts/README.md`
 
 ## コンテンツ管理
 
-- 各 Markdown ファイルに `title`, `description`, `category`, `order`, `updated`, `sourceUrl`, `keywords` などの frontmatter を付与し、英語原文との追跡を可能にする。
-- 翻訳対象のURL、カテゴリ順、ページ順は `docs/SIDEBAR_URLS.md` を正本として扱う。
-- 原文の章立てとリンク構造を踏襲し、内部リンクは対応する日本語ページが存在する場合のみ `/docs/{slug}` 形式へ差し替える。
-- コードブロックはシンタックスハイライト対応（Shiki など Astro 互換のソリューション）を組み込む。
+### Frontmatter スキーマ
+
+`src/content.config.ts` で定義。必須フィールド: `title`, `description`, `category`, `updated`, `sourceUrl`。オプション: `order`, `keywords`, `hero`, `hideToc`。
+
+- `description`: 日本語の要約を記載（原文 URL や仮置き文言は不可）
+- `sourceUrl`: 英語原文 URL。必須。追跡に使用
+- `updated`: 英語原文の更新日に合わせる（編集日に変更しない）
+- 内部リンクは `/docs/{slug}` 形式（slug は `src/content/docs/` からの相対パス）
+
+### 正本
+
+- 翻訳対象 URL、カテゴリ順、ページ順は `docs/SIDEBAR_URLS.md` をマスターリストとして扱う
+
+## ドキュメントパイプライン
+
+`scripts/pipeline/pipeline.mjs` が翻訳ワークフロー全体をオーケストレーション:
+
+1. EN ソース取得
+2. プレースホルダー生成 (`generate_untranslated_placeholders.mjs`)
+3. LLM タスク準備 (`prepare_llm_tasks.mjs`)
+4. LLM 翻訳適用 (`apply_llm_translations.mjs`)
+
+`scripts/.checkpoint` によるチェックポイントベースのレジューム対応。
+
+## スナップショット & パリティ
+
+- **Content スナップショット**: 各 EN ページ HTML から `#mc-main-content` を抽出、`snapshots/en/content/{folder}/{basename}.html` に保存
+- **Sidebar スナップショット**: MadCap Flare TOC データをパース、`snapshots/en/sidebar.json` に保存
+- **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換し、JA 翻訳と構造比較
+- **上流欠陥管理**: 壊れた EN ソースは `scripts/lib/source_sync_exclusions.mjs`（page-level freeze）と `scripts/lib/en_source_patches.mjs`（segment-level patch）で隔離。詳細は `docs/UPSTREAM_DEFECTS.md`
+
+## 権威ソース
+
+コンテンツルールやプロジェクト仕様はここでは重複させない。以下を参照:
+
+| ドキュメント | 内容 |
+| ------------ | ------ |
+| `docs/SYSTEM_SPEC.md` | プロジェクト仕様: アーキテクチャ、検出システム、不変量 |
+| `docs/WRITING_GUIDE.md` | コンテンツフォーマット: frontmatter、リンク、callout、source-first 構造契約 |
+| `docs/TRANSLATION_GUIDE.md` | 翻訳ワークフロー、自然な日本語ガイドライン、NG/OK パターン、用語テーブル |
+| `docs/OPS_DESIGN.md` | 運用設計: sync/diff/translate/QA フロー |
+| `docs/PARITY_GUIDE.md` | パリティ維持: 2-mechanism suppression 設計、gate マトリクス |
+| `docs/DOCS_DATE_TRACKING.md` | スナップショットベース変更検出 |
+| `docs/SIDEBAR_URLS.md` | 全ドキュメント URL・カテゴリ・順序のマスターリスト |
+| `docs/UPSTREAM_DEFECTS.md` | 上流 EN 欠陥レジストリ |
+| `scripts/README.md` | 全スクリプト・コマンドの完全リファレンス |
 
 ## UI / UX 制約
 
-- レイアウト、カラースキーム、主要コンポーネント配置は公式サイトに準拠する。
-- ナビゲーションやメニュー文言は日本語で自然かつ直感的な表現に調整する。
-- 情報パネル（callout）、コードブロック、セクション見出しを英語版と同じ強調スタイルで表現する。
-
-## 機能要件
-
-- `code` ブロックのシンタックスハイライト、情報パネルの強調表示、カテゴリ別ナビゲーション、全文検索などは元サイト同様に実装する。
-- 検索機能は MiniSearch によるクライアントサイド全文検索を採用し、日本語の部分一致・ファジー検索に対応する。
-- 外部/内部リンクはリンク切れが発生しないようビルド時に検証する。
-
-## 開発ワークフロー
-
-- 初回セットアップ: `npm install`
-- 開発サーバー: `npm run dev`
-- 本番ビルド: `npm run build`（ビルド成果物は `dist/` を想定）
-- Lint は markdownlint（Markdown）、フォーマットは Prettier（Astro/TypeScript/Markdown）を適用する。
+- レイアウト、カラースキーム、主要コンポーネント配置は公式サイトに準拠する
+- ナビゲーションやメニュー文言は日本語で自然かつ直感的な表現に調整する
+- Callout は `:::note`, `:::tip`, `:::warning`, `:::caution`, `:::danger`, `:::info` ディレクティブ構文を使用する
 
 ## ローカライズ指針
 
-- 技術用語は既存の Testim UI/ドキュメントで使用されている日本語訳に合わせる。
-- Testim の機能名、製品名、画面名、固有機能ラベルは原則として英語のまま維持する。
-- 機能名を日本語へ意訳せず、必要な場合のみ本文で日本語説明を補う。
-- 既に日本語UIで確定している訳語がある場合のみ、その表記に合わせる。
-- 直訳で不自然な箇所は意訳も許容するが、原文の意図を損なわないこと。
+- Testim の機能名、製品名、画面名、固有機能ラベルは原則として英語のまま維持する
+- 機能名を日本語へ意訳せず、必要な場合のみ本文で日本語説明を補う
+- 直訳で不自然な箇所は意訳も許容するが、原文の意図を損なわないこと
+- 詳細なルールとパターンは `docs/TRANSLATION_GUIDE.md` と `docs/WRITING_GUIDE.md` を参照
 
-### ローカライズ時の補足ルール
+## 開発ワークフロー
 
-- `description` に原文URLや仮置き文言を入れず、日本語の要約を記載する。
-- `sourceUrl` は必須として扱い、英語原文の追跡に使う。
-- 公開URLはフォルダ構造ではなくファイル名ベースで生成されるため、内部リンクは `/docs/{slug}` を使用する。
-- `updated` は英語原文の更新日に合わせる。
+1. 初回セットアップ: `npm install`
+2. 開発サーバー: `npm run dev`
+3. 本番ビルド: `npm run build`
+4. Lint: markdownlint（Markdown）+ `lint:docs`（WRITING_GUIDE 準拠）
+5. フォーマット: Prettier（Astro/TypeScript/Markdown）
+6. テスト: `npm run test`（`scripts/__tests__/`）
+7. パリティ検証: `npm run check:parity && npm run check:snapshots:diff`
 
 ## AI アシスタント出力ポリシー
 
-- 常に日本語で応答し、適切な技術用語を用いる。
-- ただし Testim の機能名や製品固有名詞は英語表記を維持する。
-- ドキュメント向けに丁寧かつ簡潔な文体を心掛け、必要に応じてコードコメントも日本語で付与する。
-- 仕様が不明瞭な場合は推測で進めず、ユーザーへ確認を促す。
-
----
-
-このファイルはプロジェクト進行に合わせて適宜更新してください。
+- 常に日本語で応答し、適切な技術用語を用いる
+- Testim の機能名や製品固有名詞は英語表記を維持する
+- ドキュメント向けに丁寧かつ簡潔な文体を心掛ける
+- 仕様が不明瞭な場合は推測で進めず、ユーザーへ確認を促す
+- コンテンツルールの重複定義を避け、権威ソースを参照する
