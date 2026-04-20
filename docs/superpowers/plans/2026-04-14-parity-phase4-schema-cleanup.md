@@ -60,6 +60,70 @@ worktree で Task 4.5–4.8 を実行する:
 
 この時点で Rev 6 の 5-counter 0 DoD を完全達成する。
 
+### M2.5 Pre-Cutover Requirements (2026-04-20 session記録)
+
+M2 final merge (#355) 時点で baseline=17 / audit-signal=8 / segment-inconclusive=1。Final DoD 達成には PR Z entry 前に以下 3 task を完了必要 (中間 PRs の最終 batch として実施):
+
+#### M2.5-A — §5.3.1 FileOrFilePath mechanism fix (29-slug cascade)
+
+**Mechanism change**: `scripts/lib/source_parity_segments_en.mjs` の `renderInlineText` に `<span class="FileOrFilePath">` → backtick-wrap ルールを追加 (現状 INLINE_JOIN_TAGS 透過処理 → `<code>` 同等の inline-code 化)。
+
+**Cascade**: 2026-04-20 session trial で判明、29 slugs で JA backtick 位置を EN token shape に揃える必要:
+
+- 8 sentinel fixture slugs (test regression): `integrations/test-management-integrations/ttm-for-jira-integration` / `.../xray-integration` / `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` / `administration/secrets` / `advanced-editing/validations/validate-element-text` / `administration/subscription-plans` / `advanced-editing/custom-action-step-mobile` (strict-0 representative-summary resolved) / `running-tests/the-command-line-cli` (representative-summary residual)
+- 21 non-sentinel slugs (new actionable issues surface): `administration/encrypted-credentials` / `advanced-editing/clear-text-mobile` / `advanced-editing/data-driven-testing*` (4 slugs) / `advanced-editing/deep-link-mobile/hide-keyboard-mobile` / `advanced-editing/error-suffix-customization` / `advanced-editing/parameters/configuration-file-parameters` / `advanced-editing/parameters/hidden-parameters` / `advanced-editing/parameters/json-parameters-file-parameters` / `advanced-editing/parameters/parameter-override-rules` / `advanced-editing/reusable-test-data` / `advanced-editing/validations/custom-code` / `editing-tests/conditions` / `editing-tests/groups/auto-grouping` / `editing-tests/steps` / `integrations/bug-tracker-settings/connecting-testim-to-jira` / `integrations/dedicated-run-tunnel` / `integrations/integrate-testim-to-your-ci/copado-integration` / `integrations/test-management-integrations/qtest-integration` / `recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent` (§5.3.1 / §5.3.1.a target slug、11 issues) / `running-tests/base-url` / `running-tests/configuration-file-run-hooks` / `salesforce-testing/troubleshoot` / `security/sso-integration/azure-ad-sso-integration` / `test-management/test-plans-mobile`
+
+**Fix pattern per slug**: EN FileOrFilePath span content (grep `class="FileOrFilePath">[^<]+` in snapshot) を inventory → JA で対応する token を single backtick span で wrap (splits を join、`=` / `:` 等の trailing char を backticks 内に移動)。8 sentinel slug の agent-verified pattern は本 session trial 記録済 (詳細は git blob `claude/m2-5-A-fileorfilepath-mechanism` branch、reverted)。
+
+**Verification**: mechanism fix + 29 slug JA sync 完了後、`npm run test` で sentinel fixture 全 pass 確認、`npm run check:parity` で `activeActionableFiles = 0` 維持、§5.3.1 / §5.3.1.a carve-outs が全件消滅。
+
+#### M2.5-B — Sealights comprehensive restructure
+
+**Target**: `integrations/sealights-integration.md`
+
+**Problem**: JA `- \`\`\`shell\n  --flag\n  \`\`\`` 形式の list-wrapped fenced code block が JA parser で close fence 認識失敗 → 後続 heading 7 件が `code-block` segment に吸収され `extractHeadingSequence` が EN=15 / JA=8 とカウント (segment-inconclusive [heading-count-mismatch] 1 件 baseline-frozen)。
+
+**Fix**: 3 箇所の list-wrapped fence を block-level fence (`- ` prefix 除去) に restructure:
+- §「Sealights buildSessionId を使用して Testim でテストを実行する」の `--sealights-build-session-id` code block
+- §「Sealights labId を使用して Testim でテストを実行する」の `--sealights-lab-id` code block
+- §「test-stageオプション」の `--sealights-test-stage` code block
+
+**Cascade** (2026-04-20 trial 実測、別 session 再試行時の想定): unwrap で 16 downstream issues (segment-missing 3 / segment-untranslated 8 / segment-extra 1 / section-structure-mismatch 4) が surface。これらは JA 側 "Running a Test with Sealights Integration > Using the Scheduler..." section で EN 原文との構造差に起因。comprehensive content review で各 issue を per-segment 修正。
+
+**Verification**: sealights slug `activeActionableFiles = 0` + `segment-inconclusive = 0` 達成。
+
+#### M2.5-C — Content-translation baseline burndown (8 slugs / ~15 entries)
+
+**Target**: M2 final merge 時点で baseline に frozen されている content-level entries のうち、§5.3.1 FileOrFilePath 系でないもの。8 slugs × 複数 entry:
+
+| slug | 残 entries | type |
+|---|---:|---|
+| `advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor` | 2 | segment-missing + segment-untranslated (callout-body "Adding test data...") |
+| `advanced-editing/parameters/hidden-parameters` | 2 | segment-extra + segment-missing (preface) |
+| `editing-tests/groups/auto-grouping` | 2 | segment-extra + segment-missing (preface) |
+| `editing-tests/steps` | 1 | segment-untranslated (Automatically Recorded Steps table cell) |
+| `recording-tests/recording-a-mobile-test/configure-tricentis-mobile-agent` | 2 | section-structure-mismatch + segment-missing (WDA Errors — §5.3.1 scope、M2.5-A で同時解消) |
+| `running-tests/configuration-file-run-hooks` | 2 | section-structure-mismatch + segment-missing (preface) |
+| `running-tests/the-command-line-cli` | 3 | segment-untranslated × 3 (intersect-with flag paragraphs、M2.5-A で token 揃え後も content-translation 必要) |
+| `security/sso-integration/azure-ad-sso-integration` | 2 | segment-untranslated × 2 |
+
+**Fix pattern per slug**: EN snapshot 参照 → missing content translation 作成 or JA-added content 削除 (source-first discipline)。per-slug cascade risk あり (jenkins-integration-using-docker ZWSP 事例参照)、iterative 修正 + revert 許容。
+
+**Remaining audit-signals after M2.5-A/B**:
+
+M2 final の 8 audit signals のうち:
+- 5 paragraph-count-mismatch (api-testing §1, validate-download §9, configure-tricentis-mobile-agent §19, predefined-properties §4, jenkins §1) — **M2.5-A で全件解消** (§5.3.1 cascade に含まれる)
+- 2 step-count-mismatch (create-a-salesforce-test §7 + top-level aggregation) — M2.5-C で content-level translate-1-step 必要
+- 1 bullet-count-mismatch (troubleshoot §2) — M2.5-C で content-level translate-1-bullet 必要
+
+#### M2.5 順序と PR 単位
+
+1. **M2.5-A as mechanism + sentinel PR** (Task 4 equivalent with PR ownership): mechanism 1-file change + 8 sentinel JA updates 同 PR atomic。reviewer gate 必須 (6-reviewer per PARITY_GUIDE §J)。
+2. **M2.5-A-cascade PRs** (21 non-sentinel slugs): per-slug or small batch PRs。each PR で parity slug-check green。
+3. **M2.5-B as comprehensive rewrite PR**: sealights 1-slug atomic、16 downstream 同 PR。
+4. **M2.5-C as content batch PR(s)**: 8 slug baseline burndown、~15 entry。per-slug PR 推奨。
+5. **PR Z entry**: 全上記完了後、baseline=0 + audit-signal=0 + inconclusive=0 確認して Task 4.5 以降実行。
+
 ### PR 境界の理由
 
 1. **atomic cutover 規律**: schema v2 migration は baseline.entries=0 を前提
