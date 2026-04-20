@@ -469,4 +469,4 @@ keywords:
  </tbody>
 </table>
 
-Drag & Drop — AUT 内でアーティファクトをドラッグ&amp;ドロップ時（[Drag & Drop ステップ](/docs/advanced-editing/handling-ui-actions/drag-drop-step)を参照）
+\| Drag & Drop \| AUT 内でアーティファクトをドラッグ&amp;ドロップ時（[Drag & Drop ステップ](/docs/advanced-editing/handling-ui-actions/drag-drop-step)を参照） \|
