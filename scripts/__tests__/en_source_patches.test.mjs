@@ -495,6 +495,41 @@ describe('applyEnSourcePatches (UD-001 / UD-002 application)', () => {
     );
   });
 
+  it('applies UD-010C + UD-010D stripping VSTS broken step-2/3 prefixes', () => {
+    const html =
+      '<p>\u200b2. Create a new build</p>\n' +
+      '<img src="x.png" />\n' +
+      '<p>\u200b3. Select your repository</p>';
+    const cov = createEnSourcePatchCoverage();
+    const out = applyEnSourcePatches(
+      html,
+      'integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration',
+      cov,
+    );
+    assert.ok(
+      out.includes('<p>Create a new build</p>'),
+      'UD-010C must rewrite step-2 <p> with prefix stripped',
+    );
+    assert.ok(
+      out.includes('<p>Select your repository</p>'),
+      'UD-010D must rewrite step-3 <p> with prefix stripped',
+    );
+    assert.equal(
+      out.includes('\u200b2.'),
+      false,
+      'UD-010C: ZWSP + "2. " prefix must be removed',
+    );
+    assert.equal(
+      out.includes('\u200b3.'),
+      false,
+      'UD-010D: ZWSP + "3. " prefix must be removed',
+    );
+    const s = cov.snapshot();
+    assert.equal(s.byPatchId['UD-010C-vsts-broken-step-paragraph-2'], 1);
+    assert.equal(s.byPatchId['UD-010D-vsts-broken-step-paragraph-3'], 1);
+    assert.equal(s.mismatches.length, 0);
+  });
+
   it('does NOT apply UD-001A on sfdc-step-edit (slug mismatch)', () => {
     const html = '<p>Verify -this action verifies x</p>';
     const cov = createEnSourcePatchCoverage();

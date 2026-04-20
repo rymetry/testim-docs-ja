@@ -19,7 +19,7 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-007 | _(unallocated)_ | _TBD_ | reserved | TBD |
 | UD-008 | _(unallocated)_ | _TBD_ | reserved | TBD |
 | UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
-| UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5) |
+| UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5 + VSTS broken step-2/3 extension) |
 
 ### Allocation protocol
 
@@ -262,34 +262,42 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
 
-- **Patch IDs**: `UD-010A-codeship-broken-h2-paragraph`, `UD-010B-parameters-for-groups-broken-step-paragraph`
+- **Patch IDs**: `UD-010A-codeship-broken-h2-paragraph`, `UD-010B-parameters-for-groups-broken-step-paragraph`, `UD-010C-vsts-broken-step-paragraph-2`, `UD-010D-vsts-broken-step-paragraph-3`
 - **Defect class**: `madcap-artifact`
 - **Added**: 2026-04-20
-- **Applied**: 2026-04-20 (M2 UD-010 bundle — codeship inconclusive + parameters-for-groups step-count audit-signal)
+- **Applied**: 2026-04-20 (M2 UD-010 bundle — codeship inconclusive + parameters-for-groups step-count audit-signal; extended same-day with UD-010C/D for VSTS/TFS integration step-count audit-signal)
 - **Review after**: 2026-10-20
-- **Affected slugs** (2):
+- **Affected slugs** (3):
   - `integrations/integrate-testim-to-your-ci/codeship-integration` (UD-010A)
   - `advanced-editing/parameters/parameters-for-groups` (UD-010B)
-- **Defect**: MadCap Flare が structural element (`<h2>` heading, `<li value="5">` ordered-list-item) を誤って `<p>` 要素にシリアライズし、テキスト内容の先頭に zero-width space (U+200B) + markdown-style prefix (`## ` for heading / `5. ` for step number) を残す authoring-artifact。2 つの variant を UD-010 family として集約:
+  - `integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration` (UD-010C + UD-010D)
+- **Defect**: MadCap Flare が structural element (`<h2>` heading, `<li value="N">` ordered-list-item) を誤って `<p>` 要素にシリアライズし、テキスト内容の先頭に zero-width space (U+200B) + markdown-style prefix (`## ` for heading / `N. ` for step number) を残す authoring-artifact。現在 3 ページで 4 variant が確認されている:
   - **UD-010A (codeship)**: 3 番目の section heading "Run with external Selenium Grid" が `<p>\u200b## Run with external Selenium Grid<br /> When your app...</p>` という単一の `<p>` に融合。同ページの他 2 つの h2 ("Project configuration" / "Run with local Selenium Grid") は正しく `<h2><a name="..."></a>Heading</h2>` 形状を取っているため、第 3 heading のみが MadCap 側の authoring defect。`extractHeadingSequence` は EN=2 / JA=3 とカウントし `segment-inconclusive [heading-count-mismatch]` として surface。
-  - **UD-010B (parameters-for-groups)**: 「Adding Parameters to a Group」section の step 5 が `<li value="4">` と `<li value="5">` の間に orphan `<p>\u200b5. Enter a value in the field below...</p>` として挿入。この `<p>` は正規の `<li>` ではないが turndown が Markdown paragraph に変換し、先頭行が `extractStepCounts` の `^\d+\.\s` regex にヒットするため EN step count が実際の `<li>` 個数 (6) より 1 多く (7) 算出される。JA は translator が正規の 6 step として構造化済み (値入力の説明文を step 4 の後の通常 paragraph に統合) のため step-count audit-signal (EN=7, JA=6) が section #2 で発火。
+  - **UD-010B (parameters-for-groups)**: 「Adding Parameters to a Group」section の step 5 が `<li value="4">` と `<li value="5">` の間に orphan `<p>\u200b5. Enter a value in the field below...</p>` として挿入。この `<p>` は正規の `<li>` ではないが turndown が Markdown paragraph に変換し、`normalizeEnArtifacts` が ZWSP を strip した後の先頭行が `extractStepCounts` の `^\d+\.\s` regex にヒットするため EN step count が実際の `<li>` 個数 (6) より 1 多く (7) 算出される。JA は translator が正規の 6 step として構造化済み (値入力の説明文を step 4 の後の通常 paragraph に統合) のため step-count audit-signal (EN=7, JA=6) が section #2 で発火。
+  - **UD-010C + UD-010D (vsts-and-tfs-integration)**: 「Now, just follow these steps:」section で `<li value="1">` ("Go to Build page") の後に `<img>` + `<p>\u200b2. Create a new build</p>` + `<img>` + `<p>\u200b3. Select your repository</p>` という interleave 構造が挿入されており、その後に続く本来の `<li value="2">`..`<li value="11">` (11 項目) と合わせて extractStepCounts が EN=13 とカウントする (normalizeEnArtifacts が ZWSP を strip するため 2 つの orphan `<p>` も step として算入される)。JA は translator が EN HTML の構造を mirror して `​2. 新しいビルドを作成します` / `​3. リポジトリを選択します` と ZWSP-prefixed paragraph を維持しているが、JA 側 `normalizeNumericPeriodSpacing` は ZWSP を strip しないため JA step count は 11 のみとなる。結果 step-count audit-signal (EN=13, JA=11) + paragraph-count audit-signal (EN=2, JA=4) が section #1 で発火。
 - **Observed symptom**:
   - UD-010A: `segment-inconclusive` [heading-count-mismatch] EN=2 vs JA=3 for `codeship-integration` (previously baseline-covered)
   - UD-010B: `step-count-mismatch` audit-signal EN=7 vs JA=6 for `parameters-for-groups` section #2
-- **JA side**: 両 slug ともに JA は正規の構造 (codeship: 3 h2 sections / parameters-for-groups: 6 numbered steps) を既に保持している。JA 改変なしで EN 側 patch のみで parity 一致する。ただし codeship UD-010A 適用により EN 側に出現する `webdriver-manager` plain-text token が JA paragraph 「Selenium Server (webdriver-manager)」で residue word count を 3 に到達させ `segment-untranslated` を副次的に発火する。これを解消するため `docs/GLOSSARY.md` Tier A 外部製品 / 第三者ツール に `webdriver-manager` (npm パッケージ名, Selenium WebDriver バイナリ取得 CLI) を Tier A 追加する (一般的な CLI tool name retention policy 準拠)。
+  - UD-010C + UD-010D: `step-count-mismatch` audit-signal EN=13 vs JA=11 + `paragraph-count-mismatch` EN=2 vs JA=4 for `vsts-and-tfs-integration` section #1
+- **JA side**: codeship + parameters-for-groups は EN 側 patch のみで parity 一致する (JA は既に正規構造)。vsts-and-tfs-integration は JA が EN の broken 構造 (`​2.` / `​3.` ZWSP-prefix paragraph) を mirror していたため、EN 側 patch に合わせて JA 側 2 orphan paragraph からも `​N. ` prefix を strip して plain paragraph に揃える (segment-level paragraph 比較で内容が一致するようにする)。codeship UD-010A 適用により EN 側に出現する `webdriver-manager` plain-text token が JA paragraph 「Selenium Server (webdriver-manager)」で residue word count を 3 に到達させ `segment-untranslated` を副次的に発火するため、`docs/GLOSSARY.md` Tier A 外部製品 / 第三者ツール に `webdriver-manager` (npm パッケージ名, Selenium WebDriver バイナリ取得 CLI) を追加する (一般的な CLI tool name retention policy 準拠)。
 - **Fix applied**:
   - `UD-010A-codeship-broken-h2-paragraph`: broken `<p>\u200b## ...<br /> body...</p>` → `<h2><a name="run-with-external-selenium-grid"></a>Run with external Selenium Grid</h2><p>body...</p>`。sibling h2 と同じ `<a name="...">` anchor 形式を踏襲。
   - `UD-010B-parameters-for-groups-broken-step-paragraph`: `<p>\u200b5. Enter a value...</p>` → `<p>Enter a value...</p>`。先頭の `\u200b5. ` prefix を削除し、content は通常 paragraph として残す (extractStepCounts の `^\d+\.\s` regex にマッチしなくなる)。
+  - `UD-010C-vsts-broken-step-paragraph-2`: `<p>\u200b2. Create a new build</p>` → `<p>Create a new build</p>`。
+  - `UD-010D-vsts-broken-step-paragraph-3`: `<p>\u200b3. Select your repository</p>` → `<p>Select your repository</p>`。
+  - JA 側 sync (UD-010C/D 連動): `src/content/docs/integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration.md` の `​2. 新しいビルドを作成します` / `​3. リポジトリを選択します` を `新しいビルドを作成します` / `リポジトリを選択します` (先頭 `​N. ` prefix を strip) に修正。
   - GLOSSARY Tier A 追加: `webdriver-manager`。
 - **Status**: `applied`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — MadCap authoring tool での heading/step-item シリアライゼーション bug、同種 pattern が他ページにも潜在する可能性あり)
 - **Removal SOP** (after upstream fix confirmed):
-  1. codeship + parameters-for-groups の EN HTML snapshot を再取得
+  1. 3 slug の EN HTML snapshot を再取得
   2. UD-010A: `grep '<p>\u200b## Run with external'` が 0 hit になったことを確認
   3. UD-010B: `grep '<p>\u200b5. Enter a value'` が 0 hit になったことを確認
-  4. `scripts/lib/en_source_patches.mjs` から UD-010A/B entry を削除
-  5. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
-  6. `node scripts/generate_parity_baseline.mjs --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
+  4. UD-010C/D: `grep -E '<p>\u200b[23]\. (Create|Select)'` が 0 hit になったことを確認
+  5. `scripts/lib/en_source_patches.mjs` から UD-010A/B/C/D entry を削除
+  6. JA 側 vsts-and-tfs-integration の orphan paragraph も `​N. ` prefix を再度付与するか、EN upstream が正規 `<li>` に戻れば JA も正規番号リストに統合するか、reviewer 判断
+  7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
+  8. `node scripts/generate_parity_baseline.mjs --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
 
 ## Adding a new defect
 

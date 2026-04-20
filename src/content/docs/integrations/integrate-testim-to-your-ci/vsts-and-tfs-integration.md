@@ -32,11 +32,11 @@ keywords:
 
 ![VSTS ビルドページの画面](/images/ci-integrations/vsts-and-tfs-integration/e8e8d07-tfs2.png)
 
-​2. 新しいビルドを作成します
+新しいビルドを作成します
 
 ![新しいビルド定義を作成する VSTS の画面](/images/ci-integrations/vsts-and-tfs-integration/c4affba-tfs3.png)
 
-​3. リポジトリを選択します
+リポジトリを選択します
 
 ![リポジトリを選択する VSTS の画面](/images/ci-integrations/vsts-and-tfs-integration/3f92a44-tfs4.png)
 

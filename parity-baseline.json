@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-20T01:39:25.520Z",
-  "generatedFromRunId": "2026-04-20T01:39:25.520Z#parity-check-status",
-  "rationale": "frozen baseline — partial regeneration for integrations/integrate-testim-to-your-ci/codeship-integration, advanced-editing/parameters/parameters-for-groups, advanced-editing/hooks, advanced-editing/parameters, editing-tests/search-within-a-test",
+  "generatedAt": "2026-04-20T01:52:29.291Z",
+  "generatedFromRunId": "2026-04-20T01:52:29.291Z#parity-check-status",
+  "rationale": "frozen baseline — partial regeneration for integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration",
   "entries": [
     {
       "slug": "advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor",
