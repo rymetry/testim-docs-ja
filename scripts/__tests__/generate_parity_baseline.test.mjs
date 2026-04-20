@@ -1,9 +1,19 @@
 /**
- * Tests for the baseline generation script.
+ * Tests for the baseline generation script (schema v2).
  *
  * Validates pure helpers (buildBaselineFromStatus, serializeBaseline,
- * mergePartialBaseline, defaultReviewAfter) and verifies determinism.
+ * mergePartialBaseline) and verifies determinism.
  * The CLI invocation is exercised by an end-to-end smoke test.
+ *
+ * v2 変更点:
+ *   - `--review-after` フラグ撤去 (渡すと exit 1)
+ *   - baseline entry から reviewAfter / inconclusiveCategory /
+ *     inconclusiveReason / usabilityReason を削除
+ *   - 出力 schemaVersion=2、priority='medium' default
+ *   - BASELINE_ELIGIBLE_TYPES から segment-inconclusive / snapshot-incomplete /
+ *     source-unusable を除外 (7 type のみ baseline-able)
+ *   - TYPES_ARG_ALLOWLIST も 2 type だけ: section-structure-mismatch /
+ *     segment-order-mismatch
  */
 import { before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -11,6 +21,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 import {
   assertFullParityStatus,
@@ -19,12 +31,19 @@ import {
   buildGenerationMeta,
   serializeBaseline,
   mergePartialBaseline,
-  defaultReviewAfter,
   parseArgs,
   mergePartialBaselineByType,
   loadSnapshotDiffStatus,
 } from '../generate_parity_baseline.mjs';
 import { computeStructureFingerprint } from '../lib/source_parity_baseline.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const REPO_ROOT = path.resolve(path.dirname(__filename), '..', '..');
+const GENERATE_SCRIPT = path.join(
+  REPO_ROOT,
+  'scripts',
+  'generate_parity_baseline.mjs',
+);
 
 const VALID_FINGERPRINT = 'sha256:' + 'a'.repeat(64);
 const OTHER_FINGERPRINT = 'sha256:' + 'b'.repeat(64);
@@ -77,6 +96,7 @@ const sampleStatus = {
           detail: '[CLI] JA paragraph drops EN invariant tokens: --proxy, TESTIM_KEY',
         },
         {
+          // segment-inconclusive is NOT baseline-eligible in v2 — must be skipped
           type: 'segment-inconclusive',
           severity: 'actionable',
 
@@ -102,32 +122,8 @@ const fingerprintMap = new Map([['overview/example', VALID_FINGERPRINT]]);
 const meta = {
   runId: 'test-run',
   generatedAt: '2026-04-06T03:00:00Z',
-  // Locks every entry to 2026-10-06 by overriding the staggered default,
-  // so legacy assertions that expect a single reviewAfter date keep working.
-  reviewAfterOverride: '2026-10-06',
   rationale: 'test',
 };
-
-// ---------------------------------------------------------------------------
-// defaultReviewAfter
-// ---------------------------------------------------------------------------
-
-describe('defaultReviewAfter', () => {
-  it('returns YYYY-MM-DD 6 months after the given UTC date', () => {
-    const result = defaultReviewAfter(new Date('2026-04-06T00:00:00Z'));
-    assert.equal(result, '2026-10-06');
-  });
-
-  it('respects custom monthsAhead', () => {
-    const result = defaultReviewAfter(new Date('2026-04-06T00:00:00Z'), 3);
-    assert.equal(result, '2026-07-06');
-  });
-
-  it('formats single-digit month and day with leading zeros', () => {
-    const result = defaultReviewAfter(new Date('2026-01-05T00:00:00Z'));
-    assert.equal(result, '2026-07-05');
-  });
-});
 
 // ---------------------------------------------------------------------------
 // buildGenerationMeta
@@ -139,13 +135,11 @@ describe('buildGenerationMeta', () => {
       regenerate: true,
       slugs: null,
       rationale: null,
-      reviewAfter: null,
     });
     const metaFromLaterCall = buildGenerationMeta(sampleStatus, {
       regenerate: true,
       slugs: null,
       rationale: null,
-      reviewAfter: null,
     });
     assert.deepEqual(metaFromEarlyCall, metaFromLaterCall);
     assert.equal(metaFromEarlyCall.generatedAt, '2026-04-06T03:00:00Z');
@@ -153,20 +147,15 @@ describe('buildGenerationMeta', () => {
       metaFromEarlyCall.runId,
       '2026-04-06T03:00:00Z#parity-check-status',
     );
-    // No reviewAfter on meta — per-entry stagger lives in
-    // buildBaselineFromStatus. The override slot defaults to null.
-    assert.equal(metaFromEarlyCall.reviewAfterOverride, null);
   });
 
-  it('honors explicit rationale and reviewAfter overrides', () => {
+  it('honors explicit rationale override', () => {
     const metaOverride = buildGenerationMeta(sampleStatus, {
       regenerate: false,
       slugs: ['overview/example'],
       rationale: 'custom rationale',
-      reviewAfter: '2026-12-31',
     });
     assert.equal(metaOverride.rationale, 'custom rationale');
-    assert.equal(metaOverride.reviewAfterOverride, '2026-12-31');
   });
 });
 
@@ -203,13 +192,12 @@ describe('assertFullParityStatus', () => {
 // ---------------------------------------------------------------------------
 
 describe('buildBaselineFromStatus', () => {
-  it('extracts only BASELINE_ELIGIBLE_TYPES issues', () => {
+  it('extracts only BASELINE_ELIGIBLE_TYPES issues (v2: 3 of 5 here; inconclusive is not eligible)', () => {
     const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
-    assert.equal(baseline.entries.length, 4);
+    assert.equal(baseline.entries.length, 3);
     const types = baseline.entries.map((e) => e.issueType).sort();
     assert.deepEqual(types, [
       'segment-extra',
-      'segment-inconclusive',
       'segment-missing',
       'segment-token-gap',
     ]);
@@ -222,11 +210,37 @@ describe('buildBaselineFromStatus', () => {
     assert.equal(extra.enSegmentIndex, null);
   });
 
-  it('preserves inconclusiveCategory and inconclusiveReason for segment-inconclusive', () => {
+  it('does NOT emit segment-inconclusive entries (not baseline-able in v2)', () => {
     const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
     const inc = baseline.entries.find((e) => e.issueType === 'segment-inconclusive');
-    assert.equal(inc.inconclusiveCategory, 'heading-count-mismatch');
-    assert.match(inc.inconclusiveReason, /Heading count mismatch/);
+    assert.equal(inc, undefined);
+  });
+
+  it('emits schemaVersion=2 on the output baseline', () => {
+    const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
+    assert.equal(baseline.schemaVersion, 2);
+  });
+
+  it('emits priority=medium on every entry by default', () => {
+    const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
+    for (const entry of baseline.entries) {
+      assert.equal(entry.priority, 'medium');
+    }
+  });
+
+  it('does NOT emit reviewAfter / inconclusiveCategory / usabilityReason on entries (v2 schema)', () => {
+    const baseline = buildBaselineFromStatus(sampleStatus, fingerprintMap, meta);
+    for (const entry of baseline.entries) {
+      assert.ok(!('reviewAfter' in entry), `entry for ${entry.issueType} must not have reviewAfter`);
+      assert.ok(
+        !('inconclusiveCategory' in entry),
+        `entry for ${entry.issueType} must not have inconclusiveCategory`,
+      );
+      assert.ok(
+        !('usabilityReason' in entry),
+        `entry for ${entry.issueType} must not have usabilityReason`,
+      );
+    }
   });
 
   it('skips files whose slug has no fingerprint mapping (defensive)', () => {
@@ -239,7 +253,7 @@ describe('buildBaselineFromStatus', () => {
     const status = JSON.parse(JSON.stringify(sampleStatus));
     status.files[0].issues[0].baselined = true;
     const baseline = buildBaselineFromStatus(status, fingerprintMap, meta);
-    assert.equal(baseline.entries.length, 4);
+    assert.equal(baseline.entries.length, 3);
   });
 
   it('attaches the page-level snapshotFingerprint to every entry', () => {
@@ -257,140 +271,6 @@ describe('buildBaselineFromStatus', () => {
     assert.equal(missing.enSourceFingerprint, EN_SEGMENT_FINGERPRINT);
     assert.equal(extra.jaSourceFingerprint, JA_SEGMENT_FINGERPRINT);
     assert.deepEqual(tokenGap.missingTokens, ['--proxy', 'TESTIM_KEY']);
-  });
-
-  it('staggers reviewAfter per slug when no override is set (§5)', () => {
-    // Two slugs from a sample status with no reviewAfterOverride. Their
-    // reviewAfter values must each be 6 months out from generatedAt plus
-    // a deterministic per-slug offset in [0, 90) days.
-    const status = {
-      summary: { checkedAt: '2026-04-06T00:00:00Z', checkedFiles: 2, totalFiles: 2 },
-      files: [
-        {
-          file: 'src/content/docs/section/page-a.md',
-          issues: [
-            {
-              type: 'segment-missing',
-              sectionPath: 'Setup',
-              segmentKind: 'paragraph',
-              enSegmentIndex: 0,
-              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
-            },
-          ],
-        },
-        {
-          file: 'src/content/docs/section/page-b.md',
-          issues: [
-            {
-              type: 'segment-missing',
-              sectionPath: 'Setup',
-              segmentKind: 'paragraph',
-              enSegmentIndex: 0,
-              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
-            },
-          ],
-        },
-      ],
-    };
-    const fpMap = new Map([
-      ['section/page-a', VALID_FINGERPRINT],
-      ['section/page-b', VALID_FINGERPRINT],
-    ]);
-    const baseline = buildBaselineFromStatus(status, fpMap, {
-      runId: 'r',
-      generatedAt: '2026-04-06T00:00:00Z',
-      reviewAfterOverride: null,
-      rationale: 'r',
-    });
-    const a = baseline.entries.find((e) => e.slug === 'section/page-a');
-    const b = baseline.entries.find((e) => e.slug === 'section/page-b');
-    assert.match(a.reviewAfter, /^\d{4}-\d{2}-\d{2}$/);
-    assert.match(b.reviewAfter, /^\d{4}-\d{2}-\d{2}$/);
-    // Different slugs MUST hit different cells of the stagger window
-    // (deterministic per-slug hash). If this ever flakes, recheck
-    // staggeredOffsetDays.
-    assert.notEqual(a.reviewAfter, b.reviewAfter);
-    // Both must be at least 6 months past generatedAt (the base date).
-    assert.ok(a.reviewAfter >= '2026-10-06');
-    assert.ok(b.reviewAfter >= '2026-10-06');
-    // And both must be within base + 90 days (stagger window).
-    assert.ok(a.reviewAfter < '2027-01-04');
-    assert.ok(b.reviewAfter < '2027-01-04');
-  });
-
-  it('staggered reviewAfter is deterministic across runs (§5)', () => {
-    const status = {
-      summary: { checkedAt: '2026-04-06T00:00:00Z', checkedFiles: 1, totalFiles: 1 },
-      files: [
-        {
-          file: 'src/content/docs/section/page-a.md',
-          issues: [
-            {
-              type: 'segment-missing',
-              sectionPath: 'Setup',
-              segmentKind: 'paragraph',
-              enSegmentIndex: 0,
-              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
-            },
-          ],
-        },
-      ],
-    };
-    const fpMap = new Map([['section/page-a', VALID_FINGERPRINT]]);
-    const metaNoOverride = {
-      runId: 'r',
-      generatedAt: '2026-04-06T00:00:00Z',
-      reviewAfterOverride: null,
-      rationale: 'r',
-    };
-    const a = buildBaselineFromStatus(status, fpMap, metaNoOverride);
-    const b = buildBaselineFromStatus(status, fpMap, metaNoOverride);
-    assert.equal(a.entries[0].reviewAfter, b.entries[0].reviewAfter);
-  });
-
-  it('reviewAfterOverride disables stagger and locks every entry to one date (§5)', () => {
-    const status = {
-      summary: { checkedAt: '2026-04-06T00:00:00Z', checkedFiles: 2, totalFiles: 2 },
-      files: [
-        {
-          file: 'src/content/docs/section/page-a.md',
-          issues: [
-            {
-              type: 'segment-missing',
-              sectionPath: 'Setup',
-              segmentKind: 'paragraph',
-              enSegmentIndex: 0,
-              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
-            },
-          ],
-        },
-        {
-          file: 'src/content/docs/section/page-b.md',
-          issues: [
-            {
-              type: 'segment-missing',
-              sectionPath: 'Setup',
-              segmentKind: 'paragraph',
-              enSegmentIndex: 0,
-              enSourceFingerprint: EN_SEGMENT_FINGERPRINT,
-            },
-          ],
-        },
-      ],
-    };
-    const fpMap = new Map([
-      ['section/page-a', VALID_FINGERPRINT],
-      ['section/page-b', VALID_FINGERPRINT],
-    ]);
-    const baseline = buildBaselineFromStatus(status, fpMap, {
-      runId: 'r',
-      generatedAt: '2026-04-06T00:00:00Z',
-      reviewAfterOverride: '2027-01-15',
-      rationale: 'r',
-    });
-    for (const entry of baseline.entries) {
-      assert.equal(entry.reviewAfter, '2027-01-15');
-    }
   });
 });
 
@@ -415,7 +295,7 @@ describe('serializeBaseline', () => {
 
   it('sorts entries by slug → issueType → sectionPath → segmentKind → index', () => {
     const baseline = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: '2026-04-06T03:00:00Z',
       generatedFromRunId: 'test',
       rationale: 'test',
@@ -431,9 +311,7 @@ describe('serializeBaseline', () => {
           jaSourceFingerprint: null,
           missingTokens: null,
           snapshotFingerprint: VALID_FINGERPRINT,
-          inconclusiveCategory: null,
-          inconclusiveReason: null,
-          reviewAfter: '2026-10-06',
+          priority: 'medium',
         },
         {
           slug: 'a/page',
@@ -446,9 +324,7 @@ describe('serializeBaseline', () => {
           jaSourceFingerprint: null,
           missingTokens: null,
           snapshotFingerprint: VALID_FINGERPRINT,
-          inconclusiveCategory: null,
-          inconclusiveReason: null,
-          reviewAfter: '2026-10-06',
+          priority: 'medium',
         },
       ],
     };
@@ -471,7 +347,7 @@ describe('serializeBaseline', () => {
 
 describe('mergePartialBaseline', () => {
   const existing = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: '2026-04-01T00:00:00Z',
     generatedFromRunId: 'old-run',
     rationale: 'existing',
@@ -487,9 +363,7 @@ describe('mergePartialBaseline', () => {
         jaSourceFingerprint: null,
         missingTokens: null,
         snapshotFingerprint: OTHER_FINGERPRINT,
-        inconclusiveCategory: null,
-        inconclusiveReason: null,
-        reviewAfter: '2026-09-01',
+        priority: 'medium',
       },
       {
         slug: 'other/page',
@@ -502,9 +376,7 @@ describe('mergePartialBaseline', () => {
         jaSourceFingerprint: null,
         missingTokens: null,
         snapshotFingerprint: VALID_FINGERPRINT,
-        inconclusiveCategory: null,
-        inconclusiveReason: null,
-        reviewAfter: '2026-09-01',
+        priority: 'medium',
       },
     ],
   };
@@ -522,9 +394,7 @@ describe('mergePartialBaseline', () => {
         jaSourceFingerprint: null,
         missingTokens: null,
         snapshotFingerprint: VALID_FINGERPRINT,
-        inconclusiveCategory: null,
-        inconclusiveReason: null,
-        reviewAfter: '2026-10-06',
+        priority: 'medium',
       },
     ];
     const merged = mergePartialBaseline(existing, ['overview/example'], newEntriesForSlug, {
@@ -563,19 +433,17 @@ describe('mergePartialBaseline', () => {
 });
 
 // ---------------------------------------------------------------------------
-// buildBaselineFromStatus: structure mismatch / source unusable 対応
+// buildBaselineFromStatus: structure mismatch 対応
 // ---------------------------------------------------------------------------
 
 describe('buildBaselineFromStatus: structure mismatch entry', () => {
   const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const fpMap = new Map([
     ['running-tests/the-command-line-cli', VALID_SNAPSHOT_FP],
-    ['salesforce-testing/faq', VALID_SNAPSHOT_FP],
   ]);
   const baselineMeta = {
     runId: 'baseline-run',
     generatedAt: '2026-04-06T03:00:00Z',
-    reviewAfterOverride: '2026-10-06',
     rationale: 'baseline',
   };
 
@@ -613,6 +481,8 @@ describe('buildBaselineFromStatus: structure mismatch entry', () => {
     assert.equal(entry.sectionPath, 'CLI Installation > Basic CLI command');
     assert.equal(entry.structureCategory, 'kind-multiset');
     assert.match(entry.structureFingerprint, /^sha256:[0-9a-f]{64}$/);
+    // v2: priority field is always populated (default medium)
+    assert.equal(entry.priority, 'medium');
   });
 
   it('structureFingerprint matches computeStructureFingerprint helper', () => {
@@ -652,17 +522,16 @@ describe('buildBaselineFromStatus: structure mismatch entry', () => {
   });
 });
 
-describe('buildBaselineFromStatus: source unusable entry', () => {
+describe('buildBaselineFromStatus: source-unusable / snapshot-incomplete (NOT baseline-able in v2)', () => {
   const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const fpMap = new Map([['salesforce-testing/faq', VALID_SNAPSHOT_FP]]);
   const baselineMeta = {
     runId: 'baseline-run',
     generatedAt: '2026-04-06T03:00:00Z',
-    reviewAfterOverride: '2026-10-06',
     rationale: 'baseline',
   };
 
-  it('emits a source unusable entry with usabilityReason from issue.usabilitySignals.reason', () => {
+  it('does NOT emit a baseline entry for source-unusable (source debt, not baseline-able)', () => {
     const status = {
       summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
       files: [
@@ -680,14 +549,10 @@ describe('buildBaselineFromStatus: source unusable entry', () => {
       ],
     };
     const baseline = buildBaselineFromStatus(status, fpMap, baselineMeta);
-    assert.equal(baseline.entries.length, 1);
-    const entry = baseline.entries[0];
-    assert.equal(entry.issueType, 'source-unusable');
-    assert.equal(entry.slug, 'salesforce-testing/faq');
-    assert.equal(entry.usabilityReason, 'escaped-details-residue');
+    assert.equal(baseline.entries.length, 0);
   });
 
-  it('skips a source unusable issue with unknown reason', () => {
+  it('does NOT emit a baseline entry for snapshot-incomplete', () => {
     const status = {
       summary: { checkedAt: '2026-04-06T03:00:00Z', checkedFiles: 1, totalFiles: 1 },
       files: [
@@ -695,9 +560,9 @@ describe('buildBaselineFromStatus: source unusable entry', () => {
           file: 'src/content/docs/salesforce-testing/faq.md',
           issues: [
             {
-              type: 'source-unusable',
+              type: 'snapshot-incomplete',
               severity: 'actionable',
-              usabilitySignals: { reason: 'unknown-reason' },
+              usabilitySignals: { reason: 'shallow-snapshot' },
             },
           ],
         },
@@ -708,7 +573,7 @@ describe('buildBaselineFromStatus: source unusable entry', () => {
   });
 });
 
-describe('sortEntries: structure / source unusable types', () => {
+describe('sortEntries: structure types within slug', () => {
   const VALID_SNAPSHOT_FP = 'sha256:' + 'f'.repeat(64);
   const fpMap = new Map([
     ['some/page', VALID_SNAPSHOT_FP],
@@ -716,7 +581,6 @@ describe('sortEntries: structure / source unusable types', () => {
   const baselineMeta = {
     runId: 'baseline-run',
     generatedAt: '2026-04-06T03:00:00Z',
-    reviewAfterOverride: '2026-10-06',
     rationale: 'baseline',
   };
 
@@ -783,15 +647,15 @@ describe('parseArgs: --types partial mode', () => {
     // CLI validation that this combination is invalid lives in main();
     // here we only check that parseArgs surfaces both flags so main can
     // detect the conflict.
-    const args = parseArgs(['--regenerate', '--types=source-unusable']);
+    const args = parseArgs(['--regenerate', '--types=section-structure-mismatch']);
     assert.equal(args.regenerate, true);
-    assert.deepEqual(args.types, ['source-unusable']);
+    assert.deepEqual(args.types, ['section-structure-mismatch']);
   });
 
   it('treats --types as mutually exclusive with --slug (parsing returns both)', () => {
-    const args = parseArgs(['--slug=overview/foo', '--types=source-unusable']);
+    const args = parseArgs(['--slug=overview/foo', '--types=section-structure-mismatch']);
     assert.deepEqual(args.slugs, ['overview/foo']);
-    assert.deepEqual(args.types, ['source-unusable']);
+    assert.deepEqual(args.types, ['section-structure-mismatch']);
   });
 });
 
@@ -800,7 +664,7 @@ describe('mergePartialBaselineByType', () => {
   const SEG_FP = 'sha256:' + 'c'.repeat(64);
 
   const existing = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: '2026-03-01T00:00:00Z',
     generatedFromRunId: 'old-run',
     rationale: 'existing baseline',
@@ -816,10 +680,7 @@ describe('mergePartialBaselineByType', () => {
         jaSourceFingerprint: null,
         missingTokens: null,
         snapshotFingerprint: VALID_SNAPSHOT_FP,
-        inconclusiveCategory: null,
-        inconclusiveReason: null,
-        // 重要: 既存 segment-* エントリの reviewAfter は touch 禁止 (§7.4)
-        reviewAfter: '2026-09-01',
+        priority: 'medium',
       },
     ],
   };
@@ -829,7 +690,7 @@ describe('mergePartialBaselineByType', () => {
       slug: 'running-tests/the-command-line-cli',
       issueType: 'section-structure-mismatch',
       snapshotFingerprint: VALID_SNAPSHOT_FP,
-      reviewAfter: '2026-10-06',
+      priority: 'medium',
       sectionIndex: 7,
       sectionPath: 'CLI Installation > Basic CLI command',
       structureCategory: 'kind-multiset',
@@ -846,9 +707,9 @@ describe('mergePartialBaselineByType', () => {
       },
     );
     assert.equal(merged.entries.length, 2);
-    // 既存 segment-* は bit-identical で残る (reviewAfter 含む)
+    // 既存 segment-* は bit-identical で残る (v2: priority も保持)
     const segEntry = merged.entries.find((e) => e.issueType === 'segment-missing');
-    assert.equal(segEntry.reviewAfter, '2026-09-01');
+    assert.equal(segEntry.priority, 'medium');
     // 新 type の entry が追加されている
     const structEntry = merged.entries.find(
       (e) => e.issueType === 'section-structure-mismatch',
@@ -866,7 +727,7 @@ describe('mergePartialBaselineByType', () => {
           slug: 'running-tests/the-command-line-cli',
           issueType: 'section-structure-mismatch',
           snapshotFingerprint: VALID_SNAPSHOT_FP,
-          reviewAfter: '2026-10-06',
+          priority: 'medium',
           sectionIndex: 7,
           sectionPath: 'CLI',
           structureCategory: 'kind-multiset',
@@ -901,12 +762,12 @@ describe('mergePartialBaselineByType', () => {
     );
     assert.equal(merged.entries.length, 1);
     assert.equal(merged.entries[0].issueType, 'segment-missing');
-    assert.equal(merged.entries[0].reviewAfter, '2026-09-01');
+    assert.equal(merged.entries[0].priority, 'medium');
   });
 });
 
 // ---------------------------------------------------------------------------
-// validateTypesArg helper contract
+// validateTypesArg helper contract (v2: 2-type allowlist)
 // ---------------------------------------------------------------------------
 
 describe('validateTypesArg', () => {
@@ -938,12 +799,10 @@ describe('validateTypesArg', () => {
     assert.match(result.error, /foo-bar/);
   });
 
-  it('returns { ok: true } for the 4 allowlisted types', () => {
+  it('returns { ok: true } for the 2 v2-allowlisted types (structure mismatch family)', () => {
     for (const t of [
       'section-structure-mismatch',
       'segment-order-mismatch',
-      'snapshot-incomplete',
-      'source-unusable',
     ]) {
       assert.deepEqual(
         validateTypesArg([t]),
@@ -956,15 +815,19 @@ describe('validateTypesArg', () => {
   it('returns { ok: true } for a combination of allowlisted types', () => {
     const result = validateTypesArg([
       'section-structure-mismatch',
-      'snapshot-incomplete',
+      'segment-order-mismatch',
     ]);
     assert.deepEqual(result, { ok: true });
   });
 
+  it('rejects snapshot-incomplete and source-unusable (no longer in --types allowlist in v2)', () => {
+    for (const t of ['snapshot-incomplete', 'source-unusable']) {
+      const result = validateTypesArg([t]);
+      assert.equal(result.ok, false, `${t} must not be accepted by --types in v2`);
+    }
+  });
+
   it('rejects legacy segment-* types (tightest allowlist)', () => {
-    // segment-missing / segment-extra / segment-shifted / segment-untranslated /
-    // segment-token-gap / segment-inconclusive は --types 経路では扱わない。
-    // これらを書き換えたいときは --regenerate か --slug で処理する。
     for (const t of [
       'segment-missing',
       'segment-extra',
@@ -1011,11 +874,46 @@ describe('parseArgs + validateTypesArg integration', () => {
     assert.match(v.error, /section-structure-misatch/);
   });
 
-  it('parseArgs(["--types=source-unusable"]) round-trips as valid', () => {
-    const args = parseArgs(['--types=source-unusable']);
-    assert.deepEqual(args.types, ['source-unusable']);
+  it('parseArgs(["--types=section-structure-mismatch"]) round-trips as valid', () => {
+    const args = parseArgs(['--types=section-structure-mismatch']);
+    assert.deepEqual(args.types, ['section-structure-mismatch']);
     const v = validateTypesArg(args.types);
     assert.equal(v.ok, true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// CLI: --review-after is rejected in v2
+// ---------------------------------------------------------------------------
+
+describe('CLI: --review-after flag is removed in v2', () => {
+  it('exits non-zero when --review-after is passed', () => {
+    const result = spawnSync(
+      process.execPath,
+      [GENERATE_SCRIPT, '--regenerate', '--review-after=2026-12-31'],
+      {
+        cwd: REPO_ROOT,
+        encoding: 'utf8',
+      },
+    );
+    assert.notEqual(result.status, 0, 'must exit non-zero when --review-after is passed');
+    const combined = (result.stderr ?? '') + (result.stdout ?? '');
+    assert.match(combined, /--review-after/);
+    assert.match(combined, /removed|撤去|v2/i);
+  });
+
+  it('exits non-zero when --review-after=<date> is passed with --slug', () => {
+    const result = spawnSync(
+      process.execPath,
+      [GENERATE_SCRIPT, '--slug=overview/example', '--review-after=2026-12-31'],
+      {
+        cwd: REPO_ROOT,
+        encoding: 'utf8',
+      },
+    );
+    assert.notEqual(result.status, 0);
+    const combined = (result.stderr ?? '') + (result.stdout ?? '');
+    assert.match(combined, /--review-after/);
   });
 });
 
