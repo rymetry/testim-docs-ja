@@ -417,12 +417,13 @@ describe('CLI coverage helpers', () => {
 
     it('baselined snapshot-incomplete 単独 → " (covered by baseline/ack)"', () => {
       // baseline 経路も advisory より優先。
+      // (schema v2 では baselineExpired/baselineReviewAfter は emit されないので
+      //  fixture にも付けない — `baselined: true` のみが gate state を駆動する)
       const state = getConsoleCoverageState([
         {
           type: 'snapshot-incomplete',
           severity: 'actionable',
           baselined: true,
-          baselineExpired: false,
         },
       ]);
       assert.deepEqual(state, {

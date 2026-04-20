@@ -338,7 +338,8 @@ export async function checkSourceParity({
     return 1;
   }
   // ack expiry は UTC の `today` で判定する。
-  // CI の timezone 差を消し、`reviewAfter` の YYYY-MM-DD と揃えるため。
+  // CI の timezone 差を消し、ack `reviewAfter` の YYYY-MM-DD と揃えるため。
+  // (baseline v2 は期限概念を持たないので、today は ack 判定専用)
   const today = new Date().toISOString().slice(0, 10);
 
   // frozen baseline をロード。acknowledgement とは別ファイル / 別意味で管理する。
@@ -581,12 +582,12 @@ export async function checkSourceParity({
       today,
     );
 
-    // baseline タグ付け。frozen (非 expired) baseline entries は
+    // baseline タグ付け (schema v2)。`issue.baselined === true` の entry は
     // isFrozenByBaseline / isReportableParityIssue で gate から除外される
-    // (scripts/lib/source_parity_issue_state.mjs を参照)。期限切れ baseline
-    // entries は gate に refire する。
-    // matchedKeys を consumer 側で消費して orphan
-    // baseline entry を集計する。invalidated なページは skip する契約。
+    // (scripts/lib/source_parity_issue_state.mjs を参照)。v2 では期限概念を
+    // 廃止したので baseline は明示削除まで frozen のまま。matchedKeys を
+    // consumer 側で消費して orphan baseline entry を集計する。invalidated
+    // なページは skip する契約。
     {
       const baselineResult = tagIssuesWithBaseline(
         fileSlug,
@@ -813,13 +814,6 @@ export async function checkSourceParity({
       );
       for (const [type, count] of Object.entries(summary.baselinedByType ?? {})) {
         console.log(`  ${type}: ${count} 件`);
-      }
-      const incCats = summary.baselinedByInconclusiveCategory ?? {};
-      if (Object.keys(incCats).length > 0) {
-        console.log('  inconclusiveCategory 別:');
-        for (const [cat, count] of Object.entries(incCats)) {
-          console.log(`    ${cat}: ${count} 件`);
-        }
       }
     }
     if (summary.baselineInvalidatedSlugs && summary.baselineInvalidatedSlugs.length > 0) {

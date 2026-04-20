@@ -700,8 +700,6 @@ function formatAdvisoryQueueScope(scope) {
 
 function buildParityFollowupBody({
   summary,
-  expiredBaselineFiles,
-  expiringBaselineFiles,
   baselineInvalidatedSlugs,
   blockingAdvisoryItems,
   advisoryQueueIssues,

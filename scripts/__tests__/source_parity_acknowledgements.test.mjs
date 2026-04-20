@@ -739,28 +739,10 @@ describe('summarizeParityResults — baseline accounting', () => {
     });
   });
 
-  it('counts baselined inconclusive entries by category', () => {
-    const results = [
-      {
-        file: 'a.md',
-        sourceUrl: '',
-        category: '',
-        issues: [
-          {
-            type: 'segment-inconclusive',
-            severity: 'actionable',
-            baselined: true,
-            inconclusiveCategory: 'heading-count-mismatch',
-            detail: 'inc',
-          },
-        ],
-      },
-    ];
-    const summary = summarizeParityResults(results);
-    assert.deepEqual(summary.baselinedByInconclusiveCategory, {
-      'heading-count-mismatch': 1,
-    });
-  });
+  // schema v2: segment-inconclusive は BASELINE_ELIGIBLE_TYPES から除外されて
+  // いるため tagIssuesWithBaseline が baselined:true を付けない。
+  // baselinedByInconclusiveCategory counter も撤去済。旧 "counts baselined
+  // inconclusive entries by category" test は v2 では成立しないので削除した。
 
   it('keeps baselined issues frozen (not active)', () => {
     // v2: baseline expiry is gone — baselined:true always freezes the issue.
@@ -800,7 +782,6 @@ describe('summarizeParityResults — baseline accounting', () => {
     assert.equal(summary.baselinedIssues, 0);
     assert.equal(summary.baselinedFiles, 0);
     assert.deepEqual(summary.baselinedByType, {});
-    assert.deepEqual(summary.baselinedByInconclusiveCategory, {});
   });
 });
 
