@@ -376,16 +376,15 @@ describe('reportableActive and auditSignal counters', () => {
     assert.equal(summary.auditSignalIssues, 1);
   });
 
-  it('excludes coarse signals from reportableActive* even with expired baseline', () => {
+  it('excludes baselined coarse signals from reportableActive* (coarse never re-fires)', () => {
     const summary = summarizeParityResults([
       {
-        file: 'src/content/docs/expired-baseline-coarse.md',
+        file: 'src/content/docs/baselined-coarse.md',
         issues: [
           {
             type: 'heading-mismatch',
             severity: 'signal',
             baselined: true,
-            baselineExpired: true,
           },
         ],
       },
@@ -395,7 +394,7 @@ describe('reportableActive and auditSignal counters', () => {
     assert.equal(summary.auditSignalFiles, 1);
   });
 
-  it('excludes frozen baseline (non-expired) from reportableActive*', () => {
+  it('excludes frozen baseline from reportableActive* (v2: baselined alone freezes)', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/frozen.md',
@@ -404,7 +403,6 @@ describe('reportableActive and auditSignal counters', () => {
             type: 'segment-missing',
             severity: 'actionable',
             baselined: true,
-            baselineExpired: false,
           },
         ],
       },
@@ -609,7 +607,7 @@ describe('structureMismatch and snapshotUnusable counters', () => {
     assert.equal(summary.reportableActiveFiles, 0);
   });
 
-  it('excludes frozen (non-expired) baseline from structureMismatch*', () => {
+  it('excludes frozen baseline from structureMismatch* (v2: baselined alone freezes)', () => {
     const summary = summarizeParityResults([
       {
         file: 'src/content/docs/frozen-structure.md',
@@ -618,7 +616,6 @@ describe('structureMismatch and snapshotUnusable counters', () => {
             type: 'segment-order-mismatch',
             severity: 'actionable',
             baselined: true,
-            baselineExpired: false,
           },
         ],
       },
@@ -646,22 +643,21 @@ describe('structureMismatch and snapshotUnusable counters', () => {
     assert.equal(summary.reportableActiveFiles, 1);
   });
 
-  it('includes expired baseline on source unusable in snapshotUnusable* (counter re-fires)', () => {
+  it('excludes baselined snapshot-incomplete from snapshotUnusable* (v2: frozen = out of counters)', () => {
     const summary = summarizeParityResults([
       {
-        file: 'src/content/docs/expired-baseline-source.md',
+        file: 'src/content/docs/frozen-source.md',
         issues: [
           {
             type: 'snapshot-incomplete',
             severity: 'actionable',
             baselined: true,
-            baselineExpired: true,
           },
         ],
       },
     ]);
-    assert.equal(summary.snapshotUnusableIssues, 1);
-    assert.equal(summary.snapshotUnusableFiles, 1);
+    assert.equal(summary.snapshotUnusableIssues, 0);
+    assert.equal(summary.snapshotUnusableFiles, 0);
     assert.equal(summary.reportableActiveFiles, 0);
   });
 
