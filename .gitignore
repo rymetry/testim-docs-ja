@@ -29,6 +29,7 @@ source-sync-status.json
 snapshot-diff-status.json
 parity-check-status.json
 upstream-recovery-status.json
+upstream-recovery-comment.md
 docs-actionable-report.json
 docs-update-summary.md
 docs-audit-manifest.json

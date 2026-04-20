@@ -933,6 +933,142 @@ describe('sourceSyncHealth — upstream recovery integration (Phase B)', () => {
     assert.equal(report.sourceSyncHealth.enPatchRecovery.unknownPatches, 1);
     assert.equal(report.sourceSyncHealth.enPatchRecovery.stalePatches, 0);
   });
+
+  it('still opens the issue when sourceSync is absent but upstreamRecovery has stale entries', () => {
+    // TS-reviewer MEDIUM: verify the body is coherent (freshness fields
+    // show 不明 but body still contains the upstream-recovery subsection
+    // and the artifact reference).
+    const upstreamRecovery = {
+      schemaVersion: 1,
+      summary: { totalEntries: 1, activeEntries: 0, staleEntries: 1, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [
+          {
+            id: 'UD-NOSYNC',
+            mechanism: 'en_source_patches',
+            slugs: ['some/slug'],
+            statusA: 'stale',
+            statusB: 'current',
+            hits: 0,
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+        source_sync_exclusions: [],
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: {},
+      upstreamRecovery,
+    });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    assert.match(report.sourceSyncHealth.body, /UD-NOSYNC/);
+    assert.match(report.sourceSyncHealth.body, /`upstream-recovery-status\.json`/);
+  });
+
+  it('omits the upstream-recovery-status.json artifact line when upstreamRecovery is absent', () => {
+    // Code-reviewer MEDIUM: ensure the conditional artifact-list entry is
+    // not emitted when the family opens for other reasons (freshness).
+    const brokenSync = {
+      schemaVersion: 1,
+      freshnessState: 'broken',
+      summary: {
+        targetPages: 100,
+        fetchedPages: 0,
+        notFoundPages: 0,
+        errorPages: 100,
+        sidebarVerified: false,
+      },
+      errors: [{ slug: 'x', detail: 'fetch failed' }],
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: brokenSync,
+      // upstreamRecovery intentionally omitted.
+    });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    // artifacts list should NOT include upstream-recovery-status.json.
+    assert.doesNotMatch(
+      report.sourceSyncHealth.body,
+      /`upstream-recovery-status\.json`/,
+    );
+  });
+});
+
+describe('renderUpstreamRecoveryStickyComment — single source of truth', () => {
+  it('returns null when no stale / overdue signals exist', async () => {
+    const { renderUpstreamRecoveryStickyComment } = await import(
+      '../lib/detection_reports.mjs'
+    );
+    const body = renderUpstreamRecoveryStickyComment({
+      schemaVersion: 1,
+      summary: { totalEntries: 0, activeEntries: 0, staleEntries: 0, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: { en_source_patches: [], source_sync_exclusions: [] },
+    });
+    assert.equal(body, null);
+  });
+
+  it('renders a sticky comment body with hidden marker and summary heading when signals exist', async () => {
+    const { renderUpstreamRecoveryStickyComment, UPSTREAM_RECOVERY_STICKY_MARKER } =
+      await import('../lib/detection_reports.mjs');
+    const body = renderUpstreamRecoveryStickyComment({
+      schemaVersion: 1,
+      summary: { totalEntries: 1, activeEntries: 0, staleEntries: 1, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [
+          {
+            id: 'UD-STICKY',
+            mechanism: 'en_source_patches',
+            slugs: ['some/slug'],
+            statusA: 'stale',
+            statusB: 'current',
+            hits: 0,
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+        source_sync_exclusions: [],
+      },
+    });
+    assert.ok(body);
+    assert.ok(body.startsWith(UPSTREAM_RECOVERY_STICKY_MARKER));
+    assert.match(body, /## Upstream recovery: 1 entr\(ies\) need attention/);
+    assert.match(body, /UD-STICKY/);
+    assert.match(body, /Informational only/);
+    // No emoji per project convention.
+    assert.doesNotMatch(body, /🧹/);
+  });
+
+  it('sanitises registry-derived strings that would otherwise break markdown', async () => {
+    const { renderUpstreamRecoveryStickyComment } = await import(
+      '../lib/detection_reports.mjs'
+    );
+    const body = renderUpstreamRecoveryStickyComment({
+      schemaVersion: 1,
+      summary: { totalEntries: 1, activeEntries: 0, staleEntries: 1, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [
+          {
+            id: 'UD-`inj`ect|pipe\nnewline',
+            mechanism: 'en_source_patches',
+            slugs: ['slug\nbreak'],
+            statusA: 'stale',
+            statusB: 'current',
+            hits: 0,
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+        source_sync_exclusions: [],
+      },
+    });
+    // Sanitised replacements should appear; originals should not.
+    assert.ok(body.includes('UD-_inj_ect_pipe_newline'), body);
+    assert.ok(body.includes('slug_break'), body);
+    assert.ok(!body.includes('\\n'), 'raw newline must not survive');
+  });
 });
 
 // ---------------------------------------------------------------------------

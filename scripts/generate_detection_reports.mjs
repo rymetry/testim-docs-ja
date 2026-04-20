@@ -77,6 +77,19 @@ function main() {
         `  ソース原文の既知問題: 除外=${debt.excludedPages} 未復旧=${debt.excludedBrokenPages} 復旧候補=${debt.excludedRecoveredPages}`,
       );
     }
+    // Phase B: upstream recovery signals — surface stale/overdue counts so
+    // scheduled-run logs reveal registry decay without requiring reviewers
+    // to read the JSON artifact.
+    const enRec = actionableReport.sourceSyncHealth?.enPatchRecovery;
+    const syncRec = actionableReport.sourceSyncHealth?.sourceSyncRecovery;
+    if (enRec || syncRec) {
+      const en = enRec ?? { stalePatches: 0, overduePatches: 0, totalPatches: 0 };
+      const sync = syncRec ?? { staleExclusions: 0, overdueExclusions: 0, totalExclusions: 0 };
+      console.log(
+        `  上流修正候補: patches=${en.stalePatches}stale/${en.overduePatches}overdue/${en.totalPatches}total ` +
+          `exclusions=${sync.staleExclusions}stale/${sync.overdueExclusions}overdue/${sync.totalExclusions}total`,
+      );
+    }
   } catch (error) {
     console.error(`❌ ${error.message}`);
     if (error.validationErrors) {

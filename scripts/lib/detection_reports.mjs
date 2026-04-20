@@ -37,7 +37,20 @@ export const FAMILY_KEYS = {
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return {};
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  // Graceful degradation: a partially-written artifact (e.g. aggregator killed
+  // mid-write) must not propagate a raw SyntaxError through loadDetectionInputs.
+  // `strict` mode downstream surfaces real schema issues via
+  // validateDetectionInputs; here we just warn so the scheduled / PR run can
+  // continue rather than crash with a cryptic JSON parse error.
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (err) {
+    console.warn(
+      `[detection_reports] failed to parse ${filePath}: ${err.message}. ` +
+        'Treating as empty artifact (non-blocking).',
+    );
+    return {};
+  }
 }
 
 /**
@@ -302,9 +315,15 @@ export function validateActionableReport(parsed) {
 }
 
 /**
- * 読み込み済みの 3 種類の detection 入力を検証する。
+ * 読み込み済みの detection 入力を検証する (strict mode 用)。
  * 成功時は `{ ok: true }`、1 つでも不正なら `{ ok: false, errors }` を返す。
  * ここでは throw せず、継続可否の判断は呼び出し側に委ねる。
+ *
+ * 注: `upstreamRecovery` (Phase B) は optional artifact で schema 検証対象外。
+ * 不在時は `{}` で渡され、`buildUpstreamRecoverySections` が null を返す
+ * graceful degradation に委ねる (strict mode で validation error にはしない)。
+ * このため API は従来どおり 3 キー (`snapshot` / `parity` / `sourceSync`)
+ * のみを受け取る。
  */
 export function validateDetectionInputs({ snapshot, parity, sourceSync }) {
   const errors = [];
@@ -984,29 +1003,82 @@ function buildUpstreamRecoverySections(upstreamRecovery, maxEntries = 10) {
 }
 
 /**
- * Render the markdown fragment added to the sourceSyncHealth issue body when
- * `upstreamRecovery` has non-zero stale / overdue entries (Phase B Task 4).
- * Returns [] when both sections are clean so the caller can spread it safely.
+ * Defensive sanitiser for registry-derived strings that land in markdown
+ * output (issue body / sticky PR comment). Registry values are developer-
+ * authored and protected by review, but we strip characters that could
+ * break the surrounding markdown structure (newlines / backticks / pipes)
+ * to keep output format stable even if a future entry contains them.
+ *
+ * Replaces matches with `_` so the field is visibly marked as sanitised
+ * rather than silently removed.
  */
-function renderUpstreamRecoverySubsection({ enPatchRecovery, sourceSyncRecovery }) {
-  const lines = [];
-  const hasEnSignal =
-    enPatchRecovery &&
-    (enPatchRecovery.stalePatches > 0 || enPatchRecovery.overduePatches > 0);
-  const hasSyncSignal =
-    sourceSyncRecovery &&
-    (sourceSyncRecovery.staleExclusions > 0 ||
-      sourceSyncRecovery.overdueExclusions > 0);
-  if (!hasEnSignal && !hasSyncSignal) return lines;
+function sanitizeForMarkdown(value) {
+  if (value === null || value === undefined) return '';
+  return String(value).replace(/[\r\n`|]/g, '_');
+}
 
-  lines.push('## 上流修正候補 (upstream recovery)', '');
-  lines.push(
-    '> `upstream-recovery-status.json` で検知された stale/overdue エントリー。' +
-      '運用手順は `docs/PARITY_GUIDE.md §許容機構` と ' +
-      '`docs/OPS_DESIGN.md §Weekly: Upstream recovery triage` を参照。',
+/**
+ * Sticky PR comment hidden marker. Shared between the scheduled managed issue
+ * body and the PR-triggered sticky comment so upsert logic can locate the
+ * existing comment across re-runs.
+ */
+export const UPSTREAM_RECOVERY_STICKY_MARKER = '<!-- upstream-recovery: sticky -->';
+
+/**
+ * Render the sticky PR comment body for the given upstream-recovery-status
+ * payload. Returns `null` when there are no stale / overdue signals, so the
+ * caller knows to delete any existing sticky comment. This is the **single
+ * source of truth** for sticky-comment markdown — the CI workflow reads the
+ * output of `scripts/render_upstream_recovery_comment.mjs` (which calls this)
+ * rather than re-implementing the filtering inline (see PR #363 code review).
+ *
+ * @param {object|null|undefined} upstreamRecovery — parsed upstream-recovery-status.json
+ * @param {object} [options]
+ * @param {number} [options.maxEntries] — cap on emitted stale/overdue lists
+ * @param {string} [options.marker] — hidden marker (default MARKER constant)
+ * @returns {string|null} markdown body or `null` when no signals
+ */
+export function renderUpstreamRecoveryStickyComment(
+  upstreamRecovery,
+  { maxEntries = 10, marker = UPSTREAM_RECOVERY_STICKY_MARKER } = {},
+) {
+  const sections = buildUpstreamRecoverySections(upstreamRecovery, maxEntries);
+  const entries = renderUpstreamRecoveryEntries(sections);
+  if (entries.length === 0) return null;
+  const enStale = sections.enPatchRecovery?.stalePatches ?? 0;
+  const enOverdue = sections.enPatchRecovery?.overduePatches ?? 0;
+  const syncStale = sections.sourceSyncRecovery?.staleExclusions ?? 0;
+  const syncOverdue = sections.sourceSyncRecovery?.overdueExclusions ?? 0;
+  const totalAxis = enStale + enOverdue + syncStale + syncOverdue;
+  return [
+    marker,
     '',
-  );
-  if (hasEnSignal) {
+    `## Upstream recovery: ${totalAxis} entr(ies) need attention`,
+    '',
+    ...entries,
+    '',
+    '_Informational only — this comment is non-blocking. ' +
+      'See `docs/PARITY_GUIDE.md §許容機構` and ' +
+      '`docs/OPS_DESIGN.md §Weekly: Upstream recovery triage` ' +
+      'for the removal workflow._',
+  ].join('\n');
+}
+
+/**
+ * Shared entry renderer for upstream-recovery sections. Emits ONLY the
+ * per-mechanism bullet lists (no wrapping heading / quote). The two callers
+ * wrap this output with their own heading:
+ *   - `renderUpstreamRecoverySubsection` (managed issue body) → `## 上流修正候補`
+ *   - `renderUpstreamRecoveryStickyComment` (PR sticky) → `## Upstream recovery: ...`
+ * Extracting this avoids the logic-duplication maintenance hazard between
+ * the CI workflow and detection_reports (PR #363 code review HIGH).
+ */
+function renderUpstreamRecoveryEntries({ enPatchRecovery, sourceSyncRecovery }) {
+  const lines = [];
+  if (
+    enPatchRecovery &&
+    (enPatchRecovery.stalePatches > 0 || enPatchRecovery.overduePatches > 0)
+  ) {
     lines.push(
       `- **en_source_patches:** ${enPatchRecovery.stalePatches} stale / ` +
         `${enPatchRecovery.overduePatches} overdue / ` +
@@ -1015,21 +1087,29 @@ function renderUpstreamRecoverySubsection({ enPatchRecovery, sourceSyncRecovery 
     if (enPatchRecovery.stale.length > 0) {
       lines.push('  - stale:');
       for (const e of enPatchRecovery.stale) {
-        const slugs = e.slugs.join(', ');
-        lines.push(`    - \`${e.id}\` (slugs: ${slugs}) — reviewAfter=${e.reviewAfter}`);
+        const slugs = (e.slugs || []).map(sanitizeForMarkdown).join(', ');
+        lines.push(
+          `    - \`${sanitizeForMarkdown(e.id)}\` (slugs: ${slugs}) — ` +
+            `reviewAfter=${sanitizeForMarkdown(e.reviewAfter)}`,
+        );
       }
     }
     if (enPatchRecovery.overdue.length > 0) {
       lines.push('  - overdue:');
       for (const e of enPatchRecovery.overdue) {
         lines.push(
-          `    - \`${e.id}\` reviewAfter=${e.reviewAfter} ` +
+          `    - \`${sanitizeForMarkdown(e.id)}\` ` +
+            `reviewAfter=${sanitizeForMarkdown(e.reviewAfter)} ` +
             `daysUntilReview=${e.daysUntilReview}`,
         );
       }
     }
   }
-  if (hasSyncSignal) {
+  if (
+    sourceSyncRecovery &&
+    (sourceSyncRecovery.staleExclusions > 0 ||
+      sourceSyncRecovery.overdueExclusions > 0)
+  ) {
     lines.push(
       `- **source_sync_exclusions:** ${sourceSyncRecovery.staleExclusions} stale / ` +
         `${sourceSyncRecovery.overdueExclusions} overdue / ` +
@@ -1039,7 +1119,9 @@ function renderUpstreamRecoverySubsection({ enPatchRecovery, sourceSyncRecovery 
       lines.push('  - stale:');
       for (const e of sourceSyncRecovery.stale) {
         lines.push(
-          `    - \`${e.slug}\` fetchStatus=${e.fetchStatus} reviewAfter=${e.reviewAfter}`,
+          `    - \`${sanitizeForMarkdown(e.slug)}\` ` +
+            `fetchStatus=${sanitizeForMarkdown(e.fetchStatus)} ` +
+            `reviewAfter=${sanitizeForMarkdown(e.reviewAfter)}`,
         );
       }
     }
@@ -1047,14 +1129,34 @@ function renderUpstreamRecoverySubsection({ enPatchRecovery, sourceSyncRecovery 
       lines.push('  - overdue:');
       for (const e of sourceSyncRecovery.overdue) {
         lines.push(
-          `    - \`${e.slug}\` reviewAfter=${e.reviewAfter} ` +
+          `    - \`${sanitizeForMarkdown(e.slug)}\` ` +
+            `reviewAfter=${sanitizeForMarkdown(e.reviewAfter)} ` +
             `daysUntilReview=${e.daysUntilReview}`,
         );
       }
     }
   }
-  lines.push('');
   return lines;
+}
+
+/**
+ * Render the markdown fragment added to the sourceSyncHealth issue body when
+ * `upstreamRecovery` has non-zero stale / overdue entries (Phase B Task 4).
+ * Returns [] when both sections are clean so the caller can spread it safely.
+ */
+function renderUpstreamRecoverySubsection({ enPatchRecovery, sourceSyncRecovery }) {
+  const entries = renderUpstreamRecoveryEntries({ enPatchRecovery, sourceSyncRecovery });
+  if (entries.length === 0) return [];
+  return [
+    '## 上流修正候補 (upstream recovery)',
+    '',
+    '> `upstream-recovery-status.json` で検知された stale/overdue エントリー。' +
+      '運用手順は `docs/PARITY_GUIDE.md §許容機構` と ' +
+      '`docs/OPS_DESIGN.md §Weekly: Upstream recovery triage` を参照。',
+    '',
+    ...entries,
+    '',
+  ];
 }
 
 export function buildActionableReport(snapshot, parity, auditManifest, options = {}) {
