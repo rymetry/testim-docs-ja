@@ -82,7 +82,7 @@ jq "[.entries[] | select(.slug == \"<slug>\")] | length" parity-baseline.json
 1. **具体 EN HTML anomaly への traceability**: 該当 artifact が `snapshots/en/content/<slug>.html` 内の具体的な EN 側不整合（例: `<a href="...">display-text</a>` の href と display-text 不一致 / EN-only ZWS / broken anchor 等）に 1:1 対応すること。「EN が曖昧だから」等の抽象理由は不可
 2. **1 slug あたり最大 1 件**: 同一 slug で 2 件以上発生した場合は baseline せず、upstream 修正待ちとして Phase 4 plan の `source_sync_exclusions` に page 単位で登録するか否かを判断する
 3. **Baseline entry への justification comment 必須**: `parity-baseline.json` の該当 entry に `rationale` フィールドで具体 anomaly を 1 文で記述する（例: `"EN-only broken href: display='google.com' vs href=''"`）。記述なしの baseline 追加は禁止
-4. **reviewAfter 期限 ≤ 3 ヶ月**: 長期凍結禁止。期限切れは `orphanBaselineEntries` として検知される
+4. **schema v2 契約**: `priority` (`high`/`medium`/`low`、default `medium`) を必ず設定し、`note` フィールドに具体 anomaly の 1 文記述を書く。長期凍結禁止の運用圧力は `priority='high'` + PR paydown schedule で維持する (v2 では `reviewAfter` 期限概念は撤廃)
 
 **判定フロー**:
 

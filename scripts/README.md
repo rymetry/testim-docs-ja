@@ -565,15 +565,21 @@ frozen baseline 機構は exact diff engine を deterministic に primary gate �
 
 - `scripts/lib/source_parity_baseline.mjs` — schema validation, key 生成,
   page-level invalidation を含む tagging（純粋関数のみ）
-- `scripts/generate_parity_baseline.mjs` — baseline 生成 CLI
-  - `--regenerate` で full、`--slug=<csv>` で partial 再生成
+- `scripts/generate_parity_baseline.mjs` — baseline 生成 CLI (schema v2)
+  - `--regenerate` で full、`--slug=<csv>` で partial 再生成、`--types=<csv>` で
+    structure family のみ部分再生成 (`section-structure-mismatch` /
+    `segment-order-mismatch` の 2 種のみ許可)
   - 入力の `parity-check-status.json` は full `npm run check:parity` 実行結果が必須
-  - `--rationale=<text>` / `--review-after=<YYYY-MM-DD>` で再現性を確保
-  - 出力は deterministic（`parity-check-status.json` の
+  - `--rationale=<text>` で provenance を明示化
+  - **v2 で `--review-after` option は削除された**。stale 指定時は exit 1 で reject
+  - 出力は deterministic (`parity-check-status.json` の
     `summary.checkedAt` を `generatedAt` / `generatedFromRunId` の seed に使い、
-    安定ソート + 2-space indent + LF 終端）
-- `parity-baseline.json` — frozen baseline file (entries は staggered reviewAfter で
-  cliff failure を防ぐ)
+    安定ソート + 2-space indent + LF 終端)
+- `parity-baseline.json` — frozen baseline file (schema v2)。各 entry は
+  `priority` (`high`/`medium`/`low`, default `medium`) と任意 `note` を持つ。
+  Phase 4 cutover 後は `entries.length === 0` を維持する
+- `scripts/phase4/migrate_baseline_schema.mjs` — one-shot v1→v2 migration
+  helper (`migrateEntry` / `migrateBaseline` を export)
 
 **npm script**:
 
@@ -588,8 +594,10 @@ npm run generate:parity-baseline -- --slug=overview/foo # 部分再生成
 - gate: `segment-*` issue は primary gate の actionable 集計に乗り、frozen baseline
   で既存 drift を active 集計から除外する
 - recall benchmark: 9/9 strict mutation type で 100% を維持する (Recall ベンチマークの節を参照)
-- baseline 失効: `reviewAfter` を過ぎた entry は gate に refire する。
-  paydown は明示的な PR で進め、期限切れの自動再点火に頼らない
+- baseline は v2 schema で期限管理を撤廃済。entry が載ったままになる抑止は
+  `priority='high'` + 明示 PR による paydown schedule で行う。新規 issue を
+  baseline に逃がすのではなく、artifact registry / normalizer / extractor /
+  翻訳追従で解消する (Phase 4 完了後は `entries.length === 0` 維持)
 - snapshot drift で baseline が invalidate された場合は translate-first を原則とし、
   rebaseline は justification 必須の例外として扱う
 
