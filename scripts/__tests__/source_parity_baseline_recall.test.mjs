@@ -36,7 +36,7 @@ const BASELINE_ELIGIBLE = new Set([
   'segment-shifted',
   'segment-untranslated',
   'segment-token-gap',
-  'segment-inconclusive',
+  // v2: segment-inconclusive is no longer baseline-able
 ]);
 
 function loadManifest() {
@@ -67,9 +67,8 @@ function buildBaselineEntries(slug, issues, snapshotFingerprint) {
         ? [...new Set(issue.missingTokens)].sort()
         : null,
       snapshotFingerprint,
-      inconclusiveCategory: issue.inconclusiveCategory ?? null,
-      inconclusiveReason: issue.inconclusiveReason ?? null,
-      reviewAfter: '2026-10-06',
+      // v2: priority required; reviewAfter / inconclusive* fields gone.
+      priority: 'medium',
     }));
 }
 
@@ -130,7 +129,6 @@ describe('baseline does not absorb new mutations', () => {
           newIssues,
           baselineEntries,
           snapshotFingerprint,
-          '2026-04-06',
         );
         const activeIssues = tagged.tagged.filter((issue) => issue.baselined !== true);
 
