@@ -909,9 +909,158 @@ function buildParityFollowup(parity, options = {}) {
   };
 }
 
+/**
+ * Build the `enPatchRecovery` / `sourceSyncRecovery` sections consumed by
+ * `sourceSyncHealth` (Phase B, Task 4). The aggregator in
+ * `scripts/check_upstream_recovery.mjs` emits `upstream-recovery-status.json`
+ * with per-entry `statusA` (active/stale/unknown) and `statusB`
+ * (current/overdue). Here we collapse that into family-level counters plus
+ * small arrays of stale/overdue entries for inclusion in the issue body.
+ *
+ * Missing / empty input is legitimate (local dev, PR CI without the artifact);
+ * both sections degrade to `null` and `shouldOpenIssue` is unchanged by this
+ * family.
+ *
+ * @param {object|null|undefined} upstreamRecovery — parsed upstream-recovery-status.json
+ * @param {number} [maxEntries] — cap on emitted stale/overdue lists
+ * @returns {{ enPatchRecovery: object|null, sourceSyncRecovery: object|null }}
+ */
+function buildUpstreamRecoverySections(upstreamRecovery, maxEntries = 10) {
+  if (
+    !upstreamRecovery ||
+    typeof upstreamRecovery !== 'object' ||
+    !upstreamRecovery.mechanisms
+  ) {
+    return { enPatchRecovery: null, sourceSyncRecovery: null };
+  }
+  const enPatchRows = Array.isArray(upstreamRecovery.mechanisms.en_source_patches)
+    ? upstreamRecovery.mechanisms.en_source_patches
+    : [];
+  const syncRows = Array.isArray(upstreamRecovery.mechanisms.source_sync_exclusions)
+    ? upstreamRecovery.mechanisms.source_sync_exclusions
+    : [];
+
+  const projectEnEntry = (e) => ({
+    id: e.id,
+    slugs: Array.isArray(e.slugs) ? [...e.slugs] : [],
+    reviewAfter: e.reviewAfter ?? null,
+    daysUntilReview: typeof e.daysUntilReview === 'number' ? e.daysUntilReview : null,
+  });
+  const projectSyncEntry = (e) => ({
+    slug: e.slug,
+    reviewAfter: e.reviewAfter ?? null,
+    daysUntilReview: typeof e.daysUntilReview === 'number' ? e.daysUntilReview : null,
+    fetchStatus: e.fetchStatus ?? 'unknown',
+  });
+
+  const enStale = enPatchRows.filter((e) => e.statusA === 'stale');
+  const enOverdue = enPatchRows.filter((e) => e.statusB === 'overdue');
+  const enUnknown = enPatchRows.filter((e) => e.statusA === 'unknown');
+
+  const syncStale = syncRows.filter((e) => e.statusA === 'stale');
+  const syncOverdue = syncRows.filter((e) => e.statusB === 'overdue');
+  const syncUnknown = syncRows.filter((e) => e.statusA === 'unknown');
+
+  return {
+    enPatchRecovery: {
+      totalPatches: enPatchRows.length,
+      activePatches: enPatchRows.filter((e) => e.statusA === 'active').length,
+      stalePatches: enStale.length,
+      overduePatches: enOverdue.length,
+      unknownPatches: enUnknown.length,
+      stale: enStale.slice(0, maxEntries).map(projectEnEntry),
+      overdue: enOverdue.slice(0, maxEntries).map(projectEnEntry),
+    },
+    sourceSyncRecovery: {
+      totalExclusions: syncRows.length,
+      activeExclusions: syncRows.filter((e) => e.statusA === 'active').length,
+      staleExclusions: syncStale.length,
+      overdueExclusions: syncOverdue.length,
+      unknownExclusions: syncUnknown.length,
+      stale: syncStale.slice(0, maxEntries).map(projectSyncEntry),
+      overdue: syncOverdue.slice(0, maxEntries).map(projectSyncEntry),
+    },
+  };
+}
+
+/**
+ * Render the markdown fragment added to the sourceSyncHealth issue body when
+ * `upstreamRecovery` has non-zero stale / overdue entries (Phase B Task 4).
+ * Returns [] when both sections are clean so the caller can spread it safely.
+ */
+function renderUpstreamRecoverySubsection({ enPatchRecovery, sourceSyncRecovery }) {
+  const lines = [];
+  const hasEnSignal =
+    enPatchRecovery &&
+    (enPatchRecovery.stalePatches > 0 || enPatchRecovery.overduePatches > 0);
+  const hasSyncSignal =
+    sourceSyncRecovery &&
+    (sourceSyncRecovery.staleExclusions > 0 ||
+      sourceSyncRecovery.overdueExclusions > 0);
+  if (!hasEnSignal && !hasSyncSignal) return lines;
+
+  lines.push('## 上流修正候補 (upstream recovery)', '');
+  lines.push(
+    '> `upstream-recovery-status.json` で検知された stale/overdue エントリー。' +
+      '運用手順は `docs/PARITY_GUIDE.md §許容機構` と ' +
+      '`docs/OPS_DESIGN.md §Weekly: Upstream recovery triage` を参照。',
+    '',
+  );
+  if (hasEnSignal) {
+    lines.push(
+      `- **en_source_patches:** ${enPatchRecovery.stalePatches} stale / ` +
+        `${enPatchRecovery.overduePatches} overdue / ` +
+        `${enPatchRecovery.totalPatches} total`,
+    );
+    if (enPatchRecovery.stale.length > 0) {
+      lines.push('  - stale:');
+      for (const e of enPatchRecovery.stale) {
+        const slugs = e.slugs.join(', ');
+        lines.push(`    - \`${e.id}\` (slugs: ${slugs}) — reviewAfter=${e.reviewAfter}`);
+      }
+    }
+    if (enPatchRecovery.overdue.length > 0) {
+      lines.push('  - overdue:');
+      for (const e of enPatchRecovery.overdue) {
+        lines.push(
+          `    - \`${e.id}\` reviewAfter=${e.reviewAfter} ` +
+            `daysUntilReview=${e.daysUntilReview}`,
+        );
+      }
+    }
+  }
+  if (hasSyncSignal) {
+    lines.push(
+      `- **source_sync_exclusions:** ${sourceSyncRecovery.staleExclusions} stale / ` +
+        `${sourceSyncRecovery.overdueExclusions} overdue / ` +
+        `${sourceSyncRecovery.totalExclusions} total`,
+    );
+    if (sourceSyncRecovery.stale.length > 0) {
+      lines.push('  - stale:');
+      for (const e of sourceSyncRecovery.stale) {
+        lines.push(
+          `    - \`${e.slug}\` fetchStatus=${e.fetchStatus} reviewAfter=${e.reviewAfter}`,
+        );
+      }
+    }
+    if (sourceSyncRecovery.overdue.length > 0) {
+      lines.push('  - overdue:');
+      for (const e of sourceSyncRecovery.overdue) {
+        lines.push(
+          `    - \`${e.slug}\` reviewAfter=${e.reviewAfter} ` +
+            `daysUntilReview=${e.daysUntilReview}`,
+        );
+      }
+    }
+  }
+  lines.push('');
+  return lines;
+}
+
 export function buildActionableReport(snapshot, parity, auditManifest, options = {}) {
   const maxEntries = options.maxEntries ?? 10;
   const sourceSync = options.sourceSync ?? {};
+  const upstreamRecovery = options.upstreamRecovery ?? null;
   const snapshotChanges = snapshot.changes ?? [];
   const parityFiles = parity.files ?? [];
   const parityIssueFiles = buildParityEntries(parityFiles, isReportableParityIssue);
@@ -1021,9 +1170,24 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
   const sourceSideDebtSummary = buildSourceSideDebtSummary(sourceSync);
   const hasSourceSideDebt = sourceSideDebtSummary.excludedPages > 0 ||
     (sourceSideDebtSummary.fetchErrorSlugs?.length ?? 0) > 0;
+
+  // Phase B (Task 4): upstream recovery signals are surfaced as subsections
+  // inside the existing sourceSyncHealth family — no new detection family,
+  // no new workflow. `buildUpstreamRecoverySections` returns {null,null} when
+  // upstreamRecovery is absent / empty, keeping the family body untouched.
+  const upstreamRecoverySections = buildUpstreamRecoverySections(
+    upstreamRecovery,
+    maxEntries,
+  );
+  const hasUpstreamRecoverySignal =
+    (upstreamRecoverySections.enPatchRecovery?.stalePatches ?? 0) > 0 ||
+    (upstreamRecoverySections.enPatchRecovery?.overduePatches ?? 0) > 0 ||
+    (upstreamRecoverySections.sourceSyncRecovery?.staleExclusions ?? 0) > 0 ||
+    (upstreamRecoverySections.sourceSyncRecovery?.overdueExclusions ?? 0) > 0;
+
   const syncShouldOpen =
     freshnessState === 'broken' || freshnessState === 'partial' || linkageBlocking ||
-    hasSourceSideDebt;
+    hasSourceSideDebt || hasUpstreamRecoverySignal;
 
   const sourceSyncBody = syncShouldOpen
     ? [
@@ -1045,11 +1209,19 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
         ...(hasSourceSideDebt
           ? [...renderSourceSideDebtSubsection(sourceSideDebtSummary, sourceSync.pages ?? []), '']
           : []),
+        // Phase B: upstream recovery subsection is also omitted when clean.
+        ...(hasUpstreamRecoverySignal
+          ? [...renderUpstreamRecoverySubsection(upstreamRecoverySections), '']
+          : []),
         '## アーティファクト',
         '',
         '- `source-sync-status.json`',
         '- `snapshot-diff-status.json`',
         '- `parity-check-status.json`',
+        ...(upstreamRecovery && typeof upstreamRecovery === 'object' &&
+            upstreamRecovery.mechanisms
+          ? ['- `upstream-recovery-status.json`']
+          : []),
       ].join('\n')
     : '';
 
@@ -1075,6 +1247,11 @@ export function buildActionableReport(snapshot, parity, auditManifest, options =
       },
       // source-side debt counter / slug list は独立フィールドで返す。
       sourceSideDebt: sourceSideDebtSummary,
+      // Phase B: upstream-recovery aggregator output (en_patches +
+      // sync_exclusions stale/overdue breakdown). `null` when
+      // upstream-recovery-status.json is absent.
+      enPatchRecovery: upstreamRecoverySections.enPatchRecovery,
+      sourceSyncRecovery: upstreamRecoverySections.sourceSyncRecovery,
     },
     snapshotDiff: {
       key: FAMILY_KEYS.SNAPSHOT_DIFF,
@@ -1248,12 +1425,18 @@ export function loadDetectionInputs({
   snapshotPath = path.join(ROOT_DIR, 'snapshot-diff-status.json'),
   parityPath = path.join(ROOT_DIR, 'parity-check-status.json'),
   sourceSyncPath = path.join(ROOT_DIR, 'source-sync-status.json'),
+  upstreamRecoveryPath = path.join(ROOT_DIR, 'upstream-recovery-status.json'),
   strict = false,
 } = {}) {
   const inputs = {
     snapshot: readJson(snapshotPath),
     parity: readJson(parityPath),
     sourceSync: readJson(sourceSyncPath),
+    // Phase B: upstream-recovery-status.json is optional. Absent file is a
+    // legitimate state (local dev, PR CI without the artifact). readJson()
+    // returns {} for missing files, which downstream consumers treat as
+    // "no signal" (graceful degradation).
+    upstreamRecovery: readJson(upstreamRecoveryPath),
   };
   if (strict) {
     const validation = validateDetectionInputs(inputs);

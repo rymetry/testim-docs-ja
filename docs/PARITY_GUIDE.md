@@ -222,6 +222,46 @@ patchCoverage snapshot:
 
 新規追加 `> 0` は即 PR block。`parity_artifact_registry` / `SOURCE_SYNC_EXCLUSIONS` / `en_source_patches` の新規 entry 追加は `[PENDING REVIEWER APPROVAL]` マーカー必須。
 
+## 許容機構 (2-mechanism design)
+
+EN upstream の欠陥を JA side に mirror させず吸収するため、本 repo は **2 機構のみ**を採用する。どちらも **"broken-EN retreat" という ONE purpose** に属し、粒度が異なるだけ (第 3 の許容機構追加は禁止 / `feedback_baseline_zero_increase` 参照)。
+
+### Mechanism 1: page-level freeze (`scripts/lib/source_sync_exclusions.mjs`)
+
+ページ全体が MadCap 出力で使い物にならない slug を snapshot 凍結対象として登録。snapshot fetch は行うが実際の file は上書きせず、`source-sync-status.json.pages[].fetchStatus` に `excluded-broken` / `excluded-recovered` を出力する。
+
+### Mechanism 2: segment-level patch (`scripts/lib/en_source_patches.mjs`)
+
+ページの一部に限定した MadCap authoring artifact (ZWSP 段落、broken pipe row、href-miswire 等) を抽出前に literal replace する。粒度を保ちつつ JA を source-first mirror させられる。
+
+### Lifecycle (entry 追加 → 上流修正 → 削除)
+
+1. **登録**: upstream 欠陥を人手で検証後、適切な mechanism に entry 追加 (`reviewAfter` を `addedAt` + 6 ヶ月で必ず設定)
+2. **自動検知**:
+   - `scripts/check_upstream_recovery.mjs` が毎 run で `upstream-recovery-status.json` を derive
+   - 各 entry に `statusA` (`active` / `stale` / `unknown`) と `statusB` (`current` / `overdue`) が付与される
+   - `en_source_patches_integration.test.mjs` は全 34 patches を slug-driven で scan (非 gating warning)
+3. **上流修正後の surfacing** (non-blocking):
+   - PR trigger: `.github/workflows/ci.yml` の sticky comment が hidden marker `<!-- upstream-recovery: sticky -->` で idempotent upsert
+   - Weekly trigger: `.github/workflows/scheduled-actionable.yml` が `upstream-recovery-status.json` を artifact upload し、`detection_reports.mjs` が `sourceSyncHealth` family 内の `enPatchRecovery` / `sourceSyncRecovery` section で managed issue に surface
+4. **人手削除**:
+   - registry entry を削除 (`pull-requests.md` 型の seeded pin test があれば併せて解除)
+   - `docs/superpowers/specs/upstream-defect-tracker.md` の対応 entry を archive 状態に更新
+   - 該当 JA file の parity check (`npm run check:parity`) が引き続き 0 issues であることを確認
+
+### 禁止事項
+
+- 第 3 の許容機構 (新 registry / 新 ack 経路) を追加すること
+- `reviewAfter` を将来の日付に延期して実質的な長期凍結にすること (`priority='high'` + PR paydown schedule で代替)
+- entry 削除前に upstream 修正を目視確認しないこと (`statusA: 'stale'` は signal であって confirmation ではない)
+
+### Status 判定と graceful degradation
+
+- `statusA`: `preprocessEnHtml` (en_patches) と `source-sync-status.json.fetchStatus` (exclusions) で決定
+- `statusB`: `reviewAfter` が UTC 00:00 を過ぎた瞬間に `overdue` (`check_patch_review_cadence.mjs::evaluatePatchReview` と同 semantic)
+- `source-sync-status.json` 不在時 (local dev / PR CI) は全 exclusion entry が `statusA: 'unknown'` になり、stale 判定には使われない (fail-safe)
+- Schema / 状態遷移図は `docs/superpowers/specs/2026-04-20-upstream-recovery-spec.md`
+
 ## 修正ワークフロー
 
 ### 単一ファイルの修正

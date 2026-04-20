@@ -747,10 +747,191 @@ describe('loadDetectionInputs', () => {
       snapshotPath: '/nonexistent/snapshot.json',
       parityPath: '/nonexistent/parity.json',
       sourceSyncPath: '/nonexistent/sync.json',
+      upstreamRecoveryPath: '/nonexistent/recovery.json',
     });
     assert.deepEqual(result.snapshot, {});
     assert.deepEqual(result.parity, {});
     assert.deepEqual(result.sourceSync, {});
+    assert.deepEqual(result.upstreamRecovery, {});
+  });
+
+  it('reads upstream-recovery-status.json when present (Phase B)', async () => {
+    const { mkdtempSync, writeFileSync } = await import('node:fs');
+    const { tmpdir } = await import('node:os');
+    const { join } = await import('node:path');
+    const tmp = mkdtempSync(join(tmpdir(), 'detection-inputs-recovery-'));
+    const payload = {
+      schemaVersion: 1,
+      generatedAt: '2026-04-20T00:00:00Z',
+      summary: { totalEntries: 0, activeEntries: 0, staleEntries: 0, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: { en_source_patches: [], source_sync_exclusions: [] },
+    };
+    writeFileSync(join(tmp, 'recovery.json'), JSON.stringify(payload));
+    const result = loadDetectionInputs({
+      snapshotPath: '/nonexistent/snapshot.json',
+      parityPath: '/nonexistent/parity.json',
+      sourceSyncPath: '/nonexistent/sync.json',
+      upstreamRecoveryPath: join(tmp, 'recovery.json'),
+    });
+    assert.deepEqual(result.upstreamRecovery, payload);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase B (Task 4): upstream recovery sections on sourceSyncHealth
+// ---------------------------------------------------------------------------
+
+describe('sourceSyncHealth — upstream recovery integration (Phase B)', () => {
+  const emptySnapshot = {
+    checkedAt: '2026-04-20T00:00:00Z',
+    summary: { totalSnapshots: 100, changed: 0, added: 0, removed: 0, unchanged: 100 },
+    changes: [],
+    sidebar: { changed: false, addedPages: [], removedPages: [] },
+  };
+  const emptyParity = {
+    summary: {
+      checkedAt: '2026-04-20T00:00:00Z',
+      actionableFiles: 0,
+      signalFiles: 0,
+      errorFiles: 0,
+    },
+    files: [],
+  };
+  const freshSync = {
+    schemaVersion: 1,
+    freshnessState: 'fresh',
+    summary: {
+      targetPages: 100,
+      fetchedPages: 100,
+      notFoundPages: 0,
+      errorPages: 0,
+      sidebarVerified: true,
+    },
+    errors: [],
+  };
+
+  it('enPatchRecovery / sourceSyncRecovery are null when upstreamRecovery is absent', () => {
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: freshSync,
+    });
+    assert.equal(report.sourceSyncHealth.enPatchRecovery, null);
+    assert.equal(report.sourceSyncHealth.sourceSyncRecovery, null);
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+  });
+
+  it('passes through empty mechanism lists without opening the issue', () => {
+    const upstreamRecovery = {
+      schemaVersion: 1,
+      generatedAt: '2026-04-20T00:00:00Z',
+      summary: { totalEntries: 0, activeEntries: 0, staleEntries: 0, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: { en_source_patches: [], source_sync_exclusions: [] },
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: freshSync,
+      upstreamRecovery,
+    });
+    assert.equal(report.sourceSyncHealth.enPatchRecovery.totalPatches, 0);
+    assert.equal(report.sourceSyncHealth.sourceSyncRecovery.totalExclusions, 0);
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+  });
+
+  it('opens the sourceSyncHealth issue when stalePatches > 0', () => {
+    const upstreamRecovery = {
+      schemaVersion: 1,
+      generatedAt: '2026-04-20T00:00:00Z',
+      summary: { totalEntries: 1, activeEntries: 0, staleEntries: 1, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [
+          {
+            id: 'UD-STALE',
+            mechanism: 'en_source_patches',
+            slugs: ['some/slug'],
+            statusA: 'stale',
+            statusB: 'current',
+            hits: 0,
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+        source_sync_exclusions: [],
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: freshSync,
+      upstreamRecovery,
+    });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    assert.equal(report.sourceSyncHealth.enPatchRecovery.stalePatches, 1);
+    assert.deepEqual(
+      report.sourceSyncHealth.enPatchRecovery.stale.map((e) => e.id),
+      ['UD-STALE'],
+    );
+    // Body must reference the stale patch id and link to the runbook docs.
+    assert.match(report.sourceSyncHealth.body, /UD-STALE/);
+    assert.match(report.sourceSyncHealth.body, /upstream recovery/);
+    assert.match(report.sourceSyncHealth.body, /`upstream-recovery-status\.json`/);
+  });
+
+  it('opens the sourceSyncHealth issue when overdueExclusions > 0', () => {
+    const upstreamRecovery = {
+      schemaVersion: 1,
+      generatedAt: '2026-04-20T00:00:00Z',
+      summary: { totalEntries: 1, activeEntries: 1, staleEntries: 0, overdueEntries: 1, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [],
+        source_sync_exclusions: [
+          {
+            slug: 'overdue/slug',
+            mechanism: 'source_sync_exclusions',
+            statusA: 'active',
+            statusB: 'overdue',
+            fetchStatus: 'excluded-broken',
+            addedAt: '2025-01-01',
+            reviewAfter: '2025-07-01',
+            daysUntilReview: -300,
+          },
+        ],
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: freshSync,
+      upstreamRecovery,
+    });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, true);
+    assert.equal(report.sourceSyncHealth.sourceSyncRecovery.overdueExclusions, 1);
+    assert.match(report.sourceSyncHealth.body, /overdue\/slug/);
+  });
+
+  it('does not open the issue when only unknown entries are reported (fail-safe)', () => {
+    const upstreamRecovery = {
+      schemaVersion: 1,
+      generatedAt: '2026-04-20T00:00:00Z',
+      summary: { totalEntries: 1, activeEntries: 0, staleEntries: 0, overdueEntries: 0, unknownEntries: 1 },
+      mechanisms: {
+        en_source_patches: [
+          {
+            id: 'UD-UNK',
+            mechanism: 'en_source_patches',
+            slugs: ['some/slug'],
+            statusA: 'unknown',
+            statusB: 'current',
+            hits: 0,
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+        source_sync_exclusions: [],
+      },
+    };
+    const report = buildActionableReport(emptySnapshot, emptyParity, [], {
+      sourceSync: freshSync,
+      upstreamRecovery,
+    });
+    assert.equal(report.sourceSyncHealth.shouldOpenIssue, false);
+    assert.equal(report.sourceSyncHealth.enPatchRecovery.unknownPatches, 1);
+    assert.equal(report.sourceSyncHealth.enPatchRecovery.stalePatches, 0);
   });
 });
 

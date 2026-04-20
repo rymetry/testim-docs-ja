@@ -21,9 +21,12 @@ const OUTPUTS = {
 };
 
 export function generateDetectionReports({ strict = false } = {}) {
-  const { snapshot, parity, sourceSync } = loadDetectionInputs({ strict });
+  const { snapshot, parity, sourceSync, upstreamRecovery } = loadDetectionInputs({ strict });
   const auditManifest = buildAuditManifest(snapshot, parity);
-  const actionableReport = buildActionableReport(snapshot, parity, auditManifest, { sourceSync });
+  const actionableReport = buildActionableReport(snapshot, parity, auditManifest, {
+    sourceSync,
+    upstreamRecovery,
+  });
   const summaryMarkdown = renderSummaryMarkdown(
     snapshot,
     parity,

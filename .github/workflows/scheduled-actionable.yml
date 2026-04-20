@@ -54,6 +54,15 @@ jobs:
         run: npm run check:parity
         continue-on-error: true
 
+      - name: Check upstream recovery (non-blocking)
+        # Phase B (Task 4): upstream-recovery-status.json feeds the
+        # sourceSyncHealth family's enPatchRecovery / sourceSyncRecovery
+        # subsections. Aggregator exits 0 even on failure — see
+        # scripts/check_upstream_recovery.mjs runCheckUpstreamRecovery catch.
+        id: upstream_recovery
+        run: npm run check:upstream-recovery
+        continue-on-error: true
+
       - name: Generate detection summary (strict)
         # §2 fail-closed: --strict makes loadDetectionInputs validate
         # snapshot-diff-status.json, parity-check-status.json, and (when
@@ -106,6 +115,7 @@ jobs:
             source-sync-status.json
             snapshot-diff-status.json
             parity-check-status.json
+            upstream-recovery-status.json
             docs-actionable-report.json
             docs-update-summary.md
             docs-audit-manifest.json
