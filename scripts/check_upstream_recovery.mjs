@@ -41,8 +41,15 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'upstream-recovery-status.json');
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
- * Days between `dateStr` (YYYY-MM-DD) and `now`. Positive when dateStr is in the
- * past (overdue). Returns 0 for invalid / missing dates to keep callers fail-safe.
+ * Days between `dateStr` (YYYY-MM-DD) and `now`.
+ *
+ * - Positive when `dateStr` is in the past (overdue).
+ * - `0` on the same UTC day.
+ * - Negative when `dateStr` is in the future (not yet due).
+ * - `0` for invalid / missing dates (fail-safe — callers use `> 0` to mean overdue).
+ *
+ * `new Date('YYYY-MM-DD')` is parsed as UTC midnight per ES2015+, so the result
+ * is timezone-independent.
  *
  * @param {string | null | undefined} dateStr
  * @param {number} nowMs
@@ -170,6 +177,10 @@ export function computeEnPatchStatus({
 export function computeSyncExclusionStatus({
   nowMs = Date.now(),
   exclusions = SOURCE_SYNC_EXCLUSIONS,
+  // NOTE: the I/O-bearing default `loadSourceSyncStatus()` is evaluated once
+  // per call-without-argument. All tests inject `sourceSyncStatus` directly
+  // (no fs touches from unit tests); the default is reached only from the
+  // CLI path (buildUpstreamRecoveryStatus → computeSyncExclusionStatus).
   sourceSyncStatus = loadSourceSyncStatus(),
 } = {}) {
   const pages = Array.isArray(sourceSyncStatus?.pages) ? sourceSyncStatus.pages : [];

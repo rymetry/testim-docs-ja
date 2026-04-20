@@ -39,12 +39,14 @@ derived view にまとめるための JSON schema を定める。
 
 ## JSON Schema
 
+**Shape (illustrative counters — actual values vary per run):**
+
 ```jsonc
 {
   "schemaVersion": 1,
   "generatedAt": "ISO-8601 UTC timestamp",
   "summary": {
-    "totalEntries": 35,             // en_patches (34) + sync_exclusions (1)
+    "totalEntries": 35,             // en_patches (N) + sync_exclusions (M)
     "activeEntries": 34,            // statusA === 'active'
     "staleEntries": 0,              // statusA === 'stale' (Axis A signal)
     "overdueEntries": 0,            // statusB === 'overdue' (Axis B signal)

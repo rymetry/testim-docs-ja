@@ -130,6 +130,24 @@ describe('formatWarning', () => {
     assert.ok(line.includes('slug=some/slug'), `missing slug: ${line}`);
     assert.ok(line.startsWith('[source_sync_exclusions]'), `missing prefix: ${line}`);
   });
+
+  it('prefers id over slug when both are set (disjoint shapes by contract)', () => {
+    const line = formatWarning({
+      id: 'UD-Y',
+      slug: 'should-not-appear',
+      reviewAfter: '2020-01-01',
+      daysOverdue: 1,
+    });
+    assert.ok(line.startsWith('[en_source_patches]'), `id must win: ${line}`);
+    assert.ok(line.includes('patch=UD-Y'));
+    assert.ok(!line.includes('should-not-appear'));
+  });
+
+  it('emits an explicit unknown-entry label when neither id nor slug is set', () => {
+    const line = formatWarning({ reviewAfter: '2020-01-01', daysOverdue: 7 });
+    assert.ok(line.startsWith('[registry-review-cadence]'), `missing prefix: ${line}`);
+    assert.ok(line.includes('entry=<unknown>'), `missing unknown marker: ${line}`);
+  });
 });
 
 // ---------------------------------------------------------------------------

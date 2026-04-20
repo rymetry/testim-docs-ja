@@ -908,6 +908,11 @@ export function createEnSourcePatchCoverage() {
       mismatches.push({ slug, patchId, reason });
     },
     snapshot() {
+      // snapshot() advertises a point-in-time view; we defensively copy every
+      // mutable surface so that subsequent recordHit/recordMismatch calls on
+      // the coverage instance cannot retroactively mutate an already-returned
+      // snapshot. (Callers that serialise the snapshot to JSON don't notice,
+      // but programmatic consumers would.)
       const byPatchId = {};
       const byPatchIdStatus = seedByPatchIdStatus();
       const bySlug = {};
@@ -926,14 +931,14 @@ export function createEnSourcePatchCoverage() {
           byPatchIdStatus[h.patchId] = { matched: true, hits: h.hits };
         }
       }
-      return {
+      return Object.freeze({
         registryEntries: EN_SOURCE_PATCHES.length,
         matchedHits,
-        byPatchId,
-        byPatchIdStatus,
-        bySlug,
-        mismatches: mismatches.slice(),
-      };
+        byPatchId: Object.freeze(byPatchId),
+        byPatchIdStatus: Object.freeze(byPatchIdStatus),
+        bySlug: Object.freeze(bySlug),
+        mismatches: mismatches.map((m) => ({ ...m })),
+      });
     },
   };
 }

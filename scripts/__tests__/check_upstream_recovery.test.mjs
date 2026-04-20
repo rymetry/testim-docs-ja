@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -10,6 +10,7 @@ import {
   computeEnPatchStatus,
   computeSyncExclusionStatus,
   buildUpstreamRecoveryStatus,
+  runCheckUpstreamRecovery,
 } from '../check_upstream_recovery.mjs';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -42,7 +43,6 @@ describe('daysSince / daysUntil', () => {
 });
 
 describe('computeEnPatchStatus — Axis A × Axis B matrix', () => {
-  const tmp = mkdtempSync(join(tmpdir(), 'upstream-recovery-en-'));
   const patch = Object.freeze({
     id: 'TEST-PATCH',
     slugs: Object.freeze(['fake/slug-a', 'fake/slug-b']),
@@ -172,6 +172,65 @@ describe('computeSyncExclusionStatus — fetchStatus mapping', () => {
       sourceSyncStatus: { pages: [{ slug: 'test/slug', fetchStatus: 'excluded-broken' }] },
     });
     assert.equal(result[0].statusB, 'overdue');
+  });
+});
+
+describe('runCheckUpstreamRecovery — I/O contract (write + log)', () => {
+  it('writes the aggregated payload to outputPath as pretty JSON with trailing newline', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'upstream-recovery-io-'));
+    const outputPath = join(tmp, 'upstream-recovery-status.json');
+    const stdoutLines = [];
+    const snapshotsRoot = mkdtempSync(join(tmpdir(), 'upstream-recovery-io-root-'));
+
+    const payload = runCheckUpstreamRecovery({
+      outputPath,
+      stdout: (msg) => stdoutLines.push(msg),
+      nowMs: NOW,
+      snapshotsRoot,
+      patches: [
+        Object.freeze({
+          id: 'TEST',
+          slugs: Object.freeze(['absent/slug']),
+          defectClass: 'typo',
+          find: '<p>x</p>',
+          replace: '<p>y</p>',
+          rationale: '',
+          linkedDefect: '',
+          addedAt: '2026-01-01',
+          reviewAfter: '2026-07-01',
+        }),
+      ],
+      exclusions: {
+        'test/slug': {
+          reason: 'broken-upstream-source',
+          note: '',
+          expectedIssueType: 'snapshot-incomplete',
+          expectedReason: 'extractor-empty',
+          addedAt: '2026-01-01',
+          reviewAfter: '2026-07-01',
+          linkedIssue: 1,
+        },
+      },
+      sourceSyncStatus: null,
+    });
+
+    assert.ok(existsSync(outputPath), 'outputPath must be written');
+    const raw = readFileSync(outputPath, 'utf8');
+    assert.ok(raw.endsWith('\n'), 'file must end with a single newline');
+    const written = JSON.parse(raw);
+    assert.deepEqual(written, payload, 'written JSON must round-trip with returned payload');
+    assert.equal(written.schemaVersion, 1);
+    assert.equal(written.summary.totalEntries, 2);
+
+    // stdout log line must include the summary counters so CI log scrapers
+    // can assert "active=N stale=N overdue=N unknown=N" without parsing JSON.
+    assert.equal(stdoutLines.length, 1);
+    const line = stdoutLines[0];
+    assert.ok(line.includes('total='), `expected total= token: ${line}`);
+    assert.ok(line.includes('active='), `expected active= token: ${line}`);
+    assert.ok(line.includes('stale='), `expected stale= token: ${line}`);
+    assert.ok(line.includes('overdue='), `expected overdue= token: ${line}`);
+    assert.ok(line.includes('unknown='), `expected unknown= token: ${line}`);
   });
 });
 

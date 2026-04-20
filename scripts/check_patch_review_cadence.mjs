@@ -104,6 +104,14 @@ export function collectOverdueSyncExclusions(
  * `source_sync_exclusions` row (keyed by `slug`). The shape is detected
  * from which field is present.
  *
+ * Precedence / validation:
+ *   - `id` wins over `slug` (en_source_patches is the segment-level mechanism
+ *     and its `id` uniquely names the patch; sync_exclusions has no `id`
+ *     by construction, so the two shapes are disjoint in every current caller).
+ *   - If neither `id` nor `slug` is set, an explicit "unknown-entry" label is
+ *     emitted instead of silently stringifying `undefined`. This surfaces a
+ *     programming error rather than hiding it in a log line.
+ *
  * @param {{ id?: string, slug?: string, reviewAfter: string, daysOverdue: number }} entry
  * @returns {string}
  */
@@ -111,7 +119,10 @@ export function formatWarning(entry) {
   if (entry.id) {
     return `[en_source_patches] reviewAfter overdue: patch=${entry.id} reviewAfter=${entry.reviewAfter} daysOverdue=${entry.daysOverdue}`;
   }
-  return `[source_sync_exclusions] reviewAfter overdue: slug=${entry.slug} reviewAfter=${entry.reviewAfter} daysOverdue=${entry.daysOverdue}`;
+  if (entry.slug) {
+    return `[source_sync_exclusions] reviewAfter overdue: slug=${entry.slug} reviewAfter=${entry.reviewAfter} daysOverdue=${entry.daysOverdue}`;
+  }
+  return `[registry-review-cadence] reviewAfter overdue: entry=<unknown> reviewAfter=${entry.reviewAfter ?? '<none>'} daysOverdue=${entry.daysOverdue ?? 0}`;
 }
 
 /**
