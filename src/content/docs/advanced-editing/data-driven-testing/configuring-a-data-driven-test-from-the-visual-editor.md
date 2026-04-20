@@ -80,7 +80,7 @@ CSV or Excel ファイルをアップロードしてテストデータを追加�
 - 2 行目以降 - 各行が単一のデータセットに変換されます（キー値）。最大 1200 行。
 
 :::note
-この方式では、ファイルが変更されてもアップロード済みのデータは更新されません。更新のたびにファイルを再アップロードする必要があります。これに対し、設定ファイル方式（[Data Driven tests using data from an external source](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source) を参照）を使用すると、ファイルは実行ごとに自動で解析されます。
+この方式では、ファイルが変更されてもアップロード済みのデータは更新されません。更新のたびにファイルを再アップロードする必要があります。これに対し、設定ファイル方式（[外部ソースのデータを使用したデータ駆動テストの構成](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source) を参照）を使用すると、ファイルは実行ごとに自動で解析されます。
 :::
 
 **ファイルをアップロードしてテストデータを追加するには:**

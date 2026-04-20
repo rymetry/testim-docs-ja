@@ -411,10 +411,10 @@ testim --token "7jyBS1mzOb5f6wOGE3o8ybE2tSRuWAY5rZteT1jwd4FAAJ2mPn" --project "E
 
 **例えば:**
 
-ラベル A - テストが含まれています: 1,2,3,4 ラベル B - テストが含まれています: 5,6,7 ラベル C - テストが含まれています: 3,4,5 ラベル D - テストが含まれています: 8,9 テスト計画 P はラベル A と B を含んでいます。 したがって、テスト計画 P を --intersect-with-label C で実行する場合 ==> テスト 3,4,5 が実行されます。テスト計画 P を --intersect-with-label D で実行する場合 ==> テストは実行されません。複数の交差フラグを追加することが可能です。 例えば、テスト計画 P を --intersect-with-label C --intersect-with-label A で実行する場合、Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
+ラベル `A` - テストが含まれています: 1,2,3,4 ラベル `B` - テストが含まれています: 5,6,7 ラベル `C` - テストが含まれています: 3,4,5 ラベル `D` - テストが含まれています: 8,9 テスト計画 `P` はラベル `A` と `B` を含んでいます。 したがって、テスト計画 `P` を `--intersect-with-label` `C` で実行する場合 ==> テスト 3,4,5 が実行されます。テスト計画 `P` を `--intersect-with-label` `D` で実行する場合 ==> テストは実行されません。複数の交差フラグを追加することが可能です。 例えば、テスト計画 `P` を `--intersect-with-label` `C` `--intersect-with-label` `A` で実行する場合、Testim は元の実行コマンド内のテストを確認してから、交差フラグを 1 つずつ計算します。
 
 :::note
-交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、--intersect-with-label A と --intersect-with-label B がある場合、Testim は要求されたテストと交差する A または B のすべてのテストを実行します。
+交差はフラグ間ではなく、フラグと要求されたテスト間で実行されます。したがって、`--intersect-with-label` `A` と `--intersect-with-label` `B` がある場合、Testim は要求されたテストと交差する `A` または `B` のすべてのテストを実行します。
 :::
 
 #### intersect-with-operand

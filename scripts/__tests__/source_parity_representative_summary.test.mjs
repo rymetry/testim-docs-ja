@@ -112,6 +112,11 @@ const RESOLVED_PAGES = Object.freeze([
   // M2 Tier B Wave 1: arrow-fusion burn-down で 4→0 (section-structure-mismatch ×2,
   //   segment-extra ×2) に clean 化 — RESIDUAL から移動
   'administration/project-and-user-management',
+  // M2.5-C content burndown: intersect-with flag セクションの label placeholder
+  // (A/B/C/D/P) を inline-code で invariant token 化し、segment-untranslated ×3 を
+  // 解消。source-first の token 忠実度は維持 (`--intersect-with-label` + 別 token
+  // で EN `<em>--intersect-with-label</em> A` の 2-token 構造に合わせる)。
+  'running-tests/the-command-line-cli',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -125,7 +130,9 @@ const RESIDUAL_PAGES = Object.freeze([
   // PR #337 rework: running-tests/the-command-line-cli を RESIDUAL に復帰。
   // Bundle 3 の content rewrite (ラベル A-D → 甲-丁) は TRANSLATION_GUIDE §28
   // に違反するため revert。3 件の segment-untranslated baseline を凍結運用する。
-  { slug: 'running-tests/the-command-line-cli', requiredBaselinedTypes: ['segment-untranslated'] },
+  // M2.5-C: running-tests/the-command-line-cli を RESOLVED_PAGES に昇格。
+  // label placeholder を inline-code (invariant token) で wrap することで
+  // TRANSLATION_GUIDE §28 (token 忠実度) を維持しつつ segment-untranslated を解消。
   // T15 pin は M2 Tier B Wave 1 で `administration/project-and-user-management`
   // を 4→0 に clean 化して解消。RESOLVED に移動済み。他の
   // section-structure-mismatch / segment-extra 代表 pin が必要になったら

@@ -451,7 +451,7 @@ keywords:
     Press (Key press)
    </td>
    <td>
-    キーボードキー押下時（Enter、Tab、ESC、Page Up、Page Down など）
+    キーボードキー押下時（エンターキー、タブキー、エスケープキー、ページアップキー、ページダウンキーなど）
    </td>
   </tr>
   <tr>
