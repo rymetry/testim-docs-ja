@@ -79,7 +79,15 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 ## Core Invariants (from `docs/SYSTEM_SPEC.md`)
 
 本プロジェクトのコア仕様。全作業はこれらの不変量を維持する方向で行う。
-**仕様変更が必要と判断した場合は、必ずユーザーに確認してから実施すること。** 提案は歓迎するが、承認なしに不変量を変更・緩和してはならない。
+
+**仕様変更ポリシー**: 以下に該当する変更は、必ずユーザーに提案し承認を得てから実施すること。提案自体は歓迎する。
+
+- 不変量の値や条件を変更する（例: counter の期待値を 0 以外にする、gate predicate を緩和する）
+- suppression mechanism を追加・廃止する（2-mechanism 契約の変更）
+- baseline 運用ルールを変更する（例: entries > 0 を許容する方針転換）
+- `docs/SYSTEM_SPEC.md` または `docs/PARITY_GUIDE.md` の仕様記述を書き換える
+
+以下は承認不要（通常の運用作業）: GLOSSARY/INVARIANT_TOKENS への用語・パターン追加、content 修正による parity issue 解消、EN source patch の追加・削除。
 
 **5-counter = 0 DoD**: 以下の 5 counter は全て 0 を維持する。
 
