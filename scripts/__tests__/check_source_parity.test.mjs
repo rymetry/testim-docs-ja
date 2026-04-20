@@ -25,7 +25,7 @@ before(async () => {
     computeParityResult,
     buildRunScope,
     PARITY_CHECK_STATUS_SCHEMA_VERSION,
-  } = await import('../check_source_parity.mjs'));
+  } = await import('../detection/check_source_parity.mjs'));
 });
 
 describe('parseArgs', () => {
@@ -751,7 +751,7 @@ describe('gate exit code contract (snapshotUnusable* は gate を変えない)',
 
 describe('parity-check-status.json — debug.artifactCoverage emit (Phase 4)', () => {
   it('status.debug.artifactCoverage has runtime aggregate shape', async () => {
-    const { default: main } = await import('../check_source_parity.mjs');
+    const { default: main } = await import('../detection/check_source_parity.mjs');
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'parity-artifact-'));
     const outputPath = path.join(tmp, 'parity-check-status.json');
     try {
@@ -775,7 +775,7 @@ describe('parity-check-status.json — debug.artifactCoverage emit (Phase 4)', (
 
 describe('parity-check-status.json — debug.baselineSchemaVersion is 2 (v2 cutover)', () => {
   it('status.debug.baselineSchemaVersion === 2 when baseline is loaded', async () => {
-    const { default: main } = await import('../check_source_parity.mjs');
+    const { default: main } = await import('../detection/check_source_parity.mjs');
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'parity-baseline-schema-'));
     const outputPath = path.join(tmp, 'parity-check-status.json');
     try {

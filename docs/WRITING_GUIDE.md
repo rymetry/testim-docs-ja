@@ -50,7 +50,7 @@
 
 ## 📋 frontmatter 必須ルール
 
-すべての記事ファイルには以下の frontmatter が必須です。`src/content.config.ts` と `scripts/lint_docs.mjs` の両方で検証されます。
+すべての記事ファイルには以下の frontmatter が必須です。`src/content.config.ts` と `scripts/tools/lint_docs.mjs` の両方で検証されます。
 
 ```yaml
 ---
@@ -377,7 +377,7 @@ check:parity で [reason=...] token 付与？
 レビューや作業中に新しい記法ルールや品質基準が判明した場合は、本ガイドに追記してください。
 
 1. 該当セクション（callout、リンク、原文準拠等）にルールを追加する
-2. `npm run lint:docs` で機械検証可能なら `scripts/lint_docs.mjs` にもチェックを追加する
+2. `npm run lint:docs` で機械検証可能なら `scripts/tools/lint_docs.mjs` にもチェックを追加する
 3. 変更を main にコミットする（`docs: WRITING_GUIDE ルール追加`）
 
 ---
@@ -541,14 +541,14 @@ callout タイトルでの PRO 機能表記は `PRO機能` に統一:
 
 ### 表記揺れの検出と修正
 
-大量の表記揺れを修正する場合は `scripts/fix-notation.py` と `scripts/verify-notation.py` を使用する。
+大量の表記揺れを修正する場合は `scripts/tools/fix_notation.py` と `scripts/tools/verify_notation.py` を使用する。
 
 ```bash
 # 修正実行
-python3 scripts/fix-notation.py
+python3 scripts/tools/fix_notation.py
 
 # 修正結果を検証
-python3 scripts/verify-notation.py
+python3 scripts/tools/verify_notation.py
 ```
 
 注意点:

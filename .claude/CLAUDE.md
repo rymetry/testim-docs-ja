@@ -43,7 +43,7 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 - **検索**: `src/components/SearchModal.tsx`（React）でクライアントサイド MiniSearch を実装。データは `/api/search.json` から。
 - **レイアウト**: `src/layouts/DocsLayout.astro` が全ドキュメントページをサイドバー（`src/components/navigation/NavSidebar.astro`）と目次（`TableOfContents.astro`）で包む。
 - **認証モード**: 環境変数 `BASIC_AUTH_ENABLED` で SSR+認証（レビュー用）と静的（本番）を切り替え。`src/middleware.ts` 参照。
-- **ドキュメントパイプライン**: `scripts/pipeline.mjs` が翻訳ワークフロー全体をオーケストレーション: EN ソース取得 → プレースホルダー生成 (`generate_untranslated_placeholders.mjs`) → LLM タスク準備 (`prepare_llm_tasks.mjs`) → LLM 翻訳適用 (`apply_llm_translations.mjs`)。`scripts/.checkpoint` によるチェックポイントベースのレジューム対応。
+- **ドキュメントパイプライン**: `scripts/pipeline/pipeline.mjs` が翻訳ワークフロー全体をオーケストレーション: EN ソース取得 → プレースホルダー生成 (`generate_untranslated_placeholders.mjs`) → LLM タスク準備 (`prepare_llm_tasks.mjs`) → LLM 翻訳適用 (`apply_llm_translations.mjs`)。`scripts/.checkpoint` によるチェックポイントベースのレジューム対応。
 - **スナップショットパイプライン**:
   - **Content**: 各 EN ページ HTML から `#mc-main-content` を抽出、`snapshots/en/content/{folder}/{basename}.html` に保存。
   - **Sidebar**: MadCap Flare TOC データをパース（`scripts/lib/madcap_toc.mjs`）、`snapshots/en/sidebar.json` に保存。

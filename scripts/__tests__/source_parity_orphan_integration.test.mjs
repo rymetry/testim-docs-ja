@@ -35,7 +35,7 @@ import { join } from 'node:path';
 let checkSourceParity;
 
 before(async () => {
-  ({ checkSourceParity } = await import('../check_source_parity.mjs'));
+  ({ checkSourceParity } = await import('../detection/check_source_parity.mjs'));
 });
 
 // sha256 フィンガープリントを同期的に計算する小さなユーティリティ。

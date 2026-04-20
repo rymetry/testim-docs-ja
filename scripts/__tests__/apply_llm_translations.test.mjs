@@ -19,7 +19,7 @@ async function captureWarnings(run) {
 
 before(async () => {
   ({ resolveTranslationSlug, validateTranslation, writeFileAtomic, processOneTranslation } =
-    await import('../apply_llm_translations.mjs'));
+    await import('../pipeline/apply_llm_translations.mjs'));
 });
 
 // --- resolveTranslationSlug ---

@@ -265,7 +265,7 @@ describe('check_source_parity.mjs --slug — runtime integration', { skip: 'M2.5
       const result = spawnSync(
         process.execPath,
         [
-          join(ROOT, 'scripts/check_source_parity.mjs'),
+          join(ROOT, 'scripts/detection/check_source_parity.mjs'),
           '--slug=advanced-editing/parameters/hidden-parameters',
           '--json',
         ],
@@ -323,7 +323,7 @@ describe('check_source_parity.mjs --slug — runtime integration', { skip: 'M2.5
       const result = spawnSync(
         process.execPath,
         [
-          join(ROOT, 'scripts/check_source_parity.mjs'),
+          join(ROOT, 'scripts/detection/check_source_parity.mjs'),
           '--slug=advanced-editing/parameters/hidden-parameters',
           '--fail-on=actionable',
         ],
@@ -373,7 +373,7 @@ describe('check_source_parity.mjs --slug — runtime integration', { skip: 'M2.5
       const result = spawnSync(
         process.execPath,
         [
-          join(ROOT, 'scripts/check_source_parity.mjs'),
+          join(ROOT, 'scripts/detection/check_source_parity.mjs'),
           '--slug=advanced-editing/validations/add-network-validation',
           '--json',
           '--include-advisory',
@@ -414,7 +414,7 @@ describe('check_source_parity.mjs --slug — runtime integration', { skip: 'M2.5
       const result = spawnSync(
         process.execPath,
         [
-          join(ROOT, 'scripts/check_source_parity.mjs'),
+          join(ROOT, 'scripts/detection/check_source_parity.mjs'),
           '--slug=advanced-editing/validations/add-network-validation',
           '--include-advisory',
           '--fail-on=actionable',

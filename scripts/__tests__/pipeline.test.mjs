@@ -1,5 +1,5 @@
 /**
- * tests for scripts/pipeline.mjs
+ * tests for scripts/pipeline/pipeline.mjs
  *
  * Exported API:
  *   parseArgs(argv: string[]): { mode: string, section: string | null, resume: boolean }
@@ -25,7 +25,7 @@ import path from 'node:path';
 let parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps;
 before(async () => {
   ({ parseArgs, loadCheckpoint, saveCheckpoint, getPendingSteps } = await import(
-    '../pipeline.mjs'
+    '../pipeline/pipeline.mjs'
   ));
 });
 

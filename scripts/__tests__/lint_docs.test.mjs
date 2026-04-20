@@ -1,5 +1,5 @@
 /**
- * tests for scripts/lint_docs.mjs
+ * tests for scripts/tools/lint_docs.mjs
  *
  * Exported API:
  *   lintContent(content: string, filePath: string, context?: LintContext): LintError[]
@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 let lintContent;
 let toKebab;
 before(async () => {
-  ({ lintContent, toKebab } = await import('../lint_docs.mjs'));
+  ({ lintContent, toKebab } = await import('../tools/lint_docs.mjs'));
 });
 
 // ---------------------------------------------------------------------------

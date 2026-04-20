@@ -12,7 +12,7 @@ import {
   computeSyncExclusionStatus,
   buildUpstreamRecoveryStatus,
   runCheckUpstreamRecovery,
-} from '../check_upstream_recovery.mjs';
+} from '../detection/check_upstream_recovery.mjs';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NOW = new Date('2026-05-01T00:00:00Z').getTime();

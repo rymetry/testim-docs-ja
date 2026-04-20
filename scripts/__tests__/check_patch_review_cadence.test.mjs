@@ -27,7 +27,7 @@ before(async () => {
     collectOverdueSyncExclusions,
     formatWarning,
     main,
-  } = await import('../check_patch_review_cadence.mjs'));
+  } = await import('../detection/check_patch_review_cadence.mjs'));
 });
 
 // ---------------------------------------------------------------------------

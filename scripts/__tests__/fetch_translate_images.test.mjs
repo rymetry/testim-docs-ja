@@ -1,5 +1,5 @@
 /**
- * tests for scripts/fetch_translate_images.mjs
+ * tests for scripts/pipeline/fetch_translate_images.mjs
  *
  * The implementation must:
  * - Export: rewriteDocLinks, getUntranslatedList, getAllPagesList, getDiffPagesList, parseMode
@@ -38,7 +38,7 @@ before(async () => {
     getAllPagesList,
     getDiffPagesList,
     parseMode,
-  } = await import('../fetch_translate_images.mjs'));
+  } = await import('../pipeline/fetch_translate_images.mjs'));
   const project = await import('../lib/project.mjs');
   ROOT = project.ROOT_DIR;
 });

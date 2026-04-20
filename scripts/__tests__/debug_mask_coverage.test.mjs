@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os';
 
 describe('parity-check-status.json — debug.maskCoverage emit', () => {
   it('output includes debug.maskCoverage with summary counters', async () => {
-    const { default: main } = await import('../check_source_parity.mjs');
+    const { default: main } = await import('../detection/check_source_parity.mjs');
     const tmp = mkdtempSync(join(tmpdir(), 'parity-debug-'));
     const outputPath = join(tmp, 'parity-check-status.json');
     try {

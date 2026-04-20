@@ -31,7 +31,7 @@
 - **新規追加時**: Tier A/B に該当しない汎用語は GLOSSARY ではなく [INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) の narrow pattern に追加する
 - **compound general 禁止**: `browser version` / `major version` / `Add action` / `Add validation` 等の compound general 一般語は全 Tier で登録禁止（false-negative 源）
 - **Tier C の範囲**: narrow 文脈で英語維持が許容される用語のみ。判定は [TRANSLATION_GUIDE.md §5.4 許容される一般 IT 用語](./TRANSLATION_GUIDE.md) 参照
-- **duplicate 禁止**: 同一用語の case / whitespace 変異 entry は merge する。検知は `npm run lint:glossary`（`scripts/check_glossary_duplicates.mjs`）
+- **duplicate 禁止**: 同一用語の case / whitespace 変異 entry は merge する。検知は `npm run lint:glossary`（`scripts/tools/check_glossary_duplicates.mjs`）
 
 ### duplicate 現況 (M4 時点)
 
@@ -47,7 +47,7 @@
 1. 以下のカテゴリ配下に行を追加する
 2. `scripts/lib/parity_glossary_mask.mjs` は起動時に本ファイルをパースするため、再起動で反映される
 3. 登録後に `npm run check:parity` で影響を確認する
-4. 重複検出は `npm run lint:glossary` で確認（T21 / `scripts/check_glossary_duplicates.mjs`）
+4. 重複検出は `npm run lint:glossary` で確認（T21 / `scripts/tools/check_glossary_duplicates.mjs`）
 
 ---
 
