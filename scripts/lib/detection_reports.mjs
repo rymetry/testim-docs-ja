@@ -952,11 +952,20 @@ function buildUpstreamRecoverySections(upstreamRecovery, maxEntries = 10) {
   ) {
     return { enPatchRecovery: null, sourceSyncRecovery: null };
   }
+  // Codex C2 (MEDIUM): filter out non-object rows so a malformed
+  // upstream-recovery-status.json (e.g. `[null]`, `[42]`) cannot crash the
+  // downstream `.filter(e => e.statusA === ...)` calls. Rows that survive
+  // are still shape-trusted only up to the field accessors below — each
+  // projection also uses optional chaining / nullish-coalescing.
   const enPatchRows = Array.isArray(upstreamRecovery.mechanisms.en_source_patches)
-    ? upstreamRecovery.mechanisms.en_source_patches
+    ? upstreamRecovery.mechanisms.en_source_patches.filter(
+        (e) => e && typeof e === 'object' && !Array.isArray(e),
+      )
     : [];
   const syncRows = Array.isArray(upstreamRecovery.mechanisms.source_sync_exclusions)
-    ? upstreamRecovery.mechanisms.source_sync_exclusions
+    ? upstreamRecovery.mechanisms.source_sync_exclusions.filter(
+        (e) => e && typeof e === 'object' && !Array.isArray(e),
+      )
     : [];
 
   const projectEnEntry = (e) => ({
@@ -1006,15 +1015,20 @@ function buildUpstreamRecoverySections(upstreamRecovery, maxEntries = 10) {
  * Defensive sanitiser for registry-derived strings that land in markdown
  * output (issue body / sticky PR comment). Registry values are developer-
  * authored and protected by review, but we strip characters that could
- * break the surrounding markdown structure (newlines / backticks / pipes)
- * to keep output format stable even if a future entry contains them.
+ * break the surrounding markdown structure or inject links/HTML:
+ *   - `\r` / `\n` — break bullet / heading structure
+ *   - `` ` `` — escape out of inline code spans
+ *   - `|` — break table cells
+ *   - `[` / `]` / `(` / `)` — craft markdown links (Codex C3)
+ *   - `<` / `>` — raw HTML tags (Codex C3)
  *
  * Replaces matches with `_` so the field is visibly marked as sanitised
- * rather than silently removed.
+ * rather than silently removed. Defense-in-depth: registry review already
+ * gates content, this is the last-line safety net.
  */
 function sanitizeForMarkdown(value) {
   if (value === null || value === undefined) return '';
-  return String(value).replace(/[\r\n`|]/g, '_');
+  return String(value).replace(/[\r\n`|\[\]()<>]/g, '_');
 }
 
 /**

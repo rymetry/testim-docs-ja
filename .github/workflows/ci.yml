@@ -50,10 +50,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      # Sticky PR comment (Phase B Task 4). No untrusted event input is
+      # Sticky PR comment (Phase B Task 4). PR comments route through the
+      # issues REST endpoint (`github.rest.issues.{list,create,update,delete}Comment`),
+      # so `issues: write` alone is sufficient — `pull-requests: write` was
+      # previously granted but unused (Codex C5). No untrusted event input is
       # interpolated into shell/scripts — the comment body is built from
       # upstream-recovery-status.json (generated in-run) and static text.
-      pull-requests: write
       issues: write
     concurrency:
       # Serialise the sticky comment upsert per PR so successive pushes

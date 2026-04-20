@@ -1069,6 +1069,82 @@ describe('renderUpstreamRecoveryStickyComment — single source of truth', () =>
     assert.ok(body.includes('slug_break'), body);
     assert.ok(!body.includes('\\n'), 'raw newline must not survive');
   });
+
+  it('also strips markdown link / HTML chars from registry values (Codex C3)', async () => {
+    const { renderUpstreamRecoveryStickyComment } = await import(
+      '../lib/detection_reports.mjs'
+    );
+    const body = renderUpstreamRecoveryStickyComment({
+      schemaVersion: 1,
+      summary: { totalEntries: 1, activeEntries: 0, staleEntries: 1, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [],
+        source_sync_exclusions: [
+          {
+            slug: 'malicious[link](http://evil.example)<script>',
+            mechanism: 'source_sync_exclusions',
+            statusA: 'stale',
+            statusB: 'current',
+            fetchStatus: 'excluded-recovered',
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+      },
+    });
+    // None of the link / HTML delimiters must survive intact.
+    assert.ok(!body.includes('[link]'), 'markdown link brackets must be sanitised');
+    assert.ok(!body.includes('(http://evil'), 'parentheses must be sanitised');
+    assert.ok(!body.includes('<script>'), 'HTML tags must be sanitised');
+    // Sanitised form should still identify the entry.
+    assert.ok(body.includes('malicious_link__http'), body);
+  });
+
+  it('tolerates malformed rows (null / undefined / scalar) in mechanisms arrays (Codex C2)', async () => {
+    const { renderUpstreamRecoveryStickyComment } = await import(
+      '../lib/detection_reports.mjs'
+    );
+    // Previously `.filter(e => e.statusA === 'stale')` would throw on null /
+    // undefined / non-object rows. buildUpstreamRecoverySections now filters
+    // down to object-shaped rows first.
+    const body = renderUpstreamRecoveryStickyComment({
+      schemaVersion: 1,
+      summary: { totalEntries: 1, activeEntries: 1, staleEntries: 0, overdueEntries: 0, unknownEntries: 0 },
+      mechanisms: {
+        en_source_patches: [
+          null,
+          undefined,
+          42,
+          'garbage',
+          [],
+          {
+            id: 'UD-REAL',
+            mechanism: 'en_source_patches',
+            slugs: ['some/slug'],
+            statusA: 'active',
+            statusB: 'current',
+            hits: 1,
+            addedAt: '2026-01-01',
+            reviewAfter: '2026-07-01',
+            daysUntilReview: 72,
+          },
+        ],
+        source_sync_exclusions: [null, {
+          slug: 'valid/slug',
+          mechanism: 'source_sync_exclusions',
+          statusA: 'active',
+          statusB: 'current',
+          fetchStatus: 'excluded-broken',
+          addedAt: '2026-01-01',
+          reviewAfter: '2026-07-01',
+          daysUntilReview: 72,
+        }],
+      },
+    });
+    // No signals to report (all real rows are `active` + `current`).
+    assert.equal(body, null);
+  });
 });
 
 // ---------------------------------------------------------------------------
