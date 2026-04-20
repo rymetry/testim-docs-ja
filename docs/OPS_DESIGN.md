@@ -175,6 +175,25 @@ npm run test && npm run build
 - 本文には件数、代表例、artifact への導線を載せ、machine-readable な follow-up payload は
   `docs-actionable-report.json` に保持する
 
+### Weekly: Upstream recovery triage
+
+`scheduled-actionable` 実行後、`sourceSyncHealth` managed issue に出現する `enPatchRecovery` / `sourceSyncRecovery` section を次の手順で triage する:
+
+1. `docs-actionable-report.json.sourceSyncHealth.enPatchRecovery.stale[]` と同 `sourceSyncRecovery.stale[]` を確認
+2. 各 stale entry について:
+   a. 該当 slug の EN snapshot を手動で fetch し直す (`npm run check:snapshots:fetch -- --slug=<slug>`)
+   b. 現在の EN HTML を目視し、欠陥が実際に消えているかを確認する (stale signal だけで削除しない)
+   c. 消えていれば:
+      - `en_source_patches` 系: `scripts/lib/en_source_patches.mjs` から entry を削除
+      - `source_sync_exclusions` 系: `scripts/lib/source_sync_exclusions.mjs` から entry を削除 + `scripts/__tests__/source_parity_source_side_debt.test.mjs` の seeded pin を調整
+      - どちらも `docs/superpowers/specs/upstream-defect-tracker.md` の対応 entry を archive 状態に更新
+      - `npm run check:parity` が 0 issues を維持していることを確認
+   d. まだ消えていなければ managed issue にコメントで状況記録 (次週 run で再評価)
+3. overdue entry (`statusB: 'overdue'`) は `reviewAfter` 延長でなく **paydown PR** で対応する (`priority='high'` を付与して順位付け)
+4. 全 stale / overdue 解消後、当該 section が空になり `sourceSyncHealth` が他 signal も無ければ workflow が自動で issue を close
+
+sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstream recovery") も同じ `upstream-recovery-status.json` を読むため、PR 作業中にも stale / overdue entry が可視化される。weekly triage で解消した項目は次の PR run で comment から自動削除される。
+
 ## 一括変更時の検証フロー
 
 複数ファイルを一括変換する場合、**検証スクリプトを変換スクリプトと同時に作成**し、初回コミット前に通す。
