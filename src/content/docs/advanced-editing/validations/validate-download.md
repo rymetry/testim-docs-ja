@@ -698,4 +698,4 @@ return pdf(fileBuffer).then((data) => {
  </tbody>
 </table>
 
-`| expectedText       | JavaScript | 'A Simple PDF File'  |`
+`| expectedText | JavaScript | 'A Simple PDF File' |`

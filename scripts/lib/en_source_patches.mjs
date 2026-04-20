@@ -408,6 +408,379 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
+  Object.freeze({
+    id: 'UD-012-ddt-visual-editor-index-section-cross-ref',
+    slugs: Object.freeze([
+      'advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor',
+    ]),
+    defectClass: 'madcap-artifact',
+    find:
+      '<a href="index.htm#section-data-driven-tests-using-data-from-an-external-source">' +
+      'Data Driven tests using data from an external source</a>',
+    replace:
+      '<a href="configuring-data-driven-tests-using-data-from-an-external-source.htm">' +
+      'Data Driven tests using data from an external source</a>',
+    rationale:
+      'Upstream MadCap cross-reference artifact: the EN callout "As part of this method..." links to ' +
+      '`index.htm#section-data-driven-tests-using-data-from-an-external-source`, a MadCap TOC-stitched ' +
+      'anchor on the non-existent category-index page. The intended target is the sibling page ' +
+      '`configuring-data-driven-tests-using-data-from-an-external-source.htm` (which JA correctly ' +
+      'references as `/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source`). ' +
+      'Without this patch, normalizeUrlToken emits `/docs/index` for EN vs the full canonical slug ' +
+      'for JA, leaving token-overlap at 0 so the callout-body LCS pair fails (segment-missing + ' +
+      'segment-extra). Same defect class as UD-005E/F/008/009 (bare `index.htm` self-reference).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-012',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-013-hidden-parameters-index-parent-link',
+    slugs: Object.freeze(['advanced-editing/parameters/hidden-parameters']),
+    defectClass: 'madcap-artifact',
+    find: 'When you use <a href="index.htm">parameters</a> in your tests',
+    replace: 'When you use <a href="../parameters/index.htm">parameters</a> in your tests',
+    rationale:
+      'Upstream MadCap artifact: the preface paragraph links to the bare `index.htm` for the parent ' +
+      'Parameters category, producing a bogus `/docs/index` invariant token. JA content correctly ' +
+      'links to `/docs/advanced-editing/parameters`. Patch prepends the explicit `../parameters/` ' +
+      'hop so normalizeUrlToken resolves to the same canonical `/docs/advanced-editing/parameters` ' +
+      'path as JA. Same defect class as UD-005E/F (parameter-override-rules) on the sibling preface.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-013',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-014-auto-grouping-index-parent-link',
+    slugs: Object.freeze(['editing-tests/groups/auto-grouping']),
+    defectClass: 'madcap-artifact',
+    find: 'When creating a new <a href="index.htm">Group</a>',
+    replace: 'When creating a new <a href="../groups/index.htm">Group</a>',
+    rationale:
+      'Upstream MadCap artifact: the first ordered-list-item links to the bare `index.htm` for the ' +
+      'parent Groups category, producing a bogus `/docs/index` invariant token. JA content correctly ' +
+      'links to `/docs/editing-tests/groups`. Patch prepends the explicit `../groups/` hop so ' +
+      'normalizeUrlToken resolves to the same canonical `/docs/editing-tests/groups` path as JA. ' +
+      'Same defect class as UD-005E/F/008/013.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-014',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-015-config-file-run-hooks-empty-zwsp-paragraph',
+    slugs: Object.freeze(['running-tests/configuration-file-run-hooks']),
+    defectClass: 'madcap-artifact',
+    find: '<p>\u200b</p>',
+    replace: '',
+    rationale:
+      'Upstream MadCap authoring artifact: a stray `<p>\u200b</p>` element (zero-width space only) ' +
+      'sits immediately after the "grid name" callout in the preface. The turndown-extracted segment ' +
+      'survives as an empty paragraph, inflating EN preface body structure to [paragraph, ' +
+      'callout-body, paragraph] vs JA [paragraph, callout-body]. The ZWSP has no user-visible content ' +
+      'and is an authoring residue (same ZWSP pattern as UD-010A/B/C/D and UD-011). Patch strips it ' +
+      'so EN body structure collapses to [paragraph, callout-body] matching JA. No information loss.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-015',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-016A-subscription-plans-host-localhost-cli-span',
+    slugs: Object.freeze(['administration/subscription-plans']),
+    defectClass: 'madcap-artifact',
+    find:
+      '<span class="FileOrFilePath">host=localhost/127.0.0.1</span></p>\r\n' +
+      '                                                    </td>\r\n' +
+      '                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">\r\n' +
+      '                                                        <p class="tableBody">Web</p>',
+    replace:
+      '<code>host=localhost/127.0.0.1</code></p>\r\n' +
+      '                                                    </td>\r\n' +
+      '                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body1">\r\n' +
+      '                                                        <p class="tableBody">Web</p>',
+    rationale:
+      'Upstream MadCap artifact: the "Triggering an execution from the CLI with host=localhost/127.0.0.1" ' +
+      'row (6,1) wraps the inline file/path literal in `<span class="FileOrFilePath">`, which is a ' +
+      'MadCap-specific semantic span. The HTML-table extractor (extractHtmlTables) only converts ' +
+      '`<code>` to backticks when building cell tokens; FileOrFilePath falls through as plain text, so ' +
+      'the cell-level invariant tokenizer matches `127.0.0` via the three-segment dotted-identifier ' +
+      'regex (`\\bv?\\d+\\.\\d+\\.\\d+\\b` greedy stop at the final `.`). JA correctly wraps ' +
+      '`host=localhost/127.0.0.1` in markdown backticks (semantically identical to `<code>`), which ' +
+      'the tokenizer extracts as a single invariant token. Patch rewrites `<span class="FileOrFilePath">` ' +
+      'around this specific literal to `<code>` so both sides emit the same token. The surrounding ' +
+      '</td>…<td class="…-Column2-Body1"><p…>Web</p> anchor scopes the literal to row 6,1 only (row ' +
+      '7,1 uses Column2-Body2). Same defect class as UD-005 family (MadCap-specific markup that ' +
+      'survives turndown without code-equivalent semantics).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-016',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-016B-subscription-plans-host-localhost-grid-span',
+    slugs: Object.freeze(['administration/subscription-plans']),
+    defectClass: 'madcap-artifact',
+    find:
+      '<span class="FileOrFilePath">host=localhost/127.0.0.1</span></p>\r\n' +
+      '                                                    </td>\r\n' +
+      '                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">\r\n' +
+      '                                                        <p class="tableBody">Web</p>',
+    replace:
+      '<code>host=localhost/127.0.0.1</code></p>\r\n' +
+      '                                                    </td>\r\n' +
+      '                                                    <td class="TableStyle-Table_new-BodyE-Column2-Body2">\r\n' +
+      '                                                        <p class="tableBody">Web</p>',
+    rationale:
+      'Upstream MadCap artifact: the "Triggering an execution from Test Editor on Grid with ' +
+      'host=localhost/127.0.0.1" row (7,1) wraps the inline file/path literal in ' +
+      '`<span class="FileOrFilePath">`. Same defect class and mechanism as UD-016A, but scoped to ' +
+      'row 7,1 via the Column2-Body2 anchor (alternating table-row body class). Patch rewrites the ' +
+      'span to `<code>` so the HTML-table extractor wraps it in backticks matching JA.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-016',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-017-api-testing-assertion-br-br-paragraph-inflation',
+    slugs: Object.freeze(['advanced-editing/api-testing']),
+    defectClass: 'madcap-artifact',
+    find:
+      'Run additional code on request results code won’t be executed. <br /><br /> Do the following:</p>',
+    replace:
+      'Run additional code on request results code won’t be executed. Do the following:</p>',
+    rationale:
+      'Upstream MadCap authoring artifact: a single `<p>` element in the "Adding a Validate API Step" ' +
+      'section concatenates the Assertion-section description and the "Do the following:" list-intro ' +
+      'using an inline `<br /><br />` pair. Turndown converts `<br /><br />` inside a paragraph into a ' +
+      'hard-break + blank-line sequence, which the markdown paragraph-count extractor reads as two ' +
+      'paragraph-starts (inflating EN=9 vs JA=8). The alignSegments extractor already collapses the pair ' +
+      'into one segment (so EN/JA segment structures match), and JA authors this as one logical ' +
+      'paragraph ending with "設定手順:". Patch removes the redundant inline `<br /><br />` (purely ' +
+      'visual spacing, no semantic boundary) so paragraph-count and segment-count both agree at one ' +
+      'paragraph, matching JA. Same defect class as other MadCap authoring-artifact patches ' +
+      '(UD-010/UD-011/UD-015).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-017',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-003-predefined-properties-broken-global-parameters-row',
+    slugs: Object.freeze([
+      'running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks',
+    ]),
+    defectClass: 'madcap-artifact',
+    find: '<p>| globalParameters      |             |      |</p>',
+    replace: '',
+    rationale:
+      'Upstream MadCap authoring artifact: a broken table row ' +
+      '`<p>| globalParameters | | |</p>` sits immediately after the After Test ' +
+      'Predefined Properties `</table>` close. The author intended another ' +
+      'table row, but MadCap serialized it as a raw paragraph whose first ' +
+      'character is the pipe separator. Turndown re-emits the same text as ' +
+      'a paragraph line `| globalParameters | | |`; the coarse ' +
+      '`extractParagraphCounts` heuristic treats pipe-leading lines as ' +
+      'markdown-table (EN=0 paragraphs for the section), while the JA mirror ' +
+      'backtick-wraps the leading pipe to preserve source-first fidelity ' +
+      '(`` `|` globalParameters | | | ``) and IS counted as a paragraph ' +
+      '(JA=1), producing a paragraph-count-mismatch signal. alignSegments ' +
+      'also extracts the EN `<p>` as a segment-paragraph that has no ' +
+      'semantically meaningful JA counterpart. Patch strips the broken ' +
+      'paragraph at the HTML boundary (upstream-defect-tracker.md UD-003 ' +
+      'Option A). JA side drops the mirror line so both bodies converge to ' +
+      '"section ends at `</table>`". Same defect class as UD-015/UD-017 ' +
+      '(MadCap authoring residue with no user-visible content).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-003',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-018A-sealights-build-session-id-list-wrapped-codesnippet',
+    slugs: Object.freeze(['integrations/sealights-integration']),
+    defectClass: 'madcap-artifact',
+    find:
+      '<li>\r\n                                                <div class="codeSnippet">' +
+      '<a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>\r\n' +
+      '                                                    <div class="codeSnippetBody">' +
+      '<pre><code>--sealights-build-session-id [sealights-suid-session-id]</code></pre>\r\n' +
+      '                                                    </div>\r\n' +
+      '                                                </div>\r\n' +
+      '                                            </li>',
+    replace:
+      '<li><code>--sealights-build-session-id [sealights-suid-session-id]</code></li>',
+    rationale:
+      'Upstream MadCap authoring pattern: a single one-line CLI flag is wrapped as the sole content ' +
+      'of a <li> inside a <ul>, but rendered via the full <div class="codeSnippet"><div ' +
+      'class="codeSnippetBody"><pre><code>FLAG</code></pre></div></div> codeSnippet scaffolding ' +
+      '(Copy button + pre+code block). Turndown serializes this as `*   ```\\n    FLAG\\n    ```` — ' +
+      'the coarse `extractBulletCounts` heuristic skips the line because `FENCE_LINE_RE` matches the ' +
+      'bullet-led ` ``` ` opening (FENCE_LINE_RE = /^\\s*(?:(?:[-*+]\\s+|\\d+\\.\\s+))?```/), giving ' +
+      'EN=0 bullets in the section while JA uses an inline-code bullet `- `--sealights-...`` that is ' +
+      'correctly counted (JA=1). alignSegments already treats both sides as unordered-list-item with ' +
+      'matching text (so segment checks pass / actionable=0), but the coarse bullet count emits an ' +
+      'audit signal. Patch normalizes the list-wrapped codeSnippet scaffolding into a minimal <li>' +
+      '<code>FLAG</code></li>, which turndown serializes as `* `FLAG`` — a real bullet that the ' +
+      'coarse counter recognizes, matching JA exactly. Same defect class as UD-015/UD-017 ' +
+      '(MadCap authoring residue that inflates coarse counts while segment alignment already works).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-018',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-018B-sealights-lab-id-list-wrapped-codesnippet',
+    slugs: Object.freeze(['integrations/sealights-integration']),
+    defectClass: 'madcap-artifact',
+    find:
+      '<li>\r\n                                                <div class="codeSnippet">' +
+      '<a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>\r\n' +
+      '                                                    <div class="codeSnippetBody">' +
+      '<pre><code>--sealights-lab-id [sealights-lab-id]</code></pre>\r\n' +
+      '                                                    </div>\r\n' +
+      '                                                </div>\r\n' +
+      '                                            </li>',
+    replace:
+      '<li><code>--sealights-lab-id [sealights-lab-id]</code></li>',
+    rationale:
+      'Paired with UD-018A (same defect pattern on the sibling labId section). See UD-018A for the ' +
+      'full rationale: list-wrapped codeSnippet scaffolding trips the coarse bullet-count heuristic ' +
+      'via FENCE_LINE_RE matching the bullet-led triple-backtick opening, while JA uses a real ' +
+      'inline-code bullet. Patch collapses to minimal <li><code>FLAG</code></li>.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-018',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-018C-sealights-test-stage-list-wrapped-codesnippet',
+    slugs: Object.freeze(['integrations/sealights-integration']),
+    defectClass: 'madcap-artifact',
+    find:
+      '<li>\r\n                                                <div class="codeSnippet">' +
+      '<a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>\r\n' +
+      '                                                    <div class="codeSnippetBody">' +
+      '<pre><code>--sealights-test-stage [sealights-test-stage-name]</code></pre>\r\n' +
+      '                                                    </div>\r\n' +
+      '                                                </div>\r\n' +
+      '                                            </li>',
+    replace:
+      '<li><code>--sealights-test-stage [sealights-test-stage-name]</code></li>',
+    rationale:
+      'Paired with UD-018A/B (same defect pattern on the sibling test-stage section). See UD-018A ' +
+      'for the full rationale: list-wrapped codeSnippet scaffolding trips the coarse bullet-count ' +
+      'heuristic via FENCE_LINE_RE matching the bullet-led triple-backtick opening, while JA uses ' +
+      'a real inline-code bullet. Patch collapses to minimal <li><code>FLAG</code></li>.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-018',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-019-create-salesforce-test-image-only-li-inflates-step-count',
+    slugs: Object.freeze(['salesforce-testing/create-a-salesforce-test']),
+    defectClass: 'madcap-artifact',
+    find:
+      '<li value="5">\r\n' +
+      '                                                <p>\r\n' +
+      '                                                    <img src="images/1a9ac07-afterlogin.png" class="ScreenshotFullsize" />\r\n' +
+      '                                                </p>\r\n' +
+      '                                            </li>',
+    replace:
+      '<img src="images/1a9ac07-afterlogin.png" class="ScreenshotFullsize" />',
+    rationale:
+      'Upstream MadCap authoring artifact: inside the "Recording Steps" <ol>, the 5th <li value="5"> ' +
+      'wraps a single <img src="images/1a9ac07-afterlogin.png"> (post-login screenshot) with no text ' +
+      'content. Adjacent list items all carry translatable prose; the screenshot is purely illustrative ' +
+      'for step 4. The sibling image 90023bd-salesforcesteps.png (after step 6 in EN) is already rendered ' +
+      'OUTSIDE any <li> as a direct child of <ol>, proving the intended shape for image-only screenshots ' +
+      'in this list. Turndown emits the image-only <li> as "5. ![](...)" which extractStepCounts counts ' +
+      'as a step (EN total=14) while extractSegmentsFromHtml drops it (empty inline text) — so EN reports ' +
+      '7 ordered-list-items for step counting but only 6 for segment alignment, an asymmetric extractor ' +
+      'outcome. JA content correctly renders the screenshot as a standalone image between numbered steps ' +
+      '(6 items matching sibling image placement), surfacing as a 2x `step-count-mismatch` audit signal ' +
+      '(top-level EN=14/JA=13, §7 EN=7/JA=6). Patch lifts the <img> out of the <li> to match the ' +
+      'sibling 90023bd pattern; extractStepCounts drops to 6 for §7 (13 total), extractSegments emits an ' +
+      '"image" segment between ordered-list-item indexes 3 and 4 aligning with JA.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-019',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-020-troubleshoot-grid-image-only-li-inflates-bullet-count',
+    slugs: Object.freeze(['salesforce-testing/troubleshoot']),
+    defectClass: 'madcap-artifact',
+    find:
+      '                                            <li>\r\n' +
+      '                                                <p>\r\n' +
+      '                                                    <img src="images/bbf8513-image.png" class="ScreenshotFullsize" />\r\n' +
+      '                                                </p>\r\n' +
+      '                                            </li>\r\n' +
+      '                                        </ul>',
+    replace:
+      '                                        </ul>\r\n' +
+      '                                        <p>\r\n' +
+      '                                            <img src="images/bbf8513-image.png" class="ScreenshotFullsize" />\r\n' +
+      '                                        </p>',
+    rationale:
+      'Upstream MadCap authoring artifact: in the "Scheduled test executions on the Grid are failing" ' +
+      'section, the first <ul> has a third <li><p><img src="images/bbf8513-image.png"/></p></li> that ' +
+      'wraps only an illustrative screenshot (Login History restricted-IP image) — no prose. Same shape ' +
+      'and defect class as UD-019 (image-only <li> in an otherwise prose-bearing list). ' +
+      'extractSegmentsFromHtml correctly drops this <li> (walkListChildren emits nothing when ' +
+      'collectInlineText returns empty; <img> maps to a single space that trims away). But ' +
+      'extractBulletCounts (markdown-level `^[-*+]\\s` regex) counts the turndown output ' +
+      '"*   ![](images/bbf8513-image.png)" as a bullet, yielding EN=6 vs JA=5 bullet-count-mismatch. ' +
+      'JA content correctly renders the screenshot as a standalone image between the bullet list and ' +
+      'the next paragraph (semantic role: illustration of the preceding two bullets, not itself a list ' +
+      'entry). Patch lifts the <img> out of the <li> to a sibling <p> after the closing </ul>, mirroring ' +
+      'JA shape. After the patch, EN markdown has 5 bullets + standalone image, aligning with JA. No ' +
+      'information loss: the image is preserved one DOM node later.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-020',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-021-validate-download-pdf-broken-row-as-code',
+    slugs: Object.freeze(['advanced-editing/validations/validate-download']),
+    defectClass: 'madcap-artifact',
+    find: "<p>| expectedText       | JavaScript | 'A Simple PDF File'  |</p>",
+    replace:
+      "<p><code>| expectedText       | JavaScript | 'A Simple PDF File'  |</code></p>",
+    rationale:
+      'Upstream MadCap authoring artifact: the "PDF files" example-parameters table in the Validate ' +
+      'download page has a broken third-row rendered as a stray `<p>|...|</p>` plain-text line after a ' +
+      'proper `<table>` element (rows 1-2 are structured, row 3 leaked out as raw markdown pipe syntax ' +
+      'in HTML). Turndown fuses the pipe paragraph into the preceding markdown table so `classifyLine` ' +
+      'treats it as `markdown-table` (not counted), while JA authors the same broken-row in ' +
+      'backtick-wrapped inline-code form (`\\`|...|\\``) which `classifyLine` correctly classifies as a ' +
+      'paragraph-start. Result: EN=5 paragraphs vs JA=6 paragraph-count-mismatch signal. Patch wraps ' +
+      'the broken-row `<p>` content in `<code>` so turndown emits matching backtick-inline-code ' +
+      'markdown (`\\`|...|\\``), aligning paragraph-counts on both sides. Segment alignment remains ' +
+      'intact because backticks are stripped from textNorm on both sides (symmetric), preserving the ' +
+      'paragraph textNorm match. Same defect class as UD-015/UD-017 (MadCap authoring artifacts that ' +
+      'survive turndown asymmetrically).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-021',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-022-jenkins-docker-trailing-zwsp-paragraph',
+    slugs: Object.freeze([
+      'integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker',
+    ]),
+    defectClass: 'madcap-artifact',
+    find: '<p>\u200B \u200B</p>',
+    replace: '',
+    rationale:
+      'Upstream MadCap authoring artifact: a trailing `<p>\u200B \u200B</p>` element (two ZWSPs with ' +
+      'a space between) sits at the end of the "Now, just follow these steps:" section after the ' +
+      'final ordered-list item + screenshot. `normalizeEnArtifacts` strips ZWSPs per line; the residue ' +
+      'for this line is a single space which matches `^[\\s]*$` so the paragraph-count extractor drops ' +
+      'it. But `extractSegmentsFromHtml` still emits a `paragraph ""` segment for this `<p>`, creating ' +
+      'an asymmetry: EN paragraph-count=1 vs JA paragraph-count=2 (JA authors the residue as ' +
+      '`\u200B \u200B` prose at the end, which the paragraph-count classifier counts because ' +
+      '`^[\u200B...]+$` does not match due to the embedded space). Patch strips the stray `<p>` so ' +
+      'neither counter nor segment extractor sees it on the EN side. JA content also removes the ' +
+      'trailing `\u200B \u200B` line (pure authoring residue, no user-visible content). Same pattern ' +
+      'as UD-015 (config-file-run-hooks ZWSP-only paragraph) — pure authoring-tool residue with ' +
+      'no information loss.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-022',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
 ]);
 
 /**

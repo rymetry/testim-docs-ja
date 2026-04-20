@@ -1359,5 +1359,3 @@ keywords:
   </tr>
  </tbody>
 </table>
-
-`|` globalParameters | | |

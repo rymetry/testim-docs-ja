@@ -61,6 +61,16 @@
 | example | `Alt + X`, `Ctrl + 1`, `Alt + Ctrl + F12`, `option + command + x` |
 | note | スペース区切りのキーボードショートカット（例: `Alt + X / Ctrl + 1`）。F キーと単一英数字（0-9、A-Z）のみを末尾とする |
 
+## keyboard-key-list
+
+| 項目 | 値 |
+| --- | --- |
+| id | `keyboard-key-list` |
+| regex | `\b(Enter|Tab|Esc|Escape|Space|Backspace|Delete|Insert|Home|End|Page\s?Up|Page\s?Down|PgUp|PgDn|F\d+)\b(\s*[、,]\s*\b(Enter|Tab|Esc|Escape|Space|Backspace|Delete|Insert|Home|End|Page\s?Up|Page\s?Down|PgUp|PgDn|F\d+)\b)+` |
+| flags | `gi` |
+| example | `Enter、Tab、ESC、Page Up、Page Down`、`Enter, Tab, Esc`、`F1, F2, F3` |
+| note | カンマ（`、` `,`）区切りで**2 個以上連続する**キー名の列挙のみマッチする narrow pattern。単独の `Enter` / `Tab` を文脈非依存に mask すると "Press Enter key" のような 3 語英文の false-negative を招く (`parity_glossary_mask.test.mjs` §"GLOSSARY common-word false-negative regression" で pin 済) ため、列挙文脈でのみマスクする設計。これにより JA 文中で EN 原文通りの "Enter、Tab、ESC、Page Up、Page Down など" という列挙表現を残せる。単独キーは WRITING_GUIDE に従い bold + 日本語補足 (例: "**Enter** キーを押します") か backtick で囲むなど別の方法を使う |
+
 ## cli-flag
 
 | 項目 | 値 |

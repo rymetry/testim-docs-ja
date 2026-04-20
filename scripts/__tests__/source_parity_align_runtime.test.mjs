@@ -247,7 +247,15 @@ describe('summarizeParityResults', () => {
 // 4. End-to-end CLI invocation against a real drifted page
 // ---------------------------------------------------------------------------
 
-describe('check_source_parity.mjs --slug — runtime integration', () => {
+// NOTE: M2.5-C content burndown drove parity-baseline.json to 0 entries, so no
+// real page is currently baseline-covered. The two integration tests below
+// pinned `advanced-editing/parameters/hidden-parameters` as a drifted page to
+// exercise the baseline mechanism end-to-end. With 0 baseline entries both
+// preconditions (baselinedIssues > 0 / CLI "⏸️ covered by baseline/ack" suffix)
+// no longer hold. PR Z schema v2 cutover will redesign the baseline contract,
+// after which these runtime tests will be re-expressed against the new shape.
+// Until then, skip with todo so the intent stays visible in the suite.
+describe('check_source_parity.mjs --slug — runtime integration', { skip: 'M2.5-C: baseline is 0 entries; pending PR Z schema v2 rewrite' }, () => {
   it('emits baseline-tagged segment-* issues into parity-check-status.json', () => {
     // Backup any existing status file so the test does not destroy
     // local CI state. Restored in the `after` step below.
@@ -443,6 +451,12 @@ describe('check_source_parity.mjs --slug — runtime integration', () => {
 // 5. Pin content-correctness + fallback (T12 fragility-1 / plan §3.2)
 // ---------------------------------------------------------------------------
 
+// NOTE: The fallback-pin test below asserted a specific slug retains ≥ 1
+// baseline entry so the 2-page fragility pin stays meaningful. M2.5-C drove
+// baseline to 0 entries, so no fallback slug exists. Keep the primary pin
+// fixture-extraction guard (covers a different contract: the EN/JA extractor
+// still emits ≥ 3 segments on the pinned page), but skip the fallback check
+// until PR Z schema v2 redefines the baseline-fragility pin strategy.
 describe('pin slug content-correctness + fallback (T12)', () => {
   it('primary pin slug file has extractable segments (fixture non-empty guard)', () => {
     const pinSlug = 'advanced-editing/parameters/hidden-parameters';
@@ -456,7 +470,7 @@ describe('pin slug content-correctness + fallback (T12)', () => {
     );
   });
 
-  it('fallback pin slug is still baseline-covered (fixture 2-page pin / fragility fallback)', () => {
+  it('fallback pin slug is still baseline-covered (fixture 2-page pin / fragility fallback)', { skip: 'M2.5-C: baseline is 0 entries; pending PR Z schema v2 fragility pin strategy' }, () => {
     // 1 ページ破綻時に fallback として検証可能な 2nd pin。baseline 上に entry が
     // 存在することを jq で 1 度だけ確認する (実測再評価は T11 側で別途 pin 済)。
     // NOTE: 2026-04-17 に旧 fallback `editing-tests/groups` が PR #328 で burn-down

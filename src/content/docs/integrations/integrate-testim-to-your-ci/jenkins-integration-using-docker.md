@@ -74,5 +74,3 @@ echo "Testim finished"\
 6. セクション 4 の"report-file"パラメーターに従って、xml ファイルの値を設定します:
 
 ![JUnit テスト結果レポートの XML ファイルパスを設定する画面](/images/ci-integrations/jenkins-integration-using-docker/d2241d4-Jenkins7.PNG)
-
-​ ​
