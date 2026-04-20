@@ -79,6 +79,7 @@ Review workflow and feedback loop are defined in **`docs/OPS_DESIGN.md`**. Summa
 ## Core Invariants (from `docs/SYSTEM_SPEC.md`)
 
 本プロジェクトのコア仕様。全作業はこれらの不変量を維持する方向で行う。
+**仕様変更が必要と判断した場合は、必ずユーザーに確認してから実施すること。** 提案は歓迎するが、承認なしに不変量を変更・緩和してはならない。
 
 **5-counter = 0 DoD**: 以下の 5 counter は全て 0 を維持する。
 
