@@ -365,6 +365,49 @@ export const EN_SOURCE_PATCHES = Object.freeze([
     addedAt: '2026-04-20',
     reviewAfter: '2026-10-20',
   }),
+  Object.freeze({
+    id: 'UD-010C-vsts-broken-step-paragraph-2',
+    slugs: Object.freeze([
+      'integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration',
+    ]),
+    defectClass: 'madcap-artifact',
+    find: '<p>\u200b2. Create a new build</p>',
+    replace: '<p>Create a new build</p>',
+    rationale:
+      'Upstream MadCap authoring artifact (2nd "broken step" variant in the VSTS/TFS integration ' +
+      'page): an orphan <p> begins with a zero-width space (U+200B) followed by a literal "2. " ' +
+      'step-number prefix. Unlike UD-010B (parameters-for-groups), this ZWSP-step <p> sits inside ' +
+      'a sequence of <img> + <p> + <img> siblings between <li value="1"> ("Go to Build page") and ' +
+      'the next real <li> items — the authoring intent appears to have been to present "Create a ' +
+      'new build" and "Select your repository" as sub-labels under step 1, not as top-level list ' +
+      'items. But turndown still maps them to Markdown paragraphs whose first line matches ' +
+      '`extractStepCounts` "^\\d+\\.\\s" regex after normalizeEnArtifacts strips the ZWSP, inflating ' +
+      'the EN total step count from 11 (actual <li value> count) to 13. JA mirrors the EN structure ' +
+      'but normalizeNumericPeriodSpacing does not strip ZWSP, so JA counts 11. This patch strips the ' +
+      'leading "\u200b2. " prefix in EN so both sides converge to 11 after normalization. JA content ' +
+      'is updated in the same PR to remove the matching "​2. " prefix so segment-level comparison ' +
+      'lines up (plain paragraph = plain paragraph).',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
+  Object.freeze({
+    id: 'UD-010D-vsts-broken-step-paragraph-3',
+    slugs: Object.freeze([
+      'integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration',
+    ]),
+    defectClass: 'madcap-artifact',
+    find: '<p>\u200b3. Select your repository</p>',
+    replace: '<p>Select your repository</p>',
+    rationale:
+      'Paired with UD-010C — same defect pattern (ZWSP + "N. " step-number prefix on an orphan <p>), ' +
+      'just the adjacent occurrence for "Select your repository" (step-sub-label 3). Without this ' +
+      'patch, UD-010C alone would still leave a 1-step EN=12 / JA=11 mismatch. Both patches together ' +
+      'bring step-count to 11/11. Rationale, impact, and JA-side sync strategy are identical to UD-010C.',
+    linkedDefect: 'docs/superpowers/specs/upstream-defect-tracker.md#UD-010',
+    addedAt: '2026-04-20',
+    reviewAfter: '2026-10-20',
+  }),
 ]);
 
 /**
