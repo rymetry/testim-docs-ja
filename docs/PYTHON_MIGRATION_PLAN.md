@@ -785,6 +785,38 @@ turndown 等価実装が必要な 4 script は subprocess wrapper に留めた:
 Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えてから
 上記 4 script を full port し、本 plan の Phase 4 を完全完了とする。
 
+### Phase 4b progress (2026-04-22 更新)
+
+| Milestone | 対象 | 状態 |
+| --- | --- | --- |
+| **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ conformance harness で mjs と byte-identical (17 unit + 2 parity sample) |
+| M2 | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | pending |
+| M3 | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | pending |
+| M4 | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | pending |
+| M5 | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | pending |
+
+### Phase 4b M1 byte-parity scope (現状)
+
+M1 時点では **17 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
+byte 比較) でのみ parity を保証する。288-page corpus 全体の byte parity 計測は
+M2/M3 integration 時に ``test_convert_en_html_to_md_288_matrix`` を追加して
+実施する (Issue #368 の nested-list flatten は JA extractor 側で完結するため
+EN side の turndown 出力は従来通り mjs 互換の文字列を要求する)。
+
+**M1 カバー範囲**:
+
+- markdownify ``MarkdownConverter`` subclass + ``DefaultOptions`` + ``Options``
+  両方 override (1.x の 2 層 option 組み立てに対応)
+- ATX heading / ``*   `` 3-space bullet / ``_italic_`` / ``**bold**`` /
+  fenced code with language class
+- 5 MadCap custom converter: ``convert_div`` (note/caution) / ``convert_a``
+  (codeSnippetCopyButton strip) / ``convert_ol`` (``<li value>`` + sibling
+  ``<img>``/``<p>``/``<div>`` block 並べ) / ``convert_table`` (pipe table) /
+  ``convert_details`` + ``convert_summary`` (summary → ``## heading``)
+- ``convert_en_html_to_md`` は existing ``preprocess_en_html`` を chain する
+  ので、escaped-callout / escaped-details の preprocess 経由 sample も
+  byte-identical
+
 ---
 
 ## Phase 5: Tests (pytest 全書き直し)

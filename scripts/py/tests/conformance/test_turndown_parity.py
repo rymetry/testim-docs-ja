@@ -1,0 +1,137 @@
+"""``convert_en_html_to_md`` / ``html_to_md`` のクロスランタイム conformance。
+
+mjs ``scripts/lib/turndown.mjs`` の ``convertEnHtmlToMd`` と Python port が
+同じ入力に対して **byte-identical な Markdown 文字列** を返すことを保証する。
+
+Phase 4b M1 の verification gate。Phase 4b M2/M4 (check_source_parity +
+fetch_translate_images の full port) が本関数の出力に依存するため、ここで
+divergence すると下流が連鎖的に壊れる。
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from testim_parity.turndown import convert_en_html_to_md, html_to_md
+
+from ._harness import run_batch
+
+# 代表的な MadCap Flare HTML パターン。mjs turndown の default rules +
+# 5 つの custom rule (madcap-callout / madcap-code-snippet-copy /
+# madcap-ordered-list / madcap-table / html-details+summary) を網羅する。
+#
+# 新しい divergence を見つけたらまず samples に追加して test を落とし、
+# 原因を修正する運用。
+_SAMPLES_HTML_TO_MD: list[tuple[str, str]] = [
+    # 空 / 平易
+    ("empty", ""),
+    ("plain_p", "<p>Hello world.</p>"),
+    # heading (atx style)
+    ("h1", "<h1>Main</h1>"),
+    ("h2", "<h2>Sub</h2>"),
+    ("h3", "<h3>Section</h3>"),
+    # 強調
+    ("strong", "<p>This is <strong>bold</strong> text.</p>"),
+    ("em", "<p>This is <em>italic</em> text.</p>"),
+    # link / image
+    ("link", '<a href="https://example.com">Click</a>'),
+    ("img", '<img src="/img.png" alt="Logo" />'),
+    # ul (``*   `` 3-space bullet)
+    ("ul_simple", "<ul><li>A</li><li>B</li></ul>"),
+    # ol custom rule (dashes without value, numbers with value)
+    ("ol_no_value", "<ol><li>First</li><li>Second</li></ol>"),
+    (
+        "ol_with_value",
+        '<ol><li value="1">First</li><li value="2">Second</li></ol>',
+    ),
+    # ol with non-<li> siblings (img/p/div between steps)
+    (
+        "ol_with_img_sibling",
+        '<ol><li value="1">Step 1</li><img src="/fig.png" alt="fig"/>'
+        '<li value="2">Step 2</li></ol>',
+    ),
+    # code fence with language
+    (
+        "code_fence_lang",
+        '<pre><code class="language-js">const x = 1;</code></pre>',
+    ),
+    # madcap-callout
+    (
+        "callout_note",
+        '<div class="note"><p>Note body</p></div>',
+    ),
+    (
+        "callout_caution",
+        '<div class="caution"><p>Caution body</p></div>',
+    ),
+    # madcap-code-snippet-copy (copy button が strip される)
+    (
+        "code_snippet_copy",
+        '<div class="codeSnippet">'
+        '<a class="codeSnippetCopyButton" href="javascript:void(0)">Copy</a>'
+        "<pre>x=1</pre>"
+        "</div>",
+    ),
+    # madcap-table (pipe table)
+    (
+        "table_basic",
+        '<table class="TableStyle-Table_new">'
+        "<thead><tr><th>A</th><th>B</th></tr></thead>"
+        "<tbody><tr><td>1</td><td>2</td></tr></tbody>"
+        "</table>",
+    ),
+    # html-details + summary
+    (
+        "details_summary",
+        "<details><summary><b>Question?</b></summary><p>Answer.</p></details>",
+    ),
+]
+
+# convert_en_html_to_md は preprocess_en_html を通すので、preprocess の
+# 2 normalize path (escaped callout / escaped details) と chaining する。
+_SAMPLES_FULL: list[tuple[str, str]] = [
+    # preprocess_en 経由でも plain HTML は同じ結果になる (冪等性)
+    ("plain_after_preprocess", "<p>Hello world.</p>"),
+    # escaped callout (preprocessEnHtml で <div class="note"> に正規化される)
+    ("escaped_callout", "<p>&gt; Title &gt; &gt; Body text</p>"),
+    # escaped details (legacy single-<p> path)
+    (
+        "escaped_details",
+        "<p>&lt;details&gt;&lt;summary&gt;Q&lt;/summary&gt; body&lt;/details&gt;</p>",
+    ),
+]
+
+
+@pytest.fixture(scope="module")
+def mjs_html_to_md_results(repo_root, node_available) -> list[str]:
+    if not node_available:
+        pytest.skip("node not available")
+    calls = [
+        {"function": "turndown_html_to_md", "args": [html]} for _name, html in _SAMPLES_HTML_TO_MD
+    ]
+    return run_batch(repo_root, calls)
+
+
+@pytest.fixture(scope="module")
+def mjs_convert_en_results(repo_root, node_available) -> list[str]:
+    if not node_available:
+        pytest.skip("node not available")
+    calls = [
+        {"function": "turndown_convert_en_html_to_md", "args": [html]}
+        for _name, html in _SAMPLES_FULL
+    ]
+    return run_batch(repo_root, calls)
+
+
+def test_html_to_md_matches_mjs(mjs_html_to_md_results):
+    """html_to_md の全 sample で Python 出力が mjs turndown と byte 一致する。"""
+    for (name, html), mjs in zip(_SAMPLES_HTML_TO_MD, mjs_html_to_md_results, strict=True):
+        py = html_to_md(html)
+        assert py == mjs, f"divergence [{name}] html={html!r}:\n  py={py!r}\n  mjs={mjs!r}"
+
+
+def test_convert_en_html_to_md_matches_mjs(mjs_convert_en_results):
+    """convert_en_html_to_md (preprocess + turndown) の byte-identical 検証。"""
+    for (name, html), mjs in zip(_SAMPLES_FULL, mjs_convert_en_results, strict=True):
+        py = convert_en_html_to_md(html)
+        assert py == mjs, f"divergence [{name}] html={html!r}:\n  py={py!r}\n  mjs={mjs!r}"

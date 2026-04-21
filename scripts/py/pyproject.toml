@@ -17,6 +17,10 @@ dependencies = [
   "pydantic>=2.0",
   "click>=8.0",
   "python-frontmatter>=1.1",
+  # Phase 4b: turndown.mjs (HTML→MD 変換) の Python 等価実装で使用。
+  # markdownify 自体は default 規則が turndown と異なるため、MarkdownConverter
+  # subclass で大部分を override して使う (testim_parity.turndown 参照)。
+  "markdownify~=1.2",
 ]
 
 [project.optional-dependencies]
@@ -85,6 +89,15 @@ module = "tests.*"
 disallow_untyped_defs = false
 
 [[tool.mypy.overrides]]
+# ``turndown.py`` subclasses ``MarkdownConverter`` whose package lacks stubs.
+# Inheriting from Any-typed class + accessing its attrs (``self.options``, nested
+# ``DefaultOptions`` / ``Options``) surfaces multiple name-defined / misc errors.
+# The module is exercised by conformance + unit tests against mjs turndown, so
+# runtime correctness is covered; relax mypy here rather than sprinkle ignores.
+module = "testim_parity.turndown"
+disable_error_code = ["name-defined", "attr-defined", "no-any-return", "misc"]
+
+[[tool.mypy.overrides]]
 # Third-party libraries without type stubs. Keep this list explicit so a
 # typo in a first-party import path (``testim_paritty`` etc.) is still
 # caught as a missing-import error. Add modules here only after confirming
@@ -104,5 +117,7 @@ module = [
   "markdown_it.*",
   "mdit_py_plugins",
   "mdit_py_plugins.*",
+  "markdownify",
+  "markdownify.*",
 ]
 ignore_missing_imports = true
