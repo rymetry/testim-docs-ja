@@ -65,7 +65,13 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
 - ``testim_parity.summary`` — parity result を type / severity / ack / baseline
   の summary 統計に集計する純粋関数。5-counter = 0 DoD の権威ソース
 
-Phase 3 M6-M7 (mutation_corpus / detection_reports) は別 commit で追加予定。
+**Mutation corpus (Phase 3 M6)**:
+
+- ``testim_parity.mutation_corpus`` — diff=1 recall test 用の synthetic mutation
+  generator (10 type × classify_lines + list/block extent helpers)。9/9 recall
+  DoD の権威ソース
+
+Phase 3 M7 (detection_reports) は別 commit で追加予定。
 """
 
 from __future__ import annotations

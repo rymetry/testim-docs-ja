@@ -187,6 +187,14 @@ import {
 } from '../../lib/source_sync_health.mjs';
 import { summarizeParityResults } from '../../lib/source_parity_summary.mjs';
 import {
+  MUTATION_TYPES as MUTATION_CORPUS_TYPES,
+  classifyLines as mutationClassifyLines,
+  generateAllMutations,
+  generateCorpus,
+  listItemBlockEnd,
+  paragraphBlockRange,
+} from '../../lib/mutation_corpus.mjs';
+import {
   BASELINE_ELIGIBLE_TYPES,
   NOTE_MAX_LENGTH as BASELINE_NOTE_MAX_LENGTH,
   PRIORITY_VALUES as BASELINE_PRIORITY_VALUES,
@@ -669,6 +677,31 @@ const DISPATCH = {
   // Python の結果 dict を deep-equal 比較で byte 一致に縛る。
   summary_summarize: ([results, orphanMeta]) =>
     summarizeParityResults(results, orphanMeta ?? {}),
+
+  // -------- mutation_corpus (Phase 3 M6) --------
+  // Consumer: scripts/py/tests/conformance/test_mutation_corpus_parity.py
+  // diff=1 recall test の corpus generator。9/9 recall は translation-parity
+  // pipeline の quality gate そのものなので、各 mutation の shape / description
+  // / lineIndex を byte-identical に縛る。
+  mutation_classify_lines: ([md]) => mutationClassifyLines(md),
+  mutation_list_item_block_end: ([lines, start]) => listItemBlockEnd(lines, start),
+  mutation_paragraph_block_range: ([classified, idx]) =>
+    paragraphBlockRange(classified, idx),
+  mutation_type_keys: () => Object.keys(MUTATION_CORPUS_TYPES),
+  mutation_run: ([typeName, md, nth]) => {
+    const fn = MUTATION_CORPUS_TYPES[typeName];
+    if (!fn) return { __domain_error: `unknown mutation type: ${typeName}` };
+    return fn(md, nth ?? 0);
+  },
+  mutation_generate_all: ([md]) => {
+    const map = generateAllMutations(md);
+    // Map → object で dispatch。Python dict (挿入順保持) と byte 一致。
+    return Object.fromEntries(map);
+  },
+  mutation_generate_corpus: ([md, count]) => {
+    const map = generateCorpus(md, count ?? 3);
+    return Object.fromEntries(map);
+  },
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
