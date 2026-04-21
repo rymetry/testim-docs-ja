@@ -518,12 +518,18 @@ def _collect_list_region(lines: list[str], start: int) -> int:
     return last_list_line
 
 
-def _flatten_list_region(region: str) -> list[tuple[str, str, int | None]]:
-    """list region 文字列を markdown-it-py で parse して ``(kind, raw_text, line_offset)``
-    のリストを返す。
+def _flatten_list_region(region: str) -> tuple[list[tuple[str, str, int | None]], int | None]:
+    """list region 文字列を markdown-it-py で parse して flatten 結果を返す。
 
-    ``kind`` は ``"ordered-list-item"`` / ``"unordered-list-item"``。
-    ``line_offset`` は region 内の 0-based 行番号 (top-level item の開始行)。
+    戻り値 ``(items, list_end_line)``:
+
+    - ``items``: ``(kind, raw_text, line_offset)`` の list。``kind`` は
+      ``"ordered-list-item"`` / ``"unordered-list-item"``、``line_offset`` は
+      region 内の 0-based 行番号 (top-level item の開始行)。
+    - ``list_end_line``: region 内で **最後の top-level list が閉じた行** の
+      0-based index (exclusive)。region にこれ以降の content があれば main
+      loop に戻して非 list content として再処理する (codex review P2 #1
+      follow-up)。list が 1 つも見つからなければ ``None``。
 
     **top-level ``list_item`` の内容 (inline content + 内部 fence の body) を
     すべて親 item の ``raw_text`` にスペース区切りで連結する**。ネストされた
@@ -544,10 +550,15 @@ def _flatten_list_region(region: str) -> list[tuple[str, str, int | None]]:
     current_parts: list[str] = []
     current_kind: str | None = None
     current_line: int | None = None
+    list_end_line: int | None = None
 
     for tok in tokens:
         if tok.type in ("bullet_list_open", "ordered_list_open"):
             list_depth += 1
+            # top-level list_open の map は list 全体 [start, end_exclusive] を示す。
+            # nested list の map は subset なので、top-level のみ追跡する。
+            if list_depth == 1 and tok.map is not None:
+                list_end_line = tok.map[1]
             continue
         if tok.type in ("bullet_list_close", "ordered_list_close"):
             list_depth -= 1
@@ -582,7 +593,32 @@ def _flatten_list_region(region: str) -> list[tuple[str, str, int | None]]:
             content = tok.content or ""
             if content:
                 current_parts.append(content)
-    return results
+    return (results, list_end_line)
+
+
+def _emit_lines_as_mjs_fallback_list(
+    lines_slice: list[str],
+    emit: Any,
+    section_path: str,
+    base_line_no: int,
+) -> None:
+    """``_flatten_list_region`` が CommonMark 的に list を認識しなかったときの
+    fall-back: mjs line-based 実装と同じく、list-regex に match する各行を
+    単独の list-item として emit する (codex review P2 #2)。
+
+    該当ケース: ``    - codeish`` のように 4-space indent された list marker
+    行。CommonMark は code block として扱うが、mjs は list-item として emit
+    するため、silent に content を drop しないよう mjs 側と揃える。
+    """
+    for offset, line in enumerate(lines_slice):
+        ordered_match = _ORDERED_RE.match(line)
+        unordered_match = _UNORDERED_RE.match(line)
+        if ordered_match is None and unordered_match is None:
+            continue
+        match = ordered_match if ordered_match is not None else unordered_match
+        assert match is not None  # for mypy
+        kind = "ordered-list-item" if ordered_match is not None else "unordered-list-item"
+        emit(section_path, kind, match.group(2), base_line_no + offset)
 
 
 # ---------------------------------------------------------------------------
@@ -853,13 +889,26 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
         if _ORDERED_RE.match(line) or _UNORDERED_RE.match(line):
             flush_paragraph()
             end_idx = _collect_list_region(lines, i)
-            region = "\n".join(lines[i : end_idx + 1])
-            flattened = _flatten_list_region(region)
+            region_lines = lines[i : end_idx + 1]
+            region = "\n".join(region_lines)
+            flattened, list_end_line = _flatten_list_region(region)
             path = build_section_path(heading_stack)
-            for kind, raw_text, row_offset in flattened:
-                resolved_line = line_no + (row_offset or 0)
-                emitter.emit(path, kind, raw_text, resolved_line)
-            i = end_idx + 1
+            if flattened:
+                for kind, raw_text, row_offset in flattened:
+                    resolved_line = line_no + (row_offset or 0)
+                    emitter.emit(path, kind, raw_text, resolved_line)
+                # codex review P2 #1 follow-up: markdown-it-py が認識した list
+                # の範囲だけ consume し、残りは main loop に戻して非 list content
+                # として再処理する。1-space indented paragraph や non-indented
+                # trailing content を silent に dropping しない契約。
+                consumed = list_end_line if list_end_line is not None else len(region_lines)
+                i += consumed
+            else:
+                # CommonMark が list を認識しなかったケース (例: 4-space indent
+                # された list marker は indented code block 扱い)。mjs 等価の
+                # 単行 emit に fall back する (codex review P2 #2)。
+                _emit_lines_as_mjs_fallback_list(region_lines, emitter.emit, path, line_no)
+                i = end_idx + 1
             continue
 
         if _HORIZONTAL_RULE_RE.match(trimmed):

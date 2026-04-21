@@ -295,6 +295,50 @@ class TestListRegionEdgeCases:
         assert "continuation paragraph" in segs[0]["textNorm"]
         assert segs[1]["textNorm"] == "step two"
 
+    def test_one_space_indent_after_list_emits_paragraph(self):
+        """blank 行 + 1-space indent の行は list continuation にならない。
+
+        codex review P2 follow-up: ``- item\\n\\n x\\n`` のような 1-space indent
+        paragraph は markdown-it-py が list 外の paragraph として parse する。
+        以前の実装では region に含めていたが list-item だけ emit し paragraph
+        を silent に drop していた。list_open.map で実際の list 範囲を特定し、
+        残行を main loop に戻すことで paragraph を正しく emit する。
+        """
+        md = "- item\n\n x\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "paragraph"]
+        assert segs[0]["textNorm"] == "item"
+        assert segs[1]["textNorm"] == "x"
+
+    def test_one_space_indent_after_ordered_list_emits_paragraph(self):
+        md = "1. item\n\n x\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["ordered-list-item", "paragraph"]
+
+    def test_four_space_indent_list_marker_mjs_fallback(self):
+        """4-space indent された list marker は mjs fallback で list-item 化。
+
+        codex review P2 follow-up: CommonMark は ``    - codeish`` を indented
+        code block として扱い list_item token を emit しない。mjs line-based
+        実装は ``_UNORDERED_RE.test(trimmed)`` で match して list-item emit
+        するため、Python も silent drop せずに ``_emit_lines_as_mjs_fallback_list``
+        で mjs と揃える。
+        """
+        md = "    - codeish\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "unordered-list-item"
+        assert segs[0]["textNorm"] == "codeish"
+
+    def test_four_space_indent_ordered_marker_mjs_fallback(self):
+        md = "    1. codeish\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "ordered-list-item"
+        assert segs[0]["textNorm"] == "codeish"
+
     def test_top_level_fence_still_terminates_list_region(self):
         """top-level (non-indented) fence は list region を終了させる。
 
