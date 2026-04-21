@@ -32,6 +32,17 @@ from __future__ import annotations
 from collections.abc import Iterable, Sequence
 from typing import Any
 
+from .align_diffs import (
+    ALIGN_OUTPUT_SCHEMA_VERSION,
+    build_diff_extra,
+    build_diff_missing,
+    build_diff_shifted,
+    build_diff_token_gap,
+    build_diff_untranslated,
+)
+from .align_diffs import (
+    section_label as _section_label,
+)
 from .align_scoring import score_segment_match
 from .artifact_registry import NOOP_COVERAGE, is_artifact_excluded
 from .glossary_mask import classify_segment
@@ -44,14 +55,6 @@ __all__ = [
     "align_segments",
     "parity_diffs_to_issues",
 ]
-
-
-# architect L2 指摘対応: ``align_segments`` の return shape を固定する schema
-# version。``baseline.py`` (Phase 3 M5) が identity key に hash する field
-# (``sectionIndex`` / ``structureCategory`` / ``enKinds`` / ``jaKinds`` /
-# ``contentPermutation``) を破壊的変更する場合は bump し、baseline
-# ``schemaVersion`` と同時に migration を組むこと。
-ALIGN_OUTPUT_SCHEMA_VERSION = 1
 
 
 _GATE_KIND_SET: frozenset[str] = frozenset(GATE_ELIGIBLE_KINDS)
@@ -285,129 +288,8 @@ def _looks_untranslated(segment: Any) -> bool:
     return not cls["isFullyMasked"]
 
 
-# ---------------------------------------------------------------------------
-# diff factory
-# ---------------------------------------------------------------------------
-
-
-def _section_label(section_path: Any) -> str:
-    return section_path if section_path else "(preface)"
-
-
-def _diff_missing(section: dict[str, Any], en_seg: Any, en_local_index: int) -> dict[str, Any]:
-    return {
-        "type": "segment-missing",
-        "sectionPath": section["sectionPath"],
-        "sectionIndex": section["index"],
-        "segmentKind": _get_attr(en_seg, "segmentKind"),
-        "enIndex": en_local_index,
-        "jaIndex": None,
-        "enSegmentIndex": _get_attr(en_seg, "segmentIndex"),
-        "jaSegmentIndex": None,
-        "enSourceFingerprint": _get_attr(en_seg, "sourceFingerprint"),
-        "jaSourceFingerprint": None,
-        "detail": (
-            f"EN {_get_attr(en_seg, 'segmentKind')} not found in JA section "
-            f'"{_section_label(section["sectionPath"])}"'
-        ),
-    }
-
-
-def _diff_extra(section: dict[str, Any], ja_seg: Any, ja_local_index: int) -> dict[str, Any]:
-    return {
-        "type": "segment-extra",
-        "sectionPath": section["sectionPath"],
-        "sectionIndex": section["index"],
-        "segmentKind": _get_attr(ja_seg, "segmentKind"),
-        "enIndex": None,
-        "jaIndex": ja_local_index,
-        "enSegmentIndex": None,
-        "jaSegmentIndex": _get_attr(ja_seg, "segmentIndex"),
-        "enSourceFingerprint": None,
-        "jaSourceFingerprint": _get_attr(ja_seg, "sourceFingerprint"),
-        "detail": (
-            f"JA {_get_attr(ja_seg, 'segmentKind')} has no EN counterpart in section "
-            f'"{_section_label(section["sectionPath"])}"'
-        ),
-    }
-
-
-def _diff_untranslated(
-    section: dict[str, Any],
-    ja_seg: Any,
-    ja_local_index: int,
-    en_seg: Any = None,
-    en_local_index: int | None = None,
-) -> dict[str, Any]:
-    return {
-        "type": "segment-untranslated",
-        "sectionPath": section["sectionPath"],
-        "sectionIndex": section["index"],
-        "segmentKind": _get_attr(ja_seg, "segmentKind"),
-        "enIndex": en_local_index,
-        "jaIndex": ja_local_index,
-        "enSegmentIndex": _get_attr(en_seg, "segmentIndex") if en_seg is not None else None,
-        "jaSegmentIndex": _get_attr(ja_seg, "segmentIndex"),
-        "enSourceFingerprint": _get_attr(en_seg, "sourceFingerprint")
-        if en_seg is not None
-        else None,
-        "jaSourceFingerprint": _get_attr(ja_seg, "sourceFingerprint"),
-        "detail": f"JA {_get_attr(ja_seg, 'segmentKind')} appears to be untranslated English",
-    }
-
-
-def _diff_shifted(
-    section: dict[str, Any],
-    shared_reason: str,
-    en_tokens: set[str],
-    ja_tokens: set[str],
-) -> dict[str, Any]:
-    return {
-        "type": "segment-shifted",
-        "sectionPath": section["sectionPath"],
-        "sectionIndex": section["index"],
-        "segmentKind": "section",
-        "enIndex": None,
-        "jaIndex": None,
-        "enSegmentIndex": None,
-        "jaSegmentIndex": None,
-        "enSourceFingerprint": None,
-        "jaSourceFingerprint": None,
-        "enSectionTokens": sorted(en_tokens),
-        "jaSectionTokens": sorted(ja_tokens),
-        "confidence": "high",
-        "detail": (
-            f'Section "{_section_label(section["sectionPath"])}" appears mis-aligned: '
-            f"{shared_reason}"
-        ),
-    }
-
-
-def _diff_token_gap(
-    section: dict[str, Any],
-    en_seg: Any,
-    ja_seg: Any,
-    en_local_index: int,
-    ja_local_index: int,
-    missing_tokens: list[str],
-) -> dict[str, Any]:
-    return {
-        "type": "segment-token-gap",
-        "sectionPath": section["sectionPath"],
-        "sectionIndex": section["index"],
-        "segmentKind": _get_attr(en_seg, "segmentKind"),
-        "enIndex": en_local_index,
-        "jaIndex": ja_local_index,
-        "enSegmentIndex": _get_attr(en_seg, "segmentIndex"),
-        "jaSegmentIndex": _get_attr(ja_seg, "segmentIndex"),
-        "enSourceFingerprint": _get_attr(en_seg, "sourceFingerprint"),
-        "jaSourceFingerprint": _get_attr(ja_seg, "sourceFingerprint"),
-        "missingTokens": missing_tokens,
-        "detail": (
-            f"JA {_get_attr(en_seg, 'segmentKind')} is missing invariant tokens: "
-            f"{', '.join(missing_tokens)}"
-        ),
-    }
+# diff factory は ``align_diffs.py`` に分離済み (code-reviewer MEDIUM)。本 module
+# 内では ``build_diff_*`` / ``section_label`` を import alias 経由で使う。
 
 
 # ---------------------------------------------------------------------------
@@ -605,7 +487,7 @@ def _align_section(
             f"and JA section content best matches EN section #{swap_evidence['enDestIndex']} "
             f"({swap_evidence['jaToOtherOverlap']} token overlap) — likely body swap"
         )
-        diffs.append(_diff_shifted(en_section, reason, en_tokens, ja_tokens))
+        diffs.append(build_diff_shifted(en_section, reason, en_tokens, ja_tokens))
         return diffs
 
     matched = _weighted_lcs(en_body, ja_body, score_segment_match)
@@ -619,15 +501,15 @@ def _align_section(
     for i, seg in enumerate(en_body):
         if i in en_matched:
             continue
-        diffs.append(_diff_missing(en_section, seg, i))
+        diffs.append(build_diff_missing(en_section, seg, i))
 
     for j, seg in enumerate(ja_body):
         if j in ja_matched:
             continue
         if _looks_untranslated(seg):
-            diffs.append(_diff_untranslated(en_section, seg, j))
+            diffs.append(build_diff_untranslated(en_section, seg, j))
         else:
-            diffs.append(_diff_extra(en_section, seg, j))
+            diffs.append(build_diff_extra(en_section, seg, j))
 
     for en_idx, ja_idx in matched:
         en_seg = en_body[en_idx]
@@ -656,11 +538,11 @@ def _align_section(
 
         if missing_tokens:
             diffs.append(
-                _diff_token_gap(en_section, en_seg, ja_seg, en_idx, ja_idx, missing_tokens)
+                build_diff_token_gap(en_section, en_seg, ja_seg, en_idx, ja_idx, missing_tokens)
             )
 
         if _looks_untranslated(ja_seg):
-            diffs.append(_diff_untranslated(en_section, ja_seg, ja_idx, en_seg, en_idx))
+            diffs.append(build_diff_untranslated(en_section, ja_seg, ja_idx, en_seg, en_idx))
 
     return diffs
 
