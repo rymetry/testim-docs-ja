@@ -100,6 +100,58 @@ import {
 } from '../../lib/source_parity_segments_shared.mjs';
 import { ISSUE_SEVERITY } from '../../lib/source_parity_types.mjs';
 import { extractInvariantTokens } from '../../lib/source_parity_extract.mjs';
+import { formatSourceUnusableSection } from '../../lib/source_parity_summary_format.mjs';
+import {
+  isActiveParityIssue,
+  isAdvisoryOnlyParityIssue,
+  isCoarseAuditSignal,
+  isFrozenByBaseline,
+  isNonBlockingParityIssue,
+  isReportableParityIssue,
+  isSourceUnusableIssue,
+  isStructureMismatchIssue,
+  isValidAcknowledgedIssue,
+} from '../../lib/source_parity_issue_state.mjs';
+import {
+  SOURCE_SYNC_EXCLUSIONS,
+  getExclusion,
+  isSourceSideDebt,
+  listSourceSideDebtSlugs,
+} from '../../lib/source_sync_exclusions.mjs';
+import {
+  checkLocalPageOrphan,
+  checkMissingSnapshot,
+  checkPageCoverage,
+  checkSinglePageSnapshot,
+  checkSourcePageMissingLocal,
+} from '../../lib/source_parity_page_coverage.mjs';
+import {
+  NON_ACKNOWLEDGEABLE_TYPES,
+  computeSnapshotFingerprint,
+  findMatchingAcknowledgement,
+  isAcknowledgementExpired,
+  tagIssuesWithAcknowledgements,
+  validateAcknowledgements,
+} from '../../lib/source_parity_acknowledgements.mjs';
+import {
+  buildAdvisoryArtifacts,
+  buildAdvisoryQueueIssueKey,
+  buildAdvisoryReviewQueue,
+  buildAdvisoryReviewScope,
+  isAdvisoryReviewCandidate,
+  isBlockingAdvisoryReviewIssue,
+  isValidAdvisoryAcknowledgement,
+  summarizeAdvisoryReviewQueue,
+} from '../../lib/source_parity_advisory_queue.mjs';
+import { detectSourceUsability } from '../../lib/source_parity_source_usability.mjs';
+import {
+  SOURCE_SYNC_STATUS_SCHEMA_VERSION,
+  buildRunScope,
+  buildSourceSyncStatus,
+  computeFreshnessState,
+  fingerprint as syncHealthFingerprint,
+  validateRunLinkage,
+} from '../../lib/source_sync_health.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers (Map / Set を JSON-safe に正規化する)
@@ -315,6 +367,133 @@ const DISPATCH = {
       ? { slug, calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS }
       : {};
     return extractSegmentsFromHtml(html, options);
+  },
+
+  // -------- summary_format --------
+  // Phase 3 M1: formatSourceUnusableSection は summary dict を受け取って複数行
+  // テキスト (または null) を返す純粋フォーマッタ。mjs と byte 一致。
+  // Consumer: scripts/py/tests/conformance/test_summary_format_parity.py
+  summary_format_source_unusable: ([summary]) => formatSourceUnusableSection(summary),
+
+  // -------- issue_state --------
+  // Phase 3 M1: issue 状態判定述語 (pure predicates)。ack / baseline / severity /
+  // type (coarse / structure / source-unusable) の組合せで issue を分類する。
+  // Consumer: scripts/py/tests/conformance/test_issue_state_parity.py
+  issue_state_is_valid_acknowledged: ([issue]) => isValidAcknowledgedIssue(issue),
+  issue_state_is_frozen_by_baseline: ([issue]) => isFrozenByBaseline(issue),
+  issue_state_is_active: ([issue]) => isActiveParityIssue(issue),
+  issue_state_is_coarse_audit_signal: ([issue]) => isCoarseAuditSignal(issue),
+  issue_state_is_structure_mismatch: ([issue]) => isStructureMismatchIssue(issue),
+  issue_state_is_source_unusable: ([issue]) => isSourceUnusableIssue(issue),
+  issue_state_is_reportable: ([issue]) => isReportableParityIssue(issue),
+  issue_state_is_advisory_only: ([issue]) => isAdvisoryOnlyParityIssue(issue),
+  issue_state_is_non_blocking: ([issue]) => isNonBlockingParityIssue(issue),
+
+  // -------- sync_exclusions --------
+  // Phase 3 M1: source-side debt registry (upstream broken page の固定化)。
+  // Python 側は MappingProxyType で immutable を再現。registry content の byte
+  // parity は sync_exclusions_dump で保証する。
+  // Consumer: scripts/py/tests/conformance/test_sync_exclusions_parity.py
+  sync_exclusions_is_source_side_debt: ([slug]) => isSourceSideDebt(slug),
+  sync_exclusions_get: ([slug]) => getExclusion(slug),
+  sync_exclusions_list_slugs: () => listSourceSideDebtSlugs(),
+  sync_exclusions_dump: () =>
+    // registry 全体を dump。dual-source-of-truth (mjs と Python の定数) の drift
+    // detection 用 — mjs 側 const と Python 側 _REGISTRY を byte 比較する。
+    Object.fromEntries(
+      Object.entries(SOURCE_SYNC_EXCLUSIONS).map(([slug, entry]) => [slug, { ...entry }]),
+    ),
+
+  // -------- page_coverage --------
+  // Phase 3 M1: page coverage gate (sidebar / local / snapshot 三者整合)。
+  // severity は ISSUE_SEVERITY lookup なので、freshness state と type の組合せ
+  // で actionable / signal が切り替わる。
+  // Consumer: scripts/py/tests/conformance/test_page_coverage_parity.py
+  page_coverage_source_missing_local: ([sidebarSlugs, localSlugs]) =>
+    checkSourcePageMissingLocal(new Set(sidebarSlugs), new Set(localSlugs)),
+  page_coverage_local_orphan: ([localSlugs, sidebarSlugs]) =>
+    checkLocalPageOrphan(new Set(localSlugs), new Set(sidebarSlugs)),
+  page_coverage_missing_snapshot: ([localSourceUrls, snapshotSlugs, freshnessState]) =>
+    checkMissingSnapshot(
+      new Map(Object.entries(localSourceUrls)),
+      new Set(snapshotSlugs),
+      freshnessState,
+    ),
+  page_coverage_single_page: ([slug, sourceUrl, snapshotSlugs, freshnessState]) =>
+    checkSinglePageSnapshot(slug, sourceUrl, new Set(snapshotSlugs), freshnessState),
+  page_coverage_all: ([opts]) =>
+    checkPageCoverage({
+      sidebarSlugs: new Set(opts.sidebarSlugs ?? []),
+      localSlugs: new Set(opts.localSlugs ?? []),
+      localSourceUrls: new Map(Object.entries(opts.localSourceUrls ?? {})),
+      snapshotSlugs: new Set(opts.snapshotSlugs ?? []),
+      freshnessState: opts.freshnessState ?? null,
+    }),
+
+  // -------- acknowledgements --------
+  // Phase 3 M2: SHA-256 fingerprint, schema validation, ack match + tagging。
+  // Consumer: scripts/py/tests/conformance/test_acknowledgements_parity.py
+  acknowledgements_fingerprint: ([content]) => computeSnapshotFingerprint(content),
+  acknowledgements_non_acknowledgeable_types: () => [...NON_ACKNOWLEDGEABLE_TYPES].sort(),
+  acknowledgements_is_expired: ([entry, currentFingerprint, today]) =>
+    isAcknowledgementExpired(entry, currentFingerprint, today),
+  acknowledgements_find_match: ([slug, issue, entries, currentFingerprint, today]) =>
+    findMatchingAcknowledgement(slug, issue, entries, currentFingerprint, today),
+  acknowledgements_tag_issues: ([slug, issues, entries, currentFingerprint, today]) =>
+    tagIssuesWithAcknowledgements(slug, issues, entries, currentFingerprint, today),
+  acknowledgements_validate: ([parsed]) => {
+    // throw 経路は harness 外 try/catch で捕まると {__error} として返るが、
+    // validateAcknowledgements は schema 違反で Error を throw するため
+    // domain error は ``{__domain_error}`` envelope で分離する。
+    try {
+      validateAcknowledgements(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+
+  // -------- advisory_queue --------
+  // Phase 3 M2: tokenless-near-tie advisory queue builder + summarizer。
+  // Consumer: scripts/py/tests/conformance/test_advisory_queue_parity.py
+  advisory_is_candidate: ([issue]) => isAdvisoryReviewCandidate(issue),
+  advisory_is_valid_ack: ([issue]) => isValidAdvisoryAcknowledgement(issue),
+  advisory_is_blocking: ([issue]) => isBlockingAdvisoryReviewIssue(issue),
+  advisory_build_issue_key: ([slug, issue]) => buildAdvisoryQueueIssueKey(slug, issue),
+  advisory_build_scope: ([opts]) => buildAdvisoryReviewScope(opts ?? {}),
+  advisory_build_queue: ([results]) => buildAdvisoryReviewQueue(results ?? []),
+  advisory_summarize: ([queue, scope]) =>
+    summarizeAdvisoryReviewQueue(queue ?? [], scope ?? null),
+  advisory_build_artifacts: ([opts]) => buildAdvisoryArtifacts(opts ?? {}),
+
+  // -------- source_usability --------
+  // Phase 3 M2: Layer 1/2/3 source usability detection。preprocess_en を使う
+  // ため ``segment`` list は ``{segmentKind}`` shape に限定した minimal fixture
+  // を Python 側で用意して渡す。
+  // Consumer: scripts/py/tests/conformance/test_source_usability_parity.py
+  usability_detect: ([opts]) => detectSourceUsability(opts ?? {}),
+
+  // -------- sync_health --------
+  // Phase 3 M2: source-sync-status.json builder。runId の deterministic 生成
+  // のため conformance sample では常に ``now`` (ISO string) と ``runSeed`` を渡す。
+  // Consumer: scripts/py/tests/conformance/test_sync_health_parity.py
+  sync_health_schema_version: () => SOURCE_SYNC_STATUS_SCHEMA_VERSION,
+  sync_health_build_run_scope: ([opts]) => buildRunScope(opts ?? {}),
+  sync_health_fingerprint: ([items]) => syncHealthFingerprint(items ?? []),
+  sync_health_compute_freshness: ([pages, sidebarVerified]) =>
+    computeFreshnessState(pages ?? [], Boolean(sidebarVerified)),
+  sync_health_validate_linkage: ([sourceSync, snapshotDiff, parityRunScope]) =>
+    validateRunLinkage(sourceSync, snapshotDiff, parityRunScope),
+  sync_health_build_status: ([opts]) => {
+    // opts.now は ISO string で渡す想定。mjs は Date 型を期待するため変換する。
+    const normalized = {
+      pages: opts.pages ?? [],
+      sidebarResult: opts.sidebarResult ?? { ok: false },
+      runScope: opts.runScope ?? { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+      now: opts.now ? new Date(opts.now) : undefined,
+      runSeed: opts.runSeed,
+    };
+    return buildSourceSyncStatus(normalized);
   },
 
   // -------- segments_ja --------

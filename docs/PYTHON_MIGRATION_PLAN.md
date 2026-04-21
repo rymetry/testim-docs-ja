@@ -583,26 +583,87 @@ Issue #368 の core fix。
 
 **Goal**: parity system コア + 全 supporting modules を port
 
+### Milestone 分割 (単一 PR 内の段階的 commit)
+
+Phase 3 は **単一 PR に集約** (ユーザ決定 2026-04-21)。ただし ~5,500 LOC を
+1 commit に積むと review が困難なので、以下 M1-M7 を **連続 commit として積む**
+方針。branch ``claude/phase3-supporting-modules`` に全 M1-M7 を commit し、
+全 M7 完了時点で **4 specialist reviewer gate** (``feedback_four_reviewer_gate``
+必須) を実施。gate 合格後に 1 PR を作成。
+
+| Milestone | 対象 | 状態 |
+| --- | --- | --- |
+| **M1** | `summary_format` + `issue_state` + `sync_exclusions` + `page_coverage` (4 leaf, ~400 LOC) | ✅ 完了 (conformance harness + unit/byte-parity test) |
+| M2 | `acknowledgements` + `source_usability` + `advisory_queue` + `sync_health` | in progress |
+| M3 | `structure` + `checks` | pending |
+| M4 | `align` (weighted LCS, JS rounding 互換) | pending |
+| M5 | `baseline` + `summary` (summary_format と結線) | pending |
+| M6 | `mutation_corpus` (9/9 mutation recall 契約) | pending |
+| M7 | `detection_reports` (1575 LOC, split 検討) | pending |
+
+### Milestone 依存関係 DAG
+
+architect review H3 を反映。linear chain ではなく実際には:
+
+- **M1** (leaf predicates/registry) → {**M2, M3, M4, M6**} **並列着手可**
+- **M5** (baseline + summary) は **M1 + M2 + M3 完了後**
+- **M7** (detection_reports aggregator) は **全 modules 完了後**
+
+| Milestone | 直接依存 |
+| --- | --- |
+| M2 `acknowledgements` / `source_usability` / `advisory_queue` / `sync_health` | M1 (`issue_state`) |
+| M3 `structure` / `checks` | M1 (`issue_state` / `page_coverage`) |
+| M4 `align` | (独立 — pure scoring) |
+| M5 `baseline` / `summary` | M1 (`summary_format` / `issue_state`) + M2 (`acknowledgements`) + M3 (`structure`) |
+| M6 `mutation_corpus` | (独立 — scoring fixture) |
+| M7 `detection_reports` | 全 modules (aggregator) |
+
+### M1 実装メモ (2026-04-21)
+
+- 全 4 modules は pure function / immutable registry のみで副作用なし
+- ``issue_state`` の 9 predicates: mjs ``isValidAcknowledgedIssue`` /
+  ``isFrozenByBaseline`` / ``isReportableParityIssue`` / ``isNonBlockingParityIssue``
+  は ``null`` / 非 object で ``TypeError`` を throw する。Python port は
+  ``_is_issue_mapping`` ガードで非 dict を False に倒す (improvement)。conformance
+  sample は意図的に dict 限定 (production caller は常に dict)
+- **parity issue の受け渡しは dict / Mapping 前提**。Phase 4 CLI port で
+  Pydantic model を使う場合は ``.model_dump()`` を通してから predicate に渡す
+  (architect H1)
+- ``page_coverage``: mjs ``Set`` iteration 順 = 挿入順。harness 側で ``Set``/``Map``
+  に変換する際 sort 済み配列を渡して Python-mjs 間で issue 順序を揃える。
+  **production caller (Phase 4 ``check_source_parity.py``) は ``sidebar_slugs`` /
+  ``local_slugs`` / ``snapshot_slugs`` に sort 済み sequence を渡す契約**
+  (architect H2)。Python 側関数内部では ``set`` に変換して lookup に使うが、
+  iteration 対象 (``sidebar_slugs`` / ``local_source_urls`` / ``local_slugs``) は
+  caller の順序を維持する
+- ``sync_exclusions``: ``MappingProxyType`` で immutable 化、``get_exclusion`` は
+  shallow copy を返す (mjs ``{ ...entry }`` と等価)。dual-source-of-truth drift は
+  ``sync_exclusions_dump`` conformance で byte 比較。registry shape が nested dict
+  を含むように拡張した時は ``deepcopy`` に切替 (現状 flat dict のため shallow 可)
+- ``summary_format``: CLI 表示用複数行テキストの byte-identical を保証
+- **M1 allowlist: 空** — 4 modules 全て conformance で byte-identical (divergence
+  は意図的な non-dict ガードのみ、test sample から除外済み)
+
 ### Port 対象 (16 modules, ~5,500 LOC)
 
-| mjs source | Python target | LOC |
-| --- | --- | --- |
-| `source_parity_align.mjs` | `align.py` | 898 |
-| `source_parity_structure.mjs` | `structure.py` | 441 |
-| `source_parity_baseline.mjs` | `baseline.py` | 551 |
-| `source_parity_source_usability.mjs` | `source_usability.py` | 267 |
-| `source_parity_acknowledgements.mjs` | `acknowledgements.py` | 242 |
-| `source_parity_issue_state.mjs` | `issue_state.py` | 115 |
-| `source_parity_summary.mjs` | `summary.py` | 209 |
-| `source_parity_summary_format.mjs` | `summary_format.py` | 33 |
-| `source_parity_advisory_queue.mjs` | `advisory_queue.py` | 200 |
-| `source_parity_page_coverage.mjs` | `page_coverage.py` | 137 |
-| `source_parity_checks.mjs` | `checks.py` | 411 |
-| `turndown.mjs` (preprocessEnHtml only) | `preprocess_en.py` | ~200 |
-| `mutation_corpus.mjs` | `mutation_corpus.py` | 763 |
-| `source_sync_exclusions.mjs` | `sync_exclusions.py` | 116 |
-| `source_sync_health.mjs` | `sync_health.py` | 276 |
-| `detection_reports.mjs` | `detection_reports.py` | 1575 |
+| mjs source | Python target | LOC | Milestone |
+| --- | --- | --- | --- |
+| `source_parity_align.mjs` | `align.py` | 898 | M4 |
+| `source_parity_structure.mjs` | `structure.py` | 441 | M3 |
+| `source_parity_baseline.mjs` | `baseline.py` | 551 | M5 |
+| `source_parity_source_usability.mjs` | `source_usability.py` | 267 | M2 |
+| `source_parity_acknowledgements.mjs` | `acknowledgements.py` | 242 | M2 |
+| `source_parity_issue_state.mjs` | `issue_state.py` | 115 | **M1 ✅** |
+| `source_parity_summary.mjs` | `summary.py` | 209 | M5 |
+| `source_parity_summary_format.mjs` | `summary_format.py` | 33 | **M1 ✅** |
+| `source_parity_advisory_queue.mjs` | `advisory_queue.py` | 200 | M2 |
+| `source_parity_page_coverage.mjs` | `page_coverage.py` | 137 | **M1 ✅** |
+| `source_parity_checks.mjs` | `checks.py` | 411 | M3 |
+| `turndown.mjs` (preprocessEnHtml only) | `preprocess_en.py` | ~200 | (Phase 1 で完了 ✅) |
+| `mutation_corpus.mjs` | `mutation_corpus.py` | 763 | M6 |
+| `source_sync_exclusions.mjs` | `sync_exclusions.py` | 116 | **M1 ✅** |
+| `source_sync_health.mjs` | `sync_health.py` | 276 | M2 |
+| `detection_reports.mjs` | `detection_reports.py` | 1575 | M7 |
 
 ### 重要制約
 

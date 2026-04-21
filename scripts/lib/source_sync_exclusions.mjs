@@ -95,6 +95,7 @@ export function isSourceSideDebt(slug) {
  *   expectedIssueType: string,
  *   expectedReason: string,
  *   addedAt: string,
+ *   reviewAfter: string,
  *   linkedIssue: number,
  * } | null}
  */
