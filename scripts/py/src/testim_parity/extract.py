@@ -37,7 +37,12 @@ def _normalize_url_token(url: str) -> str | None:
         if slug:
             full = resolve_to_full_slug(slug)
             basename = slug.split("/")[-1]
-            if build_basename_to_path_map().get(basename) is None:
+            # mjs は ``map.get(basename) === null`` で **明示的 null (ambiguous)**
+            # のみ抑止する。key 欠如 (undefined) は emit する。Python の
+            # ``dict.get()`` は missing / explicit None を区別できないので、
+            # ``in`` で存在チェックを先行させる (Phase 1.3 verification で発覚)。
+            basename_map = build_basename_to_path_map()
+            if basename in basename_map and basename_map[basename] is None:
                 return None
             return f"/docs/{full}"
 
@@ -50,7 +55,8 @@ def _normalize_url_token(url: str) -> str | None:
         if slug:
             full = resolve_to_full_slug(slug)
             basename = slug.split("/")[-1]
-            if build_basename_to_path_map().get(basename) is None:
+            basename_map = build_basename_to_path_map()
+            if basename in basename_map and basename_map[basename] is None:
                 return None
             return f"/docs/{full}"
 

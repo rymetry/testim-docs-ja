@@ -258,7 +258,7 @@ PR #370 review サイクルで意図的に残した設計メモ (後続 Phase �
 
 **Goal**: カスタム HTML tokenizer → `BeautifulSoup(html, 'lxml')`
 
-### 1.0: Runtime 間 IPC / artifact contract の決定 (前提条件)
+### 1.0: Runtime 間 IPC / artifact contract の決定 ✅ 完了
 
 Phase 1 以降は Python 側に新機能を置く一方で pipeline は当分 mjs に残るため、runtime 間でどう segments を受け渡すか事前に決める必要がある (Phase 0 reviewer gate 指摘)。
 
@@ -267,12 +267,25 @@ Phase 1 以降は Python 側に新機能を置く一方で pipeline は当分 mj
 1. **Library-only**: Phase 1–3 の Python modules は standalone library として提供し、pipeline wiring は Phase 4 まで遅延。mjs 側は当分 mjs `segments_en` を使い続ける。Python 側は conformance test で byte 一致を保証するだけ。
 2. **JSON bridge**: `segments.v1.json` schema (Pydantic → JSON Schema 生成) を定義し、両 runtime がそれを read/write。mjs 側は既存の in-memory object からこの JSON へ serialize する wrapper を追加。
 
-**推奨**: Phase 1 開始前に **Library-only** を選択 (変更面積最小、conformance test で drift 検出可能)。`docs/PYTHON_MIGRATION_PLAN.md` の当節に選択結果を記録し、`segments_en.py` は `scripts/detection/check_source_parity.mjs` からは呼ばれない (mjs 実装のまま) 方針を明記。Phase 4 で detection CLI を Python に切り替える時に pipeline wiring。
+**決定: Library-only を採用 (2026-04-21)**。Phase 1 開始時に以下の理由で確定:
 
-**Phase 1 着手時の先行チェック**:
+- 変更面積最小 — mjs 側に変更ゼロで Python 実装を並行できる
+- conformance harness (Phase 0 で導入済み) が byte 一致を直接保証するため、JSON schema を挟まなくても drift 検出可能
+- `scripts/detection/check_source_parity.mjs` は mjs `source_parity_segments_en.mjs` を呼び続ける。Python 側 `segments_en.py` は standalone library として存在し、pipeline からは呼ばれない
+- Phase 4 で detection CLI を Python に切り替える時に pipeline wiring を行う。その時点で必要なら JSON bridge を追加する (cutover の一部として)
 
-- `types-beautifulsoup4` / `types-html5lib` / `lxml-stubs` が PyPI に存在するか確認し、存在すれば `pyproject.toml` の `dev` extras へ追加。Phase 0 時点の `[[tool.mypy.overrides]]` は `html5lib` だけ `ignore_missing_imports` を許容しているが、Phase 1 で `from bs4 import BeautifulSoup` / `import lxml.html` を追加した瞬間に同 override を拡張するか、型スタブを入れて strict を維持するかを判断する (PR 0 review N3)
-- スタブ導入で mypy が first-party コードに対し新しい error を出す可能性があるため、Phase 1.0 着手 PR の最初のコミットで scaffolding (`from bs4 import BeautifulSoup` を module 先頭に置くだけ) + mypy を走らせ、ノイズを先に潰してから実装コミットを積む
+**Phase 1 着手時の先行チェック ✅ 実施済**:
+
+- `types-beautifulsoup4` (4.12.0.20250516) / `types-html5lib` (1.1.11.20260408) / `lxml-stubs` (0.5.1) を PyPI で確認し、全て存在。`scripts/py/pyproject.toml` の `dev` extras へ追加済
+- `[[tool.mypy.overrides]]` から `html5lib` を除外 (スタブ導入により strict 維持可能)。first-party typo 検出力を落とさない
+- scaffolding commit で `scripts/py/src/testim_parity/preprocess_en.py` + `segments_en.py` に最小 `from bs4 import BeautifulSoup` を配置し、`mypy src` が 0 error を出すことを確認 (15 source files clean)
+
+**Phase 1.0 verification gate ✅ 全通過**:
+
+- `uv run pytest` pass — **294 tests, 95.67% coverage** (scaffold に 4 unit tests 追加)
+- `uv run ruff check src tests` / `format --check` / `uv run mypy src` — 全 clean
+- `npm run build` — 290 pages OK
+- `preprocess_en.py` は `BeautifulSoup(html, "lxml")` を返すだけの scaffold、`segments_en.py` は空 list を返す scaffold として Phase 1.1 / 1.2 の実装を待つ
 
 ### Module: `source_parity_segments_en.mjs` (709 LOC) → `segments_en.py`
 
@@ -320,11 +333,49 @@ def extract_segments_from_html(html: str, slug: str | None = None) -> list[Segme
     return segments
 ```
 
-### Phase 1 verification gate
+### Phase 1 verification gate ✅ 全通過
 
-- 全 288+ snapshot ページで segments_en 出力を mjs と比較
-- **比較対象**: `segmentKind`, `sectionPath`, segment 数が一致 (textNorm の微差は entity decoding の差で許容)
-- 一致しないページを explicit allowlist で管理し原因文書化
+- 全 288 snapshot ページで segments_en 出力を mjs と **byte-identical** 比較
+  (segmentKind / sectionPath / segmentIndex / textNorm / tokensInvariant /
+  sourceFingerprint すべて一致)
+- mjs 側は harness batch dispatch で 1 回の node プロセスにまとめる
+  (per-page spawn だと CI コストが 288 倍になるため強制)
+- 一致しないページを ``_ALLOWLIST`` で管理。entry は ``AllowEntry(reason,
+  expires_at_phase, linked_issue)`` shape で追加し、対応 Phase 完了時に
+  retire する (architect review H3)。**現状 allowlist は空**
+
+### Phase 1 post-review 対応 (2026-04-21)
+
+4 specialist reviewer gate (python-reviewer / typescript-reviewer / architect /
+codex) の指摘事項を反映した主要変更:
+
+- **html5lib fallback 実装** (architect H1) — lxml が segment 0 件を返した
+  HTML が ``_HTML5LIB_FALLBACK_MIN_LEN`` 以上の場合、html5lib で再パース。
+  現行 288-page corpus では発動しない defensive net だが、将来 malformed
+  EN snapshot が来たときの safety net として事前配線
+- **``callout_allow_slugs`` default を mjs と揃える** (architect H4) —
+  Python 側も ``None`` = no normalization。production caller は
+  ``CALLOUT_NORMALIZATION_SLUGS`` を明示的に渡す契約
+- **``<table><tr>`` (tbody なし) conformance sample** (architect H2) — lxml
+  の暗黙 ``<tbody>`` 挿入と mjs custom tokenizer の挙動差を guard
+- **allowlist lifecycle 明文化** (architect H3) — ``AllowEntry`` dataclass で
+  reason / expires_at_phase / linked_issue を必須化。288-matrix 自体は Phase 5
+  aggregate gate 移行時に retire する契約
+- **BS4 entity double-decode 修正** (Phase 1.3 で発覚) — lxml auto-decode と
+  mjs 1-pass decode の等価性を docstring に明記
+- **``_has_class`` pattern cache** (python-reviewer MEDIUM) — module-level
+  dict で ``re.compile`` を amortize
+- **``Comment`` import を module top へ** (python-reviewer MEDIUM)
+- **``root: Tag | BeautifulSoup`` 型 union** (python-reviewer MEDIUM)
+
+### 既知の follow-up (Phase 2 着手前に検討)
+
+- type-stub version drift の CI 監視 (monthly ``gh api`` + ``uv lock --upgrade``
+  時の 288-matrix re-run) — 現状手動運用で pin `~=`
+- ``_WHITESPACE_RUN_RE`` / ``_iter_element_children`` 等の shared helper を
+  Phase 2 JA extractor と合流させる時に抽出
+- ``_is_warning_like_blockquote`` の 3 条件判定を BS4 DOM 版に置き換えるか
+  継続 regex で回すかの最終判断 (現状 mjs と byte 一致のため regex 維持)
 
 ---
 

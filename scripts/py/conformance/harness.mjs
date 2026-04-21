@@ -26,6 +26,12 @@ import {
   countOccurrences,
   DEFECT_CLASSES,
 } from '../../lib/en_source_patches.mjs';
+import { preprocessEnHtml } from '../../lib/turndown.mjs';
+import {
+  CALLOUT_NORMALIZATION_SLUGS,
+  decodeEntities,
+  extractSegmentsFromHtml,
+} from '../../lib/source_parity_segments_en.mjs';
 import {
   ARTIFACT_REGISTRY,
   createArtifactCoverage,
@@ -279,6 +285,35 @@ const DISPATCH = {
     const patch = EN_SOURCE_PATCHES.find((p) => p.id === patchId);
     if (!patch) return null;
     return applyEnSourcePatches(patch.find, patch.slugs[0]);
+  },
+
+  // -------- preprocess_en --------
+  preprocess_en_html: ([html, slug]) => {
+    // 第二引数は options object。slug が非 nullish なら patchCoverage は
+    // NOOP_PATCH_COVERAGE が default で入るので渡さない。Python 側も
+    // patch_coverage=None がデフォルトで同じ経路を通る契約。
+    const options = slug ? { slug } : {};
+    return preprocessEnHtml(html, options);
+  },
+
+  // -------- segments_en --------
+  segments_en_decode_entities: ([text]) => decodeEntities(text),
+  segments_en_callout_normalization_slugs: () =>
+    [...CALLOUT_NORMALIZATION_SLUGS].sort(),
+  segments_en_extract: ([html, slug]) => {
+    // options の build 規則:
+    //   - slug が falsy (null / undefined / '')  → options = {}
+    //     (mjs `normalizeCallouts` は calloutAllowSlugs を instanceof Set で
+    //      チェックするため、未 bind なら normalization を skip)
+    //   - slug が truthy → calloutAllowSlugs を CALLOUT_NORMALIZATION_SLUGS に
+    //     bind する。Python 側も同じ Set を明示的に渡す契約 (review H4)。
+    //     これで production caller (`extract_segments_from_html(html, slug=...,
+    //     callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS)`) と同じ shape で
+    //     byte 一致を比較できる。
+    const options = slug
+      ? { slug, calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS }
+      : {};
+    return extractSegmentsFromHtml(html, options);
   },
 };
 
