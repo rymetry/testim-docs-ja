@@ -1,0 +1,5 @@
+# en_source_patches の Python port JSON は mjs registry (scripts/lib/en_source_patches.mjs)
+# から `npm run regen:py-patches` で自動生成される。PR reviewer は手動 edit を
+# 疑わずスキップしてよい — `npm run check:py-patches` (CI で自動実行) が drift
+# を検出する。
+scripts/py/src/testim_parity/_en_source_patches_data.json linguist-generated=true

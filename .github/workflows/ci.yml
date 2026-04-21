@@ -46,6 +46,50 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+  python-test:
+    # Covers the in-flight Python port (see docs/PYTHON_MIGRATION_PLAN.md).
+    # Runs unit tests, conformance tests (which spawn node against mjs
+    # sources), lint, format, and type-check. Node is installed because the
+    # conformance harness at scripts/py/conformance/harness.mjs imports
+    # scripts/lib/*.mjs. Drop this job only after the cutover in Phase 6.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        run: pip install --upgrade uv
+      - name: Sync Python deps
+        run: uv sync --all-extras
+      - name: Check en_source_patches JSON is in sync with mjs registry
+        # dual-source-of-truth の drift 検出。mjs 側 registry を編集したら
+        # `npm run regen:py-patches` を実行して JSON を再生成する必要がある。
+        working-directory: ${{ github.workspace }}
+        run: node scripts/py/tools/regen_en_source_patches.mjs --check
+      - name: Ruff lint
+        run: uv run ruff check src tests
+      - name: Ruff format check
+        run: uv run ruff format --check src tests
+      - name: mypy
+        run: uv run mypy src
+      - name: pytest
+        run: uv run pytest --cov=testim_parity --cov-report=term-missing
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage
+          path: scripts/py/.coverage
+          if-no-files-found: ignore
+          retention-days: 7
+
   parity:
     runs-on: ubuntu-latest
     permissions:

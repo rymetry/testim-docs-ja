@@ -15,7 +15,7 @@ Issue #368 の根本原因は JA parser が line-based regex であること。E
 ### Python libraries
 
 | ライブラリ | GitHub Stars | 用途 | 選定理由 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | [beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/) | PyPI 最多 DL | EN HTML パース | lxml/html5lib 切替可能。壊れた HTML に最堅牢 |
 | [lxml](https://github.com/lxml/lxml) | 2.9K | BS4 高速バックエンド | C 拡張。`recover=True` で自動修復 |
 | [html5lib](https://github.com/html5lib/html5lib-python) | 1.1K | BS4 寛容バックエンド (fallback) | WHATWG 準拠。lxml 失敗時の逃げ道 |
@@ -31,12 +31,12 @@ Issue #368 の根本原因は JA parser が line-based regex であること。E
 ### Astro (COPY ボタン)
 
 | ライブラリ | GitHub Stars | npm weekly DL |
-|---|---|---|
+| --- | --- | --- |
 | [astro-expressive-code](https://github.com/expressive-code/expressive-code) | 882 | 10,092 |
 
 ### パーサ戦略
 
-```
+```text
 EN HTML: BeautifulSoup(html, 'lxml') → fallback: html5lib
 JA Markdown: HYBRID
   - markdown-it-py: headings, lists, code fences, tables, images, paragraphs
@@ -54,6 +54,7 @@ JA Markdown: HYBRID
 ### 解決策: `redirects.mjs` を自己完結化
 
 `filePathToSlug` は 1 行の pure path utility:
+
 ```javascript
 export function filePathToSlug(filePath, docsDir = DOCS_DIR) {
   return path.relative(docsDir, filePath).replace(/\.md$/, '');
@@ -61,17 +62,20 @@ export function filePathToSlug(filePath, docsDir = DOCS_DIR) {
 ```
 
 **Action**: `redirects.mjs` に `filePathToSlug` と `DOCS_DIR` をインライン化し、`project.mjs` への import を除去。結果:
-- `redirects.mjs` → `node:fs`, `node:path`, `node:url` のみに依存 (自己完結)
-- `project.mjs` / `sidebar.mjs` / `madcap_toc.mjs` / `gray-matter` は全て削除可能
 
-**保持ファイル**: `scripts/lib/redirects.mjs` のみ (Astro build 用)
-**削除ファイル**: その他全ての mjs
+- `redirects.mjs` → `node:fs`, `node:path`, `node:url` のみに依存 (自己完結)
+- `astro.config.mjs` の build graph から `scripts/lib/project.mjs` 以下の依存 chain が切り離される
+
+**重要な注意**: この decoupling は **Astro build graph だけ** を切る。`project.mjs` には依然として 17+ の mjs consumer が残る (`check_source_parity.mjs`, `snapshot_update/diff.mjs`, `pipeline/*`, `tools/*`, `detection_reports.mjs`, `source_parity_extract.mjs` 等)。したがって `project.mjs` / `sidebar.mjs` / `madcap_toc.mjs` / `gray-matter` の削除は **Phase 4 の consumer 全 port 完了まで不可**。Phase 0 だけで「mjs 削除可能」となるわけではない。
+
+**保持ファイル (Phase 6 cutover まで)**: `scripts/lib/redirects.mjs` (Astro build 用) + その他全 mjs (coexistence)
+**最終削除ファイル (Phase 6 cutover 時)**: `scripts/lib/redirects.mjs` 以外すべて
 
 ---
 
 ## Python 環境セットアップ
 
-```
+```text
 scripts/
   py/
     pyproject.toml           # package definition + dependencies
@@ -138,44 +142,118 @@ uv run pytest   # runs tests in venv
 
 ## Phase 0: Foundation (基盤構築)
 
-**Goal**: Pydantic モデル、共有 utilities、redirects.mjs 自己完結化
+**Goal**: Python package skeleton, 基盤 utilities の port, cross-runtime conformance harness, redirects.mjs 自己完結化, CI Python job。
 
-### 0.1: redirects.mjs decoupling
+### 0.1: redirects.mjs decoupling ✅ 完了
 
 `scripts/lib/redirects.mjs` に `filePathToSlug` + `DOCS_DIR` をインライン化:
+
 ```javascript
 const DOCS_DIR = path.resolve(__dirname, '..', '..', 'src', 'content', 'docs');
 function filePathToSlug(filePath) {
   return path.relative(DOCS_DIR, filePath).replace(/\.md$/, '');
 }
 ```
-`import { filePathToSlug } from './project.mjs';` を削除。
 
-### 0.2: Python package skeleton
+`import { filePathToSlug } from './project.mjs';` を削除。Astro build graph から `project.mjs` 依存を切断済。**ただし**「Node.js 保持境界」節に記載の通り、`project.mjs` には 17+ の mjs consumer が残っているため、この decoupling だけで mjs 削除可能とはならない (Phase 4 以降)。
 
-Port 対象 (leaf nodes):
-- `source_parity_segments_shared.mjs` → `models.py` + `segments_shared.py`
-- `source_parity_types.mjs` → `types.py`
-- `parity_normalize.mjs` → `normalize.py`
-- `source_parity_align_scoring.mjs` → `align_scoring.py`
-- `source_parity_extract.mjs` (token portion) → `extract.py`
-- `parity_glossary_mask.mjs` → `glossary_mask.py`
-- `parity_artifact_registry.mjs` → `artifact_registry.py`
-- `en_source_patches.mjs` → `en_source_patches.py`
-- `project.mjs` → `project.py`
-- `sidebar.mjs` → `sidebar.py`
-- `madcap_toc.mjs` → `madcap_toc.py`
+### 0.2: Python package skeleton + 基盤 utilities ✅ 完了
 
-### Verification gate
+- `scripts/py/` skeleton: `pyproject.toml` (uv + pydantic + bs4 + lxml + markdown-it-py 等), `.python-version` = 3.12, `uv.lock`, ruff / mypy / pytest 設定
+- `tests/conftest.py`: 共有 `make_segment` fixture, `repo_root` / `node_available` session fixtures
+- 11 leaf module 全て ported:
+  - `source_parity_types.mjs` → `types.py` (severity map, coarse signal / structure / source-unusable sets, UNTRANSLATED_PATTERNS 他)
+  - `parity_normalize.mjs` → `normalize.py` (URL canonicalization)
+  - `source_parity_align_scoring.mjs` → `align_scoring.py` (weighted-LCS ペアスコア)
+  - `madcap_toc.mjs` → `madcap_toc.py` (AMD module パーサ + TOC tree 走査 + sidebar snapshot)
+  - `sidebar.mjs` → `sidebar.py` (SIDEBAR_URLS.md パーサ + section lookup)
+  - `project.mjs` → `project.py` (slug index / basename map / frontmatter-aware indexing / section filter)
+  - `source_parity_extract.mjs` (token portion) → `extract.py` (invariant token 抽出 + URL 正規化)
+  - `source_parity_segments_shared.mjs` → `models.py` (Pydantic Segment) + `segments_shared.py` (factory + 正規化 + fingerprint)
+  - `parity_glossary_mask.mjs` → `glossary_mask.py` (GLOSSARY.md / INVARIANT_TOKENS.md loader + mask + classify)
+  - `parity_artifact_registry.mjs` → `artifact_registry.py` (EN 側 artifact suppress registry + coverage)
+  - `en_source_patches.mjs` → `en_source_patches.py` (patch registry は `_en_source_patches_data.json` として mjs から JSON 生成し共有)
+- `__init__.py` で public API 再 export
+- 構造契約 dep (beautifulsoup4 / lxml / markdown-it-py) に `~=` upper bound
 
-- `uv run pytest tests/test_segments_shared.py` pass
-- `npm run build` pass (redirects.mjs decoupling 確認)
+### 0.3: Cross-runtime conformance harness ✅ 完了
+
+`scripts/py/conformance/harness.mjs` が mjs 関数群を JSON I/O で露出し、Python conformance test (`tests/conformance/test_*_parity.py`) が 1 回の node プロセスで batch 評価して Python 出力と byte 比較する。
+**これは Phase 0 reviewer gate で発覚した CRITICAL (Math.round vs Python round 銀行家丸め) の根本原因に対する systemic 対策**。port 対象 mjs を新しく追加するときは必ず `harness.mjs` の `DISPATCH` テーブルと該当 `test_*_parity.py` samples を同じ PR で拡張する。
+
+`node_available` fixture 経由で node 不在環境では skip するため、Python-only CI でも壊れない。
+
+### 0.4: CI Python job ✅ 完了
+
+`.github/workflows/ci.yml` に `python-test` job 追加:
+
+```yaml
+python-test:
+  runs-on: ubuntu-latest
+  defaults:
+    run:
+      working-directory: scripts/py
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4  # conformance harness 用
+      with: { node-version: '22' }
+    - uses: actions/setup-python@v5
+      with: { python-version-file: scripts/py/.python-version }
+    - run: pip install --upgrade uv
+    - run: uv sync --all-extras
+    - run: uv run ruff check src tests
+    - run: uv run ruff format --check src tests
+    - run: uv run mypy src
+    - run: uv run pytest --cov=testim_parity --cov-report=term-missing
+```
+
+### Phase 0 verification gate ✅ 全通過
+
+- `uv run pytest` pass — **277 tests, 95%+ coverage** (unit + conformance)。conformance は mjs 出力と byte 一致を保証。`en_source_patches` は dual-source-of-truth drift 検出のため全 34 patch について registry full dump + replay を両 runtime で byte 比較
+- `uv run ruff check src tests` pass
+- `uv run ruff format --check src tests` pass
+- `uv run mypy src` pass (strict=false, warn_return_any=true, disallow_untyped_defs=true)。strict 化は Phase 1 以降の follow-up
+- `node scripts/py/tools/regen_en_source_patches.mjs --check` pass (mjs ↔ JSON drift なし)
+- `npm run build` pass (Astro 290 pages)
+- `npm run test` pass (mjs 2040/2041、1 skip、0 fail)
+- `npm run lint` pass (0 errors)
+- CI `python-test` job が PR で緑 (node + setup-python + uv + patch drift check + ruff + format + mypy + pytest)
+
+11 leaf 全て conformance test で byte-level 一致確認済。
+
+### en_source_patches の dual-source-of-truth 運用
+
+`scripts/lib/en_source_patches.mjs` が patch の **唯一の定義ソース**。Python 側は
+`scripts/py/src/testim_parity/_en_source_patches_data.json` 経由で同じデータを
+読むため、mjs を編集した PR では必ず JSON を再生成する:
+
+```bash
+npm run regen:py-patches    # JSON を再生成して git に commit
+npm run check:py-patches    # drift 検出のみ (CI が自動実行)
+```
+
+CI の `python-test` job の一番最初で `check:py-patches` が走るため、再生成を忘れて
+push すると CI が失敗する。さらに `test_registry_full_dump_matches_mjs` conformance
+テストが mjs の literal と Python が読んだ JSON を byte 比較し、
+`test_every_patch_replays_identically` が 34 patch 全てについて
+`find → replace` を両 runtime で照合することで、silent drift を 3 重に防ぐ。
 
 ---
 
 ## Phase 1: EN Segment Extractor (BS4 化)
 
 **Goal**: カスタム HTML tokenizer → `BeautifulSoup(html, 'lxml')`
+
+### 1.0: Runtime 間 IPC / artifact contract の決定 (前提条件)
+
+Phase 1 以降は Python 側に新機能を置く一方で pipeline は当分 mjs に残るため、runtime 間でどう segments を受け渡すか事前に決める必要がある (Phase 0 reviewer gate 指摘)。
+
+**選択肢**:
+
+1. **Library-only**: Phase 1–3 の Python modules は standalone library として提供し、pipeline wiring は Phase 4 まで遅延。mjs 側は当分 mjs `segments_en` を使い続ける。Python 側は conformance test で byte 一致を保証するだけ。
+2. **JSON bridge**: `segments.v1.json` schema (Pydantic → JSON Schema 生成) を定義し、両 runtime がそれを read/write。mjs 側は既存の in-memory object からこの JSON へ serialize する wrapper を追加。
+
+**推奨**: Phase 1 開始前に **Library-only** を選択 (変更面積最小、conformance test で drift 検出可能)。`docs/PYTHON_MIGRATION_PLAN.md` の当節に選択結果を記録し、`segments_en.py` は `scripts/detection/check_source_parity.mjs` からは呼ばれない (mjs 実装のまま) 方針を明記。Phase 4 で detection CLI を Python に切り替える時に pipeline wiring。
 
 ### Module: `source_parity_segments_en.mjs` (709 LOC) → `segments_en.py`
 
@@ -223,7 +301,7 @@ def extract_segments_from_html(html: str, slug: str | None = None) -> list[Segme
     return segments
 ```
 
-### Verification gate
+### Phase 1 verification gate
 
 - 全 288+ snapshot ページで segments_en 出力を mjs と比較
 - **比較対象**: `segmentKind`, `sectionPath`, segment 数が一致 (textNorm の微差は entity decoding の差で許容)
@@ -327,7 +405,7 @@ def handle_callout(tokens: list, para_open_idx: int, state: WalkState) -> int:
 ### Callout inside list items: 意図的に未対応
 
 | 状態 | 説明 |
-|---|---|
+| --- | --- |
 | 現行 JA parser | :::callout inside list item は未対応 (line regex が list context を追跡しない) |
 | 新 HYBRID parser | 同様に未対応。markdown-it-py は list item 内の `:::` テキストを paragraph inline として emit するため、custom state machine の `is_callout_open` チェックに到達しない |
 | EN parser | `<li>` 内の callout div は `collectInlineText` でフラット化 (callout kind を失う) |
@@ -339,6 +417,7 @@ def handle_callout(tokens: list, para_open_idx: int, state: WalkState) -> int:
 ### Block image detection
 
 markdown-it-py では image は常に inline token。Block image の判定:
+
 ```python
 def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
     inline_token = tokens[start + 1]
@@ -355,7 +434,7 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 
 `collect_list_item_text` が nested markdown を自動フラット化するため、**JA content 変更ゼロで parity 成立**。
 
-### Verification gate
+### Phase 2 verification gate
 
 - 既存 clean pages (181 files): issue 数が増えない
 - Issue #368 対象 128 files: `segment-missing` / `segment-extra` が 0 に減少
@@ -371,7 +450,7 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 ### Port 対象 (16 modules, ~5,500 LOC)
 
 | mjs source | Python target | LOC |
-|---|---|---|
+| --- | --- | --- |
 | `source_parity_align.mjs` | `align.py` | 898 |
 | `source_parity_structure.mjs` | `structure.py` | 441 |
 | `source_parity_baseline.mjs` | `baseline.py` | 551 |
@@ -395,7 +474,7 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 - `weightedLcs()` → pure Python array (numpy 不使用)、同一結果保証
 - `preprocessEnHtml()` → BS4 ベースに port (`normalizeEscapedCallouts`, `normalizeEscapedFaqDetails` 含む)
 
-### Verification gate
+### Phase 3 verification gate
 
 - **5-counter aggregate gate**: Python parity check が 5 counter 全て 0 を出力
 - Mutation recall: 9/9 = 100%
@@ -413,6 +492,7 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 ### CI workflow 更新
 
 `.github/workflows/ci.yml` line 111:
+
 ```yaml
 # Before: node scripts/detection/render_upstream_recovery_comment.mjs
 # After:  cd scripts/py && uv run python -m testim_parity.detection.render_upstream_recovery_comment
@@ -424,7 +504,7 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 - `markdownify` (Python) + custom converters for MadCap patterns
 - **extraction hot path には使わない** (segments_en は raw HTML を直接 walk)
 
-### Verification gate
+### Phase 4 verification gate
 
 - 各 CLI が同一の JSON artifacts を生成
 - 5-counter = 0
@@ -440,7 +520,7 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 **Golden-master の矛盾を解消**: Python は Issue #368 の 128 ページで意図的に異なる (正しい) 出力を生成する。per-page segment 比較ではなく aggregate gate で検証。
 
 | Tier | 目的 | 手法 |
-|---|---|---|
+| --- | --- | --- |
 | **Unit tests** | 個別関数の正しさ | pytest parametrize。mjs テストを Python に移植。CORRECT behavior をテスト |
 | **Structural conformance** | 意図しない regression 検出 | 全ページで `{sectionPath, kind, count}` を比較。intentional diff は allowlist |
 | **Aggregate counter gate** | 5-counter = 0 不変量 | Full parity run → `parity-check-status.json` の 5 counter が全て 0 |
@@ -564,7 +644,7 @@ export default defineConfig({
 ## Risk Mitigation
 
 | Risk | Mitigation |
-|---|---|
+| --- | --- |
 | BS4/lxml の `<ol>` + non-`<li>` 兄弟 reparent | 433 件パターンで conformance test 作成 |
 | lxml パース失敗 | html5lib fallback (segment 0 件時に自動再試行) |
 | :::callout の metadata `{title}` | markdown-it-py に頼らず custom regex state machine を port |
@@ -576,6 +656,10 @@ export default defineConfig({
 | Python 環境 local/CI | uv + .python-version + CI setup-python action |
 | Expressive Code vs 既存 CSS | styleOverrides + CSS scope 限定 |
 | 128 pages intentional diff | structural conformance test の explicit allowlist で管理 |
+| **JS/Python 数値 semantics 差異** | **Phase 0 で発生した `Math.round` (half away from zero) vs Python `round` (banker's rounding) の非対称が LCS tie-break を反転させた事例あり**。対策: (1) `_js_round` helper を置き Python 側で明示的に half-away-from-zero を再現、(2) conformance harness (`scripts/py/conformance/harness.mjs`) で mjs 出力と byte 一致を強制、(3) 新しい数値演算を port する時は必ず境界値 (`.5` / `0.5` / `2.5`) を含む sample を `test_*_parity.py` に追加する |
+| Runtime 間 contract 欠落 | Phase 1 冒頭で Library-only vs JSON bridge の方針を決定 (Phase 1.0 節)。その合意なしに Python 側 pipeline wiring を進めない |
+| 構造契約 dep の silent breakage | `beautifulsoup4` / `lxml` / `markdown-it-py` は `pyproject.toml` で `~=` compatible-release 上限を指定。`uv lock --upgrade` を踏む PR では 288-page conformance matrix の re-run を必須化 |
+| Phase 0 完了条件の曖昧さ | Phase 0 gate を「全 11 leaves ported + conformance harness green + CI Python job passing」に固定。partial (current 3 leaves) は **Phase 0a** と明記し、残 8 leaves 完了を Phase 0b として tracking |
 
 ---
 
@@ -619,7 +703,7 @@ npm run dev  # → browser で確認
 ## Critical Files
 
 | File | Role | Action |
-|---|---|---|
+| --- | --- | --- |
 | `scripts/lib/source_parity_segments_en.mjs` (709 LOC) | EN extractor | BS4 化 |
 | `scripts/lib/source_parity_segments_ja.mjs` (715 LOC) | JA extractor | HYBRID (markdown-it-py + custom) |
 | `scripts/lib/source_parity_align.mjs` (898 LOC) | Alignment | weighted LCS port |

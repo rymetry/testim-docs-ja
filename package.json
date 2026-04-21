@@ -54,7 +54,9 @@
     "check:snapshots:fetch": "node scripts/detection/snapshot_update.mjs",
     "check:snapshots:diff": "node scripts/detection/snapshot_diff.mjs",
     "check:snapshots": "node scripts/detection/snapshot_update.mjs && node scripts/detection/snapshot_diff.mjs",
-    "check:snapshots:fetch:dry-run": "node scripts/detection/snapshot_update.mjs --dry-run"
+    "check:snapshots:fetch:dry-run": "node scripts/detection/snapshot_update.mjs --dry-run",
+    "regen:py-patches": "node scripts/py/tools/regen_en_source_patches.mjs",
+    "check:py-patches": "node scripts/py/tools/regen_en_source_patches.mjs --check"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",

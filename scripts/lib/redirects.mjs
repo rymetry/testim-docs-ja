@@ -1,10 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { filePathToSlug } from './project.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DOCS_DIR = path.resolve(__dirname, '..', '..', 'src', 'content', 'docs');
+
+function filePathToSlug(filePath, docsDir) {
+  return path.relative(docsDir, filePath).replace(/\.md$/, '');
+}
 
 /**
  * Build a redirect map from legacy basename URLs to path-based URLs.

@@ -7,6 +7,19 @@
  * a single canonical HTML. Each patch is a literal `find → replace` against
  * the pre-turndown HTML (`preprocessEnHtml` output), scoped to a slug allow-list.
  *
+ * **SINGLE SOURCE OF TRUTH**: このファイルが patch registry の唯一の定義ソース。
+ * Python port (`scripts/py/src/testim_parity/en_source_patches.py`) は
+ * `scripts/py/src/testim_parity/_en_source_patches_data.json` 経由で同じデータを
+ * 読むため、本ファイルを編集したら **必ず** 以下を実行して JSON を再生成すること:
+ *
+ *     npm run regen:py-patches   # 書き出し
+ *     npm run check:py-patches   # drift 検出のみ
+ *
+ * CI の `python-test` job の先頭で `check:py-patches` を走らせているため、
+ * 再生成を忘れて push すると CI が落ちる (fail-fast)。詳細運用は
+ * `docs/PYTHON_MIGRATION_PLAN.md` の "en_source_patches の dual-source-of-truth
+ * 運用" 節を参照。
+ *
  * Contract:
  *   - registry は凍結された配列。entry 単位で `slugs[]`、`defectClass`、
  *     literal `find`、literal `replace`、`rationale`、`linkedDefect` を持つ。
