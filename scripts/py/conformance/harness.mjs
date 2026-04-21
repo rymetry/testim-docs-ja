@@ -99,7 +99,36 @@ import {
   SEGMENT_KINDS,
 } from '../../lib/source_parity_segments_shared.mjs';
 import { ISSUE_SEVERITY } from '../../lib/source_parity_types.mjs';
-import { extractInvariantTokens } from '../../lib/source_parity_extract.mjs';
+import {
+  classifyLine,
+  detectEnArtifacts,
+  extractBulletCounts,
+  extractCalloutPositions,
+  extractHeadingSequence,
+  extractHtmlTables,
+  extractImageSequence,
+  extractInvariantTokens,
+  extractMarkdownTables,
+  extractParagraphCounts,
+  extractStepCounts,
+  extractTableStructure,
+  isUntranslatedCell,
+  normalizeEnArtifacts,
+  normalizeNumericPeriodSpacing,
+  stripMarkdown,
+  stripTitleH1,
+} from '../../lib/source_parity_extract.mjs';
+import {
+  STRUCTURE_COMPARATOR_KINDS,
+  __collapseBodyToBlocks as collapseBodyToBlocks,
+  compareSectionStructure,
+} from '../../lib/source_parity_structure.mjs';
+import {
+  compareSnapshotStructure,
+  isEnglishOnlyLine,
+  loadSidebarSlugs,
+  localCheck,
+} from '../../lib/source_parity_checks.mjs';
 import { formatSourceUnusableSection } from '../../lib/source_parity_summary_format.mjs';
 import {
   isActiveParityIssue,
@@ -495,6 +524,55 @@ const DISPATCH = {
     };
     return buildSourceSyncStatus(normalized);
   },
+
+  // -------- extract (Phase 3 M3) --------
+  // markdown 構造抽出 13 関数。conformance で mjs と byte 一致を保証。
+  // Consumer: scripts/py/tests/conformance/test_extract_parity.py
+  extract_image_sequence: ([body]) => extractImageSequence(body),
+  extract_callout_positions: ([body]) => extractCalloutPositions(body),
+  extract_step_counts: ([body]) => {
+    const map = extractStepCounts(body);
+    return Array.from(map.entries());
+  },
+  extract_bullet_counts: ([body]) => {
+    const map = extractBulletCounts(body);
+    return Array.from(map.entries());
+  },
+  extract_paragraph_counts: ([body]) => {
+    const map = extractParagraphCounts(body);
+    return Array.from(map.entries());
+  },
+  extract_heading_sequence: ([body]) => extractHeadingSequence(body),
+  extract_strip_markdown: ([text]) => stripMarkdown(text),
+  extract_is_untranslated_cell: ([cell]) => isUntranslatedCell(cell),
+  extract_strip_title_h1: ([body]) => stripTitleH1(body),
+  extract_normalize_numeric_period: ([body]) => normalizeNumericPeriodSpacing(body),
+  extract_normalize_en_artifacts: ([body]) => normalizeEnArtifacts(body),
+  extract_markdown_tables: ([body]) => extractMarkdownTables(body),
+  extract_html_tables: ([body]) => extractHtmlTables(body),
+  extract_table_structure: ([body]) => extractTableStructure(body),
+  extract_detect_en_artifacts: ([body]) => detectEnArtifacts(body),
+  extract_classify_line: ([line, state]) => {
+    const { kind, heading = null, nextState } = classifyLine(line, state ?? {});
+    // heading field は mjs が付ける時だけ present。Python も同じ shape を返すので
+    // ``?? null`` で明示的に null に埋める (conformance で field 欠如 vs null の
+    // 差を作らないため)。
+    return { kind, heading, nextState };
+  },
+
+  // -------- structure (Phase 3 M3) --------
+  // Consumer: scripts/py/tests/conformance/test_structure_parity.py
+  structure_comparator_kinds: () => [...STRUCTURE_COMPARATOR_KINDS],
+  structure_collapse_body: ([body]) => collapseBodyToBlocks(body),
+  structure_compare: ([enSection, jaSection]) => compareSectionStructure(enSection, jaSection),
+
+  // -------- checks (Phase 3 M3) --------
+  // Consumer: scripts/py/tests/conformance/test_checks_parity.py
+  checks_is_english_only_line: ([line]) => isEnglishOnlyLine(line),
+  checks_load_sidebar_slugs: ([text]) => [...loadSidebarSlugs(text)].sort(),
+  checks_local: ([doc]) => localCheck(doc),
+  checks_compare_snapshot_structure: ([enBody, jaBody]) =>
+    compareSnapshotStructure(enBody, jaBody),
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
