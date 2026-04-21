@@ -130,6 +130,23 @@ EXTRACT_SAMPLES: list[tuple[str, str | None]] = [
         "</blockquote></body>",
         "unrelated/page",
     ),
+    # review H2: <table> 直下 <tr> (tbody なし) — lxml は暗黙に tbody を挿入し、
+    # mjs custom tokenizer は挿入しない。両方の walker が table-cell を emit
+    # できるか確認 (mjs: walkTable 直下 tr 分岐、Python: lxml auto-tbody 経由)
+    (
+        "<body><table><tr><td>a</td><td>b</td></tr></table></body>",
+        None,
+    ),
+    # LOW coverage: <pre> block (code-block segment kind)
+    (
+        "<body><h2>X</h2><pre>var x = 1;</pre></body>",
+        None,
+    ),
+    # LOW coverage: 数値 entity が正常 / 例外 (OverflowError) の両経路
+    (
+        "<body><p>pi is &#x3C0; and &#8217;curly&#8217;.</p></body>",
+        None,
+    ),
     # HTML コメント + script 除去
     (
         "<body><h2>X</h2><!-- comment --><script>alert(1)</script><p>after</p></body>",
@@ -183,9 +200,17 @@ def test_callout_normalization_slugs_match(mjs_allow_slugs):
 
 
 def test_extract_segments_matches(mjs_extract_results):
-    """全 sample で Python segment list が mjs と byte 一致する。"""
+    """全 sample で Python segment list が mjs と byte 一致する。
+
+    harness 側 (``harness.mjs:segments_en_extract``) が
+    ``CALLOUT_NORMALIZATION_SLUGS`` を明示的に options に入れるため、Python 側も
+    production caller と同じ shape で allow list を explicit に渡す
+    (review H4 で default が None = no normalization に変更済み)。
+    """
     for (html, slug), mjs in zip(EXTRACT_SAMPLES, mjs_extract_results, strict=True):
-        py = extract_segments_from_html(html, slug=slug)
+        py = extract_segments_from_html(
+            html, slug=slug, callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS
+        )
         assert len(py) == len(mjs), (
             f"segment count differs for slug={slug!r}:\n"
             f"  py={len(py)} mjs={len(mjs)}\n"

@@ -37,7 +37,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 from .preprocess_en import preprocess_en_html
 from .segments_shared import build_section_path, create_segment, push_heading
@@ -131,15 +131,33 @@ def _is_code_snippet_div(node: Tag) -> bool:
     return bool(_CODE_SNIPPET_CLASS_RE.search(_get_class_string(node)))
 
 
+#: ``_has_class`` の hot path 用に pre-compile した pattern cache。呼び出し側が
+#: 使う class 名は ``FileOrFilePath`` のみだが、API は一般化しているため引数ごとの
+#: `re.compile` コストを ``functools.lru_cache`` ではなく明示的な dict で償却する。
+_CLASS_PATTERN_CACHE: dict[str, re.Pattern[str]] = {}
+
+
+def _class_pattern(class_name: str) -> re.Pattern[str]:
+    cached = _CLASS_PATTERN_CACHE.get(class_name)
+    if cached is not None:
+        return cached
+    compiled = re.compile(rf"(?:^|\s){re.escape(class_name)}(?:\s|$)")
+    _CLASS_PATTERN_CACHE[class_name] = compiled
+    return compiled
+
+
 def _has_class(node: Tag | None, class_name: str) -> bool:
-    """``class`` 属性に whitespace-delimited な ``class_name`` を含むか。"""
+    """``class`` 属性に whitespace-delimited な ``class_name`` を含むか。
+
+    tree walk の hot path で毎 node 呼ばれるため、pattern は
+    ``_CLASS_PATTERN_CACHE`` で module-level に cache する。
+    """
     if node is None:
         return False
     cls = _get_class_string(node)
     if not cls:
         return False
-    pattern = re.compile(rf"(?:^|\s){re.escape(class_name)}(?:\s|$)")
-    return bool(pattern.search(cls))
+    return bool(_class_pattern(class_name).search(cls))
 
 
 def _is_callout_div(node: Tag) -> bool:
@@ -194,17 +212,19 @@ def _normalize_callouts_dom(soup: BeautifulSoup, slug: str, allow_slugs: frozens
         if not _is_warning_like_blockquote(inner_html):
             continue
         new_div = soup.new_tag("div", attrs={"class": "callout-note"})
+        # ``bq.contents`` は BS4 ``PageElement`` のみを含むので、どの child も
+        # ``.extract()`` を持つ。mjs 契約では children の順序を保ったまま移す。
         for child in list(bq.contents):
-            new_div.append(child.extract() if hasattr(child, "extract") else child)
+            new_div.append(child.extract())
         bq.replace_with(new_div)
 
 
-def _preprocess_html(
-    html: str,
+def _clean_soup(
+    soup: BeautifulSoup,
     slug: str | None = None,
     callout_allow_slugs: frozenset[str] | None = None,
 ) -> BeautifulSoup:
-    """MadCap noise を削ぎ落とした BS4 tree を返す。
+    """MadCap noise を削ぎ落とした soup を返す (in-place 変更して返す)。
 
     mjs ``preprocessHtml`` (regex strip) と等価の DOM 操作を行う:
 
@@ -214,19 +234,19 @@ def _preprocess_html(
     - anchor-only ``<a name="...">`` decompose
     - ``<thead>`` decompose (header rows は non-gate)
     - ``<col>`` decompose
-    - slug-scope callout normalization (allow list 内 slug のみ)
+    - slug-scope callout normalization (``callout_allow_slugs`` が Set で
+      渡され、かつ ``slug`` がその Set に含まれるときのみ)
 
     ``<div class="codeSnippet">`` は **意図的に残す** — nested codeSnippetBody を
     regex で切ると外側 tree が壊れるリスクがあるため、walk 側の
     ``_is_code_snippet_div`` で drop する契約 (mjs と同一)。
+
+    ``callout_allow_slugs`` が ``None`` の場合は normalization を一切行わない
+    (mjs ``normalizeCallouts`` の ``calloutAllowSlugs instanceof Set`` guard と
+    同じ挙動。production caller は常に ``CALLOUT_NORMALIZATION_SLUGS`` を
+    明示的に渡す契約。review H4 で mjs と揃える修正)。
     """
-    if not html:
-        return BeautifulSoup("", "lxml")
-    soup = BeautifulSoup(html, "lxml")
-
     # HTML コメントを除去 (``Comment`` は ``NavigableString`` のサブクラス)
-    from bs4 import Comment
-
     for comment in soup.find_all(string=lambda s: isinstance(s, Comment)):
         comment.extract()
 
@@ -241,9 +261,8 @@ def _preprocess_html(
         if anchor.get("name") and not anchor.get_text(strip=True) and not anchor.find():
             anchor.decompose()
 
-    allow = callout_allow_slugs if callout_allow_slugs is not None else CALLOUT_NORMALIZATION_SLUGS
-    if slug:
-        _normalize_callouts_dom(soup, slug, allow)
+    if slug and callout_allow_slugs is not None:
+        _normalize_callouts_dom(soup, slug, callout_allow_slugs)
 
     return soup
 
@@ -587,6 +606,29 @@ def _walk_details(node: Tag, state: _WalkState) -> None:
 # ---------------------------------------------------------------------------
 
 
+#: ``extract_segments_from_html`` の html5lib fallback を発動させる最小サイズ。
+#: mjs 実装との契約は plan ``docs/PYTHON_MIGRATION_PLAN.md`` Phase 1 ``Fallback
+#: 戦略`` 節に記載。288-page matrix では lxml だけで segment 0 件になる page は
+#: 現状存在しないが、将来 malformed HTML が入ってきた時の safety net。
+_HTML5LIB_FALLBACK_MIN_LEN = 800
+
+
+def _walk_soup(
+    soup: BeautifulSoup,
+    slug: str | None,
+    callout_allow_slugs: frozenset[str] | None,
+) -> list[dict[str, Any]]:
+    """``soup`` を in-place で ``_clean_soup`` してから walk し segment list を返す。"""
+    cleaned = _clean_soup(soup, slug=slug, callout_allow_slugs=callout_allow_slugs)
+    # lxml は ``<html><body>...</body></html>`` で包むので、存在すれば body を
+    # root として walk する。なければ soup 自体を root 扱い。BS4 は
+    # ``BeautifulSoup`` < ``Tag`` の継承関係にあるため、union 型にしておく。
+    root: Tag | BeautifulSoup = cleaned.body if cleaned.body is not None else cleaned
+    state = _WalkState()
+    _walk_block_container(root, state)
+    return state.emitter.segments
+
+
 def extract_segments_from_html(
     html: str,
     slug: str | None = None,
@@ -595,11 +637,19 @@ def extract_segments_from_html(
     """MadCap Flare HTML から canonical segment list を抽出する。
 
     mjs ``extractSegmentsFromHtml`` (``source_parity_segments_en.mjs:696``) と
-    同一 shape の segment 辞書を返す。``slug`` が allow list 内の場合のみ
-    warning-like ``<blockquote>`` の callout 書き換えを適用する。
+    同一 shape の segment 辞書を返す。``callout_allow_slugs`` が ``None`` の
+    場合は callout normalization を **一切行わない** (mjs の
+    ``calloutAllowSlugs instanceof Set`` guard と同じ挙動)。production caller は
+    ``CALLOUT_NORMALIZATION_SLUGS`` を明示的に渡す契約。
 
     Phase 1 verification gate (288-page matrix) で mjs と segment count /
     segmentKind / sectionPath の一致を hard 確認する契約。
+
+    **html5lib fallback**: lxml で 0 件しか取れず、かつ HTML が
+    ``_HTML5LIB_FALLBACK_MIN_LEN`` バイト以上の場合のみ html5lib parser で
+    再試行する (plan ``Fallback 戦略``)。mjs には対応する経路が無いが、Python
+    の lxml が万一壊れた MadCap HTML で早期終了するシナリオを防ぐ defensive
+    net。現行 288-page corpus ではこの経路に落ちることは無いことを確認済み。
     """
     if not isinstance(html, str):
         return []
@@ -611,11 +661,12 @@ def extract_segments_from_html(
     # 渡さない契約)。slug-scope patch は呼び出し側 ``preprocess_en_html`` に
     # 任せる前提。
     normalized = preprocess_en_html(html)
-    soup = _preprocess_html(normalized, slug=slug, callout_allow_slugs=callout_allow_slugs)
+    lxml_soup = BeautifulSoup(normalized, "lxml")
+    segments = _walk_soup(lxml_soup, slug, callout_allow_slugs)
 
-    # lxml は ``<html><body>...</body></html>`` で包むので、存在すれば body を
-    # root として walk する。なければ soup 自体を root 扱い。
-    root: Tag = soup.body if soup.body is not None else soup
-    state = _WalkState()
-    _walk_block_container(root, state)
-    return state.emitter.segments
+    if not segments and len(normalized) >= _HTML5LIB_FALLBACK_MIN_LEN:
+        # lxml が壊れた malformed HTML で 0 件を返したとき、html5lib で
+        # 再パースする。html5lib は WHATWG 準拠で lxml より寛容。
+        html5lib_soup = BeautifulSoup(normalized, "html5lib")
+        segments = _walk_soup(html5lib_soup, slug, callout_allow_slugs)
+    return segments

@@ -30,6 +30,12 @@ class TestDecodeEntities:
         assert decode_entities(None) == ""  # type: ignore[arg-type]
         assert decode_entities(123) == ""  # type: ignore[arg-type]
 
+    def test_out_of_range_numeric_entity_preserved(self):
+        """``chr()`` が OverflowError を投げるほど巨大な code point は原文保持。"""
+        # Unicode 範囲外の巨大な整数は chr() で OverflowError。原文がそのまま返る。
+        oversized = "&#9999999999999999999;"
+        assert decode_entities(oversized) == oversized
+
 
 class TestExtractSegmentsBasic:
     def test_empty_returns_empty(self):
@@ -88,6 +94,17 @@ class TestCallout:
         segs = extract_segments_from_html(html)
         callouts = [s for s in segs if s["segmentKind"] == "callout-body"]
         assert len(callouts) == 2
+
+
+class TestPreBlock:
+    """``<pre>`` は code-block segment kind (codeSnippet drop 漏れ時の fallback)。"""
+
+    def test_pre_block_emits_code_block(self):
+        html = "<body><h2>X</h2><pre>var x = 1;</pre></body>"
+        segs = extract_segments_from_html(html)
+        code_blocks = [s for s in segs if s["segmentKind"] == "code-block"]
+        assert len(code_blocks) == 1
+        assert "var x" in code_blocks[0]["textNorm"]
 
 
 class TestCodeSnippetDrop:
@@ -151,21 +168,42 @@ class TestTable:
 
 class TestCalloutNormalization:
     def test_allow_list_rewrites_blockquote(self):
+        """allow list 内 slug では ``<blockquote>`` が callout-body に書き換わる。"""
         html = (
             "<body><h2>API</h2><blockquote><p><strong>Note</strong> body.</p></blockquote></body>"
         )
-        segs = extract_segments_from_html(html, slug="administration/api-access")
-        # allow list 内なので callout-body として emit される
+        segs = extract_segments_from_html(
+            html,
+            slug="administration/api-access",
+            callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS,
+        )
         assert any(s["segmentKind"] == "callout-body" for s in segs)
 
     def test_unrelated_slug_leaves_blockquote(self):
+        """allow list 外 slug では書き換えなし (callout-body は emit されない)。"""
         html = (
             "<body><h2>Misc</h2><blockquote><p><strong>Note</strong> body.</p></blockquote></body>"
         )
-        segs = extract_segments_from_html(html, slug="unrelated/page")
-        # allow list 外なので通常の paragraph として emit される
+        segs = extract_segments_from_html(
+            html, slug="unrelated/page", callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS
+        )
         assert not any(s["segmentKind"] == "callout-body" for s in segs)
         assert any(s["segmentKind"] == "paragraph" for s in segs)
+
+    def test_callout_allow_slugs_none_disables_normalization(self):
+        """review H4: ``callout_allow_slugs=None`` (default) で normalization 停止。
+
+        mjs ``normalizeCallouts`` は ``calloutAllowSlugs instanceof Set`` を
+        満たさないと即 return するため、Python 側も default で normalization を
+        行わないのが正しい契約。production caller は ``CALLOUT_NORMALIZATION_SLUGS``
+        を明示的に渡すが、library として単独で使われる場合はこの guard が効く。
+        """
+        html = (
+            "<body><h2>API</h2><blockquote><p><strong>Note</strong> body.</p></blockquote></body>"
+        )
+        # slug だけ渡して callout_allow_slugs は省略 → mjs と同じく書き換えなし
+        segs = extract_segments_from_html(html, slug="administration/api-access")
+        assert not any(s["segmentKind"] == "callout-body" for s in segs)
 
 
 class TestConstants:

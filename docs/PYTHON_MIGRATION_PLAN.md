@@ -333,11 +333,49 @@ def extract_segments_from_html(html: str, slug: str | None = None) -> list[Segme
     return segments
 ```
 
-### Phase 1 verification gate
+### Phase 1 verification gate ✅ 全通過
 
-- 全 288+ snapshot ページで segments_en 出力を mjs と比較
-- **比較対象**: `segmentKind`, `sectionPath`, segment 数が一致 (textNorm の微差は entity decoding の差で許容)
-- 一致しないページを explicit allowlist で管理し原因文書化
+- 全 288 snapshot ページで segments_en 出力を mjs と **byte-identical** 比較
+  (segmentKind / sectionPath / segmentIndex / textNorm / tokensInvariant /
+  sourceFingerprint すべて一致)
+- mjs 側は harness batch dispatch で 1 回の node プロセスにまとめる
+  (per-page spawn だと CI コストが 288 倍になるため強制)
+- 一致しないページを ``_ALLOWLIST`` で管理。entry は ``AllowEntry(reason,
+  expires_at_phase, linked_issue)`` shape で追加し、対応 Phase 完了時に
+  retire する (architect review H3)。**現状 allowlist は空**
+
+### Phase 1 post-review 対応 (2026-04-21)
+
+4 specialist reviewer gate (python-reviewer / typescript-reviewer / architect /
+codex) の指摘事項を反映した主要変更:
+
+- **html5lib fallback 実装** (architect H1) — lxml が segment 0 件を返した
+  HTML が ``_HTML5LIB_FALLBACK_MIN_LEN`` 以上の場合、html5lib で再パース。
+  現行 288-page corpus では発動しない defensive net だが、将来 malformed
+  EN snapshot が来たときの safety net として事前配線
+- **``callout_allow_slugs`` default を mjs と揃える** (architect H4) —
+  Python 側も ``None`` = no normalization。production caller は
+  ``CALLOUT_NORMALIZATION_SLUGS`` を明示的に渡す契約
+- **``<table><tr>`` (tbody なし) conformance sample** (architect H2) — lxml
+  の暗黙 ``<tbody>`` 挿入と mjs custom tokenizer の挙動差を guard
+- **allowlist lifecycle 明文化** (architect H3) — ``AllowEntry`` dataclass で
+  reason / expires_at_phase / linked_issue を必須化。288-matrix 自体は Phase 5
+  aggregate gate 移行時に retire する契約
+- **BS4 entity double-decode 修正** (Phase 1.3 で発覚) — lxml auto-decode と
+  mjs 1-pass decode の等価性を docstring に明記
+- **``_has_class`` pattern cache** (python-reviewer MEDIUM) — module-level
+  dict で ``re.compile`` を amortize
+- **``Comment`` import を module top へ** (python-reviewer MEDIUM)
+- **``root: Tag | BeautifulSoup`` 型 union** (python-reviewer MEDIUM)
+
+### 既知の follow-up (Phase 2 着手前に検討)
+
+- type-stub version drift の CI 監視 (monthly ``gh api`` + ``uv lock --upgrade``
+  時の 288-matrix re-run) — 現状手動運用で pin `~=`
+- ``_WHITESPACE_RUN_RE`` / ``_iter_element_children`` 等の shared helper を
+  Phase 2 JA extractor と合流させる時に抽出
+- ``_is_warning_like_blockquote`` の 3 条件判定を BS4 DOM 版に置き換えるか
+  継続 regex で回すかの最終判断 (現状 mjs と byte 一致のため regex 維持)
 
 ---
 

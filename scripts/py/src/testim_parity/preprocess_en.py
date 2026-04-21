@@ -28,6 +28,12 @@ from typing import Any
 
 from .en_source_patches import apply_en_source_patches
 
+#: ``create_en_source_patch_coverage()`` factory が返す closure-bag の型 alias。
+#: Phase 0 port は Pydantic model を経由しない dict-dispatch なので ``dict[str,
+#: Any]`` が現状の最小契約。Phase 2 以降で TypedDict 化する候補 (python review
+#: MEDIUM 指摘)。
+PatchCoverage = dict[str, Any]
+
 __all__ = ["preprocess_en_html"]
 
 
@@ -220,7 +226,7 @@ def _unescape_details(html: str) -> str:
 def preprocess_en_html(
     html: str,
     slug: str | None = None,
-    patch_coverage: Any = None,
+    patch_coverage: PatchCoverage | None = None,
 ) -> str:
     """EN snapshot HTML を segment extractor 向けに正規化する。
 

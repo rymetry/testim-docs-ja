@@ -301,9 +301,15 @@ const DISPATCH = {
   segments_en_callout_normalization_slugs: () =>
     [...CALLOUT_NORMALIZATION_SLUGS].sort(),
   segments_en_extract: ([html, slug]) => {
-    // mjs 側は options.calloutAllowSlugs を渡さない場合、allow list 無効
-    // (後方互換)。Python 側 default は CALLOUT_NORMALIZATION_SLUGS を使う
-    // ため、conformance 比較時は明示的に同じ Set を渡して挙動を揃える。
+    // options の build 規則:
+    //   - slug が falsy (null / undefined / '')  → options = {}
+    //     (mjs `normalizeCallouts` は calloutAllowSlugs を instanceof Set で
+    //      チェックするため、未 bind なら normalization を skip)
+    //   - slug が truthy → calloutAllowSlugs を CALLOUT_NORMALIZATION_SLUGS に
+    //     bind する。Python 側も同じ Set を明示的に渡す契約 (review H4)。
+    //     これで production caller (`extract_segments_from_html(html, slug=...,
+    //     callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS)`) と同じ shape で
+    //     byte 一致を比較できる。
     const options = slug
       ? { slug, calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS }
       : {};
