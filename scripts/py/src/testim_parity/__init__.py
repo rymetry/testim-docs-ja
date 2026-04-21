@@ -78,7 +78,19 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
   4 issue family (snapshotDiff / parityRegression / sourceSyncHealth /
   parityFollowup) を組み立てる主エントリ。Phase 4 CLI script の build 基盤
 
-Phase 4 (detection / pipeline / tools CLI scripts) は後続 PR で予定。
+**CLI scripts (Phase 4 — pilot)**:
+
+- ``testim_parity.detection.render_upstream_recovery_comment`` — PR sticky
+  comment の markdown を書き出す non-blocking script。CI workflow から
+  ``python -m`` で呼び出す
+- ``testim_parity.detection.generate_detection_reports`` —
+  ``docs-actionable-report.json`` / ``docs-update-summary.md`` /
+  ``docs-audit-manifest.json`` を 1 回の CLI 実行で生成
+- ``testim_parity.tools.report_frontmatter_categories`` — markdown の
+  frontmatter ``category`` field を集計し、``SIDEBAR_URLS.md`` と照合する
+
+残る Phase 4 CLI script (check_source_parity / generate_parity_baseline /
+snapshot_diff / snapshot_update / pipeline scripts 等) は後続 PR で予定。
 """
 
 from __future__ import annotations
