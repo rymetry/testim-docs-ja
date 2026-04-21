@@ -339,6 +339,44 @@ class TestListRegionEdgeCases:
         assert segs[0]["segmentKind"] == "ordered-list-item"
         assert segs[0]["textNorm"] == "codeish"
 
+    def test_fallback_prefix_then_real_list(self):
+        """4-space indent marker (CommonMark code) + real list (codex P2 follow-up).
+
+        ``    - codeish\\n- real\\n`` ではmarkdown-it-py が前者を code_block、
+        後者を list として parse する。prefix を mjs-style で emit してから、
+        CommonMark 側の list を flatten 結果で emit し、全 3 lines を consume
+        する契約。content を silent drop しない。
+        """
+        md = "    - codeish\n- real\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "unordered-list-item"]
+        assert [s["textNorm"] for s in segs] == ["codeish", "real"]
+
+    def test_fallback_then_trailing_paragraph(self):
+        """CommonMark が list を認識しないとき trailing content を drop しない。
+
+        ``    - codeish\\n\\n x\\n`` は markdown-it-py が list を検出しない
+        (code_block + paragraph)。現在行 ``    - codeish`` を mjs fallback で
+        emit し、``i`` を 1 だけ進めることで次行以降を main loop に戻す。
+        main loop は blank 行 + 1-space indent paragraph を正しく emit する
+        (codex review P2 follow-up)。
+        """
+        md = "    - codeish\n\n x\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "paragraph"]
+        assert segs[0]["textNorm"] == "codeish"
+        assert segs[1]["textNorm"] == "x"
+
+    def test_multi_fallback_prefix_and_real_list(self):
+        """prefix に multiple 4-space fallback markers + 本 list の組合せ。"""
+        md = "    - codeish\n    - more\n- real\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item"] * 3
+        assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
+
     def test_top_level_fence_still_terminates_list_region(self):
         """top-level (non-indented) fence は list region を終了させる。
 

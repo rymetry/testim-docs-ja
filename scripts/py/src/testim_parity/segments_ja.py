@@ -518,18 +518,25 @@ def _collect_list_region(lines: list[str], start: int) -> int:
     return last_list_line
 
 
-def _flatten_list_region(region: str) -> tuple[list[tuple[str, str, int | None]], int | None]:
+def _flatten_list_region(
+    region: str,
+) -> tuple[list[tuple[str, str, int | None]], int | None, int | None]:
     """list region 文字列を markdown-it-py で parse して flatten 結果を返す。
 
-    戻り値 ``(items, list_end_line)``:
+    戻り値 ``(items, list_start_line, list_end_line)``:
 
     - ``items``: ``(kind, raw_text, line_offset)`` の list。``kind`` は
       ``"ordered-list-item"`` / ``"unordered-list-item"``、``line_offset`` は
       region 内の 0-based 行番号 (top-level item の開始行)。
+    - ``list_start_line``: region 内で **最初の top-level list が始まる行** の
+      0-based index (inclusive)。prefix (例: 4-space indented fallback
+      marker) が先行していれば ``> 0`` になる。codex review P2 follow-up
+      で prefix を mjs fallback で emit する必要があるため、正確な list
+      境界を伝える。list が 1 つも無ければ ``None``。
     - ``list_end_line``: region 内で **最後の top-level list が閉じた行** の
       0-based index (exclusive)。region にこれ以降の content があれば main
-      loop に戻して非 list content として再処理する (codex review P2 #1
-      follow-up)。list が 1 つも見つからなければ ``None``。
+      loop に戻して非 list content として再処理する。list が 1 つも見つから
+      なければ ``None``。
 
     **top-level ``list_item`` の内容 (inline content + 内部 fence の body) を
     すべて親 item の ``raw_text`` にスペース区切りで連結する**。ネストされた
@@ -550,6 +557,7 @@ def _flatten_list_region(region: str) -> tuple[list[tuple[str, str, int | None]]
     current_parts: list[str] = []
     current_kind: str | None = None
     current_line: int | None = None
+    list_start_line: int | None = None
     list_end_line: int | None = None
 
     for tok in tokens:
@@ -557,7 +565,11 @@ def _flatten_list_region(region: str) -> tuple[list[tuple[str, str, int | None]]
             list_depth += 1
             # top-level list_open の map は list 全体 [start, end_exclusive] を示す。
             # nested list の map は subset なので、top-level のみ追跡する。
+            # 連続する top-level lists (例: nested 無し複数 list) の場合は
+            # 最初の start と最後の end を採用する。
             if list_depth == 1 and tok.map is not None:
+                if list_start_line is None:
+                    list_start_line = tok.map[0]
                 list_end_line = tok.map[1]
             continue
         if tok.type in ("bullet_list_close", "ordered_list_close"):
@@ -593,32 +605,36 @@ def _flatten_list_region(region: str) -> tuple[list[tuple[str, str, int | None]]
             content = tok.content or ""
             if content:
                 current_parts.append(content)
-    return (results, list_end_line)
+    return (results, list_start_line, list_end_line)
 
 
-def _emit_lines_as_mjs_fallback_list(
-    lines_slice: list[str],
+def _emit_single_fallback_list_item(
+    line: str,
     emit: Any,
     section_path: str,
-    base_line_no: int,
+    line_no: int,
 ) -> None:
-    """``_flatten_list_region`` が CommonMark 的に list を認識しなかったときの
-    fall-back: mjs line-based 実装と同じく、list-regex に match する各行を
-    単独の list-item として emit する (codex review P2 #2)。
+    """単一行を mjs line-based 実装と同じ挙動で list-item として emit する。
 
-    該当ケース: ``    - codeish`` のように 4-space indent された list marker
-    行。CommonMark は code block として扱うが、mjs は list-item として emit
-    するため、silent に content を drop しないよう mjs 側と揃える。
+    ``_flatten_list_region`` が CommonMark 的に list を認識しなかったときの
+    fallback (例: ``    - codeish`` のように 4-space indent された list marker
+    は CommonMark では indented code block 扱い)。mjs は ``_UNORDERED_RE`` /
+    ``_ORDERED_RE`` の match で list-item を emit するため、silent に content
+    を drop しないよう mjs 側と揃える (codex review P2 #2)。
+
+    **呼び出し元の契約**: 本関数は 1 行だけ処理する。main loop は ``i`` を 1
+    だけ進めて、次行以降は通常の dispatch に戻す。これにより region に含まれる
+    blank 行 / 非 list paragraph も main loop が正しく扱える (codex follow-up
+    P2 #2: fallback prefix 後の trailing content を dropping しない)。
     """
-    for offset, line in enumerate(lines_slice):
-        ordered_match = _ORDERED_RE.match(line)
-        unordered_match = _UNORDERED_RE.match(line)
-        if ordered_match is None and unordered_match is None:
-            continue
-        match = ordered_match if ordered_match is not None else unordered_match
-        assert match is not None  # for mypy
-        kind = "ordered-list-item" if ordered_match is not None else "unordered-list-item"
-        emit(section_path, kind, match.group(2), base_line_no + offset)
+    ordered_match = _ORDERED_RE.match(line)
+    unordered_match = _UNORDERED_RE.match(line)
+    if ordered_match is None and unordered_match is None:
+        return
+    match = ordered_match if ordered_match is not None else unordered_match
+    assert match is not None  # for mypy
+    kind = "ordered-list-item" if ordered_match is not None else "unordered-list-item"
+    emit(section_path, kind, match.group(2), line_no)
 
 
 # ---------------------------------------------------------------------------
@@ -885,30 +901,43 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
 
         # Ordered / unordered list — Issue #368 fix:
         # 単行 match ではなく **list region 全体** を収集して markdown-it-py に
-        # 渡し、top-level item だけ 1 segment で emit する。
+        # 渡し、top-level item だけ 1 segment で emit する。prefix / suffix の
+        # 非 list 行は main loop に戻して再処理する (codex review P2 follow-up)。
         if _ORDERED_RE.match(line) or _UNORDERED_RE.match(line):
             flush_paragraph()
             end_idx = _collect_list_region(lines, i)
             region_lines = lines[i : end_idx + 1]
             region = "\n".join(region_lines)
-            flattened, list_end_line = _flatten_list_region(region)
+            flattened, list_start_line, list_end_line = _flatten_list_region(region)
             path = build_section_path(heading_stack)
-            if flattened:
+            if flattened and list_end_line is not None:
+                # codex review P2 follow-up: list_start > 0 の場合、prefix には
+                # CommonMark が list と認識しなかった list-regex 行 (例: 4-space
+                # indented fallback marker) が含まれる。それらを mjs-style で
+                # 単行 emit してから、本 list を flatten 結果で emit する。
+                prefix_end = list_start_line if list_start_line is not None else 0
+                for prefix_offset in range(prefix_end):
+                    _emit_single_fallback_list_item(
+                        region_lines[prefix_offset],
+                        emitter.emit,
+                        path,
+                        line_no + prefix_offset,
+                    )
                 for kind, raw_text, row_offset in flattened:
                     resolved_line = line_no + (row_offset or 0)
                     emitter.emit(path, kind, raw_text, resolved_line)
-                # codex review P2 #1 follow-up: markdown-it-py が認識した list
-                # の範囲だけ consume し、残りは main loop に戻して非 list content
-                # として再処理する。1-space indented paragraph や non-indented
-                # trailing content を silent に dropping しない契約。
-                consumed = list_end_line if list_end_line is not None else len(region_lines)
-                i += consumed
+                # list_end_line までを consume し、残り lines は main loop に戻す。
+                # これで 1-space indented paragraph や non-indented trailing
+                # content を silent に drop しない (codex review P2 #1)。
+                i += list_end_line
             else:
-                # CommonMark が list を認識しなかったケース (例: 4-space indent
-                # された list marker は indented code block 扱い)。mjs 等価の
-                # 単行 emit に fall back する (codex review P2 #2)。
-                _emit_lines_as_mjs_fallback_list(region_lines, emitter.emit, path, line_no)
-                i = end_idx + 1
+                # CommonMark が list を認識しなかったケース (例: ``    - codeish``
+                # のみ、続く行が paragraph 等)。現在行だけ mjs-style で emit し、
+                # ``i`` を 1 だけ進めて次行以降は main loop が通常 dispatch で
+                # 処理する。これで trailing non-list content を main loop が拾え
+                # silent drop しない (codex review P2 #2 follow-up)。
+                _emit_single_fallback_list_item(line, emitter.emit, path, line_no)
+                i += 1
             continue
 
         if _HORIZONTAL_RULE_RE.match(trimmed):
