@@ -283,11 +283,19 @@ _INLINE_JOIN_TAGS: frozenset[str] = frozenset(
 def _render_inline_text(node: Tag | NavigableString | None, buffer: list[str]) -> None:
     """mjs ``renderInlineText`` の Python 版。invariant token を backtick /
     markdown-link で wrap して ``extractInvariantTokens`` が拾えるようにする。
+
+    **entity 扱いの注意**: BS4/lxml が text 読み込み時に entity を auto-decode
+    するため、ここで ``decode_entities`` を **再適用しない**。再適用すると
+    ``&amp;#x73;`` → lxml で ``&#x73;`` になった後、さらに ``decode_entities``
+    で ``s`` まで戻されて mjs (single-pass decode) と divergence する。
+    mjs は custom tokenizer が raw entity を保持したまま text token を吐き、
+    ``decodeEntities`` で 1 段だけ decode する前提。BS4 経路では lxml の 1 段が
+    mjs の 1 段に対応する (Phase 1.3 verification で発覚)。
     """
     if node is None:
         return
     if isinstance(node, NavigableString):
-        buffer.append(decode_entities(str(node)))
+        buffer.append(str(node))
         return
     if not isinstance(node, Tag):
         return
@@ -314,7 +322,9 @@ def _render_inline_text(node: Tag | NavigableString | None, buffer: list[str]) -
         label = "".join(inner_a).strip()
         raw_href = node.get("href")
         if isinstance(raw_href, str):
-            href = decode_entities(raw_href)
+            # BS4 が href を auto-decode 済みなので decode_entities は呼ばない
+            # (text 側と同じ double-decode regression を回避)。
+            href = raw_href
             if href and not href.startswith("#") and not href.startswith("javascript:"):
                 buffer.append("[")
                 buffer.append(label)
@@ -415,7 +425,8 @@ def _walk_block_container(node: Tag, state: _WalkState) -> None:
 
     for child in _iter_element_children(node):
         if isinstance(child, NavigableString):
-            loose_buffer.append(decode_entities(str(child)))
+            # BS4 が text を auto-decode 済みなので decode_entities は呼ばない
+            loose_buffer.append(str(child))
             continue
         if not isinstance(child, Tag):
             continue
