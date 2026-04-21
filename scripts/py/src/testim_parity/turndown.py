@@ -64,6 +64,12 @@ _CALLOUT_CLASS_MAP: dict[str, str] = {
 _LEADING_NEWLINES_RE: re.Pattern[str] = re.compile(r"^\n+")
 _TRAILING_NEWLINES_RE: re.Pattern[str] = re.compile(r"\n+$")
 
+# ``_is_flanked_by_whitespace`` で使う sibling whitespace 検出 regex。
+# emphasis / strong が多いページで毎回 ``re.compile`` を踏まないよう module
+# 定数化 (review round-3 M1 対応)。
+_LEFT_FLANK_RE: re.Pattern[str] = re.compile(r" $")
+_RIGHT_FLANK_RE: re.Pattern[str] = re.compile(r"^ ")
+
 # ``_convert_fragment`` の recursion depth guard。MadCap HTML では通常 5-10
 # 階層程度だが、malformed HTML に対して RecursionError を未然に防ぐ。
 _MAX_FRAGMENT_DEPTH: int = 40
@@ -129,10 +135,10 @@ def _is_flanked_by_whitespace(side: str, el: Tag) -> bool:
     """
     if side == "left":
         sibling = el.previous_sibling
-        pattern = re.compile(r" $")
+        pattern = _LEFT_FLANK_RE
     else:
         sibling = el.next_sibling
-        pattern = re.compile(r"^ ")
+        pattern = _RIGHT_FLANK_RE
     value = _sibling_text(sibling)
     return bool(value and pattern.search(value))
 
