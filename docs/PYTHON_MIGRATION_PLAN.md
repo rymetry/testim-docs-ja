@@ -744,13 +744,25 @@ Python setup (setup-python + uv sync) を `parity` job 先頭に追加。他の
 
 ### Phase 4 verification gate ✅ 全通過 (PR #374)
 
-- 各 CLI が同一の JSON artifacts を生成 → **verified**
-  - 個別関数 byte parity: conformance harness 経由で 12 関数 (detection_reports) +
-    M5-M7 で追加された baseline / summary / mutation_corpus の 19 dispatch
-  - Orchestration byte parity: `tests/conformance/test_generate_detection_reports_e2e.py` で
-    Python CLI entry の 3 output ファイル (actionable / audit / summary) が
-    harness 経由 mjs と byte 一致することを確認
+- 各 CLI が同一の JSON artifacts を生成 → **verified (3 layer)**
+  1. **Library byte parity** — conformance harness 経由で 31 dispatch
+     (detection_reports 12 + baseline 9 + summary 2 + mutation_corpus 8)。
+     CLI が呼ぶ underlying 関数 level で mjs 出力と 1 byte ずれない。
+  2. **Orchestration byte parity** —
+     `tests/conformance/test_generate_detection_reports_e2e.py` で
+     Python CLI entry の 3 output ファイル (actionable / audit / summary)
+     が harness 経由 mjs と byte 一致することを確認。driver の chain 順 +
+     options 受け渡しをカバー。
+  3. **Per-CLI smoke** — 各 CLI の public contract を smoke test で固定:
+     - `generate_parity_baseline` × 5 (3 mode + mutually exclusive + gate fail)
+     - `snapshot_diff` × 4 (classify / 404 marker / sidebar url map / fallback url)
+     - `check_upstream_recovery` × 2 (empty-input artifact + days helpers)
+     - `generate_detection_reports` × 3 (minimal / strict fail / cwd default)
+     - `render_upstream_recovery_comment` × 4 (no artifact / empty / signals / cleanup)
 - 5-counter = 0 → **維持** (既存 check:parity で継続確認)
+
+**Phase 4b (turndown-依存 4 script の full port) は別 PR で、その時点で
+gate-1 evidence を同じ 3 layer で追加する**。
 
 ### Phase 4 残作業 (Phase 4b として次 PR で対応)
 

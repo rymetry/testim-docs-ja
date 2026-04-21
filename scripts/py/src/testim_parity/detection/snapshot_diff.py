@@ -162,9 +162,14 @@ def _get_head_content(relative_path: Path) -> str | None:
     """mjs ``git show HEAD:path`` 等価。HEAD に存在しない場合は None を返す。
 
     入力 path は ``assert_safe_refspec_path`` で repo 内を指していることを
-    検証してから git に渡す。
+    検証してから git に渡す。guard が発火した ``ValueError`` は main loop /
+    ``_diff_sidebar`` のどちらからも一貫して catch できるよう ``RuntimeError``
+    に wrap し直す (呼び出し側の ``except RuntimeError`` と揃える)。
     """
-    safe_posix = assert_safe_refspec_path(relative_path)
+    try:
+        safe_posix = assert_safe_refspec_path(relative_path)
+    except ValueError as err:
+        raise RuntimeError(f"unsafe refspec rejected: {err}") from err
     try:
         result = subprocess.run(
             ["git", "show", f"HEAD:{safe_posix}"],

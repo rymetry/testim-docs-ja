@@ -41,7 +41,11 @@ def main(argv: list[str] | None = None) -> int:
 
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    # mjs 等価: ``new Date()`` の ``getFullYear()`` / ``getMonth()`` / ``getDate()``
+    # は **local time** を返す。意図的に naive ``datetime.now()`` を使い、
+    # runner の timezone に追従させて mjs 出力と揃える (``js_iso_timestamp`` の
+    # ような UTC 固定は byte drift を生む)。
+    today_str = datetime.now().strftime("%Y-%m-%d")  # noqa: DTZ005
 
     created = 0
     created_paths: list[str] = []

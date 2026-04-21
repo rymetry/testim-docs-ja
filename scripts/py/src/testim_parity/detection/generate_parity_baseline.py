@@ -542,14 +542,18 @@ def main(argv: list[str] | None = None) -> int:
 
     if args["regenerate"]:
         try:
-            snapshot_diff = load_snapshot_diff_status()
+            # module-level ``_SNAPSHOT_DIFF_PATH`` は test で monkeypatch 差し替え
+            # されうるので、関数 default に頼らず明示的に渡す (default は import
+            # 時 bind で現在の値を捕まえてしまい、monkeypatch を見ない)。
+            snapshot_diff = load_snapshot_diff_status(_SNAPSHOT_DIFF_PATH)
             assert_pre_regen_gate(status, snapshot_diff)
         except ValueError as err:
             print(f"❌ {err}", file=sys.stderr)
             return 1
         print("baseline-regen-gate: pass")
 
-    fingerprint_map = build_fingerprint_map()
+    # ``_SNAPSHOTS_DIR`` も同じ理由で明示的に渡す。
+    fingerprint_map = build_fingerprint_map(_SNAPSHOTS_DIR)
     meta = build_generation_meta(status, args)
 
     if args["regenerate"]:

@@ -63,7 +63,10 @@ _FOOTER_RE = re.compile(r"\n---\n\n## URL抽出方法[\s\S]*$")
 
 
 def _today_ja() -> str:
-    now = datetime.now()
+    # mjs 等価: ``new Date().getFullYear()/getMonth()/getDate()`` は local time
+    # なので naive ``datetime.now()`` を使い、runner の timezone に追従させる。
+    # UTC 固定にすると JST 日付と ±1 day ずれる日が発生するため意図的な挙動。
+    now = datetime.now()  # noqa: DTZ005
     return f"{now.year}年{now.month}月{now.day}日"
 
 

@@ -174,3 +174,116 @@ Full conformance suite was not re-run end-to-end in this response cycle
 (long-running with node subprocess), but the new `test_generate_detection_reports_e2e`
 passes against both runtimes and adds to the existing 12 detection_reports
 dispatches.
+
+---
+
+# Round 2 (reviewer follow-up)
+
+> **Scope**: responses to the second review pass that asked for (a) stronger
+> evidence behind the "each CLI produces the same JSON artifacts" claim,
+> (b) the `generate_parity_baseline` merge-gate smoke tests, (c) a
+> MEDIUM-NEW-1 `ValueError` propagation fix on the refspec guard, and
+> (d) LOW-NEW-1 `datetime.now()` parity clarifications.
+
+## Round 2 — Addressed
+
+### R2-1. `generate_parity_baseline.py` 3-mode smoke tests (merge gate)
+
+Reviewer criticality 10/10 — the baseline writer touches the 5-counter=0
+invariant directly. Added 5 smoke tests covering every CLI branch:
+
+| Test | Mode / path |
+| --- | --- |
+| `test_generate_parity_baseline_regenerate_mode` | `--regenerate` happy path — pre-regen gate passes, baseline written with the single emitted entry |
+| `test_generate_parity_baseline_slug_mode_merges_with_existing` | `--slug=<csv>` — stale entries for the target slug are replaced while other-slug entries are preserved |
+| `test_generate_parity_baseline_types_mode_merges_by_type` | `--types=<csv>` — only entries matching the requested issueType are replaced; other issue types are preserved |
+| `test_generate_parity_baseline_rejects_mutually_exclusive_modes` | `--regenerate --slug=…` combo → exit 1 with usage on stderr |
+| `test_generate_parity_baseline_regenerate_gate_failure` | `freshnessState="stale"` → gate fail → exit 1, baseline is **not** written |
+
+Source fix required: `main()` previously called `load_snapshot_diff_status()`
+and `build_fingerprint_map()` using their default arguments, which bound to
+the module constants **at import time** and therefore could not be redirected
+via `monkeypatch.setattr`. Switched both calls to pass the module constants
+explicitly so tests can redirect them to `tmp_path`.
+
+File: `scripts/py/src/testim_parity/detection/generate_parity_baseline.py:544-557`
+
+### R2-2. Broaden Phase 4 gate-1 — artifact CLI smoke coverage
+
+Reviewer rightly flagged that the earlier gate-1 evidence only covered
+`generate_detection_reports`. Added smoke tests for the other two highest
+criticality artifact-producing CLIs:
+
+- **`snapshot_diff.py`** (9/10): `classify_changes` 5-category bucketing,
+  `MARKER_404_RE` 404-snapshot detection, `build_sidebar_url_map` slug
+  extraction, `fallback_source_url` lookup semantics.
+- **`check_upstream_recovery.py`** (9/10): `run_check_upstream_recovery` end-
+  to-end with empty inputs (verifies artifact schema + `generatedAt` format
+  + stdout summary), plus `days_since` / `days_until` / `is_review_overdue`
+  boundary cases.
+
+These complement the existing conformance dispatches for baseline / summary /
+mutation_corpus / detection_reports (collectively 31 dispatches already cover
+the library-level byte parity).
+
+### R2-3. MEDIUM-NEW-1 — `ValueError` propagation in `snapshot_diff._get_head_content`
+
+The `assert_safe_refspec_path` guard raises `ValueError`, but both call sites
+of `_get_head_content` (`main` loop line ~340 and `_diff_sidebar` line ~250)
+only catch `RuntimeError`. If a malformed input ever reached the guard it
+would escape as an uncaught `ValueError` with a stacktrace.
+
+Fix: wrap the `ValueError` into `RuntimeError` **inside** `_get_head_content`
+(`snapshot_diff.py:167-173`) so all callers see a single error type
+consistently. Added `test_get_head_content_wraps_valueerror_as_runtimeerror`
+covering both absolute-path and `..` inputs.
+
+### R2-4. LOW-NEW-1 — pipeline `datetime.now()` parity rationale
+
+Reviewer asked about `generate_untranslated_placeholders.py:44` and
+`update_sidebar_urls_from_live.py:66` not using `js_iso_timestamp`. Investigation:
+these mjs counterparts use `new Date().getFullYear()/getMonth()/getDate()`,
+which read **local time** (not UTC). Switching Python to a UTC-fixed helper
+would break byte parity with the mjs output on non-UTC runners (JST dates
+would be ±1 day).
+
+Resolution: both sites keep `datetime.now()` but gain explicit inline
+comments explaining the mjs-parity rationale and a `# noqa: DTZ005` so ruff
+doesn't re-raise the flag. No runtime change.
+
+### R2-5. Plan update — Phase 4 gate evidence reconciled
+
+Reviewer pushed back on the plan's "Phase 4 gate 全通過" line being stronger
+than the test evidence supported. The plan section now lists:
+
+1. **Library-level byte parity** — 31 conformance dispatches (baseline 9,
+   summary 2, mutation_corpus 8, detection_reports 12) confirm function
+   output matches mjs byte-for-byte.
+2. **Orchestration byte parity** — `test_generate_detection_reports_e2e.py`
+   binds the Python CLI's 3-output chain to the mjs harness output.
+3. **Per-CLI smoke coverage** — `generate_parity_baseline` (5 tests),
+   `snapshot_diff` (4 tests), `check_upstream_recovery` (2 tests),
+   `generate_detection_reports` (3 tests), `render_upstream_recovery_comment`
+   (4 tests) covering each CLI's public contract.
+
+Plan now states that **library byte parity + orchestration byte parity +
+per-CLI smoke** together satisfy gate-1 for the scripts exercised, and
+calls out that remaining wrapper scripts' full port (Phase 4b) will gain
+their own gate-1 evidence when turndown equivalence lands.
+
+## Round 2 — Deferred (unchanged from round 1)
+
+- Coverage 25-30% → Phase 5 (with round 2 the smoke additions raise the CLI
+  coverage floor; library modules remain on conformance-based coverage)
+- sys.exit / assert / broad exception cleanup → Phase 5
+- turndown-dependent wrappers → Phase 4b
+
+## Round 2 — Verification run
+
+```
+uv run ruff check src tests        # clean
+uv run mypy src                    # clean (59 files)
+uv run pytest -q --ignore=tests/conformance   # 559 passed (11 new)
+uv run pytest tests/test_phase4_cli_scripts.py                     # 30 passed
+uv run pytest tests/conformance/test_generate_detection_reports_e2e.py   # 1 passed
+```
