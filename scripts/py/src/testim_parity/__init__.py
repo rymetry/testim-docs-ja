@@ -71,7 +71,14 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
   generator (10 type × classify_lines + list/block extent helpers)。9/9 recall
   DoD の権威ソース
 
-Phase 3 M7 (detection_reports) は別 commit で追加予定。
+**検出レポート (Phase 3 M7)**:
+
+- ``testim_parity.detection_reports`` — 4 artifact の schema validation +
+  actionable report + summary markdown + upstream recovery sticky comment。
+  4 issue family (snapshotDiff / parityRegression / sourceSyncHealth /
+  parityFollowup) を組み立てる主エントリ。Phase 4 CLI script の build 基盤
+
+Phase 4 (detection / pipeline / tools CLI scripts) は後続 PR で予定。
 """
 
 from __future__ import annotations

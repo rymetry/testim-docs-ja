@@ -187,6 +187,22 @@ import {
 } from '../../lib/source_sync_health.mjs';
 import { summarizeParityResults } from '../../lib/source_parity_summary.mjs';
 import {
+  ACTIONABLE_REPORT_SCHEMA_VERSION,
+  FAMILY_KEYS as DR_FAMILY_KEYS,
+  UPSTREAM_RECOVERY_STICKY_MARKER,
+  assignReviewGroups,
+  buildActionableReport,
+  buildAuditManifest,
+  classifySnapshotBucket,
+  renderSummaryMarkdown,
+  renderUpstreamRecoveryStickyComment,
+  validateActionableReport,
+  validateDetectionInputs,
+  validateParityCheckStatus,
+  validateSnapshotDiffStatus,
+  validateSourceSyncStatus,
+} from '../../lib/detection_reports.mjs';
+import {
   MUTATION_TYPES as MUTATION_CORPUS_TYPES,
   classifyLines as mutationClassifyLines,
   generateAllMutations,
@@ -702,6 +718,64 @@ const DISPATCH = {
     const map = generateCorpus(md, count ?? 3);
     return Object.fromEntries(map);
   },
+
+  // -------- detection_reports (Phase 3 M7) --------
+  // Consumer: scripts/py/tests/conformance/test_detection_reports_parity.py
+  // 4 validator + classifier + actionable report + summary markdown を byte 比較。
+  // generatedAt は Date.now() 依存なので report build 後に外して比較する。
+  detection_reports_constants: () => ({
+    ACTIONABLE_REPORT_SCHEMA_VERSION,
+    FAMILY_KEYS: { ...DR_FAMILY_KEYS },
+    UPSTREAM_RECOVERY_STICKY_MARKER,
+  }),
+  detection_reports_validate_snapshot: ([parsed]) => {
+    try {
+      validateSnapshotDiffStatus(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_parity: ([parsed]) => {
+    try {
+      validateParityCheckStatus(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_source_sync: ([parsed]) => {
+    try {
+      validateSourceSyncStatus(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_actionable: ([parsed]) => {
+    try {
+      validateActionableReport(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_inputs: ([inputs]) => validateDetectionInputs(inputs),
+  detection_reports_classify_bucket: ([change]) => classifySnapshotBucket(change),
+  detection_reports_assign_review_groups: ([entries, groupCount]) =>
+    assignReviewGroups(entries, groupCount ?? 6),
+  detection_reports_build_audit_manifest: ([snapshot, parity, options]) =>
+    buildAuditManifest(snapshot, parity, options ?? {}),
+  detection_reports_build_actionable: ([snapshot, parity, manifest, options]) => {
+    const report = buildActionableReport(snapshot, parity, manifest, options ?? {});
+    // generatedAt は timestamp なので Python 側と厳密比較できない — 外す。
+    const { generatedAt: _generatedAt, ...rest } = report;
+    return rest;
+  },
+  detection_reports_render_summary: ([snapshot, parity, report, manifest, sourceSync]) =>
+    renderSummaryMarkdown(snapshot, parity, report, manifest, sourceSync),
+  detection_reports_render_sticky: ([upstream, options]) =>
+    renderUpstreamRecoveryStickyComment(upstream, options ?? {}),
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
