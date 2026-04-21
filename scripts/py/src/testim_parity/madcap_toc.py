@@ -215,6 +215,59 @@ def build_sidebar_snapshot(
     }
 
 
+def fetch_toc_data(
+    *,
+    base_url: str = DEFAULT_BASE_URL,
+    fetch_fn: Any = None,
+) -> dict[str, Any]:
+    """MadCap Flare TOC 全体を取得して解析する (mjs ``fetchTocData`` 等価)。
+
+    ``fetch_fn`` は test 用に差し替え可能。None なら ``httpx`` で GET する。
+    """
+    main_url = f"{base_url}/{TOC_PATH}/Main.js"
+    main_data = _fetch_toc_file(main_url, fetch_fn)
+
+    num_chunks = int(main_data["numchunks"])
+    prefix = main_data["prefix"]
+    tree = main_data["tree"]
+
+    chunk_data_list: list[dict[str, Any]] = []
+    failures: list[str] = []
+    for i in range(num_chunks):
+        url = f"{base_url}/{TOC_PATH}/{prefix}{i}.js"
+        try:
+            chunk_data_list.append(_fetch_toc_file(url, fetch_fn))
+        except Exception as err:
+            failures.append(str(err))
+
+    if failures:
+        reasons = "; ".join(failures)
+        raise RuntimeError(f"Failed to fetch {len(failures)}/{num_chunks} TOC chunk(s): {reasons}")
+
+    lookup = build_index_lookup(chunk_data_list)
+    sections = build_sections(tree, lookup)
+    return {"sections": sections, "lookup": lookup, "tree": tree}
+
+
+def _fetch_toc_file(url: str, fetch_fn: Any = None) -> dict[str, Any]:
+    """TOC JS file を 1 件取得して parse_amd_module する (mjs 等価)。"""
+    if fetch_fn is not None:
+        text = fetch_fn(url)
+    else:
+        import httpx
+
+        response = httpx.get(
+            url,
+            headers={"User-Agent": DEFAULT_USER_AGENT},
+            timeout=FETCH_TIMEOUT_S,
+        )
+        if response.status_code != 200:
+            raise RuntimeError(f"Failed to fetch TOC file {url}: HTTP {response.status_code}")
+        text = response.text
+    parsed: dict[str, Any] = parse_amd_module(text)
+    return parsed
+
+
 __all__ = [
     "DEFAULT_BASE_URL",
     "TOC_PATH",
@@ -229,4 +282,5 @@ __all__ = [
     "build_sections",
     "extract_slugs_from_snapshot",
     "build_sidebar_snapshot",
+    "fetch_toc_data",
 ]
