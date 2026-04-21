@@ -64,7 +64,7 @@
     "@astrojs/vercel": "^10.0.2",
     "@microflash/remark-callout-directives": "^5.0.0",
     "@tailwindcss/vite": "^4.1.16",
-    "astro": "^6.1.0",
+    "astro": "^6.1.8",
     "dotenv": "^17.2.3",
     "gray-matter": "^4.0.3",
     "minisearch": "^7.2.0",
