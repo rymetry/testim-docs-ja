@@ -712,20 +712,29 @@ gate で確認する。
 
 ## Phase 4: Detection + Pipeline + Tools (CLI scripts)
 
-**Goal**: 全 CLI entry point を port。`click` で引数パース。
+**Goal**: 全 CLI entry point を port。`argparse` で引数パース (※ plan 初期の
+``click`` 想定は depend 追加のコスト対 benefits が低く、標準 ``argparse`` で
+十分だったため実装では採用を見送り。後続 cutover 時点で cleanup)。
 
-### Detection (9 scripts) → `detection/`
-### Pipeline (6 scripts) → `pipeline/`
-### Tools (6 scripts) → `tools/` (既存 fix_notation.py, verify_notation.py を移動)
+### Detection (9 scripts) → `detection/` ✅ 完了
+### Pipeline (6 scripts) → `pipeline/` ✅ 完了
+### Tools (6 scripts) → `tools/` (既存 fix_notation.py, verify_notation.py を移動) ✅ 完了
 
-### CI workflow 更新
+**合計 21/21 port 済** (PR #374):
+- Full port: 17 scripts
+- Subprocess wrapper: 4 scripts (turndown / 915 LOC orchestration など、Phase 4b で解消)
 
-`.github/workflows/ci.yml` line 111:
+### CI workflow 更新 ✅ 完了 (PR #374)
+
+`.github/workflows/ci.yml` の `parity` job:
 
 ```yaml
 # Before: node scripts/detection/render_upstream_recovery_comment.mjs
 # After:  cd scripts/py && uv run python -m testim_parity.detection.render_upstream_recovery_comment
 ```
+
+Python setup (setup-python + uv sync) を `parity` job 先頭に追加。他の
+`check:parity` / `check:upstream-recovery` 等はまだ mjs (Phase 6 cutover で切替)。
 
 ### HTML→MD 変換 (pipeline 用)
 
@@ -733,10 +742,48 @@ gate で確認する。
 - `markdownify` (Python) + custom converters for MadCap patterns
 - **extraction hot path には使わない** (segments_en は raw HTML を直接 walk)
 
-### Phase 4 verification gate
+### Phase 4 verification gate ✅ gate 条件を満たす範囲で通過 (PR #374)
 
-- 各 CLI が同一の JSON artifacts を生成
-- 5-counter = 0
+Gate 1 ("各 CLI が同一の JSON artifacts を生成") の evidence は **CLI ごとに
+層が異なる**。下表の通り明示的に scope を書き分けて、証拠の強さを
+overstate しないようにする。
+
+| CLI | Library byte parity (conformance harness) | Orchestration byte parity (end-to-end) | Per-CLI smoke |
+| --- | --- | --- | --- |
+| `generate_detection_reports` | 12 dispatch (detection_reports) | ✅ `test_generate_detection_reports_e2e.py` — Python 3 output vs mjs harness | ✅ 3 (minimal / strict / cwd default) |
+| `generate_parity_baseline` | 9 dispatch (baseline) | ⚠️ CLI orchestration は per-CLI smoke のみ。end-to-end mjs 比較は Phase 4b で追加予定 | ✅ 9 (regenerate / slug / types / mutual exclusive / gate pass marker / gate fail / malformed baseline × 2 / partial-run status) |
+| `snapshot_diff` | — (純 Python, conformance 対象外) | ⚠️ end-to-end mjs 比較は未実施 (git HEAD 依存のため fixture 化コスト高い、Phase 4b で対応) | ✅ 5 (classifier / 404 marker / sidebar url map / fallback / sidebar RuntimeError guard) |
+| `check_upstream_recovery` | — (純 Python) | ⚠️ end-to-end mjs 比較は未実施 (Phase 4b) | ✅ 2 (empty-input artifact schema / days helpers) |
+| `render_upstream_recovery_comment` | 1 dispatch (`detection_reports_render_sticky`) | ⚠️ CLI 入出力 (``has_signals`` stdout + md file) の mjs 比較は未実施 (Phase 4b) | ✅ 5 (no artifact / empty / with signals / stale cleanup / cwd default) |
+
+加えて共通して:
+
+- **mutation_corpus** 8 dispatch + **summary** 2 dispatch (parity result の
+  集計 library) は library byte parity のみ。CLI は無い。
+
+**Summary**: `generate_detection_reports` は library + orchestration + smoke
+の 3 層。他 CLI は library byte parity (該当するもの) + smoke の 2 層で、
+orchestration byte parity は Phase 4b で埋める。Gate text は overstate せず、
+この scope のまま Round 4 以降の merge 判断に委ねる。
+
+- 5-counter = 0 → **維持** (既存 check:parity で継続確認)
+
+**Phase 4b (turndown-依存 4 script の full port + 他 CLI の end-to-end mjs
+byte parity) は別 PR で対応**。
+
+### Phase 4 残作業 (Phase 4b として次 PR で対応)
+
+turndown 等価実装が必要な 4 script は subprocess wrapper に留めた:
+
+| Script | wrapper 理由 |
+| --- | --- |
+| `detection/check_source_parity.py` | 915 LOC orchestration + turndown 依存 |
+| `detection/snapshot_update.py` | live EN HTML fetch (HTTP + turndown) |
+| `pipeline/fetch_translate_images.py` | HTML→MD 変換 hot path |
+| `pipeline` 内 `fetch` step | 上記に委譲 |
+
+Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えてから
+上記 4 script を full port し、本 plan の Phase 4 を完全完了とする。
 
 ---
 

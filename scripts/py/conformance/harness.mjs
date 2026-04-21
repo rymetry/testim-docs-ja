@@ -185,6 +185,45 @@ import {
   fingerprint as syncHealthFingerprint,
   validateRunLinkage,
 } from '../../lib/source_sync_health.mjs';
+import { summarizeParityResults } from '../../lib/source_parity_summary.mjs';
+import {
+  ACTIONABLE_REPORT_SCHEMA_VERSION,
+  FAMILY_KEYS as DR_FAMILY_KEYS,
+  UPSTREAM_RECOVERY_STICKY_MARKER,
+  assignReviewGroups,
+  buildActionableReport,
+  buildAuditManifest,
+  classifySnapshotBucket,
+  renderSummaryMarkdown,
+  renderUpstreamRecoveryStickyComment,
+  validateActionableReport,
+  validateDetectionInputs,
+  validateParityCheckStatus,
+  validateSnapshotDiffStatus,
+  validateSourceSyncStatus,
+} from '../../lib/detection_reports.mjs';
+import {
+  MUTATION_TYPES as MUTATION_CORPUS_TYPES,
+  classifyLines as mutationClassifyLines,
+  generateAllMutations,
+  generateCorpus,
+  listItemBlockEnd,
+  paragraphBlockRange,
+} from '../../lib/mutation_corpus.mjs';
+import {
+  BASELINE_ELIGIBLE_TYPES,
+  NOTE_MAX_LENGTH as BASELINE_NOTE_MAX_LENGTH,
+  PRIORITY_VALUES as BASELINE_PRIORITY_VALUES,
+  STRUCTURE_CATEGORIES as BASELINE_STRUCTURE_CATEGORIES,
+  TYPES_ARG_ALLOWLIST as BASELINE_TYPES_ARG_ALLOWLIST,
+  buildBaselineKey,
+  buildBaselineKeyFromEntry,
+  computeOrphanBaselineEntries,
+  computeStructureFingerprint,
+  tagIssuesWithBaseline,
+  validateBaseline,
+  validateTypesArg,
+} from '../../lib/source_parity_baseline.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers (Map / Set を JSON-safe に正規化する)
@@ -609,6 +648,134 @@ const DISPATCH = {
     }
   },
   align_parity_diffs_to_issues: ([diffs]) => parityDiffsToIssues(diffs),
+
+  // -------- baseline (Phase 3 M5) --------
+  // Consumer: scripts/py/tests/conformance/test_baseline_parity.py
+  // baseline identity key は align ParityDiff 出力に直結するため、fingerprint /
+  // build_key / validate / tagging の戻り値 shape を byte-identical に縛る。
+  baseline_eligible_types: () => [...BASELINE_ELIGIBLE_TYPES].sort(),
+  baseline_types_arg_allowlist: () => [...BASELINE_TYPES_ARG_ALLOWLIST].sort(),
+  baseline_priority_values: () => [...BASELINE_PRIORITY_VALUES],
+  baseline_structure_categories: () => [...BASELINE_STRUCTURE_CATEGORIES].sort(),
+  baseline_note_max_length: () => BASELINE_NOTE_MAX_LENGTH,
+  baseline_validate_types_arg: ([types]) => validateTypesArg(types),
+  baseline_compute_structure_fingerprint: ([payload]) =>
+    computeStructureFingerprint(payload),
+  baseline_validate: ([parsed]) => {
+    // validate_baseline は正常時に parsed reference を返すため conformance では
+    // {ok: true} のみ送り返し、Python 側は ValueError を raise するシグネチャに
+    // 合わせる。dispatch 全般と同じ {ok, error} envelope。
+    try {
+      validateBaseline(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  baseline_build_key: ([slug, issue]) => buildBaselineKey(slug, issue),
+  baseline_build_key_from_entry: ([entry]) => buildBaselineKeyFromEntry(entry),
+  baseline_tag_issues: ([slug, issues, entries, fp]) => {
+    const { tagged, invalidated, matchedKeys } = tagIssuesWithBaseline(
+      slug,
+      issues,
+      entries,
+      fp,
+    );
+    return { tagged, invalidated, matchedKeys: [...matchedKeys].sort() };
+  },
+  baseline_orphan_entries: ([slug, entries, matchedKeys]) =>
+    computeOrphanBaselineEntries(slug, entries, new Set(matchedKeys)),
+
+  // -------- summary (Phase 3 M5) --------
+  // Consumer: scripts/py/tests/conformance/test_summary_parity.py
+  // 全 counter (reportableActiveFiles / auditSignalIssues / baselinedIssues /
+  // structureMismatchFiles / ...) は 5-counter=0 DoD に直結するため、mjs と
+  // Python の結果 dict を deep-equal 比較で byte 一致に縛る。
+  summary_summarize: ([results, orphanMeta]) =>
+    summarizeParityResults(results, orphanMeta ?? {}),
+
+  // -------- mutation_corpus (Phase 3 M6) --------
+  // Consumer: scripts/py/tests/conformance/test_mutation_corpus_parity.py
+  // diff=1 recall test の corpus generator。9/9 recall は translation-parity
+  // pipeline の quality gate そのものなので、各 mutation の shape / description
+  // / lineIndex を byte-identical に縛る。
+  mutation_classify_lines: ([md]) => mutationClassifyLines(md),
+  mutation_list_item_block_end: ([lines, start]) => listItemBlockEnd(lines, start),
+  mutation_paragraph_block_range: ([classified, idx]) =>
+    paragraphBlockRange(classified, idx),
+  mutation_type_keys: () => Object.keys(MUTATION_CORPUS_TYPES),
+  mutation_run: ([typeName, md, nth]) => {
+    const fn = MUTATION_CORPUS_TYPES[typeName];
+    if (!fn) return { __domain_error: `unknown mutation type: ${typeName}` };
+    return fn(md, nth ?? 0);
+  },
+  mutation_generate_all: ([md]) => {
+    const map = generateAllMutations(md);
+    // Map → object で dispatch。Python dict (挿入順保持) と byte 一致。
+    return Object.fromEntries(map);
+  },
+  mutation_generate_corpus: ([md, count]) => {
+    const map = generateCorpus(md, count ?? 3);
+    return Object.fromEntries(map);
+  },
+
+  // -------- detection_reports (Phase 3 M7) --------
+  // Consumer: scripts/py/tests/conformance/test_detection_reports_parity.py
+  // 4 validator + classifier + actionable report + summary markdown を byte 比較。
+  // generatedAt は Date.now() 依存なので report build 後に外して比較する。
+  detection_reports_constants: () => ({
+    ACTIONABLE_REPORT_SCHEMA_VERSION,
+    FAMILY_KEYS: { ...DR_FAMILY_KEYS },
+    UPSTREAM_RECOVERY_STICKY_MARKER,
+  }),
+  detection_reports_validate_snapshot: ([parsed]) => {
+    try {
+      validateSnapshotDiffStatus(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_parity: ([parsed]) => {
+    try {
+      validateParityCheckStatus(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_source_sync: ([parsed]) => {
+    try {
+      validateSourceSyncStatus(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_actionable: ([parsed]) => {
+    try {
+      validateActionableReport(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  detection_reports_validate_inputs: ([inputs]) => validateDetectionInputs(inputs),
+  detection_reports_classify_bucket: ([change]) => classifySnapshotBucket(change),
+  detection_reports_assign_review_groups: ([entries, groupCount]) =>
+    assignReviewGroups(entries, groupCount ?? 6),
+  detection_reports_build_audit_manifest: ([snapshot, parity, options]) =>
+    buildAuditManifest(snapshot, parity, options ?? {}),
+  detection_reports_build_actionable: ([snapshot, parity, manifest, options]) => {
+    const report = buildActionableReport(snapshot, parity, manifest, options ?? {});
+    // generatedAt は timestamp なので Python 側と厳密比較できない — 外す。
+    const { generatedAt: _generatedAt, ...rest } = report;
+    return rest;
+  },
+  detection_reports_render_summary: ([snapshot, parity, report, manifest, sourceSync]) =>
+    renderSummaryMarkdown(snapshot, parity, report, manifest, sourceSync),
+  detection_reports_render_sticky: ([upstream, options]) =>
+    renderUpstreamRecoveryStickyComment(upstream, options ?? {}),
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
