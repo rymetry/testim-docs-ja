@@ -33,6 +33,7 @@ __all__ = [
     "CHANGE_CLASSIFIERS",
     "MARKER_404_RE",
     "SNAPSHOT_DIFF_SCHEMA_VERSION",
+    "assert_safe_refspec_path",
     "build_sidebar_url_map",
     "classify_changes",
     "fallback_source_url",
@@ -127,11 +128,46 @@ def parse_args(argv: list[str] | None = None) -> dict[str, Any]:
     return {"section": args.section, "slug": args.slug, "json": args.json_mode}
 
 
+def assert_safe_refspec_path(relative_path: Path) -> str:
+    """``git show HEAD:<path>`` に渡す前に path が repo 内を指していることを検証する。
+
+    ``git show HEAD:`` の RHS は refspec なので、絶対パスや ``..`` traversal を
+    そのまま渡すと git が予期せぬ refspec を解釈して、repo 外 / 意図しない
+    blob を読む可能性がある。snapshot loop は基本的に信頼済みの
+    ``snapshot_path.relative_to(ROOT_DIR)`` しか渡さないが、万一 symlink や
+    absolute path が混入した場合にも防御できるように明示的に guard する
+    (PR #374 reviewer 指摘)。
+
+    Returns
+    -------
+    str
+        POSIX 区切りの相対パス文字列 (git refspec 用)。
+
+    Raises
+    ------
+    ValueError
+        ``relative_path`` が絶対パス or ``..`` を含む場合。
+    """
+    posix = relative_path.as_posix()
+    if relative_path.is_absolute() or posix.startswith("/"):
+        raise ValueError(f"refuse to pass absolute path to git refspec: {posix!r}")
+    # PurePosixPath.parts で ``..`` の有無をチェックする (文字列 ``..`` の誤検出を
+    # 避けるため、単純な ``in`` ではなく分解後の segment 比較を使う)。
+    if any(part == ".." for part in relative_path.parts):
+        raise ValueError(f"refuse to pass '..' in git refspec: {posix!r}")
+    return posix
+
+
 def _get_head_content(relative_path: Path) -> str | None:
-    """mjs ``git show HEAD:path`` 等価。HEAD に存在しない場合は None を返す。"""
+    """mjs ``git show HEAD:path`` 等価。HEAD に存在しない場合は None を返す。
+
+    入力 path は ``assert_safe_refspec_path`` で repo 内を指していることを
+    検証してから git に渡す。
+    """
+    safe_posix = assert_safe_refspec_path(relative_path)
     try:
         result = subprocess.run(
-            ["git", "show", f"HEAD:{relative_path.as_posix()}"],
+            ["git", "show", f"HEAD:{safe_posix}"],
             cwd=str(ROOT_DIR),
             capture_output=True,
             text=True,

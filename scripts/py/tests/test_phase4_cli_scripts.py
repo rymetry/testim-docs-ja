@@ -330,3 +330,39 @@ def test_js_iso_timestamp_default_uses_now() -> None:
     """引数省略時は ``datetime.now(tz=UTC)`` と同じ contract で返る。"""
     stamp = js_iso_timestamp()
     assert re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$", stamp)
+
+
+# --- snapshot_diff refspec safety guard (reviewer CRITICAL-1) ---
+
+
+def test_assert_safe_refspec_path_accepts_clean_relative_paths() -> None:
+    """通常の relative path は as_posix() 文字列で返る。"""
+    from testim_parity.detection.snapshot_diff import assert_safe_refspec_path
+
+    assert assert_safe_refspec_path(Path("snapshots/en/content/a.html")) == (
+        "snapshots/en/content/a.html"
+    )
+    assert assert_safe_refspec_path(Path("docs/sidebar.json")) == "docs/sidebar.json"
+
+
+def test_assert_safe_refspec_path_rejects_absolute_path(tmp_path: Path) -> None:
+    """絶対パスは ValueError (git refspec が予期しない blob を読みうる)。"""
+    from testim_parity.detection.snapshot_diff import assert_safe_refspec_path
+
+    with pytest.raises(ValueError, match="absolute path"):
+        assert_safe_refspec_path(tmp_path / "foo.html")
+
+
+def test_assert_safe_refspec_path_rejects_dotdot_traversal() -> None:
+    """``..`` 混入を拒否する。"""
+    from testim_parity.detection.snapshot_diff import assert_safe_refspec_path
+
+    with pytest.raises(ValueError, match=r"\.\."):
+        assert_safe_refspec_path(Path("snapshots/../../etc/passwd"))
+
+
+def test_assert_safe_refspec_path_does_not_flag_inner_dots() -> None:
+    """ファイル名内の ``..`` は segment 単位チェックで誤検出しない (``a..b.html``)。"""
+    from testim_parity.detection.snapshot_diff import assert_safe_refspec_path
+
+    assert assert_safe_refspec_path(Path("snapshots/a..b.html")) == "snapshots/a..b.html"
