@@ -182,3 +182,47 @@ def test_img_with_title_attr() -> None:
     """``title`` 属性付き ``<img>`` は turndown の ``"..."`` syntax を使う。"""
     html = '<img src="/a.png" alt="a" title="A title"/>'
     assert html_to_md(html) == '![a](/a.png "A title")'
+
+
+# ----------------------------------------------------------------------
+# Review round-2 P1 regression pins: emphasis chomp + flanking whitespace。
+# turndown は content を trim して marker 外側に whitespace を出す。sibling が
+# 既に whitespace を持てば二重 space を避ける。empty / whitespace-only emphasis
+# は marker ごと除去される (双方の sibling whitespace が 1 つに merge される)。
+# ----------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("html", "expected"),
+    [
+        ("<p>A <em> text</em> B</p>", "A _text_ B"),
+        ("<p>A <em>text </em> B</p>", "A _text_ B"),
+        ("<p>A <em> text </em> B</p>", "A _text_ B"),
+        ("<p>A <em>   </em> B</p>", "A B"),
+        ("<p>A <em></em> B</p>", "A B"),
+        ("<p>A <i> text </i> B</p>", "A _text_ B"),
+        ("<p>A <strong> text </strong> B</p>", "A **text** B"),
+        ("<p>A <strong></strong> B</p>", "A B"),
+        ("<p>A <b> text </b> B</p>", "A **text** B"),
+    ],
+)
+def test_emphasis_flanking_whitespace(html: str, expected: str) -> None:
+    assert html_to_md(html) == expected
+
+
+# ----------------------------------------------------------------------
+# Review round-2 P2 regression pin: empty <li> は bullet 行を emit しない。
+# ----------------------------------------------------------------------
+
+
+def test_empty_li_does_not_emit_bullet() -> None:
+    """``<ul><li></li><li>A</li></ul>`` は ``*   A`` のみ (空 bullet を出さない)。"""
+    assert html_to_md("<ul><li></li><li>A</li></ul>") == "*   A"
+
+
+def test_whitespace_only_li_does_not_emit_bullet() -> None:
+    assert html_to_md("<ul><li>   </li><li>A</li></ul>") == "*   A"
+
+
+def test_all_empty_list_emits_nothing() -> None:
+    assert html_to_md("<ul><li></li></ul>") == ""

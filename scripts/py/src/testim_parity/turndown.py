@@ -9,23 +9,33 @@ Python 版は ``markdownify.MarkdownConverter`` を subclass し、必要な
 output format (``*   `` 3-space bullet / ``**bold**`` / ``_italic_`` / ATX heading /
 fenced code with language) を replicate する。
 
-**turndown default rule の Python port**: review round-1 P1/P2 対応で以下を
+**turndown default rule の Python port**: review round-1/2 P1/P2 対応で以下を
 上書き実装:
 
 - ``convert_li`` — leading ``\\n`` strip + trailing ``\\n+`` collapse +
   ``\\n`` → ``\\n    `` (4-space indent)。nested list / multi-paragraph
-  list item を flatten せず turndown 互換で保持する
+  list item を flatten せず turndown 互換で保持する。trimmed content が空
+  なら bullet ごと省略 (round-2 P2)
 - ``convert_ul`` — 親が ``<li>`` で last element child のときは ``\\n`` +
   content、さもなくば ``\\n\\n`` + content + ``\\n\\n``。turndown default
   の list rule 等価
+- ``convert_em`` / ``convert_i`` / ``convert_strong`` / ``convert_b`` —
+  turndown の ``flankingWhitespace`` を port (round-2 P1)。content を trim
+  して marker 外側に whitespace を emit、sibling が既に whitespace を持つ
+  場合は二重 space を避けるため省略する
 - ``convert_img`` — ``![alt](src "title")`` を常に emit (markdownify default
   の ``_inline`` context alt-text fallback を無効化)。table cell / heading
   内の ``<img>`` を preserve する
+- ``_strip_empty_inline_elements`` — raw HTML 段階で ``<em></em>`` /
+  ``<em>   </em>`` 等の空 inline を除去。mjs turndown の DOM whitespace
+  normalization を emulate し、``A <em></em> B`` → ``A B`` (単一 space) に
+  collapse する
 
-**byte-parity 戦略**: 25 代表 MadCap pattern (5 custom rule + nested list +
-multi-paragraph li + table cell img + heading img + 4 preprocess chain) を
-unit test で mjs turndown 出力と byte 比較。288-page corpus 全体の byte-parity
-は M2/M3 integration 時に計測する (``test_convert_en_html_to_md_288_matrix``)。
+**byte-parity 戦略**: 36 代表 MadCap pattern (5 custom rule + nested list +
+multi-paragraph li + table cell img + heading img + 8 emphasis flanking
+whitespace / empty inline / empty li + 4 preprocess chain) を unit test で
+mjs turndown 出力と byte 比較。288-page corpus 全体の byte-parity は M2/M3
+integration 時に計測する (``test_convert_en_html_to_md_288_matrix``)。
 
 ``preprocess_en_html`` は既存の ``preprocess_en`` module の re-export。
 """
@@ -36,7 +46,7 @@ import re
 from re import Match
 from typing import Any
 
-from bs4 import Tag
+from bs4 import NavigableString, Tag
 from markdownify import MarkdownConverter
 
 from .preprocess_en import preprocess_en_html
@@ -99,6 +109,70 @@ def _is_last_element_of_parent_li(el: Tag) -> bool:
     return last_elem is el
 
 
+def _sibling_text(sibling: Any) -> str:
+    """直接 sibling (NavigableString または Tag) から text content を取り出す。"""
+    if sibling is None:
+        return ""
+    if isinstance(sibling, NavigableString):
+        return str(sibling)
+    if isinstance(sibling, Tag):
+        return sibling.get_text()
+    return ""
+
+
+def _is_flanked_by_whitespace(side: str, el: Tag) -> bool:
+    """turndown ``isFlankedByWhitespace`` 等価。
+
+    side=="left" なら ``el.previous_sibling`` の末尾 space を、"right" なら
+    ``el.next_sibling`` の先頭 space を確認する。flanked なら自分 (el) は
+    flanking whitespace を emit しない (double space を防ぐ)。
+    """
+    if side == "left":
+        sibling = el.previous_sibling
+        pattern = re.compile(r" $")
+    else:
+        sibling = el.next_sibling
+        pattern = re.compile(r"^ ")
+    value = _sibling_text(sibling)
+    return bool(value and pattern.search(value))
+
+
+def _flanking_whitespace(el: Tag) -> tuple[str, str]:
+    """turndown ``flankingWhitespace`` 等価。
+
+    inline node (em/i/strong/b) が leading/trailing whitespace を持つ場合、
+    そのぶんを marker の **外側** に emit する。ただし sibling 側が既に
+    whitespace を持つなら二重 space を避けるため emit しない。
+    """
+    text = el.get_text()
+    if not text:
+        return "", ""
+    has_leading = text[0].isspace()
+    has_trailing = text[-1].isspace()
+    blank_with_spaces = text.strip() == ""
+    leading = ""
+    trailing = ""
+    if has_leading and not _is_flanked_by_whitespace("left", el):
+        leading = " "
+    if not blank_with_spaces and has_trailing and not _is_flanked_by_whitespace("right", el):
+        trailing = " "
+    return leading, trailing
+
+
+def _inline_replacement(el: Tag, text: str, marker: str) -> str:
+    """turndown-style inline emphasis/strong replacement。
+
+    content を trim してから marker で囲み、flanking whitespace は marker の
+    **外側** に置く。trimmed content が空なら marker 無しで flanking のみ
+    (mjs turndown と同じ)。
+    """
+    content = (text or "").strip()
+    if not content:
+        return ""
+    leading, trailing = _flanking_whitespace(el)
+    return f"{leading}{marker}{content}{marker}{trailing}"
+
+
 class _TurndownConverter(MarkdownConverter):
     """mjs ``turndown`` + MadCap custom rule 相当の HTML→MD converter。
 
@@ -137,16 +211,25 @@ class _TurndownConverter(MarkdownConverter):
         escape_misc = False
 
     # ------------------------------------------------------------------
-    # <em> → _italic_ (turndown default)
-    # markdownify default は ``*italic*``。turndown は ``_italic_`` なので override
+    # <em>/<i>/<strong>/<b> — turndown default の ``flankingWhitespace`` +
+    # chomp を port する (review round-2 P1 対応)。
+    # - content を trim して marker で囲み、leading/trailing whitespace は
+    #   marker の **外側** に emit
+    # - sibling が既に whitespace を持つなら flanking を emit しない
+    #   (``A <em> text </em> B`` → ``A _text_ B`` という double-space 無し)
+    # - trimmed content が空なら marker ごと省略
     # ------------------------------------------------------------------
     def convert_em(self, el: Tag, text: str, parent_tags: Any) -> str:
-        if not text.strip():
-            return text
-        return f"_{text}_"
+        return _inline_replacement(el, text, "_")
 
     def convert_i(self, el: Tag, text: str, parent_tags: Any) -> str:
-        return self.convert_em(el, text, parent_tags)
+        return _inline_replacement(el, text, "_")
+
+    def convert_strong(self, el: Tag, text: str, parent_tags: Any) -> str:
+        return _inline_replacement(el, text, "**")
+
+    def convert_b(self, el: Tag, text: str, parent_tags: Any) -> str:
+        return _inline_replacement(el, text, "**")
 
     # ------------------------------------------------------------------
     # <li> — turndown rule:
@@ -166,6 +249,11 @@ class _TurndownConverter(MarkdownConverter):
         if parent is not None and parent.name == "ol":
             return text
         content = text or ""
+        # Review round-2 P2 対応: trimmed content が空なら bullet ごと省略
+        # (mjs turndown は ``<li></li>`` / ``<li>   </li>`` を empty 文字列化する)。
+        # ``content.strip()`` は whitespace-only の list item も拾う。
+        if not content.strip():
+            return ""
         # leading newlines を削除
         content = _LEADING_NEWLINES_RE.sub("", content)
         # trailing newlines を ``\n`` 1 個に collapse
@@ -354,14 +442,37 @@ def _convert_fragment(
     return converter.convert(html)
 
 
+_EMPTY_INLINE_RE: re.Pattern[str] = re.compile(
+    r"<(em|i|strong|b)\b[^>]*>\s*</\1>",
+    re.IGNORECASE,
+)
+
+
+def _strip_empty_inline_elements(html: str) -> str:
+    """empty/whitespace-only ``<em>`` / ``<i>`` / ``<strong>`` / ``<b>`` を除去。
+
+    mjs turndown は DOM レベルの whitespace 正規化で ``<p>A <em></em> B</p>`` を
+    ``A B`` (単一 space) に collapse するが、Python / markdownify は raw text
+    node を preserve するため ``A  B`` (double space) になる。事前に空 inline
+    を raw HTML から剥がしておくと、 ``<p>A  B</p>`` と text node 1 つに
+    merge されて parent converter が text 側の double-space を ``A B`` に
+    collapse する (markdownify は text 内の whitespace run を single space に
+    縮約する)。
+    """
+    return _EMPTY_INLINE_RE.sub("", html)
+
+
 def html_to_md(html: str) -> str:
     """Preprocess-skip 版。``turndown.turndown(html)`` 相当。
 
     ``preprocess_en_html`` を通さないので callout/details 等の MadCap
     artifact 正規化は caller 責務。通常は ``convert_en_html_to_md`` を使う。
     """
+    # review round-2 P1 (empty/whitespace emphasis)対応: raw HTML 段階で空
+    # inline 要素を除去し、markdownify の text-node whitespace collapse に任せる
+    normalized_html = _strip_empty_inline_elements(html)
     converter = _TurndownConverter()
-    return _normalize_output(converter.convert(html))
+    return _normalize_output(converter.convert(normalized_html))
 
 
 def convert_en_html_to_md(html: str) -> str:

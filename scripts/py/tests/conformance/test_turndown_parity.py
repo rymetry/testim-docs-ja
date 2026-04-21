@@ -111,6 +111,21 @@ _SAMPLES_HTML_TO_MD: list[tuple[str, str]] = [
         "heading_with_inline_img",
         '<h2>Title <img src="/i.png" alt="icon"/></h2>',
     ),
+    # Review round-2 P1 regression pin: em/strong の flanking whitespace chomp。
+    # turndown は content を trim して marker 外側に空白を出し、sibling 側が
+    # 既に空白を持つなら二重空白を避ける。
+    ("em_leading_space", "<p>A <em> text</em> B</p>"),
+    ("em_both_spaces", "<p>A <em> text </em> B</p>"),
+    ("em_only_whitespace", "<p>A <em>   </em> B</p>"),
+    ("em_empty_element", "<p>A <em></em> B</p>"),
+    ("strong_both_spaces", "<p>A <strong> text </strong> B</p>"),
+    ("strong_empty_element", "<p>A <strong></strong> B</p>"),
+    ("i_both_spaces", "<p>A <i> text </i> B</p>"),
+    ("b_both_spaces", "<p>A <b> text </b> B</p>"),
+    # Review round-2 P2 regression pin: empty <li> の short-circuit。
+    ("empty_li_skipped", "<ul><li></li><li>A</li></ul>"),
+    ("whitespace_only_li_skipped", "<ul><li>   </li><li>A</li></ul>"),
+    ("all_empty_ul", "<ul><li></li></ul>"),
 ]
 
 # convert_en_html_to_md は preprocess_en_html を通すので、preprocess の
