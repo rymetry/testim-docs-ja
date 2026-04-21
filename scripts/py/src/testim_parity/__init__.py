@@ -78,19 +78,40 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
   4 issue family (snapshotDiff / parityRegression / sourceSyncHealth /
   parityFollowup) を組み立てる主エントリ。Phase 4 CLI script の build 基盤
 
-**CLI scripts (Phase 4 — pilot)**:
+**CLI scripts (Phase 4 — complete)**:
 
-- ``testim_parity.detection.render_upstream_recovery_comment`` — PR sticky
-  comment の markdown を書き出す non-blocking script。CI workflow から
-  ``python -m`` で呼び出す
-- ``testim_parity.detection.generate_detection_reports`` —
-  ``docs-actionable-report.json`` / ``docs-update-summary.md`` /
-  ``docs-audit-manifest.json`` を 1 回の CLI 実行で生成
-- ``testim_parity.tools.report_frontmatter_categories`` — markdown の
-  frontmatter ``category`` field を集計し、``SIDEBAR_URLS.md`` と照合する
+Detection (``testim_parity.detection.*``):
 
-残る Phase 4 CLI script (check_source_parity / generate_parity_baseline /
-snapshot_diff / snapshot_update / pipeline scripts 等) は後続 PR で予定。
+- ``check_patch_review_cadence`` — reviewAfter 過去超過 entry の non-blocking 警告
+- ``check_source_parity`` — 主 parity gate (turndown 依存のため mjs subprocess wrapper)
+- ``check_upstream_recovery`` — EN patch / sync exclusion の Axis A/B 集計 →
+  ``upstream-recovery-status.json``
+- ``find_untranslated`` — baseline の ``segment-untranslated`` slug を scan
+- ``generate_detection_reports`` — 4 family report + summary markdown + audit manifest
+- ``generate_parity_baseline`` — schema v2 baseline 生成 (regenerate / slug / types 3 mode)
+- ``render_upstream_recovery_comment`` — PR sticky comment の markdown 書き出し
+- ``snapshot_diff`` — committed vs working tree snapshot の diff (純 Python)
+- ``snapshot_update`` — live EN HTML fetch (HTTP + turndown 依存のため mjs subprocess wrapper)
+
+Pipeline (``testim_parity.pipeline.*``):
+
+- ``apply_llm_translations`` — LLM 翻訳結果を atomic write で doc に反映
+- ``fetch_translate_images`` — HTML→MD 変換 (turndown 依存のため mjs subprocess wrapper)
+- ``generate_untranslated_placeholders`` — ⏳ page の placeholder md 生成
+- ``pipeline`` — 5 step orchestration (url_collect / placeholders / fetch / prepare_llm / apply_llm)
+- ``prepare_llm_tasks`` — 翻訳 task prompt 生成
+- ``update_sidebar_urls_from_live`` — live TOC fetch → SIDEBAR_URLS.md 再生成
+
+Tools (``testim_parity.tools.*``):
+
+- ``check_glossary_duplicates`` — GLOSSARY.md の重複検出
+- ``fix_alt_all`` — 空 alt の markdown 画像に日本語 alt を付与
+- ``lint_docs`` — WRITING_GUIDE 準拠 lint
+- ``normalize_docs`` — 用語揺れ正規化 + frontmatter 順序統一
+- ``report_frontmatter_categories`` — category 集計 + SIDEBAR と照合
+- ``sync_frontmatter_from_sidebar`` — SIDEBAR_URLS.md → frontmatter category/order
+
+**Phase 5 以降の予定**: pytest 全書き直し / atomic cutover / COPY ボタン追加。
 """
 
 from __future__ import annotations
