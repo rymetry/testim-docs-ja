@@ -374,13 +374,15 @@ def test_get_head_content_wraps_valueerror_as_runtimeerror() -> None:
 
     main loop / ``_diff_sidebar`` は ``except RuntimeError`` でのみ handling
     するため、guard の ValueError がそのまま escape すると CLI がトレース
-    ダンプで落ちる。wrap して統一 (MEDIUM-NEW-1)。
+    ダンプで落ちる。wrap して統一 (MEDIUM-NEW-1)。メッセージは guard の
+    ``refuse to pass ...`` をそのまま引き継ぐ (double-prefix を避ける
+    Round 3 M4)。
     """
     from testim_parity.detection.snapshot_diff import _get_head_content
 
-    with pytest.raises(RuntimeError, match="unsafe refspec rejected"):
+    with pytest.raises(RuntimeError, match="refuse to pass absolute path"):
         _get_head_content(Path("/etc/passwd"))
-    with pytest.raises(RuntimeError, match="unsafe refspec rejected"):
+    with pytest.raises(RuntimeError, match=r"refuse to pass '\.\.'"):
         _get_head_content(Path("snapshots/../../etc/passwd"))
 
 
@@ -462,7 +464,14 @@ def _write_snapshot_html(snapshots_dir: Path, slug: str, content: str = "<p>x</p
 def _patch_baseline_paths(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> dict[str, Path]:
-    """``generate_parity_baseline`` module の 4 path 定数を tmp_path に差し替える。"""
+    """``generate_parity_baseline`` module の 4 path 定数を tmp_path に差し替える。
+
+    ``ROOT_DIR`` は意図的に patch しない。module 内で ``ROOT_DIR`` が使われる
+    唯一の箇所は ``main`` 末尾の ``_BASELINE_PATH.relative_to(ROOT_DIR)`` で、
+    成功すれば相対 path、失敗すれば絶対 path を print するだけの cosmetic 処理。
+    tmp_path は通常 ROOT_DIR の外にあるので ``ValueError`` の fallback を通り、
+    結果として絶対 path が print される (test の assertion には影響しない)。
+    """
     import testim_parity.detection.generate_parity_baseline as mod
 
     status_path = tmp_path / "parity-check-status.json"
@@ -475,8 +484,6 @@ def _patch_baseline_paths(
     monkeypatch.setattr(mod, "_BASELINE_PATH", baseline_path)
     monkeypatch.setattr(mod, "_SNAPSHOT_DIFF_PATH", snapshot_diff_path)
     monkeypatch.setattr(mod, "_SNAPSHOTS_DIR", snapshots_dir)
-    # ``relative_to(ROOT_DIR)`` が失敗しても tmp 配下の絶対 path を print するだけ
-    # なので ROOT_DIR の差し替えは不要。
     return {
         "status": status_path,
         "baseline": baseline_path,
@@ -710,6 +717,94 @@ def test_generate_parity_baseline_regenerate_gate_failure(
     assert not paths["baseline"].exists()
 
 
+def test_generate_parity_baseline_regenerate_emits_gate_pass_marker(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``--regenerate`` success path は ``baseline-regen-gate: pass`` を stdout に出す。
+
+    CI 側で pass signal を grep している場合の regression guard (Round 3 M1)。
+    """
+    from testim_parity.detection.generate_parity_baseline import main as baseline_main
+
+    paths = _patch_baseline_paths(monkeypatch, tmp_path)
+    slug = "overview/intro"
+    _write_json(paths["status"], _parity_status_with_structure_issue(slug=slug))
+    _write_json(paths["snapshot_diff"], _snapshot_diff_clean())
+    _write_snapshot_html(paths["snapshots"], slug)
+
+    exit_code = baseline_main(["--regenerate"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "baseline-regen-gate: pass" in captured.out
+
+
+def test_generate_parity_baseline_slug_mode_rejects_malformed_existing_baseline(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """既存 ``parity-baseline.json`` が schema 違反なら clean exit 1 で失敗する。
+
+    以前は ``load_baseline_file`` が raw ``ValueError`` を上げて CLI が traceback
+    で落ちていた (Round 3 P2)。``main`` の top-level catch で
+    ``❌ generate_parity_baseline error:`` prefix 付きに変換される。
+    """
+    from testim_parity.detection.generate_parity_baseline import main as baseline_main
+
+    paths = _patch_baseline_paths(monkeypatch, tmp_path)
+    slug = "overview/intro"
+    _write_json(paths["status"], _parity_status_with_structure_issue(slug=slug))
+    _write_snapshot_html(paths["snapshots"], slug)
+    # schema version が 2 でない baseline は ``validate_baseline`` が reject。
+    _write_json(paths["baseline"], {"schemaVersion": 999, "entries": []})
+
+    exit_code = baseline_main([f"--slug={slug}"])
+
+    assert exit_code == 1, "malformed baseline must produce exit 1, not traceback"
+    captured = capsys.readouterr()
+    assert "generate_parity_baseline error" in captured.err
+
+
+def test_generate_parity_baseline_types_mode_rejects_malformed_existing_baseline(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``--types`` モードも同様の clean-exit 契約を満たす。"""
+    from testim_parity.detection.generate_parity_baseline import main as baseline_main
+
+    paths = _patch_baseline_paths(monkeypatch, tmp_path)
+    slug = "overview/intro"
+    _write_json(paths["status"], _parity_status_with_structure_issue(slug=slug))
+    _write_snapshot_html(paths["snapshots"], slug)
+    # 壊れた JSON を書いて ``json.loads`` を失敗させる。
+    paths["baseline"].write_text("{ not valid json", encoding="utf-8")
+
+    exit_code = baseline_main(["--types=section-structure-mismatch"])
+
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "generate_parity_baseline error" in captured.err
+
+
+def test_generate_parity_baseline_slug_mode_rejects_non_full_run(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``--slug`` モードでも partial-run status なら exit 1 (Round 3 M3)。"""
+    from testim_parity.detection.generate_parity_baseline import main as baseline_main
+
+    paths = _patch_baseline_paths(monkeypatch, tmp_path)
+    status = _full_parity_status_pass()
+    # partial run を模す (checkedFiles != totalFiles)。
+    status["summary"]["checkedFiles"] = 1
+    status["summary"]["totalFiles"] = 2
+    _write_json(paths["status"], status)
+
+    exit_code = baseline_main(["--slug=overview/intro"])
+
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "not a full-repo run" in captured.err
+    assert not paths["baseline"].exists()
+
+
 # --- snapshot_diff smoke tests (priority 9/10 artifact producer) ---
 
 
@@ -767,6 +862,37 @@ def test_snapshot_diff_fallback_source_url() -> None:
     assert fallback_source_url("overview/intro", None) is None
 
 
+def test_snapshot_diff_sidebar_guards_runtimeerror(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """``_diff_sidebar`` は ``_get_head_content`` の RuntimeError を catch する。
+
+    Round 3 P3: MEDIUM-NEW-1 の wrap は sidebar path にも届いていなかった。
+    guard 発火 / git 不在 / git show 予期外 exit のいずれで RuntimeError が
+    出ても、sidebar 単体の parse error result に graceful degrade する。
+    """
+    import testim_parity.detection.snapshot_diff as mod
+
+    # sidebar ファイルを作って ``_diff_sidebar`` を通す。
+    sidebar_path = tmp_path / "sidebar.json"
+    sidebar_path.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(mod, "_SIDEBAR_PATH", sidebar_path)
+    monkeypatch.setattr(mod, "ROOT_DIR", tmp_path)
+
+    def _boom(_path: Path) -> str | None:
+        raise RuntimeError("simulated git lookup failure")
+
+    monkeypatch.setattr(mod, "_get_head_content", _boom)
+
+    result = mod._diff_sidebar()
+    assert result == {
+        "changed": True,
+        "addedPages": [],
+        "removedPages": [],
+        "parseError": True,
+    }
+
+
 # --- check_upstream_recovery smoke tests (priority 9/10 artifact producer) ---
 
 
@@ -820,12 +946,14 @@ def test_check_upstream_recovery_days_helpers_edge_cases() -> None:
     )
 
     now_ms = int(datetime(2026, 4, 22, 10, 0, 0, tzinfo=UTC).timestamp() * 1000)
-    past = "2026-04-15"  # 7 日前
-    future = "2026-04-29"  # 7 日後
+    past = "2026-04-15"  # 7 日前 (Z 00:00:00)
+    future = "2026-04-29"  # 7 日後 (Z 00:00:00)
 
     assert days_since(past, now_ms=now_ms) == 7
-    # future は 00:00Z から 10:00Z までズレがあり UTC 丸めで 6 になる。
+    # ``days_until`` は floor division なので ``(future_ms - now_ms) // MS_PER_DAY``
+    # → now が 10:00Z / future が 00:00Z なので 6.58 日差 → floor して 6。
     assert days_until(future, now_ms=now_ms) == 6
+    # ``days_until`` も同じ floor。past は負方向で ``-7.42 日`` → floor して -8。
     assert days_until(past, now_ms=now_ms) == -8
 
     assert is_review_overdue(past, now_ms=now_ms) is True

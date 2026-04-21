@@ -287,3 +287,139 @@ uv run pytest -q --ignore=tests/conformance   # 559 passed (11 new)
 uv run pytest tests/test_phase4_cli_scripts.py                     # 30 passed
 uv run pytest tests/conformance/test_generate_detection_reports_e2e.py   # 1 passed
 ```
+
+---
+
+# Round 3 (reviewer follow-up)
+
+> **Scope**: Round 3 returned APPROVE with MEDIUM + LOW improvement suggestions,
+> plus two substantive findings (P2 + P3) about incomplete coverage of the
+> round-2 fixes. All addressed here (no deferral).
+
+## Round 3 — Addressed
+
+### R3-P2. `generate_parity_baseline.main()` wraps top-level errors
+
+Reviewer noted that `--slug` and `--types` branches call
+`load_baseline_file(_BASELINE_PATH)` without any local handling, so a
+malformed on-disk `parity-baseline.json` would bubble a raw `ValueError` /
+`json.JSONDecodeError` traceback, whereas the mjs entrypoint wraps `main()`
+in a top-level `.catch` returning exit 1.
+
+Fix:
+
+- `scripts/py/src/testim_parity/detection/generate_parity_baseline.py`
+  refactored so `main()` parses argv / usage / obsolete flags synchronously
+  and delegates the file-I/O heavy body to a new `_run_main(args)`. The
+  `main()` function wraps the call in `except (ValueError, OSError,
+  json.JSONDecodeError)` and emits the mjs-equivalent prefix:
+  `❌ generate_parity_baseline error: <err>`.
+- Added 3 regression tests:
+  - `test_generate_parity_baseline_slug_mode_rejects_malformed_existing_baseline`
+    — existing baseline with `schemaVersion=999` → exit 1
+  - `test_generate_parity_baseline_types_mode_rejects_malformed_existing_baseline`
+    — existing baseline with invalid JSON → exit 1
+  - `test_generate_parity_baseline_slug_mode_rejects_non_full_run` — partial
+    run parity status (`checkedFiles != totalFiles`) → exit 1 on the common
+    `assert_full_parity_status` gate (closes R3-M3 below too)
+
+### R3-P3. `_diff_sidebar` now catches `RuntimeError` from `_get_head_content`
+
+Reviewer flagged that the MEDIUM-NEW-1 fix from round 2 wrapped
+`_get_head_content` callers inside the `main` loop but missed the second
+call site in `_diff_sidebar` (where `git` unavailability or refspec guard
+failures still aborted with uncaught exceptions).
+
+Fix:
+
+- `_diff_sidebar` now wraps the `_get_head_content(sidebar_rel)` call in
+  `try/except RuntimeError`, prints a `diff_sidebar: git lookup failed …`
+  notice, and returns `{"changed": True, "addedPages": [], "removedPages":
+  [], "parseError": True}` — the same graceful-degradation shape the JSON
+  decode branch already produces.
+- `test_snapshot_diff_sidebar_guards_runtimeerror` monkeypatches
+  `_get_head_content` to raise and verifies the fallback payload shape.
+
+### R3-P3 (plan). Phase 4 gate text rewritten to match evidence
+
+Reviewer rightly noted the plan's "各 CLI … 3 layer verification" line was
+stronger than the in-tree evidence. The plan section now carries a table
+showing **per-CLI** evidence layers:
+
+- `generate_detection_reports` has all 3 layers (library + orchestration +
+  smoke).
+- `generate_parity_baseline`, `snapshot_diff`, `check_upstream_recovery`,
+  `render_upstream_recovery_comment` have library (where applicable) +
+  per-CLI smoke; orchestration byte parity is explicitly marked as
+  "Phase 4b scope".
+
+This removes the overstated claim while keeping gate-1 truthfully
+partially-satisfied for the parts we actually cover today.
+
+### R3-M1. `baseline-regen-gate: pass` stdout marker is now asserted
+
+New test `test_generate_parity_baseline_regenerate_emits_gate_pass_marker`
+verifies the regen happy-path emits `baseline-regen-gate: pass` on stdout —
+CI dashboards that grep this signal now have a regression guard.
+
+### R3-M2. `_patch_baseline_paths` documents why `ROOT_DIR` is not patched
+
+The fixture's docstring explains that `ROOT_DIR` usage inside the module is
+cosmetic-only (the `_BASELINE_PATH.relative_to(ROOT_DIR)` fallback to
+absolute path at line ~582). Tests assert on `paths["baseline"]` and
+captured output, so the absolute-path print is harmless.
+
+### R3-M3. Slug/types mode gate-failure paths covered
+
+`test_generate_parity_baseline_slug_mode_rejects_non_full_run` exercises
+the shared `assert_full_parity_status` gate through the `--slug` entry (the
+`checkedFiles != totalFiles` branch that was previously only tested via
+`--regenerate`).
+
+### R3-M4. Double-prefix on refspec error removed
+
+`_get_head_content` previously produced
+`RuntimeError("unsafe refspec rejected: refuse to pass absolute path …")`,
+which duplicated context. The wrap now preserves the guard's original
+message verbatim (`RuntimeError(str(err)) from err`), producing
+`refuse to pass absolute path to git refspec: '/etc/passwd'` as a single
+coherent line. The existing test's assertion regex was updated accordingly.
+
+### R3-L2. Unified `datetime.now()` rationale comments
+
+`generate_untranslated_placeholders.py` and `update_sidebar_urls_from_live.py`
+now carry identical 3-line comments explaining the mjs-parity rationale for
+`datetime.now()` + `# noqa: DTZ005`. Previously each file had a slightly
+different wording.
+
+### R3-L3. `days_until` test comment rewritten
+
+Replaced the misleading "UTC 丸め" wording with an explicit floor-division
+calculation note (`(future_ms − now_ms) // MS_PER_DAY → 6.58 → 6`) that
+correctly describes why 10:00Z vs 00:00Z yields 6 not 7.
+
+### R3-L1 (no code change, documented)
+
+Reviewer noted `runScope` in the `_snapshot_diff_clean` helper is unused by
+`assert_pre_regen_gate`. Kept for schema fidelity (the on-disk JSON artifact
+always carries `runScope`) — acknowledged in comments. No code change.
+
+## Round 3 — Verification run
+
+```
+uv run ruff check src tests        # clean
+uv run mypy src                    # clean (59 files)
+uv run pytest -q --ignore=tests/conformance   # 564 passed (5 new)
+uv run pytest tests/test_phase4_cli_scripts.py                     # 35 passed
+uv run pytest tests/conformance/test_generate_detection_reports_e2e.py   # 1 passed
+```
+
+## Round 3 — Cumulative test count
+
+- Round 1 (P2 × 4 + refspec): +10 tests
+- Round 2 (baseline smoke + gate broadening): +12 tests
+- Round 3 (P2 + P3 + polish): +5 tests
+- **Total new tests introduced by PR #374 review cycles: 27**
+
+All failures caught by the review cycles had a test landed alongside the
+fix; no regression from round to round.

@@ -485,48 +485,14 @@ def _print_usage() -> None:
     )
 
 
-def main(argv: list[str] | None = None) -> int:
-    """CLI エントリポイント (mjs ``main`` 等価)。"""
-    if argv is None:
-        argv = sys.argv[1:]
+def _run_main(args: dict[str, Any]) -> int:
+    """``main`` の本体。戻り値は exit code。
 
-    obsolete = next((a for a in argv if a.startswith("--review-after")), None)
-    if obsolete:
-        print(
-            f"❌ --review-after is removed in schema v2 ({obsolete}). "
-            "Drop the flag — baseline entries no longer carry a reviewAfter field.",
-            file=sys.stderr,
-        )
-        return 1
-
-    args = _parse_cli_args(argv)
-
-    # argparse は CLI `--slug` / `--types` を使わないが、help で確認できるよう下絵。
-    parser = argparse.ArgumentParser(add_help=True)
-    parser.add_argument("--regenerate", action="store_true")
-    parser.add_argument("--slug")
-    parser.add_argument("--types")
-    parser.add_argument("--rationale")
-    parser.parse_known_args(argv)
-
-    if not args["regenerate"] and not args["slugs"] and not args["types"]:
-        _print_usage()
-        return 1
-
-    mode_count = (
-        (1 if args["regenerate"] else 0) + (1 if args["slugs"] else 0) + (1 if args["types"] else 0)
-    )
-    if mode_count > 1:
-        print("❌ --regenerate / --slug / --types are mutually exclusive", file=sys.stderr)
-        _print_usage()
-        return 1
-
-    validation = validate_types_arg(args["types"])
-    if not validation.get("ok"):
-        print(f"❌ {validation.get('error')}", file=sys.stderr)
-        _print_usage()
-        return 1
-
+    ここで発生する ValueError / OSError / json.JSONDecodeError は呼び出し元
+    ``main`` の top-level ``except`` で一括 catch して mjs の
+    ``.catch(err => { console.error('❌ generate_parity_baseline error:', err);
+    process.exit(1); })`` と等価に扱う。
+    """
     if not _STATUS_PATH.exists():
         print(
             f"❌ {_STATUS_PATH} not found. Run `npm run check:parity` first.",
@@ -618,6 +584,61 @@ def main(argv: list[str] | None = None) -> int:
         rel = _BASELINE_PATH
     print(f"✅ Wrote {len(output.get('entries') or [])} baseline entries to {rel}")
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI エントリポイント (mjs ``main`` + top-level ``.catch`` 等価)。"""
+    if argv is None:
+        argv = sys.argv[1:]
+
+    obsolete = next((a for a in argv if a.startswith("--review-after")), None)
+    if obsolete:
+        print(
+            f"❌ --review-after is removed in schema v2 ({obsolete}). "
+            "Drop the flag — baseline entries no longer carry a reviewAfter field.",
+            file=sys.stderr,
+        )
+        return 1
+
+    args = _parse_cli_args(argv)
+
+    # argparse は CLI `--slug` / `--types` を使わないが、help で確認できるよう下絵。
+    parser = argparse.ArgumentParser(add_help=True)
+    parser.add_argument("--regenerate", action="store_true")
+    parser.add_argument("--slug")
+    parser.add_argument("--types")
+    parser.add_argument("--rationale")
+    parser.parse_known_args(argv)
+
+    if not args["regenerate"] and not args["slugs"] and not args["types"]:
+        _print_usage()
+        return 1
+
+    mode_count = (
+        (1 if args["regenerate"] else 0) + (1 if args["slugs"] else 0) + (1 if args["types"] else 0)
+    )
+    if mode_count > 1:
+        print("❌ --regenerate / --slug / --types are mutually exclusive", file=sys.stderr)
+        _print_usage()
+        return 1
+
+    validation = validate_types_arg(args["types"])
+    if not validation.get("ok"):
+        print(f"❌ {validation.get('error')}", file=sys.stderr)
+        _print_usage()
+        return 1
+
+    # mjs の ``main().catch(err => { console.error(...); process.exit(1); })``
+    # と等価。``_run_main`` で未 catch の JSON 破損 / schema 違反 / OSError を
+    # traceback で escape させず clean な exit 1 に変換する。schema / gate の
+    # 既知 ValueError は ``_run_main`` 内で個別 catch 済なので、ここは
+    # unexpected failure を `❌ generate_parity_baseline error:` prefix 付きで
+    # 表示する保険。
+    try:
+        return _run_main(args)
+    except (ValueError, OSError, json.JSONDecodeError) as err:
+        print(f"❌ generate_parity_baseline error: {err}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

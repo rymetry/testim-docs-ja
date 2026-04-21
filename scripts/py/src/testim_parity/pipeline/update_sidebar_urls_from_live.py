@@ -63,9 +63,10 @@ _FOOTER_RE = re.compile(r"\n---\n\n## URL抽出方法[\s\S]*$")
 
 
 def _today_ja() -> str:
-    # mjs 等価: ``new Date().getFullYear()/getMonth()/getDate()`` は local time
-    # なので naive ``datetime.now()`` を使い、runner の timezone に追従させる。
-    # UTC 固定にすると JST 日付と ±1 day ずれる日が発生するため意図的な挙動。
+    # mjs parity: new Date().getFullYear()/getMonth()/getDate() は local time
+    # を返す。UTC 固定 (js_iso_timestamp など) にすると JST 日付と ±1 day
+    # ずれる日が発生するため、naive datetime.now() を意図的に使う。行末の
+    # noqa:DTZ005 は ruff の timezone warning を同じ理由で silence する。
     now = datetime.now()  # noqa: DTZ005
     return f"{now.year}年{now.month}月{now.day}日"
 

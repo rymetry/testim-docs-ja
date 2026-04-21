@@ -165,11 +165,14 @@ def _get_head_content(relative_path: Path) -> str | None:
     検証してから git に渡す。guard が発火した ``ValueError`` は main loop /
     ``_diff_sidebar`` のどちらからも一貫して catch できるよう ``RuntimeError``
     に wrap し直す (呼び出し側の ``except RuntimeError`` と揃える)。
+    guard のメッセージ (``refuse to pass ...``) がそのまま新 exception の
+    ``args`` に入るので、double-prefix (``unsafe refspec rejected: refuse to
+    pass ...``) は避けて 1 行で済ませる。
     """
     try:
         safe_posix = assert_safe_refspec_path(relative_path)
     except ValueError as err:
-        raise RuntimeError(f"unsafe refspec rejected: {err}") from err
+        raise RuntimeError(str(err)) from err
     try:
         result = subprocess.run(
             ["git", "show", f"HEAD:{safe_posix}"],
@@ -241,13 +244,30 @@ def _build_source_url_index(*, section: str | None) -> dict[str, str]:
 
 
 def _diff_sidebar() -> dict[str, Any]:
-    """sidebar.json を slug set で比較 (metadata の変更は無視、mjs 等価)。"""
+    """sidebar.json を slug set で比較 (metadata の変更は無視、mjs 等価)。
+
+    ``_get_head_content`` は ``RuntimeError`` を上げうる (git 不在 / refspec
+    guard fail / git show 予期外 exit)。sidebar path は sidebar 単体なので
+    ここで catch して "parse error 相当" の結果を返す方が CLI 全体としての
+    graceful degradation になる。mjs 側は top-level ``.catch`` に委ねるが、
+    Python は呼び出し側 (``main``) が ``RuntimeError`` を slug loop の file
+    単位でしか catch できないので、sidebar 側は独立 guard にする (Round 3 P3)。
+    """
     if not _SIDEBAR_PATH.exists():
         return {"changed": False, "addedPages": [], "removedPages": []}
 
     sidebar_rel = _SIDEBAR_PATH.relative_to(ROOT_DIR)
     current_content = _SIDEBAR_PATH.read_text(encoding="utf-8")
-    head_content = _get_head_content(sidebar_rel)
+    try:
+        head_content = _get_head_content(sidebar_rel)
+    except RuntimeError as err:
+        print(f"diff_sidebar: git lookup failed for sidebar: {err}", file=sys.stderr)
+        return {
+            "changed": True,
+            "addedPages": [],
+            "removedPages": [],
+            "parseError": True,
+        }
 
     if head_content is None:
         try:

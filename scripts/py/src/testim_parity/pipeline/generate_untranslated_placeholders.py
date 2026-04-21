@@ -41,10 +41,10 @@ def main(argv: list[str] | None = None) -> int:
 
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # mjs 等価: ``new Date()`` の ``getFullYear()`` / ``getMonth()`` / ``getDate()``
-    # は **local time** を返す。意図的に naive ``datetime.now()`` を使い、
-    # runner の timezone に追従させて mjs 出力と揃える (``js_iso_timestamp`` の
-    # ような UTC 固定は byte drift を生む)。
+    # mjs parity: new Date().getFullYear()/getMonth()/getDate() は local time
+    # を返す。UTC 固定 (js_iso_timestamp など) にすると JST 日付と ±1 day
+    # ずれる日が発生するため、naive datetime.now() を意図的に使う。行末の
+    # noqa:DTZ005 は ruff の timezone warning を同じ理由で silence する。
     today_str = datetime.now().strftime("%Y-%m-%d")  # noqa: DTZ005
 
     created = 0
