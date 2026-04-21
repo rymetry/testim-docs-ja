@@ -59,9 +59,17 @@ defer しても silent drift は起きない契約。
 
 ``decode_entities`` public API は conformance harness 経由のみ使用され、
 production segment 抽出経路 (``extract_segments_from_html``) では BS4 が
-entity decode を担うため呼ばれない。``&#x110000;`` のような Unicode 範囲外
-numeric entity は ``OverflowError`` を catch して原文保持するが、この経路は
-conformance test での guard のみが利用する (production 影響なし)。
+entity decode を担うため呼ばれない。不正な numeric entity は以下の 2 種類の
+Python 例外を catch して原文保持する:
+
+- ``&#x110000;`` (Unicode 範囲外) → ``chr()`` が ``ValueError``
+- ``&#99999999999999999999;`` (C int オーバーフロー) → ``chr()`` が ``OverflowError``
+
+mjs は ``String.fromCodePoint`` が対応する ``RangeError`` を throw するため、
+harness 経由の byte 比較では **意図的に divergent** にしている
+(``test_segments_en_parity.py`` の ``DECODE_SAMPLES`` は range-out entity を
+含めず、``test_segments_en.py::TestDecodeEntities`` の dedicated test で
+Python 側の lenient 挙動を記録)。production 影響なし。
 """
 
 from __future__ import annotations

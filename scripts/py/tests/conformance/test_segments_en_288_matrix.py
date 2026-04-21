@@ -20,14 +20,18 @@ fixture scope=module で batch を 1 度だけ実行する。
 **空**。将来、Phase 2 (JA extractor) が EN 側と異なる segmentation を意図的
 に emit する時などに entry を追加する。Entry の shape:
 
+    # 関連 issue / UD 番号がある場合
     {slug: AllowEntry(reason="...", expires_at_phase="phaseN", linked_issue="#123")}
+    # 純粋な design divergence で tracker 無しの場合 (linked_issue 省略)
+    {slug: AllowEntry(reason="...", expires_at_phase="phaseN")}
 
 運用ルール:
 
 1. 追加時は ``reason`` を必ず明記する (parity 変更の理由 / 対応する上流欠陥)
 2. ``expires_at_phase`` は「この divergence が解消されるべき Phase」。Phase N
    完了時に必ず見直して、不要なら削除する
-3. 288-matrix 自体の役割は Phase 4 (pipeline wiring) まで。Phase 5 の
+3. ``linked_issue`` は任意だが、可能な限り GitHub issue / UD 番号を付ける
+4. 288-matrix 自体の役割は Phase 4 (pipeline wiring) まで。Phase 5 の
    aggregate-counter gate へ移行したタイミングで本 test は retire する想定
    (plan ``docs/PYTHON_MIGRATION_PLAN.md`` Phase 5 tier 戦略)
 """
@@ -49,8 +53,10 @@ SNAPSHOT_ROOT_PARTS = ("snapshots", "en", "content")
 class AllowEntry:
     """intentional divergence 1 件分の台帳エントリ。
 
-    ``reason`` / ``expires_at_phase`` / ``linked_issue`` を必須化することで、
-    allow list がサイレントに肥大化するのを防ぐ (architect review H3)。
+    ``reason`` と ``expires_at_phase`` は **必須**。``linked_issue`` は GitHub
+    issue 番号 (例: ``"#368"``) か ``docs/UPSTREAM_DEFECTS.md`` の UD 番号
+    (例: ``"UD-017"``) を入れる。関連 issue が無い純粋な design divergence の
+    場合は ``None`` のまま省略できる (architect review H3、Codex LOW)。
     """
 
     reason: str
