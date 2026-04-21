@@ -28,6 +28,11 @@ import {
 } from '../../lib/en_source_patches.mjs';
 import { preprocessEnHtml } from '../../lib/turndown.mjs';
 import {
+  CALLOUT_NORMALIZATION_SLUGS,
+  decodeEntities,
+  extractSegmentsFromHtml,
+} from '../../lib/source_parity_segments_en.mjs';
+import {
   ARTIFACT_REGISTRY,
   createArtifactCoverage,
   isArtifactExcluded,
@@ -289,6 +294,20 @@ const DISPATCH = {
     // patch_coverage=None がデフォルトで同じ経路を通る契約。
     const options = slug ? { slug } : {};
     return preprocessEnHtml(html, options);
+  },
+
+  // -------- segments_en --------
+  segments_en_decode_entities: ([text]) => decodeEntities(text),
+  segments_en_callout_normalization_slugs: () =>
+    [...CALLOUT_NORMALIZATION_SLUGS].sort(),
+  segments_en_extract: ([html, slug]) => {
+    // mjs 側は options.calloutAllowSlugs を渡さない場合、allow list 無効
+    // (後方互換)。Python 側 default は CALLOUT_NORMALIZATION_SLUGS を使う
+    // ため、conformance 比較時は明示的に同じ Set を渡して挙動を揃える。
+    const options = slug
+      ? { slug, calloutAllowSlugs: CALLOUT_NORMALIZATION_SLUGS }
+      : {};
+    return extractSegmentsFromHtml(html, options);
   },
 };
 
