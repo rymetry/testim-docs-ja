@@ -16,8 +16,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -27,8 +27,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -38,8 +38,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -57,8 +57,8 @@ jobs:
       run:
         working-directory: scripts/py
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -69,11 +69,13 @@ jobs:
         # これが無いと conformance テストが ERR_MODULE_NOT_FOUND で全滅する。
         working-directory: ${{ github.workspace }}
         run: npm ci
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version-file: scripts/py/.python-version
       - name: Install uv
-        run: pip install --upgrade uv
+        # uv のバージョンを固定して、将来の破壊的変更が突然 CI を壊すリスクを
+        # 抑える。bump 時は手動で SHA / テストを回してから上げる。
+        run: pip install 'uv==0.11.7'
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: Check en_source_patches JSON is in sync with mjs registry
@@ -91,7 +93,7 @@ jobs:
         run: uv run pytest --cov=testim_parity --cov-report=term-missing
       - name: Upload coverage
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-coverage
           path: scripts/py/.coverage
@@ -115,8 +117,8 @@ jobs:
       group: parity-upstream-recovery-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -125,7 +127,7 @@ jobs:
         run: npm run check:parity
       - name: Upload parity results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: parity-check-status
           path: parity-check-status.json
@@ -140,7 +142,7 @@ jobs:
 
       - name: Upload upstream recovery status
         if: always() && hashFiles('upstream-recovery-status.json') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: upstream-recovery-status
           path: upstream-recovery-status.json
@@ -172,7 +174,7 @@ jobs:
           always() && github.event_name == 'pull_request'
           && hashFiles('upstream-recovery-status.json') != ''
         continue-on-error: true
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         env:
           HAS_SIGNALS: ${{ steps.render_upstream_recovery_comment.outputs.has_signals }}
         with:

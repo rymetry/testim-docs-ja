@@ -113,8 +113,11 @@ function setToSortedArray(set) {
 // ---------------------------------------------------------------------------
 
 // Python `__all__` との対応契約:
-//   - 以下 DISPATCH は Python 側 `testim_parity.__init__.__all__` のコール可能
-//     surface と 1:1 で対応させる。新規 leaf port 時は両側同時更新する。
+//   - 以下 DISPATCH は Python 側の **各モジュール** が宣言する ``__all__`` の
+//     コール可能 surface と 1:1 で対応させる (ルートパッケージ ``testim_parity``
+//     は re-export を行わず、module 単位で surface を持つ: Phase 0 review M3)。
+//     新規 leaf を port したら、その module の ``__all__`` に name を追加し、
+//     以下 DISPATCH に対応する関数名を追加する。
 //   - **意図的に除外** している Python エクスポート:
 //     * `match_all_tricentis_urls` — Python-only API (mjs 側に対応する export
 //       が無い; JS 側は `TRICENTIS_URL_RE` + 呼び出し側で matchAll を組み立てる

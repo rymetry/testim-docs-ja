@@ -66,7 +66,9 @@ strict = false
 warn_return_any = true
 warn_unused_ignores = true
 disallow_untyped_defs = true
-ignore_missing_imports = true
+# ``ignore_missing_imports`` is **not** set globally — we use per-package
+# overrides below so type errors in first-party code (typos in
+# ``testim_parity.*`` module paths, etc.) still surface.
 packages = ["testim_parity"]
 mypy_path = "src"
 
@@ -74,3 +76,20 @@ mypy_path = "src"
 # Tests can be loose — the conftest factories return Any by design.
 module = "tests.*"
 disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+# Third-party libraries without type stubs. Keep this list explicit so a
+# typo in a first-party import path (``testim_paritty`` etc.) is still
+# caught as a missing-import error. Add modules here only after confirming
+# they genuinely lack stubs on PyPI (check ``types-*`` packages first).
+module = [
+  "frontmatter",
+  "frontmatter.*",
+  "html5lib",
+  "html5lib.*",
+  "markdown_it",
+  "markdown_it.*",
+  "mdit_py_plugins",
+  "mdit_py_plugins.*",
+]
+ignore_missing_imports = true

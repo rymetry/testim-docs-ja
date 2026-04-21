@@ -134,7 +134,13 @@ def test_glossary_set_matches(mjs_glossary):
 
 
 def test_invariant_patterns_match_shape(mjs_invariant_patterns):
-    """id / pattern source / flags が mjs と一致する。"""
+    """id / pattern source / flags が mjs と一致する。
+
+    ``source`` (生 regex 文字列) を含めて比較することで、``INVARIANT_TOKENS.md``
+    → JS/Python コンパイル経路のどこかで escape/quote 変換が挟まれた場合も
+    補足する (L1 指摘)。両 runtime とも markdown テーブルの ``regex`` cell を
+    そのまま保持する契約なので、source は byte 一致する想定。
+    """
     py_patterns = load_invariant_patterns()
     assert len(py_patterns) == len(mjs_invariant_patterns)
     for py, mjs in zip(py_patterns, mjs_invariant_patterns, strict=True):
@@ -142,6 +148,13 @@ def test_invariant_patterns_match_shape(mjs_invariant_patterns):
         # flags は harness が JS 側の ``re.flags`` をそのまま返すため ``g`` を含む。
         # Python 側も harness 合流地点で ``g`` を保存しているので byte 一致で比較可。
         assert py["flags"] == mjs["flags"]
+        # compiled regex の元ソースを直接比較する。Python の ``re.Pattern`` は
+        # ``.pattern`` に原文字列を保持しているので、それを JS の
+        # ``RegExp.prototype.source`` と照合する。
+        assert py["regex"].pattern == mjs["source"], (
+            f"regex source diverged for id={py['id']!r}: "
+            f"py={py['regex'].pattern!r} mjs={mjs['source']!r}"
+        )
 
 
 def test_coverage_roundtrip_matches(mjs_coverage_snapshot):
