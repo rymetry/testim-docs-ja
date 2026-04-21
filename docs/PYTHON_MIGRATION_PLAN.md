@@ -504,12 +504,54 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 
 `collect_list_item_text` が nested markdown を自動フラット化するため、**JA content 変更ゼロで parity 成立**。
 
-### Phase 2 verification gate
+### Phase 2 verification gate ✅ 全通過
 
-- 既存 clean pages (181 files): issue 数が増えない
-- Issue #368 対象 128 files: `segment-missing` / `segment-extra` が 0 に減少
-- Callout 境界テスト: `:::note{title="X"} ... :::` が正しく `callout-body` segment を emit
-- Boundary stability >= 0.95
+- `uv run pytest` pass — **368 tests, 94.96% coverage** (unit 26 + conformance 3 を追加)
+- `uv run ruff check src tests` / `format --check` / `uv run mypy src` — 全 clean
+- `npm run test` pass (mjs 2040/2041、1 skip、0 fail — Phase 1 と同じ)
+- `npm run build` — 290 pages OK
+- JA 288 ページ corpus 実測:
+  - **byte-identical with mjs: 142 pages** (49%、nest-free 領域)
+  - **Python が nested list を flatten する divergent: 146 pages**
+  - total segments: py=11810 vs mjs=12671 → **861 segment が flatten で除去** (Issue #368 対象)
+  - **regression (py > mjs) pages: 0** — conformance test の ``test_ja_corpus_zero_regressions`` で hard guard
+- Callout 境界テスト: `:::note{title="X"} ... :::` を ``callout-body`` として emit する unit test 済 (`TestCallout::test_callout_with_title_attr`)
+- Boundary stability >= 0.95 の measurement は Phase 3 alignment port 後に実施 (Phase 2 単独では alignment scoring 未接続のため)
+
+### Phase 2 実装メモ (2026-04-21)
+
+- **HYBRID の粒度**: mjs line-based state machine を Python に verbatim port
+  し、**list region のみ** markdown-it-py に委譲する構成を採用。plan 当初案の
+  「全面 AST 駆動」よりも byte-identical 領域を最大化 (142/288)、regression
+  リスクを最小化した
+- **list region 収集**: ``_collect_list_region`` が連続する list 行 / 先頭
+  whitespace 行 / blank + continuation を 1 region に纏め、``_flatten_list_region``
+  が ``MarkdownIt("commonmark").parse(region)`` で AST を取得、top-level
+  ``list_item_open``/``list_item_close`` 間だけ emit する (nested は parent
+  の textNorm に ``inline.content`` を space 区切りで混ぜ込む)
+- **loose list 対応**: ``1. item\n\n   continuation paragraph\n\n2. next`` のような
+  blank 行 + indent 3 の continuation も CommonMark 意味論で single item に
+  merge される。mjs line-based 実装は continuation を別 segment として emit
+  するため、意図的 divergent の主要パターンの一つ
+- **code fence inside list**: list region terminator に ``_FENCE_RE`` が含まれ
+  るため、list の途中に ``\`\`\`js`` が来ると region を閉じる。これにより top-
+  level の code fence handler が発火して code-block segment を emit する
+  (意図的 — CommonMark の tight-list 挙動と一致)
+- **loose ``<summary>`` delegation**: ``<details>`` 外の ``<summary>`` は EN walker
+  (``extract_segments_from_html``) に内部 HTML を渡して element children を
+  proper kind に分類してから JA emitter で再 emit する。Phase 1 で port 済の
+  ``segments_en`` を library として利用する最初の cross-module 契約
+
+### 既知の follow-up (Phase 3 着手前に検討)
+
+- **Boundary stability >= 0.95 の実測**: alignment scoring を Phase 3 で port
+  した後、288-page corpus で stability を測定。Phase 2 成果が alignment 層で
+  想定通り parity issue を減らすかの final verification
+- **EN walker との flatten 文字列 separator 統一**: Python JA の nested flatten は
+  ``' '.join(inline.content)`` で space separator、EN walker は BS4 text traversal
+  の結果そのままで separator を自動挿入しないケースあり。alignment scoring は
+  weighted-LCS で space 差を吸収するため現状 blocking ではないが、Phase 3 で
+  issue 数を見て separator を揃えるか判断する
 
 ---
 

@@ -32,6 +32,7 @@ import {
   decodeEntities,
   extractSegmentsFromHtml,
 } from '../../lib/source_parity_segments_en.mjs';
+import { extractSegmentsFromMarkdown } from '../../lib/source_parity_segments_ja.mjs';
 import {
   ARTIFACT_REGISTRY,
   createArtifactCoverage,
@@ -315,6 +316,15 @@ const DISPATCH = {
       : {};
     return extractSegmentsFromHtml(html, options);
   },
+
+  // -------- segments_ja --------
+  // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
+  // is expected for all inputs EXCEPT nested-list patterns — the Python port
+  // intentionally flattens nested <li> text into the top-level item (Issue #368
+  // fix), while mjs emits each nested line as its own segment. Conformance
+  // samples that exercise nested lists go through dedicated Python-only unit
+  // tests; the harness dispatch samples must remain nest-free.
+  segments_ja_extract: ([body]) => extractSegmentsFromMarkdown(body),
 };
 
 async function readStdin() {
