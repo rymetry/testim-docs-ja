@@ -269,6 +269,49 @@ class TestListRegionEdgeCases:
         # horizontal rule 自体は emit されず、後続 paragraph だけ emit
         assert kinds == ["unordered-list-item", "paragraph"]
 
+    def test_indented_fence_inside_list_absorbed(self):
+        """indented code fence は list item に吸収 (codex review P2 #1)。
+
+        CommonMark では indent された code fence が list item continuation に
+        なる。EN HTML walker は ``<li>`` 内の ``<pre>`` を parent list-item
+        の textNorm に連結する。Python JA も同じ挙動で揃える。mjs line-based
+        実装は fence を独立 code-block として emit するため意図的 divergence。
+        """
+        md = (
+            "1. step one\n\n"
+            "   ```js\n"
+            "   var x = 1;\n"
+            "   ```\n\n"
+            "   continuation paragraph\n\n"
+            "2. step two\n"
+        )
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        # 2 list-items のみ。code fence も continuation も item 1 に吸収。
+        assert kinds == ["ordered-list-item", "ordered-list-item"]
+        # item 1 の textNorm に fence body と continuation が含まれる
+        assert "step one" in segs[0]["textNorm"]
+        assert "var x" in segs[0]["textNorm"]
+        assert "continuation paragraph" in segs[0]["textNorm"]
+        assert segs[1]["textNorm"] == "step two"
+
+    def test_top_level_fence_still_terminates_list_region(self):
+        """top-level (non-indented) fence は list region を終了させる。
+
+        indented fence は吸収するが、indent 0 の fence は list の直後の独立
+        code block として emit する (CommonMark でも tight list の後に separate
+        code block として扱われるケース)。
+        """
+        md = "- alpha\n- beta\n\n```js\ncode\n```\n\n- gamma\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == [
+            "unordered-list-item",
+            "unordered-list-item",
+            "code-block",
+            "unordered-list-item",
+        ]
+
     def test_indented_table_inside_list_absorbed_by_commonmark(self):
         """indent された markdown table は list item continuation として吸収。
 

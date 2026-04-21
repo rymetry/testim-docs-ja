@@ -435,12 +435,24 @@ _MD_PARSER = MarkdownIt("commonmark")
 def _is_list_region_terminator(line: str) -> bool:
     """list region を終了させるべき行なら True。
 
-    heading / callout / code fence / HTML table / horizontal rule / details
-    token / standalone image は list 外に出す。逆に blank 行 / 先頭 whitespace
-    のある continuation 行は region に含める。
+    **先頭に whitespace がある行は常に list continuation** として扱う
+    (CommonMark lazy continuation rule)。これにより indent された code fence /
+    heading-looking 行 / image などは parent list item に吸収され、EN HTML
+    walker と同じ粒度で segment が揃う (codex review P2 #1 の対応)。
+
+    top-level (indent 0) 行のみ terminator 判定対象:
+      - heading / callout / code fence / HTML table / horizontal rule
+      - ``<details>`` / ``<summary>`` / ``</details>`` token
+      - standalone image (markdown ``![...](...)``/``<img>``/``<Image>``)
+
+    blank 行は ``_collect_list_region`` 側の lookahead で判定するため、本関数
+    では常に ``False`` を返す。
     """
     stripped = line.strip()
     if stripped == "":
+        return False
+    # Indented line is list item content (lazy continuation); never a terminator.
+    if line and line[0] in (" ", "\t"):
         return False
     for pattern in _LIST_REGION_TERMINATOR_RES:
         if pattern.match(stripped):
@@ -448,11 +460,7 @@ def _is_list_region_terminator(line: str) -> bool:
     if _DETAILS_TERMINATOR_RE.search(line):
         return True
     # standalone image at indent 0
-    return (
-        not line.startswith(" ")
-        and not line.startswith("\t")
-        and _IMAGE_RE.match(stripped) is not None
-    )
+    return _IMAGE_RE.match(stripped) is not None
 
 
 def _collect_list_region(lines: list[str], start: int) -> int:
@@ -516,8 +524,18 @@ def _flatten_list_region(region: str) -> list[tuple[str, str, int | None]]:
 
     ``kind`` は ``"ordered-list-item"`` / ``"unordered-list-item"``。
     ``line_offset`` は region 内の 0-based 行番号 (top-level item の開始行)。
-    ネストされた list item の inline content は親 item の ``raw_text`` にスペース
-    区切りで連結される。
+
+    **top-level ``list_item`` の内容 (inline content + 内部 fence の body) を
+    すべて親 item の ``raw_text`` にスペース区切りで連結する**。ネストされた
+    ``list_item`` / indented code fence / image-only paragraph / 任意の block
+    要素が item 内にあっても、全て同じ segment に flatten される (EN HTML
+    walker の ``collectInlineText`` 挙動と等価)。
+
+    ``fence`` token の ``content`` も拾う理由 (codex review P2 #1): indent
+    された code fence は CommonMark で list item continuation に当たるため、
+    EN 側でも ``<pre>`` の text が親 ``<li>`` の textNorm に連結される。mjs
+    line-based 実装は fence を top-level code-block として別 emit するが、
+    Python 側は EN walker と揃える。
     """
     tokens = _MD_PARSER.parse(region)
     results: list[tuple[str, str, int | None]] = []
@@ -554,6 +572,11 @@ def _flatten_list_region(region: str) -> list[tuple[str, str, int | None]]:
                 current_kind = None
                 current_line = None
             item_depth -= 1
+            continue
+        if tok.type == "fence" and item_depth >= 1:
+            content = tok.content or ""
+            if content.strip():
+                current_parts.append(content.rstrip("\n"))
             continue
         if tok.type == "inline" and item_depth >= 1:
             content = tok.content or ""

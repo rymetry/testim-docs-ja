@@ -203,7 +203,11 @@ def test_ja_corpus_zero_regressions(ja_pages, mjs_ja_segments_by_slug):
 # 意図した変更なので、本定数を更新して diff を PR に明示する運用。静的な pin
 # があることで、"drop-one-add-one" で count が偶然保存されるような silent バグ
 # を corpus-shape 側からも tripwire できる (architect review H3)。
-_NEST_FREE_CORPUS_SIZE = 142
+#
+# 141 = 288 - 147 divergent。codex review P2 #1 対応で indented fence / image
+# の flatten 挙動を EN walker と揃えた結果、1 ページが byte-identical subset から
+# flatten subset へ移動した (以前は 142)。
+_NEST_FREE_CORPUS_SIZE = 141
 
 
 def test_ja_corpus_nest_free_count_pinned(ja_pages, mjs_ja_segments_by_slug):

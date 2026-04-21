@@ -510,11 +510,11 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
 - `uv run ruff check src tests` / `format --check` / `uv run mypy src` — 全 clean
 - `npm run test` pass (mjs 2040/2041、1 skip、0 fail — Phase 1 と同じ)
 - `npm run build` — 290 pages OK
-- JA 288 ページ corpus 実測:
-  - **byte-identical with mjs: 142 pages** (49%、nest-free 領域)
-  - **Python が nested list を flatten する divergent: 146 pages**
-  - total segments: py=11810 vs mjs=12671 → **861 segment が flatten で除去** (Issue #368 対象)
+- JA 288 ページ corpus 実測 (codex review P2 #1 対応後):
+  - **byte-identical with mjs: 141 pages** (49%、nest-free 領域)
+  - **Python が nested list / indented fence / indented image を flatten する divergent: 147 pages**
   - **regression (py > mjs) pages: 0** — conformance test の ``test_ja_corpus_zero_regressions`` で hard guard
+  - byte-identical の page 数は ``_NEST_FREE_CORPUS_SIZE`` 定数で static に pin (architect review H3)。corpus shape が shift した PR で diff が明示される
 - Callout 境界テスト: `:::note{title="X"} ... :::` を ``callout-body`` として emit する unit test 済 (`TestCallout::test_callout_with_title_attr`)
 - Boundary stability >= 0.95 の measurement は Phase 3 alignment port 後に実施 (Phase 2 単独では alignment scoring 未接続のため)
 
@@ -542,9 +542,9 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
   proper kind に分類してから JA emitter で再 emit する。Phase 1 で port 済の
   ``segments_en`` を library として利用する最初の cross-module 契約
 
-### 146 divergent page の pattern 分布 (architect review L2)
+### 147 divergent page の pattern 分布 (architect review L2 + codex P2 fix)
 
-Python が mjs より少ない segment を emit する 146 ページは、以下 3 パターンの
+Python が mjs より少ない segment を emit する 147 ページは、以下 4 パターンの
 いずれか (または複数) が該当する。Phase 3 reviewer が「想定内 flatten」と
 「新規 regression」を一目で区別できるよう具体例を載せる:
 
@@ -553,6 +553,7 @@ Python が mjs より少ない segment を emit する 146 ページは、以下
 | **nested unordered list** | `administration/project-user-management.md`, `settings/cli-settings.md` | `- outer\n  - inner` 形式。nested items の text が親 item に merge |
 | **loose list (indented continuation)** | `administration/encrypted-credentials.md` | `1. step\n\n   continuation paragraph\n\n2. next` 形式。blank 行 + indent の continuation が親 item に吸収 |
 | **indented markdown table inside list** | 一部 API docs | list item 直下の `| a | b |` 行は CommonMark が list content として吸収し、mjs の per-row ``table-cell`` emit は発動しない |
+| **indented code fence / image inside list** | `advanced-editing/data-driven-testing/configuring-...md`, `running-tests/play-from-here.md` | list item 内の indented `\`\`\`fence` / `![image]` は parent item の textNorm に flatten される (EN HTML walker の ``collectInlineText`` と等価)。mjs は独立 code-block / image segment として emit するため意図的 divergence (codex review P2 #1 で明示的に pin)。top-level (indent 0) の fence / image は従来通り list region を terminate して独立 segment を emit |
 
 Python extractor は 3 パターンとも CommonMark semantics に沿って正しく処理する。
 mjs line-based 挙動は歴史的な line-regex 起因の bug であり、これらの flatten が
