@@ -831,6 +831,10 @@ EN side の turndown 出力は従来通り mjs 互換の文字列を要求する
   で fenced code block を切り出し、``\n{3,}`` → ``\n\n`` collapse を fence
   外側のみに適用。code content 内部の連続空行は preserve する (mjs turndown
   と同じ挙動)
+- ``convert_pre`` の boundary blank line 保持 (round-5 P1): ``<code>.textContent``
+  を raw 取得して mjs ``code.replace(/\n$/, '')`` 等価に **末尾 1 個の ``\n``
+  のみ** 削除する。``_TRAILING_SINGLE_NEWLINE_RE = r"\n\Z"`` (``$`` では
+  Python default flag の "最終 ``\n`` 直前" マッチで 2 文字剥がれる)
 - ``_MAX_FRAGMENT_DEPTH=40`` で ``_convert_fragment`` の recursion guard
   (malformed HTML に対する defensive cap)
 - ``convert_en_html_to_md`` は existing ``preprocess_en_html`` を chain する

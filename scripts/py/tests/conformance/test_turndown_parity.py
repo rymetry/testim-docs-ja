@@ -145,6 +145,26 @@ _SAMPLES_HTML_TO_MD: list[tuple[str, str]] = [
         "<p>B</p>"
         '<pre><code class="language-py">x\n\n\ny</code></pre>',
     ),
+    # Review round-5 P1 regression pin: code block の先頭/末尾 blank line を
+    # preserve する。``convert_pre`` は ``<code>.textContent`` を raw で取得し、
+    # mjs ``code.replace(/\n$/, '')`` 等価な末尾 1 個のみ剥がしを実装する必要が
+    # ある (``strip("\n")`` では boundary blank が落ちる)。
+    (
+        "code_fence_leading_blank",
+        '<pre><code class="language-bash">\nline1</code></pre>',
+    ),
+    (
+        "code_fence_trailing_blank",
+        '<pre><code class="language-bash">line1\n</code></pre>',
+    ),
+    (
+        "code_fence_multi_leading_blank",
+        '<pre><code class="language-bash">\n\n\nline1</code></pre>',
+    ),
+    (
+        "code_fence_multi_trailing_blank",
+        '<pre><code class="language-bash">line1\n\n\n</code></pre>',
+    ),
 ]
 
 # convert_en_html_to_md は preprocess_en_html を通すので、preprocess の

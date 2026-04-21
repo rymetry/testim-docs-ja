@@ -266,3 +266,37 @@ def test_multiple_code_fences_each_preserved() -> None:
     )
     expected = "A\n\n```js\na\n\n\nb\n```\n\nB\n\n```py\nx\n\n\ny\n```"
     assert html_to_md(html) == expected
+
+
+# ----------------------------------------------------------------------
+# Review round-5 P1 regression pins: ``convert_pre`` の boundary blank line
+# 保持。mjs turndown は ``code.replace(/\n$/, '')`` で末尾 1 個のみ剥がす。
+# Python の ``re.sub(r"\n$", ...)`` は default flag で末尾 2 文字剥がすため、
+# ``r"\n\Z"`` (absolute end-of-string) で 1 文字だけ剥がす必要がある。
+# ----------------------------------------------------------------------
+
+
+def test_code_fence_leading_blank_line_preserved() -> None:
+    """``<pre><code>\\nline1</code></pre>`` の先頭 blank は保持される。"""
+    html = '<pre><code class="language-bash">\nline1</code></pre>'
+    assert html_to_md(html) == "```bash\n\nline1\n```"
+
+
+def test_code_fence_trailing_single_newline_normalized() -> None:
+    """``<pre><code>line1\\n</code></pre>`` の末尾 1 個 ``\\n`` は fence separator
+    に吸収されて ``\\n`` 1 個のみ (basic_fence と同じ出力)。"""
+    html = '<pre><code class="language-bash">line1\n</code></pre>'
+    assert html_to_md(html) == "```bash\nline1\n```"
+
+
+def test_code_fence_multi_leading_blank_lines_preserved() -> None:
+    """複数の先頭 blank line はそのまま保持される。"""
+    html = '<pre><code class="language-bash">\n\n\nline1</code></pre>'
+    assert html_to_md(html) == "```bash\n\n\n\nline1\n```"
+
+
+def test_code_fence_multi_trailing_blank_lines_preserved() -> None:
+    """末尾の複数 blank line は 1 個だけ剥がされ、残りは fence separator の
+    前に保持される (turndown ``code.replace(/\\n$/, '')`` と同じ)。"""
+    html = '<pre><code class="language-bash">line1\n\n\n</code></pre>'
+    assert html_to_md(html) == "```bash\nline1\n\n\n```"

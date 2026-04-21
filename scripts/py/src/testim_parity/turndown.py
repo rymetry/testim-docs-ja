@@ -74,6 +74,14 @@ _TRAILING_NEWLINES_RE: re.Pattern[str] = re.compile(r"\n+$")
 _LEFT_FLANK_RE: re.Pattern[str] = re.compile(r" $")
 _RIGHT_FLANK_RE: re.Pattern[str] = re.compile(r"^ ")
 
+# ``convert_pre`` で code content の末尾 ``\n`` を **1 個だけ** 削除するための
+# regex。mjs turndown の ``code.replace(/\n$/, '')`` と等価。
+# 重要: Python の ``$`` は default flag で end-of-string **と** 最終 ``\n`` 直前
+# 両方にマッチするため、 ``r"\n$"`` では ``"line1\n\n\n"`` から 2 文字剥がされ
+# ``"line1\n"`` になる。JS の ``/\n$/`` は末尾 1 個のみ剥がす挙動なので、
+# Python では ``\Z`` (absolute end-of-string) を使う必要がある。
+_TRAILING_SINGLE_NEWLINE_RE: re.Pattern[str] = re.compile(r"\n\Z")
+
 # ``_convert_fragment`` の recursion depth guard。MadCap HTML では通常 5-10
 # 階層程度だが、malformed HTML に対して RecursionError を未然に防ぐ。
 _MAX_FRAGMENT_DEPTH: int = 40
@@ -403,17 +411,35 @@ class _TurndownConverter(MarkdownConverter):
 
     # ------------------------------------------------------------------
     # <pre><code class="language-X"> → fenced code block with language info
-    # markdownify default は language info を出さないので override
+    # markdownify default は language info を出さないので override。
+    #
+    # mjs turndown ``fencedCodeBlock`` rule:
+    #   var code = node.firstChild.textContent;  // raw text from <code>
+    #   return '\n\n``` ' + lang + '\n' + code.replace(/\n$/, '') + '\n```\n\n';
+    #
+    # 重要な挙動 (review round-5 P1 対応):
+    #   - code content は ``<code>.textContent`` の raw 読み出し
+    #     (markdownify の inline-code 変換を迂回して mjs と一致させる)
+    #   - ``code.replace(/\n$/, '')`` は **末尾 1 個の ``\n`` のみ** 削除する
+    #     (全部削除ではない。先頭/末尾の blank line を preserve するため)
+    #   - ``convert_pre`` 内で ``text.strip("\n")`` や ``.strip()`` を使うと
+    #     先頭 blank + 複数末尾 blank が落ちて byte-parity が崩れる
     # ------------------------------------------------------------------
     def convert_pre(self, el: Tag, text: str, parent_tags: Any) -> str:
         # mjs turndown default rule: ``<pre>`` は ``<code>`` 子要素が居るときだけ
         # fenced code block にする。``<code>`` が無い ``<pre>`` は default 挙動
         # (text 相当) に fallback して余計な fence を emit しない。
-        if el is None or not text:
+        if el is None:
             return ""
         code_tag = el.find("code")
         if not isinstance(code_tag, Tag):
             return text
+        # mjs ``node.firstChild.textContent`` 等価。markdownify が ``<code>`` を
+        # inline code ``\`...\``` として wrap するのを迂回し、code boundary の
+        # leading/trailing ``\n`` を保持する。
+        raw_code = code_tag.get_text()
+        if not raw_code:
+            return ""
         language = ""
         cls = code_tag.get("class")
         if isinstance(cls, list):
@@ -426,7 +452,9 @@ class _TurndownConverter(MarkdownConverter):
                 if token.startswith("language-"):
                     language = token[len("language-") :]
                     break
-        code = text.strip("\n")
+        # mjs ``code.replace(/\n$/, '')`` — 末尾 ``\n`` を **1 個だけ** 削除。
+        # ``strip("\n")`` や ``rstrip("\n")`` (= 全削除) とは明確に異なる。
+        code = _TRAILING_SINGLE_NEWLINE_RE.sub("", raw_code)
         return f"\n\n```{language}\n{code}\n```\n\n"
 
 
