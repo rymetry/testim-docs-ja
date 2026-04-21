@@ -26,6 +26,7 @@ import {
   countOccurrences,
   DEFECT_CLASSES,
 } from '../../lib/en_source_patches.mjs';
+import { preprocessEnHtml } from '../../lib/turndown.mjs';
 import {
   ARTIFACT_REGISTRY,
   createArtifactCoverage,
@@ -279,6 +280,15 @@ const DISPATCH = {
     const patch = EN_SOURCE_PATCHES.find((p) => p.id === patchId);
     if (!patch) return null;
     return applyEnSourcePatches(patch.find, patch.slugs[0]);
+  },
+
+  // -------- preprocess_en --------
+  preprocess_en_html: ([html, slug]) => {
+    // 第二引数は options object。slug が非 nullish なら patchCoverage は
+    // NOOP_PATCH_COVERAGE が default で入るので渡さない。Python 側も
+    // patch_coverage=None がデフォルトで同じ経路を通る契約。
+    const options = slug ? { slug } : {};
+    return preprocessEnHtml(html, options);
   },
 };
 
