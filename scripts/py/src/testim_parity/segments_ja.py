@@ -67,17 +67,23 @@ from typing import Any
 from markdown_it import MarkdownIt
 
 from .segments_en import extract_segments_from_html
+from .segments_ja_html import (
+    extract_html_table_cells,
+    html_inline_to_markdown_text,
+    scan_for_matching_summary_close,
+    split_table_cells,
+    tokenize_details_line,
+)
 from .segments_shared import build_section_path, create_segment, push_heading
 
 _FENCE_RE = re.compile(r"^(`{3,}|~{3,})")
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 _CALLOUT_OPEN_RE = re.compile(r"^:::(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$")
 _CALLOUT_CLOSE_RE = re.compile(r"^:::\s*$")
+# ``<details>`` / ``<summary>`` token の粗検出用。行内に detailsまわりがあるかを
+# O(1) で判定するためだけに残す。実際の tokenize は
+# ``segments_ja_html.tokenize_details_line`` が担当する。
 _DETAILS_TOKEN_RE = re.compile(r"<\/?details\b|<summary\b", re.IGNORECASE)
-_DETAILS_OPEN_PREFIX_RE = re.compile(r"^<details\b", re.IGNORECASE)
-_DETAILS_CLOSE_PREFIX_RE = re.compile(r"^<\/details\s*>", re.IGNORECASE)
-_SUMMARY_OPEN_PREFIX_RE = re.compile(r"^<summary\b", re.IGNORECASE)
-_SUMMARY_CLOSE_RE = re.compile(r"^<\/summary\s*>", re.IGNORECASE)
 _IMAGE_RE = re.compile(r"^(?:!\[[^\]]*\]\([^)]+\)|<Image\b|<img\b)", re.IGNORECASE)
 _UNORDERED_RE = re.compile(r"^(\s*)[-*+]\s+(.+)$")
 _ORDERED_RE = re.compile(r"^(\s*)\d+\.\s+(.+)$")
@@ -103,283 +109,6 @@ _LIST_REGION_TERMINATOR_RES: tuple[re.Pattern[str], ...] = (
 # details/summary token は別途検出する (行内に出現するため regex match ではなく
 # substring test で拾う)
 _DETAILS_TERMINATOR_RE = _DETAILS_TOKEN_RE
-
-
-def _split_table_cells(line: str) -> list[str]:
-    """pipe table 行を trimmed cell 列に分解する。
-
-    cell 内の backslash-escape された pipe (``\\|``) は phantom column 分割を
-    起こさないよう literal ``|`` として扱う (mjs 等価)。
-    """
-    trimmed = line.strip()
-    if trimmed.startswith("|"):
-        trimmed = trimmed[1:]
-    if trimmed.endswith("|"):
-        trimmed = trimmed[:-1].rstrip()
-    cells: list[str] = []
-    current: list[str] = []
-    i = 0
-    n = len(trimmed)
-    while i < n:
-        ch = trimmed[i]
-        if ch == "\\" and i + 1 < n and trimmed[i + 1] == "|":
-            current.append("|")
-            i += 2
-            continue
-        if ch == "|":
-            cells.append("".join(current).strip())
-            current = []
-            i += 1
-            continue
-        current.append(ch)
-        i += 1
-    cells.append("".join(current).strip())
-    return cells
-
-
-def _find_tag_end(text: str, start: int) -> int:
-    """``start`` 以降で HTML tag の閉じ ``>`` 位置を返す。
-
-    ``<details data-x="1>0">`` のような quoted attribute 内の ``>`` は skip する。
-    見つからなければ ``-1``。mjs ``findTagEnd`` 等価。
-    """
-    quote: str | None = None
-    n = len(text)
-    i = start
-    while i < n:
-        ch = text[i]
-        if quote is not None:
-            if ch == quote:
-                quote = None
-            i += 1
-            continue
-        if ch in ('"', "'"):
-            quote = ch
-            i += 1
-            continue
-        if ch == ">":
-            return i
-        i += 1
-    return -1
-
-
-def _scan_for_matching_summary_close(text: str, start_depth: int) -> tuple[int, int, int]:
-    """``text`` 内を走査して depth が 0 になる ``</summary>`` 位置を返す。
-
-    戻り値は ``(depth, close_pos, close_len)``。matching close が見つからない
-    場合は ``close_pos = -1``、``depth`` は scan 終了時点の depth (multi-line
-    accumulator で carry-forward する)。mjs ``scanForMatchingSummaryClose`` 等価。
-    """
-    depth = start_depth
-    n = len(text)
-    i = 0
-    while i < n:
-        if text[i] != "<":
-            i += 1
-            continue
-        tail = text[i:]
-        # </summary> close 候補
-        close_match = _SUMMARY_CLOSE_RE.match(tail)
-        if close_match:
-            depth -= 1
-            if depth == 0:
-                return (depth, i, len(close_match.group(0)))
-            i += len(close_match.group(0))
-            continue
-        # <summary> nested open
-        if _SUMMARY_OPEN_PREFIX_RE.match(tail):
-            depth += 1
-            tag_end = _find_tag_end(text, i + 1)
-            if tag_end == -1:
-                return (depth, -1, 0)
-            i = tag_end + 1
-            continue
-        # その他の tag — quote-aware に skip
-        if tail.startswith("</") or (len(tail) >= 2 and tail[0] == "<" and tail[1].isalpha()):
-            tag_end = _find_tag_end(text, i + 1)
-            if tag_end == -1:
-                i += 1
-                continue
-            i = tag_end + 1
-            continue
-        # stray '<' — text として scan 継続
-        i += 1
-    return (depth, -1, 0)
-
-
-def _tokenize_details_line(line: str) -> list[dict[str, Any]]:
-    """markdown 1 行を ``<details>`` / ``<summary>`` / ``</details>`` tokens +
-    text span の event 列に分解する (mjs ``tokenizeDetailsLine`` 等価)。
-
-    condensed 1-liner ``Lead <details><summary>Q</summary></details> tail`` を
-    左→右で正しい順序で emit するために必要。quote-aware な ``_find_tag_end``
-    経由で ``data-x="1>0"`` 等の attribute value を安全に skip する。
-    """
-    events: list[dict[str, Any]] = []
-    n = len(line)
-    cursor = 0
-    i = 0
-
-    def _emit_pending_text(upto: int) -> None:
-        if upto > cursor:
-            events.append({"type": "text", "value": line[cursor:upto]})
-
-    while i < n:
-        if line[i] != "<":
-            i += 1
-            continue
-        tail = line[i:]
-
-        close_match = _DETAILS_CLOSE_PREFIX_RE.match(tail)
-        if close_match:
-            _emit_pending_text(i)
-            events.append({"type": "details-close"})
-            i += len(close_match.group(0))
-            cursor = i
-            continue
-
-        if _DETAILS_OPEN_PREFIX_RE.match(tail):
-            tag_end = _find_tag_end(line, i + 1)
-            if tag_end == -1:
-                break
-            _emit_pending_text(i)
-            events.append({"type": "details-open"})
-            i = tag_end + 1
-            cursor = i
-            continue
-
-        if _SUMMARY_OPEN_PREFIX_RE.match(tail):
-            open_end = _find_tag_end(line, i + 1)
-            if open_end == -1:
-                break
-            after_open = line[open_end + 1 :]
-            depth, close_pos, close_len = _scan_for_matching_summary_close(after_open, 1)
-            if close_pos == -1:
-                # multi-line 状態へ遷移
-                _emit_pending_text(i)
-                events.append(
-                    {
-                        "type": "summary-open",
-                        "initialInner": after_open,
-                        "initialDepth": depth,
-                    }
-                )
-                cursor = n
-                i = n
-                break
-            _emit_pending_text(i)
-            inner_text = after_open[:close_pos]
-            events.append({"type": "summary", "inner": inner_text})
-            i = open_end + 1 + close_pos + close_len
-            cursor = i
-            continue
-
-        i += 1
-
-    if cursor < n:
-        events.append({"type": "text", "value": line[cursor:]})
-    return events
-
-
-# mjs ``decodeHtmlEntities`` の case-insensitive 一括置換を再現するため compile 版
-# regex を使う (mjs の ``gi`` フラグ等価)。
-_ENTITY_NBSP_RE = re.compile(r"&nbsp;", re.IGNORECASE)
-_ENTITY_AMP_RE = re.compile(r"&amp;", re.IGNORECASE)
-_ENTITY_LT_RE = re.compile(r"&lt;", re.IGNORECASE)
-_ENTITY_GT_RE = re.compile(r"&gt;", re.IGNORECASE)
-_ENTITY_QUOT_RE = re.compile(r"&quot;", re.IGNORECASE)
-_ENTITY_39_RE = re.compile(r"&#39;", re.IGNORECASE)
-_ENTITY_APOS_RE = re.compile(r"&apos;", re.IGNORECASE)
-
-
-def _decode_html_entities(text: str) -> str:
-    """MadCap Flare / JA inline HTML に現れる entity の限定 decode (mjs 等価)。
-
-    EN walker の ``decode_entities`` で扱う tag vocabulary と揃えている。
-    ``&nbsp;`` / ``&amp;`` / ``&lt;`` / ``&gt;`` / ``&quot;`` / ``&#39;`` /
-    ``&apos;`` のみを case-insensitive に置換する。
-    """
-    text = _ENTITY_NBSP_RE.sub(" ", text)
-    text = _ENTITY_AMP_RE.sub("&", text)
-    text = _ENTITY_LT_RE.sub("<", text)
-    text = _ENTITY_GT_RE.sub(">", text)
-    text = _ENTITY_QUOT_RE.sub('"', text)
-    text = _ENTITY_39_RE.sub("'", text)
-    text = _ENTITY_APOS_RE.sub("'", text)
-    return text
-
-
-_CODE_TAG_RE = re.compile(r"<code\b[^>]*>([\s\S]*?)<\/code>", re.IGNORECASE)
-# HTML tag ストリップ用 regex。``<code>`` inner と ``<a>`` inner 両方で使うため
-# 汎用名にしている (python-reviewer LOW)。mjs 側も同一 regex を両箇所で再利用。
-_HTML_TAG_STRIP_RE = re.compile(r"<[^>]+>")
-_A_TAG_RE = re.compile(
-    r"<a\b[^>]*\bhref\s*=\s*[\"']([^\"']*)[\"'][^>]*>([\s\S]*?)<\/a>",
-    re.IGNORECASE,
-)
-_ANY_TAG_RE = re.compile(r"<[^>]+>")
-_WHITESPACE_RUN_RE = re.compile(r"\s+")
-
-
-def _html_inline_to_markdown_text(html: Any) -> str:
-    """HTML inline fragment を invariant-token を保持する markdown 風 text に変換。
-
-    ``<a href>`` / ``<code>`` は markdown 構文 (``[label](url)`` / `` `Y` ``) に
-    書き換えて ``create_segment`` の invariant-token extractor で拾えるようにし、
-    それ以外の tag は strip して inner text のみ残す。mjs ``htmlInlineToMarkdownText``
-    等価で rewrite 順序 (``<code>`` 先、``<a>`` 後) も同一。
-    """
-    if not isinstance(html, str):
-        return ""
-    text = html
-
-    def _code_sub(m: re.Match[str]) -> str:
-        inner = _HTML_TAG_STRIP_RE.sub("", m.group(1)).strip()
-        return f"`{inner}`"
-
-    text = _CODE_TAG_RE.sub(_code_sub, text)
-
-    def _a_sub(m: re.Match[str]) -> str:
-        href = m.group(1)
-        inner = m.group(2)
-        label = _HTML_TAG_STRIP_RE.sub("", inner).strip()
-        # mjs は <code> 書き換え後の backtick を残す実装。Python でも `_HTML_TAG_STRIP_RE`
-        # は tag のみ削除し backtick は保持するので等価。
-        if not href or href.startswith("#") or href.startswith("javascript:"):
-            return label
-        return f"[{label}]({href})"
-
-    text = _A_TAG_RE.sub(_a_sub, text)
-    text = _ANY_TAG_RE.sub(" ", text)
-    text = _decode_html_entities(text)
-    text = _WHITESPACE_RUN_RE.sub(" ", text).strip()
-    return text
-
-
-_TBODY_RE = re.compile(r"<tbody\b[^>]*>([\s\S]*?)<\/tbody>", re.IGNORECASE)
-_THEAD_STRIP_RE = re.compile(r"<thead\b[\s\S]*?<\/thead>", re.IGNORECASE)
-_TD_RE = re.compile(r"<td\b[^>]*>([\s\S]*?)<\/td>", re.IGNORECASE)
-
-
-def _extract_html_table_cells(table_html: str) -> list[str]:
-    """HTML ``<table>`` block から cell text を抽出する。
-
-    ``<tbody>`` がある場合はその内部だけ、ない場合は ``<thead>`` を除いた全体
-    から ``<tr><td>...</td></tr>`` の ``<td>`` inner を markdown 化して返す。
-    mjs ``extractHtmlTableCells`` 等価。
-    """
-    has_tbody = re.search(r"<tbody\b", table_html, re.IGNORECASE) is not None
-    if has_tbody:
-        m = _TBODY_RE.search(table_html)
-        body_html = m.group(1) if m else ""
-    else:
-        body_html = _THEAD_STRIP_RE.sub("", table_html)
-    cells: list[str] = []
-    for match in _TD_RE.finditer(body_html):
-        text = _html_inline_to_markdown_text(match.group(1))
-        if len(text) > 0:
-            cells.append(text)
-    return cells
 
 
 class _Emitter:
@@ -739,7 +468,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             multiline_summary_start_line if multiline_summary_start_line > 0 else closing_line_no
         )
         if details_depth > 0:
-            summary_text = _html_inline_to_markdown_text(joined)
+            summary_text = html_inline_to_markdown_text(joined)
             if len(summary_text) > 0:
                 path_at_close = build_section_path(heading_stack)
                 emitter.emit(path_at_close, "details-summary", summary_text, start_line)
@@ -776,7 +505,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             continue
 
         if in_multiline_summary:
-            depth, close_pos, close_len = _scan_for_matching_summary_close(
+            depth, close_pos, close_len = scan_for_matching_summary_close(
                 line, multiline_summary_depth
             )
             if close_pos == -1:
@@ -803,7 +532,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                     break
             if end_idx != -1:
                 table_html = "\n".join(lines[i : end_idx + 1])
-                cells = _extract_html_table_cells(table_html)
+                cells = extract_html_table_cells(table_html)
                 path = build_section_path(heading_stack)
                 for cell in cells:
                     emitter.emit(path, "table-cell", cell, line_no)
@@ -813,7 +542,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
 
         if _DETAILS_TOKEN_RE.search(line):
             flush_paragraph()
-            events = _tokenize_details_line(line)
+            events = tokenize_details_line(line)
             path_at_line = build_section_path(heading_stack)
             for ev in events:
                 etype = ev["type"]
@@ -831,7 +560,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                     continue
                 if etype == "summary":
                     if details_depth > 0:
-                        summary_text = _html_inline_to_markdown_text(ev["inner"])
+                        summary_text = html_inline_to_markdown_text(ev["inner"])
                         if summary_text:
                             emitter.emit(path_at_line, "details-summary", summary_text, line_no)
                     else:
@@ -897,7 +626,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             if _TABLE_SEPARATOR_RE.match(next_line):
                 i += 1
                 continue
-            cells = _split_table_cells(trimmed)
+            cells = split_table_cells(trimmed)
             path = build_section_path(heading_stack)
             for cell in cells:
                 emitter.emit(path, "table-cell", cell, line_no)
