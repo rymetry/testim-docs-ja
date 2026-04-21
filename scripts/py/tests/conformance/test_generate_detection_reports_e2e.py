@@ -83,9 +83,7 @@ def test_generate_detection_reports_orchestration_parity(
     # --- Python 側: entry 呼び出しで 3 ファイルを書き出す ---
     generate_detection_reports(strict=False, root_dir=tmp_path)
     py_audit = json.loads((tmp_path / "docs-audit-manifest.json").read_text(encoding="utf-8"))
-    py_report = json.loads(
-        (tmp_path / "docs-actionable-report.json").read_text(encoding="utf-8")
-    )
+    py_report = json.loads((tmp_path / "docs-actionable-report.json").read_text(encoding="utf-8"))
     py_summary = (tmp_path / "docs-update-summary.md").read_text(encoding="utf-8")
 
     # --- mjs 側: harness で同じ 3 関数を同じ順序で呼ぶ ---

@@ -161,7 +161,7 @@ Documented explicitly in `PYTHON_MIGRATION_PLAN.md` Phase 4 "残作業" table
 
 ## Verification run
 
-```
+```bash
 cd scripts/py
 uv run ruff check src tests        # clean
 uv run mypy src                    # clean (59 files)
@@ -218,8 +218,8 @@ criticality artifact-producing CLIs:
   `MARKER_404_RE` 404-snapshot detection, `build_sidebar_url_map` slug
   extraction, `fallback_source_url` lookup semantics.
 - **`check_upstream_recovery.py`** (9/10): `run_check_upstream_recovery` end-
-  to-end with empty inputs (verifies artifact schema + `generatedAt` format
-  + stdout summary), plus `days_since` / `days_until` / `is_review_overdue`
+  to-end with empty inputs (verifies artifact schema + `generatedAt` format,
+  stdout summary), plus `days_since` / `days_until` / `is_review_overdue`
   boundary cases.
 
 These complement the existing conformance dispatches for baseline / summary /
@@ -280,7 +280,7 @@ their own gate-1 evidence when turndown equivalence lands.
 
 ## Round 2 — Verification run
 
-```
+```bash
 uv run ruff check src tests        # clean
 uv run mypy src                    # clean (59 files)
 uv run pytest -q --ignore=tests/conformance   # 559 passed (11 new)
@@ -406,7 +406,7 @@ always carries `runScope`) — acknowledged in comments. No code change.
 
 ## Round 3 — Verification run
 
-```
+```bash
 uv run ruff check src tests        # clean
 uv run mypy src                    # clean (59 files)
 uv run pytest -q --ignore=tests/conformance   # 564 passed (5 new)

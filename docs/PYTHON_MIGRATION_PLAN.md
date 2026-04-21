@@ -785,6 +785,62 @@ turndown 等価実装が必要な 4 script は subprocess wrapper に留めた:
 Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えてから
 上記 4 script を full port し、本 plan の Phase 4 を完全完了とする。
 
+### Phase 4b progress (2026-04-22 更新)
+
+| Milestone | 対象 | 状態 |
+| --- | --- | --- |
+| **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ conformance harness で mjs と byte-identical (17 unit + 2 parity sample) |
+| M2 | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | pending |
+| M3 | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | pending |
+| M4 | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | pending |
+| M5 | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | pending |
+
+### Phase 4b M1 byte-parity scope (現状)
+
+M1 時点では **39 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
+byte 比較) でのみ parity を保証する。288-page corpus 全体の byte parity 計測は
+M2/M3 integration 時に ``test_convert_en_html_to_md_288_matrix`` を追加して
+実施する (Issue #368 の nested-list flatten は JA extractor 側で完結するため
+EN side の turndown 出力は従来通り mjs 互換の文字列を要求する)。
+
+**M1 カバー範囲**:
+
+- markdownify ``MarkdownConverter`` subclass + ``DefaultOptions`` + ``Options``
+  両方 override (1.x の 2 層 option 組み立てに対応)
+- ATX heading / `*<space><space><space>` 3-space bullet / ``_italic_`` /
+  ``**bold**`` / fenced code with language class
+- 5 MadCap custom converter: ``convert_div`` (note/caution) / ``convert_a``
+  (codeSnippetCopyButton strip) / ``convert_ol`` (``<li value>`` + sibling
+  ``<img>``/``<p>``/``<div>`` block 並べ) / ``convert_table`` (pipe table) /
+  ``convert_details`` + ``convert_summary`` (summary → ``## heading``)
+- **turndown default rule の port** (review round-1/2 P1/P2 対応):
+  - ``convert_li`` — leading ``\n`` strip + trailing collapse + ``\n`` を
+    4-space indent に置換 (nested list / multi-paragraph li の preserve)。
+    trimmed content が空なら bullet ごと省略 (round-2 P2)
+  - ``convert_ul`` — 親が ``<li>`` で last element child のときは ``\n`` +
+    content、さもなくば ``\n\n`` wrap (turndown default list rule)
+  - ``convert_em`` / ``convert_i`` / ``convert_strong`` / ``convert_b`` —
+    turndown の ``flankingWhitespace`` を port (round-2 P1)。content を trim
+    して marker 外側に whitespace、sibling が既に whitespace を持つ場合は
+    省略 (``A <em> text </em> B`` → ``A _text_ B``)
+  - ``convert_img`` — 常に markdown image (table cell / heading 内の inline
+    img も preserve)
+- ``_strip_empty_inline_elements`` — raw HTML 段階で ``<em></em>`` /
+  ``<em>   </em>`` 等の空 inline を除去 (round-2 P1 エッジケース)
+- ``_normalize_output`` の fence-aware split (round-4 P1): ``_FENCE_BLOCK_RE``
+  で fenced code block を切り出し、``\n{3,}`` → ``\n\n`` collapse を fence
+  外側のみに適用。code content 内部の連続空行は preserve する (mjs turndown
+  と同じ挙動)
+- ``convert_pre`` の boundary blank line 保持 (round-5 P1): ``<code>.textContent``
+  を raw 取得して mjs ``code.replace(/\n$/, '')`` 等価に **末尾 1 個の ``\n``
+  のみ** 削除する。``_TRAILING_SINGLE_NEWLINE_RE = r"\n\Z"`` (``$`` では
+  Python default flag の "最終 ``\n`` 直前" マッチで 2 文字剥がれる)
+- ``_MAX_FRAGMENT_DEPTH=40`` で ``_convert_fragment`` の recursion guard
+  (malformed HTML に対する defensive cap)
+- ``convert_en_html_to_md`` は existing ``preprocess_en_html`` を chain する
+  ので、escaped-callout / escaped-details / FAQ multi-paragraph の preprocess
+  経由 sample も byte-identical
+
 ---
 
 ## Phase 5: Tests (pytest 全書き直し)

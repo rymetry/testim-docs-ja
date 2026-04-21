@@ -26,7 +26,10 @@ import {
   countOccurrences,
   DEFECT_CLASSES,
 } from '../../lib/en_source_patches.mjs';
-import { preprocessEnHtml } from '../../lib/turndown.mjs';
+import turndownService, {
+  convertEnHtmlToMd,
+  preprocessEnHtml,
+} from '../../lib/turndown.mjs';
 import {
   CALLOUT_NORMALIZATION_SLUGS,
   decodeEntities,
@@ -420,6 +423,10 @@ const DISPATCH = {
     const options = slug ? { slug } : {};
     return preprocessEnHtml(html, options);
   },
+
+  // -------- turndown (Phase 4b M1) --------
+  turndown_convert_en_html_to_md: ([html]) => convertEnHtmlToMd(html),
+  turndown_html_to_md: ([html]) => turndownService.turndown(html),
 
   // -------- segments_en --------
   segments_en_decode_entities: ([text]) => decodeEntities(text),

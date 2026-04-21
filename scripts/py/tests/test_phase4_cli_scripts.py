@@ -461,9 +461,7 @@ def _write_snapshot_html(snapshots_dir: Path, slug: str, content: str = "<p>x</p
     target.write_text(content, encoding="utf-8")
 
 
-def _patch_baseline_paths(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> dict[str, Path]:
+def _patch_baseline_paths(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, Path]:
     """``generate_parity_baseline`` module の 4 path 定数を tmp_path に差し替える。
 
     ``ROOT_DIR`` は意図的に patch しない。module 内で ``ROOT_DIR`` が使われる
@@ -669,9 +667,7 @@ def test_generate_parity_baseline_types_mode_merges_by_type(
     assert exit_code == 0
     written = json.loads(paths["baseline"].read_text(encoding="utf-8"))
     types = {e["issueType"] for e in written["entries"]}
-    assert "segment-order-mismatch" in types, (
-        "segment-order-mismatch entry should be preserved"
-    )
+    assert "segment-order-mismatch" in types, "segment-order-mismatch entry should be preserved"
     # 古い section-structure-mismatch は削除され、新しい slug の entry が入る。
     structure_entries = [
         e for e in written["entries"] if e["issueType"] == "section-structure-mismatch"

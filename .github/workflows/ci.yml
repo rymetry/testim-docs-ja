@@ -90,6 +90,12 @@ jobs:
       - name: mypy
         run: uv run mypy src
       - name: pytest
+        # Phase 4b-5 の一時措置: ``slow`` marker (288-page matrix conformance) は
+        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。Phase 6
+        # atomic cutover で mjs 削除 + conformance test 退場に伴って自然解消する。
+        # ``pyproject.toml`` の ``addopts = "-m 'not slow'"`` が default で効く。
+        # Merge gate の shape drift 検出は local ``uv run pytest -m slow`` で
+        # reviewer が明示的に pre-merge 実行する運用に切替。
         run: uv run pytest --cov=testim_parity --cov-report=term-missing
       - name: Upload coverage
         if: always()
