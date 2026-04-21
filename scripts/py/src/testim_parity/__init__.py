@@ -49,9 +49,14 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
 
 **比較エンジン (Phase 3 M3-M4)**:
 
+- ``testim_parity.extract_lines`` — ``extract.py`` の line-level state machine
+  切り出し (``classify_line`` + section 別 step/bullet/paragraph count)。
+  consumer は ``extract.py`` 越しの re-export を使う
 - ``testim_parity.structure`` — canonical block sequence comparator (3 stage)
 - ``testim_parity.checks`` — count / shape / heuristic 比較 (segment 単位)
 - ``testim_parity.align`` — weighted LCS alignment + ParityDiff 生成
+- ``testim_parity.align_diffs`` — ``align.py`` の ParityDiff factory 切り出し +
+  ``ALIGN_OUTPUT_SCHEMA_VERSION``。``align.py`` から import alias で使う
 
 Phase 3 M5-M7 (baseline / summary / mutation_corpus / detection_reports) は
 別 PR で追加予定。
