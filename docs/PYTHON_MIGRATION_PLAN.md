@@ -807,15 +807,15 @@ EN side の turndown 出力は従来通り mjs 互換の文字列を要求する
 
 - markdownify ``MarkdownConverter`` subclass + ``DefaultOptions`` + ``Options``
   両方 override (1.x の 2 層 option 組み立てに対応)
-- ATX heading / ``*   `` 3-space bullet / ``_italic_`` / ``**bold**`` /
-  fenced code with language class
+- ATX heading / `*<space><space><space>` 3-space bullet / ``_italic_`` /
+  ``**bold**`` / fenced code with language class
 - 5 MadCap custom converter: ``convert_div`` (note/caution) / ``convert_a``
   (codeSnippetCopyButton strip) / ``convert_ol`` (``<li value>`` + sibling
   ``<img>``/``<p>``/``<div>`` block 並べ) / ``convert_table`` (pipe table) /
   ``convert_details`` + ``convert_summary`` (summary → ``## heading``)
 - **turndown default rule の port** (review round-1/2 P1/P2 対応):
   - ``convert_li`` — leading ``\n`` strip + trailing collapse + ``\n`` を
-    ``\n    `` に indent (nested list / multi-paragraph li の preserve)。
+    4-space indent に置換 (nested list / multi-paragraph li の preserve)。
     trimmed content が空なら bullet ごと省略 (round-2 P2)
   - ``convert_ul`` — 親が ``<li>`` で last element child のときは ``\n`` +
     content、さもなくば ``\n\n`` wrap (turndown default list rule)
