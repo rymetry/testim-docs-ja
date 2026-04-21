@@ -26,6 +26,7 @@ from ..detection_reports import (
     load_detection_inputs,
     render_summary_markdown,
 )
+from ..project import ROOT_DIR
 
 __all__ = ["generate_detection_reports", "main"]
 
@@ -39,8 +40,12 @@ def generate_detection_reports(
 
     mjs ``generateDetectionReports`` と等価。戻り値は ``{"outputs": {...},
     "actionableReport": {...}}``。
+
+    ``root_dir`` 未指定時は ``ROOT_DIR`` を使う。mjs 実装も ``__dirname`` から
+    repo root を固定解決しており、``cd scripts/py && uv run python -m ...``
+    経由での呼び出しでも必ず repo root の artifact を読み書きする契約。
     """
-    root = Path(root_dir) if root_dir is not None else Path.cwd()
+    root = Path(root_dir) if root_dir is not None else ROOT_DIR
     outputs = {
         "actionableReport": root / "docs-actionable-report.json",
         "summaryMarkdown": root / "docs-update-summary.md",

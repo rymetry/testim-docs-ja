@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import IO
 
 from ..detection_reports import render_upstream_recovery_sticky_comment
+from ..project import ROOT_DIR
 
 __all__ = ["main"]
 
@@ -33,15 +34,16 @@ def main(
 ) -> int:
     """CLI エントリポイント。exit code (常に 0) を返す。
 
-    ``root_dir`` と ``stdout`` / ``stderr`` stream は test から差し替えられる
-    ように引数化。mjs 側に対応する argument は無いが、mjs も
-    ``ROOT_DIR`` / ``process.stdout`` / ``process.stderr`` を module 変数と
-    して参照しているだけなので等価。
+    ``root_dir`` 未指定時は ``ROOT_DIR`` を使う (mjs の module-level 固定 path
+    契約と一致)。``cd scripts/py && uv run python -m ...`` 経由の invocation
+    でも必ず repo root の ``upstream-recovery-status.json`` を見る。
+
+    ``stdout`` / ``stderr`` stream は test から差し替えられるように引数化。
     """
     stdout_stream = stdout if stdout is not None else sys.stdout
     stderr_stream = stderr if stderr is not None else sys.stderr
 
-    root = Path(root_dir) if root_dir is not None else Path.cwd()
+    root = Path(root_dir) if root_dir is not None else ROOT_DIR
     status_path = root / "upstream-recovery-status.json"
     comment_path = root / "upstream-recovery-comment.md"
 

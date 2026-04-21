@@ -29,6 +29,7 @@ from types import MappingProxyType
 from typing import Any
 
 from .issue_state import is_reportable_parity_issue
+from .project import ROOT_DIR
 
 __all__ = [
     "ACTIONABLE_REPORT_SCHEMA_VERSION",
@@ -1720,10 +1721,11 @@ def load_detection_inputs(
     ``strict=True`` で validation error が 1 件以上あれば ``ValueError`` を
     raise (mjs は ``Error`` に ``validationErrors`` を添える)。
     """
-    # mjs は ROOT_DIR = project.py の ROOT_DIR を使うが、Python 側でも
-    # process working directory を root と見なす (CI / local 両方で動く)。
+    # mjs は module-level ``ROOT_DIR`` で repo root を固定解決する。Python 側も
+    # ``.project.ROOT_DIR`` を default にして、``cd scripts/py && uv run ...``
+    # から呼ばれても repo root の artifact を読む契約を守る。
     # caller が明示的に ``root_dir`` を渡せば override 可能。
-    root = Path(root_dir) if root_dir is not None else Path.cwd()
+    root = Path(root_dir) if root_dir is not None else ROOT_DIR
     snapshot_path = Path(snapshot_path) if snapshot_path else root / "snapshot-diff-status.json"
     parity_path = Path(parity_path) if parity_path else root / "parity-check-status.json"
     source_sync_path = (

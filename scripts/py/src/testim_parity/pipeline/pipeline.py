@@ -19,11 +19,23 @@ from ..project import ROOT_DIR
 __all__ = [
     "PIPELINE_STEPS",
     "get_pending_steps",
+    "js_iso_timestamp",
     "load_checkpoint",
     "main",
     "parse_args",
     "save_checkpoint",
 ]
+
+
+def js_iso_timestamp(now: datetime | None = None) -> str:
+    """mjs ``new Date().toISOString()`` 等価 (``YYYY-MM-DDTHH:MM:SS.sssZ``)。
+
+    ``datetime.isoformat(timespec='milliseconds')`` は tz-aware だと ``+00:00``
+    が末尾に付いてしまい、さらに ``"Z"`` を concat すると ``+00:00Z`` という
+    不正な ISO-8601 になる。mjs の仕様どおり ms 3 桁 + ``Z`` で揃える。
+    """
+    current = now or datetime.now(tz=UTC)
+    return current.strftime("%Y-%m-%dT%H:%M:%S.") + f"{current.microsecond // 1000:03d}Z"
 
 
 _DEFAULT_CHECKPOINT_PATH: Path = ROOT_DIR / "scripts" / ".checkpoint"
@@ -179,7 +191,7 @@ def main(argv: list[str] | None = None) -> int:
         checkpoint_path,
         {
             "completed_phase": "PR-final",
-            "completed_at": datetime.now(tz=UTC).isoformat(timespec="milliseconds") + "Z",
+            "completed_at": js_iso_timestamp(),
             "next_phase": None,
             "step": "apply_llm_done",
             "mode": mode,

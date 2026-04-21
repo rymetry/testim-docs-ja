@@ -39,7 +39,12 @@ __all__ = [
 ]
 
 
-_SECTION_HEADING_RE = re.compile(r"^##\s+(.+?)(?:(.+?))?\s*$")
+# mjs: /^##\s+(.+?)(?:（(.+?)）)?\s*$/
+# 全角 `（...）` 区切りで English / Japanese の category name を分離する。
+# このリテラルを落とすと section heading が 1 文字ずつに崩れる。
+_SECTION_HEADING_RE = re.compile(
+    "^##\\s+(.+?)(?:\uff08(.+?)\uff09)?\\s*$"
+)
 _STATUS_LINE_RE = re.compile(
     r"^-\s*(✅🔍|✅|⏳)\s+(https?://docs\.tricentis\.com/testim/content/[^\s]+\.htm)\s*$"
 )
