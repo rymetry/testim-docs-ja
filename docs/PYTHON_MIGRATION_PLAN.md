@@ -797,7 +797,7 @@ Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えて�
 
 ### Phase 4b M1 byte-parity scope (現状)
 
-M1 時点では **17 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
+M1 時点では **25 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
 byte 比較) でのみ parity を保証する。288-page corpus 全体の byte parity 計測は
 M2/M3 integration 時に ``test_convert_en_html_to_md_288_matrix`` を追加して
 実施する (Issue #368 の nested-list flatten は JA extractor 側で完結するため
@@ -813,9 +813,18 @@ EN side の turndown 出力は従来通り mjs 互換の文字列を要求する
   (codeSnippetCopyButton strip) / ``convert_ol`` (``<li value>`` + sibling
   ``<img>``/``<p>``/``<div>`` block 並べ) / ``convert_table`` (pipe table) /
   ``convert_details`` + ``convert_summary`` (summary → ``## heading``)
+- **turndown default rule の port** (review round-1 P1/P2 対応):
+  - ``convert_li`` — leading ``\n`` strip + trailing collapse + ``\n`` を
+    ``\n    `` に indent (nested list / multi-paragraph li の preserve)
+  - ``convert_ul`` — 親が ``<li>`` で last element child のときは ``\n`` +
+    content、さもなくば ``\n\n`` wrap (turndown default list rule)
+  - ``convert_img`` — 常に markdown image (table cell / heading 内の inline
+    img も preserve)
+- ``_MAX_FRAGMENT_DEPTH=40`` で ``_convert_fragment`` の recursion guard
+  (malformed HTML に対する defensive cap)
 - ``convert_en_html_to_md`` は existing ``preprocess_en_html`` を chain する
-  ので、escaped-callout / escaped-details の preprocess 経由 sample も
-  byte-identical
+  ので、escaped-callout / escaped-details / FAQ multi-paragraph の preprocess
+  経由 sample も byte-identical
 
 ---
 

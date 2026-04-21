@@ -26,8 +26,10 @@ import {
   countOccurrences,
   DEFECT_CLASSES,
 } from '../../lib/en_source_patches.mjs';
-import { convertEnHtmlToMd, preprocessEnHtml } from '../../lib/turndown.mjs';
-import turndownService from '../../lib/turndown.mjs';
+import turndownService, {
+  convertEnHtmlToMd,
+  preprocessEnHtml,
+} from '../../lib/turndown.mjs';
 import {
   CALLOUT_NORMALIZATION_SLUGS,
   decodeEntities,

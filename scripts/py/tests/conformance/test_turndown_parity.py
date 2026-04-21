@@ -85,10 +85,37 @@ _SAMPLES_HTML_TO_MD: list[tuple[str, str]] = [
         "details_summary",
         "<details><summary><b>Question?</b></summary><p>Answer.</p></details>",
     ),
+    # Review round-1 P1 regression pin: nested list と multi-paragraph list item
+    # が turndown の 4-space indent rule で保持されること
+    (
+        "nested_ul",
+        "<ul><li>A<ul><li>A1</li><li>A2</li></ul></li><li>B</li></ul>",
+    ),
+    (
+        "li_multi_paragraph",
+        "<ul><li><p>Para 1</p><p>Para 2</p></li><li>Next</li></ul>",
+    ),
+    (
+        "li_with_nested_ul_and_text",
+        "<ul><li>Item A<ul><li>Nested A1</li></ul></li></ul>",
+    ),
+    # Review round-1 P2 regression pin: table cell / heading 内の <img> が
+    # alt text ではなく markdown image として保持されること
+    (
+        "table_cell_with_img",
+        "<table><thead><tr><th>Name</th><th>Icon</th></tr></thead>"
+        '<tbody><tr><td>Item</td><td><img src="/x.png" alt="icon"/></td></tr>'
+        "</tbody></table>",
+    ),
+    (
+        "heading_with_inline_img",
+        '<h2>Title <img src="/i.png" alt="icon"/></h2>',
+    ),
 ]
 
 # convert_en_html_to_md は preprocess_en_html を通すので、preprocess の
-# 2 normalize path (escaped callout / escaped details) と chaining する。
+# 3 normalize path (escaped callout / multi-paragraph FAQ details / legacy
+# single-<p> details) と chaining する。
 _SAMPLES_FULL: list[tuple[str, str]] = [
     # preprocess_en 経由でも plain HTML は同じ結果になる (冪等性)
     ("plain_after_preprocess", "<p>Hello world.</p>"),
@@ -98,6 +125,15 @@ _SAMPLES_FULL: list[tuple[str, str]] = [
     (
         "escaped_details",
         "<p>&lt;details&gt;&lt;summary&gt;Q&lt;/summary&gt; body&lt;/details&gt;</p>",
+    ),
+    # FAQ multi-paragraph broken escaped details tree。``normalizeEscapedFaqDetails``
+    # (60+ 行) の複雑な rewrite path を turndown 経由で end-to-end 検証する
+    # (review round-1 MEDIUM M3 対応)。
+    (
+        "escaped_faq_multi_paragraph",
+        "<p>&lt;details&gt; &lt;summary&gt;&lt;b&gt;Q1&lt;/b&gt;&lt;/summary&gt; Answer 1</p>"
+        "<p>&lt;/details&gt; &lt;details&gt; &lt;summary&gt;&lt;b&gt;Q2&lt;/b&gt;"
+        "&lt;/summary&gt; Answer 2&lt;/details&gt;</p>",
     ),
 ]
 

@@ -9,10 +9,23 @@ Python 版は ``markdownify.MarkdownConverter`` を subclass し、必要な
 output format (``*   `` 3-space bullet / ``**bold**`` / ``_italic_`` / ATX heading /
 fenced code with language) を replicate する。
 
-**byte-parity 戦略**: 主要 MadCap pattern を unit test で mjs turndown 出力と
-byte 比較し、288-page corpus 全体の byte-parity は Phase 4b M1.2 で follow-up。
-現状は unit test + conformance harness (主要 5 pattern) でカバーし、corpus-wide
-drift は M2/M3 integration 時に計測する。
+**turndown default rule の Python port**: review round-1 P1/P2 対応で以下を
+上書き実装:
+
+- ``convert_li`` — leading ``\\n`` strip + trailing ``\\n+`` collapse +
+  ``\\n`` → ``\\n    `` (4-space indent)。nested list / multi-paragraph
+  list item を flatten せず turndown 互換で保持する
+- ``convert_ul`` — 親が ``<li>`` で last element child のときは ``\\n`` +
+  content、さもなくば ``\\n\\n`` + content + ``\\n\\n``。turndown default
+  の list rule 等価
+- ``convert_img`` — ``![alt](src "title")`` を常に emit (markdownify default
+  の ``_inline`` context alt-text fallback を無効化)。table cell / heading
+  内の ``<img>`` を preserve する
+
+**byte-parity 戦略**: 25 代表 MadCap pattern (5 custom rule + nested list +
+multi-paragraph li + table cell img + heading img + 4 preprocess chain) を
+unit test で mjs turndown 出力と byte 比較。288-page corpus 全体の byte-parity
+は M2/M3 integration 時に計測する (``test_convert_en_html_to_md_288_matrix``)。
 
 ``preprocess_en_html`` は既存の ``preprocess_en`` module の re-export。
 """
@@ -36,6 +49,15 @@ _CALLOUT_CLASS_MAP: dict[str, str] = {
     "caution": "caution",
 }
 
+# ``convert_li`` / ``convert_ul`` の turndown 互換 transformation に使う正規表現。
+# mjs turndown の JS 版: ``content.replace(/^\n+/, '')`` 等価。
+_LEADING_NEWLINES_RE: re.Pattern[str] = re.compile(r"^\n+")
+_TRAILING_NEWLINES_RE: re.Pattern[str] = re.compile(r"\n+$")
+
+# ``_convert_fragment`` の recursion depth guard。MadCap HTML では通常 5-10
+# 階層程度だが、malformed HTML に対して RecursionError を未然に防ぐ。
+_MAX_FRAGMENT_DEPTH: int = 40
+
 
 def _has_class(node: Tag, target: str) -> bool:
     cls_attr = node.get("class")
@@ -44,6 +66,37 @@ def _has_class(node: Tag, target: str) -> bool:
     if isinstance(cls_attr, str):
         return target in cls_attr.split()
     return target in cls_attr
+
+
+def _has_next_li_sibling(el: Tag) -> bool:
+    """``<li>`` の直後の兄弟に別の ``<li>`` があるか。
+
+    turndown default の li rule が trailing ``\\n`` を出すか判定するのに使う
+    (``node.nextSibling && !/\\n$/.test(content)`` の Python 等価)。
+    """
+    sibling = el.next_sibling
+    while sibling is not None:
+        if isinstance(sibling, Tag):
+            # li 以外の Tag が挟まっていれば false (実用上起きないが安全側に)
+            return sibling.name == "li"
+        sibling = sibling.next_sibling
+    return False
+
+
+def _is_last_element_of_parent_li(el: Tag) -> bool:
+    """``el`` が ``<li>`` の last element child か。
+
+    turndown list rule: nested ``<ul>`` / ``<ol>`` が li の last child なら
+    ``\\n`` + content、さもなくば ``\\n\\n`` で包む。この分岐に使う。
+    """
+    parent = el.parent
+    if parent is None or parent.name != "li":
+        return False
+    last_elem: Tag | None = None
+    for child in parent.children:
+        if isinstance(child, Tag):
+            last_elem = child
+    return last_elem is el
 
 
 class _TurndownConverter(MarkdownConverter):
@@ -96,27 +149,46 @@ class _TurndownConverter(MarkdownConverter):
         return self.convert_em(el, text, parent_tags)
 
     # ------------------------------------------------------------------
-    # <li> — turndown は bullet 後に 3 spaces、markdownify default は 1 space
+    # <li> — turndown rule:
+    #   - strip leading ``\n``
+    #   - trailing ``\n+`` を ``\n`` 1 個に collapse
+    #   - 残った ``\n`` は全て ``\n    `` (4-space indent) に置換
+    #   - prefix に ``*   `` (ul) または ``N.  `` (ol) を付与
+    #   - 次の li 兄弟がある場合のみ trailing ``\n`` を追加
+    # こうすることで nested list / multi-paragraph list item が turndown 互換
+    # の indent で保持される。mjs は ``turndown`` npm の default rule、Python
+    # はそれを忠実に再現する。
     # ------------------------------------------------------------------
     def convert_li(self, el: Tag, text: str, parent_tags: Any) -> str:
         # parent が <ol> の場合は MadCap custom rule (convert_ol) が担当する
         # (convert_ol で <li> を handle するので、ここでは <ul> 内の <li> のみ処理)
         parent = el.parent
         if parent is not None and parent.name == "ol":
-            # convert_ol が独自処理するので、text だけ返す
             return text
-        text = (text or "").strip()
-        # turndown は ``*   `` (3 spaces)
-        return f"*   {text}\n"
+        content = text or ""
+        # leading newlines を削除
+        content = _LEADING_NEWLINES_RE.sub("", content)
+        # trailing newlines を ``\n`` 1 個に collapse
+        content = _TRAILING_NEWLINES_RE.sub("\n", content)
+        # 残る newline を 4-space indent
+        content = content.replace("\n", "\n    ")
+        # 兄弟に次の li があれば trailing ``\n`` を足す (turndown 互換)
+        has_next_li = _has_next_li_sibling(el)
+        suffix = "\n" if has_next_li and not content.endswith("\n") else ""
+        return f"*   {content}{suffix}"
 
     # ------------------------------------------------------------------
-    # <ul> — items を single newline 区切りでまとめる (turndown 互換)
+    # <ul> — turndown rule: nested (親が <li>) なら ``\n`` + content、
+    # さもなくば ``\n\n`` + content + ``\n\n``。 nested ul/ol が li の last
+    # child として含まれる時に余計な blank line が入らない。
     # ------------------------------------------------------------------
     def convert_ul(self, el: Tag, text: str, parent_tags: Any) -> str:
-        items = [line for line in (text or "").split("\n") if line]
-        if not items:
+        content = (text or "").rstrip("\n")
+        if not content:
             return ""
-        return "\n\n" + "\n".join(items) + "\n\n"
+        if _is_last_element_of_parent_li(el):
+            return "\n" + content
+        return "\n\n" + content + "\n\n"
 
     # ------------------------------------------------------------------
     # <ol> — MadCap custom rule
@@ -126,6 +198,7 @@ class _TurndownConverter(MarkdownConverter):
     #   - items separated by blank line (``\n\n``)
     # ------------------------------------------------------------------
     def convert_ol(self, el: Tag, text: str, parent_tags: Any) -> str:
+        depth = getattr(self, "_fragment_depth", 0)
         parts: list[str] = []
         for child in el.children:
             if isinstance(child, str):
@@ -138,7 +211,7 @@ class _TurndownConverter(MarkdownConverter):
                 continue
             if child.name == "li":
                 inner_html = child.decode_contents()
-                inner_md = _convert_fragment(inner_html, self.options).strip()
+                inner_md = _convert_fragment(inner_html, self.options, _depth=depth + 1).strip()
                 value = child.get("value")
                 if value:
                     parts.append(f"{value}. {inner_md}")
@@ -146,7 +219,7 @@ class _TurndownConverter(MarkdownConverter):
                     parts.append(f"- {inner_md}")
             else:
                 sibling_html = str(child)
-                sibling_md = _convert_fragment(sibling_html, self.options).strip()
+                sibling_md = _convert_fragment(sibling_html, self.options, _depth=depth + 1).strip()
                 if sibling_md:
                     parts.append(sibling_md)
         if not parts:
@@ -161,6 +234,21 @@ class _TurndownConverter(MarkdownConverter):
         if _has_class(el, "codeSnippetCopyButton"):
             return ""
         return super().convert_a(el, text, parent_tags)
+
+    # ------------------------------------------------------------------
+    # <img> — turndown は常に ``![alt](src)`` を出す。markdownify は inline
+    # context (table cell / heading / span 等) で alt text にフォールバック
+    # するため、不変で markdown image を emit するよう override する。
+    # ``title`` 属性は mjs turndown と同じく ``"..."`` 形式で付与する。
+    # ------------------------------------------------------------------
+    def convert_img(self, el: Tag, text: str, parent_tags: Any) -> str:
+        alt = el.attrs.get("alt") or ""
+        src = el.attrs.get("src") or ""
+        title = el.attrs.get("title") or ""
+        if title:
+            safe_title = title.replace('"', '\\"')
+            return f'![{alt}]({src} "{safe_title}")'
+        return f"![{alt}]({src})"
 
     # ------------------------------------------------------------------
     # <div class="note|caution"> → :::note/caution directive
@@ -182,12 +270,15 @@ class _TurndownConverter(MarkdownConverter):
     # <table> → Markdown pipe table (MadCap custom rule)
     # ------------------------------------------------------------------
     def convert_table(self, el: Tag, text: str, parent_tags: Any) -> str:
+        depth = getattr(self, "_fragment_depth", 0)
         rows: list[list[str]] = []
         # <tr> は <thead>/<tbody>/<tfoot> どこにいても拾う
         for tr in el.find_all("tr"):
             cells: list[str] = []
             for cell in tr.find_all(["th", "td"], recursive=False):
-                cell_md = _convert_fragment(cell.decode_contents(), self.options).strip()
+                cell_md = _convert_fragment(
+                    cell.decode_contents(), self.options, _depth=depth + 1
+                ).strip()
                 cell_md = re.sub(r"\n+", " ", cell_md).replace("|", "\\|")
                 cells.append(cell_md)
             if cells:
@@ -241,13 +332,25 @@ class _TurndownConverter(MarkdownConverter):
         return f"\n\n```{language}\n{code}\n```\n\n"
 
 
-def _convert_fragment(html: str, options: dict[str, Any] | None = None) -> str:
+def _convert_fragment(
+    html: str,
+    options: dict[str, Any] | None = None,
+    *,
+    _depth: int = 0,
+) -> str:
     """``_TurndownConverter`` を inner HTML fragment に再適用する helper。
 
     MadCap ``<ol>`` rule の sibling 処理 / table cell 内部処理から呼ばれる。
     parent converter と同じ options を使って nested consistency を保つ。
+
+    ``_depth`` は `_MAX_FRAGMENT_DEPTH` までの再帰深度 guard。現実の MadCap
+    HTML では 5-10 階層程度だが、malformed HTML に対して ``RecursionError``
+    を未然に防ぐための defensive cap。超過時は raw HTML を返す。
     """
+    if _depth >= _MAX_FRAGMENT_DEPTH:
+        return html
     converter = _TurndownConverter(**(options or {}))
+    converter._fragment_depth = _depth  # nested convert_ol/convert_table が depth+1 で使う
     return converter.convert(html)
 
 

@@ -129,3 +129,56 @@ def test_convert_en_html_to_md_plain_passthrough() -> None:
 def test_convert_en_html_to_md_rejects_non_str() -> None:
     with pytest.raises(TypeError, match="expected str"):
         convert_en_html_to_md(123)  # type: ignore[arg-type]
+
+
+# ----------------------------------------------------------------------
+# Review round-1 P1 regression pins: nested list + multi-paragraph <li>
+# は turndown の 4-space indent rule で保持される (flatten しない)。
+# ----------------------------------------------------------------------
+
+
+def test_nested_ul_preserved_with_four_space_indent() -> None:
+    """``<ul><li>A<ul><li>A1</li></ul></li>`` が 4-space indent で nested list。"""
+    html = "<ul><li>A<ul><li>A1</li><li>A2</li></ul></li><li>B</li></ul>"
+    assert html_to_md(html) == "*   A\n    *   A1\n    *   A2\n*   B"
+
+
+def test_li_with_multi_paragraph_content_indents_continuation() -> None:
+    """``<li>`` 内の複数 ``<p>`` は 4-space indent で continuation。"""
+    html = "<ul><li><p>Para 1</p><p>Para 2</p></li><li>Next</li></ul>"
+    assert html_to_md(html) == "*   Para 1\n    \n    Para 2\n    \n*   Next"
+
+
+def test_li_with_nested_ul_and_prefix_text() -> None:
+    """``<li>`` 冒頭 text + nested ``<ul>`` が turndown 互換 indent になる。"""
+    html = "<ul><li>Item A<ul><li>Nested A1</li></ul></li></ul>"
+    assert html_to_md(html) == "*   Item A\n    *   Nested A1"
+
+
+# ----------------------------------------------------------------------
+# Review round-1 P2 regression pins: markdownify の default は inline
+# context で ``<img>`` を alt text 化するが、turndown は常に markdown image。
+# ----------------------------------------------------------------------
+
+
+def test_table_cell_inline_img_preserved_as_markdown_image() -> None:
+    """table cell 内の ``<img>`` は markdown image を保持する (alt text 化しない)。"""
+    html = (
+        "<table><thead><tr><th>Name</th><th>Icon</th></tr></thead>"
+        '<tbody><tr><td>Item</td><td><img src="/x.png" alt="icon"/></td></tr>'
+        "</tbody></table>"
+    )
+    expected = "| Name | Icon |\n| --- | --- |\n| Item | ![icon](/x.png) |"
+    assert html_to_md(html) == expected
+
+
+def test_heading_inline_img_preserved_as_markdown_image() -> None:
+    """heading 内の ``<img>`` は markdown image を保持する。"""
+    html = '<h2>Title <img src="/i.png" alt="icon"/></h2>'
+    assert html_to_md(html) == "## Title ![icon](/i.png)"
+
+
+def test_img_with_title_attr() -> None:
+    """``title`` 属性付き ``<img>`` は turndown の ``"..."`` syntax を使う。"""
+    html = '<img src="/a.png" alt="a" title="A title"/>'
+    assert html_to_md(html) == '![a](/a.png "A title")'
