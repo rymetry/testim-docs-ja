@@ -324,6 +324,10 @@ const DISPATCH = {
   // fix), while mjs emits each nested line as its own segment. Conformance
   // samples that exercise nested lists go through dedicated Python-only unit
   // tests; the harness dispatch samples must remain nest-free.
+  // Consumers: scripts/py/tests/conformance/test_segments_ja_parity.py
+  //   (nest-free byte parity + 288-page corpus regression guard) and
+  //   scripts/py/tests/test_segments_ja.py::TestIssue368NestedListFlattening
+  //   (Python-only flatten behaviour record).
   segments_ja_extract: ([body]) => extractSegmentsFromMarkdown(body),
 };
 

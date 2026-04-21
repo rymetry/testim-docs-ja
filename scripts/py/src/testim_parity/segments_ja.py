@@ -310,7 +310,9 @@ def _decode_html_entities(text: str) -> str:
 
 
 _CODE_TAG_RE = re.compile(r"<code\b[^>]*>([\s\S]*?)<\/code>", re.IGNORECASE)
-_CODE_INNER_STRIP_RE = re.compile(r"<[^>]+>")
+# HTML tag ストリップ用 regex。``<code>`` inner と ``<a>`` inner 両方で使うため
+# 汎用名にしている (python-reviewer LOW)。mjs 側も同一 regex を両箇所で再利用。
+_HTML_TAG_STRIP_RE = re.compile(r"<[^>]+>")
 _A_TAG_RE = re.compile(
     r"<a\b[^>]*\bhref\s*=\s*[\"']([^\"']*)[\"'][^>]*>([\s\S]*?)<\/a>",
     re.IGNORECASE,
@@ -332,7 +334,7 @@ def _html_inline_to_markdown_text(html: Any) -> str:
     text = html
 
     def _code_sub(m: re.Match[str]) -> str:
-        inner = _CODE_INNER_STRIP_RE.sub("", m.group(1)).strip()
+        inner = _HTML_TAG_STRIP_RE.sub("", m.group(1)).strip()
         return f"`{inner}`"
 
     text = _CODE_TAG_RE.sub(_code_sub, text)
@@ -340,8 +342,8 @@ def _html_inline_to_markdown_text(html: Any) -> str:
     def _a_sub(m: re.Match[str]) -> str:
         href = m.group(1)
         inner = m.group(2)
-        label = _CODE_INNER_STRIP_RE.sub("", inner).strip()
-        # mjs は <code> 書き換え後の backtick を残す実装。Python でも `_CODE_INNER_STRIP_RE`
+        label = _HTML_TAG_STRIP_RE.sub("", inner).strip()
+        # mjs は <code> 書き換え後の backtick を残す実装。Python でも `_HTML_TAG_STRIP_RE`
         # は tag のみ削除し backtick は保持するので等価。
         if not href or href.startswith("#") or href.startswith("javascript:"):
             return label
@@ -381,16 +383,24 @@ def _extract_html_table_cells(table_html: str) -> list[str]:
 
 
 class _Emitter:
-    """``(sectionPath, kind)`` 毎に segment index をカウントしつつ segments を集める。"""
+    """``(sectionPath, kind)`` 毎に segment index をカウントしつつ segments を集める。
+
+    counter key は ``(section_path, kind)`` の tuple を使う。mjs 側は
+    ``section_path\x00kind`` の文字列結合だが、Python では tuple の方が
+    idiomatic で ``section_path`` が仮に ``\x00`` を含んでも collision しない
+    (python-reviewer MEDIUM #3)。両 runtime とも counter は内部状態で、
+    emit 結果 (``segmentIndex``) の方が conformance 対象のため tuple 化しても
+    byte parity は維持される。
+    """
 
     def __init__(self) -> None:
-        self._counters: dict[str, int] = {}
+        self._counters: dict[tuple[str, str], int] = {}
         self.segments: list[dict[str, Any]] = []
 
     def emit(self, section_path: str, kind: str, raw_text: Any, line: int | None) -> None:
         if not isinstance(raw_text, str) or raw_text.strip() == "":
             return
-        key = f"{section_path}\x00{kind}"
+        key = (section_path, kind)
         index = self._counters.get(key, 0)
         self._counters[key] = index + 1
         self.segments.append(
@@ -410,6 +420,15 @@ class _Emitter:
 
 # markdown-it-py のデフォルト設定。list parsing 以外の feature (table, strikethrough)
 # は使わないが、instance 生成コストを削るため module-level で 1 度だけ作る。
+#
+# Thread-safety: ``MarkdownIt.parse`` は現状 stateless だが、plugin を enable
+# すると plugin 側で mutable state を持つ可能性がある (例: markdown-it-py の
+# ``mdit_py_plugins.footnote`` は parser instance に counter を持つ)。
+# ``extract_segments_from_markdown`` は本 parser instance を直接使うため、
+# plugin を追加する場合は thread-local / per-call instance に切替える必要が
+# ある。現行 pipeline は single-threaded (``check:parity`` が逐次実行) なので
+# 問題ないが、architect review L1 として記録 (Phase 3 以降で並列実行を検討
+# する際の確認事項)。
 _MD_PARSER = MarkdownIt("commonmark")
 
 
@@ -561,7 +580,7 @@ def _strip_frontmatter(lines: list[str]) -> list[str]:
     return lines
 
 
-def extract_segments_from_markdown(body: Any) -> list[dict[str, Any]]:
+def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
     """JA markdown document body から canonical segment 列を抽出する。
 
     mjs ``extractSegmentsFromMarkdown`` と同じ API 契約:
@@ -630,7 +649,15 @@ def extract_segments_from_markdown(body: Any) -> list[dict[str, Any]]:
         nonlocal in_multiline_summary, multiline_summary_buf
         nonlocal multiline_summary_start_line, multiline_summary_depth
         joined = " ".join(multiline_summary_buf)
-        start_line = multiline_summary_start_line or closing_line_no
+        # multiline_summary_start_line の初期値は 0。entry 時に ``line_no`` を
+        # 書き込むが、frontmatter 無しの 1 行目から multi-line summary が始まる
+        # 場合の正当な値は ``1 + line_offset``  (最小 1) なので ``or`` で fall-
+        # through するケースは 現行 corpus では発生しない。ただし将来的に
+        # 0-based line を持ち込むと footgun (python-reviewer Phase 3 risk) に
+        # なるため、``if ... else`` で explicit に書く。
+        start_line = (
+            multiline_summary_start_line if multiline_summary_start_line > 0 else closing_line_no
+        )
         if details_depth > 0:
             summary_text = _html_inline_to_markdown_text(joined)
             if len(summary_text) > 0:

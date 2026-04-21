@@ -197,6 +197,37 @@ def test_ja_corpus_zero_regressions(ja_pages, mjs_ja_segments_by_slug):
     )
 
 
+# 現行 288-page corpus で nested-list flatten が発動しないページ数 (Phase 2 計測)。
+# この数字が変動する = corpus 側で nested list パターンが追加/削除された、または
+# Python extractor の挙動が変わった、のいずれか。どちらも Phase 2 review では
+# 意図した変更なので、本定数を更新して diff を PR に明示する運用。静的な pin
+# があることで、"drop-one-add-one" で count が偶然保存されるような silent バグ
+# を corpus-shape 側からも tripwire できる (architect review H3)。
+_NEST_FREE_CORPUS_SIZE = 142
+
+
+def test_ja_corpus_nest_free_count_pinned(ja_pages, mjs_ja_segments_by_slug):
+    """nest-free ページ数が Phase 2 計測値 (``_NEST_FREE_CORPUS_SIZE``) と一致。
+
+    architect review H3: ``test_ja_corpus_nest_free_pages_byte_identical`` が
+    auto-derive で nest-free subset を拾うため、corpus side の shift (新規
+    nested list 追加 / 既存 flatten page の content 変更) を silent に取り込む
+    リスクがある。本 test で subset 数を static に pin することで、corpus
+    shape 変化を PR で明示的に認識させる (subset 数が変わったら本定数を更新
+    する PR が必要)。
+    """
+    equal_count_pages = sum(
+        1
+        for slug, body in ja_pages
+        if len(extract_segments_from_markdown(body)) == len(mjs_ja_segments_by_slug[slug])
+    )
+    assert equal_count_pages == _NEST_FREE_CORPUS_SIZE, (
+        f"nest-free page count shifted: actual={equal_count_pages} "
+        f"pinned={_NEST_FREE_CORPUS_SIZE}. "
+        "If corpus change is intentional, update _NEST_FREE_CORPUS_SIZE."
+    )
+
+
 def test_ja_corpus_nest_free_pages_byte_identical(ja_pages, mjs_ja_segments_by_slug):
     """segment 数が mjs と一致する全ページで byte-identical。
 
@@ -204,6 +235,10 @@ def test_ja_corpus_nest_free_pages_byte_identical(ja_pages, mjs_ja_segments_by_s
     line-based 挙動と揃っている。このサブセットで byte 一致していれば、
     headings / callout / details / code fence / table / paragraph / image の
     挙動が mjs と drift していないことを示せる。
+
+    ペアになる ``test_ja_corpus_nest_free_count_pinned`` が subset 数を static
+    に pin するため、"drop-one-add-one" 系の silent バグ (count 保存 but 内容
+    shift) も両 test の組合せで tripwire される (architect review H3)。
     """
     byte_divergences: list[str] = []
     equal_count_pages = 0

@@ -124,6 +124,21 @@ class TestCallout:
             assert len(segs) == 1, f"{callout_type} not recognised"
             assert segs[0]["segmentKind"] == "callout-body"
 
+    def test_list_inside_callout_keeps_list_kind(self):
+        """``:::note`` 内の list item は ``unordered-list-item`` kind で emit される。
+
+        python-reviewer MEDIUM: ``paragraphKind`` state が ``callout-body`` に
+        flip していても、list region handler は ``_flatten_list_region`` の
+        markup から kind を決定するため、``callout-body`` が list item に漏れ
+        込まない契約。Phase 3 alignment で list 粒度比較が壊れないよう、
+        mjs と同じ挙動 (EN ``walkCalloutBody`` と等価) を明示的に test で pin。
+        """
+        md = ":::note\nIntro paragraph.\n\n- item a\n- item b\n:::\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        # intro paragraph は callout-body、list items は unordered-list-item
+        assert kinds == ["callout-body", "unordered-list-item", "unordered-list-item"]
+
 
 class TestDetailsSummary:
     def test_single_line_details_summary(self):
@@ -204,6 +219,117 @@ class TestHorizontalRule:
         kinds = [s["segmentKind"] for s in segs]
         # heading + 2 paragraphs、horizontal rule は emit されない
         assert kinds == ["heading", "paragraph", "paragraph"]
+
+
+class TestListRegionEdgeCases:
+    """``_collect_list_region`` が non-list content を誤吸収しないことを guard。
+
+    architect review H1 / M2 指摘の edge case を記録する。``_LIST_REGION_TERMINATOR_RES``
+    は heading / callout / code fence / HTML table / horizontal rule / details
+    token / standalone image を terminator に含めるが、これらの組合せが
+    list region 境界で正しく機能することを具体例で確認する。
+    """
+
+    def test_list_ends_at_code_fence_inside_region(self):
+        """list 途中に code fence が来ると region は閉じて code-block が emit。"""
+        md = "- alpha\n\n```js\nvar x = 1;\n```\n\n- beta\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "code-block", "unordered-list-item"]
+
+    def test_indented_non_list_paragraph_after_list_not_absorbed(self):
+        """list の後 blank 行 + 非 indent paragraph は list に吸収されない。"""
+        md = "- item\n\nNon-indented paragraph.\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "paragraph"]
+
+    def test_list_then_heading_terminates_region(self):
+        md = "- item\n\n## Section\n\nBody.\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "heading", "paragraph"]
+
+    def test_list_then_callout_terminates_region(self):
+        md = "- item\n\n:::note\nBody.\n:::\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "callout-body"]
+
+    def test_list_then_standalone_image_terminates_region(self):
+        md = "- item\n\n![alt](/x.png)\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "image"]
+
+    def test_list_then_horizontal_rule_terminates_region(self):
+        md = "- item\n\n---\n\nAfter.\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        # horizontal rule 自体は emit されず、後続 paragraph だけ emit
+        assert kinds == ["unordered-list-item", "paragraph"]
+
+    def test_indented_table_inside_list_absorbed_by_commonmark(self):
+        """indent された markdown table は list item continuation として吸収。
+
+        architect review H1: ``_LIST_REGION_TERMINATOR_RES`` は table row を
+        含まないため、list 内の indented ``| a | b |`` 行は region に取り込まれ
+        ``MarkdownIt("commonmark")`` で parse される。CommonMark は table 未対応
+        (拡張なし) のため、table 文字列は list item の inline text として 1
+        segment に集約される。これは CommonMark semantics の正しい挙動 (blank
+        line 無しで list item に連続する indented 内容は item content)。mjs
+        line-based 実装は各 table row を ``table-cell`` として emit する意図
+        的 divergence。
+        """
+        md = "## X\n\n- item with table\n\n  | h1 | h2 |\n  | - | - |\n  | a | b |\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        # heading + 1 list item (table rows absorbed, no table-cell emit)
+        assert kinds == ["heading", "unordered-list-item"]
+        assert "table-cell" not in kinds
+
+    def test_list_with_blank_and_indented_code_block_continuation(self):
+        """4-space indent の "code-looking" 行が list item の continuation に
+        なるケース (CommonMark では list item 内の indented code block)。
+
+        list region が正しく吸収して 1 item として emit する (nested list と
+        同じ flatten 挙動)。region の後に来る非 indent paragraph は別 segment。
+        """
+        md = "- item\n\n    indented-content-line\n\nAfter paragraph.\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        # CommonMark が indented content を list item に吸収するため、list-item
+        # + paragraph で 2 segment。list-item の textNorm に "indented-content-line"
+        # が含まれることも確認する。
+        assert kinds == ["unordered-list-item", "paragraph"]
+        assert "indented-content-line" in segs[0]["textNorm"]
+        assert segs[1]["textNorm"] == "after paragraph."
+
+
+class TestLooseSummaryENDelegation:
+    """``<details>`` に囲まれていない ``<summary>`` を EN walker に委譲する契約。
+
+    architect review M1: ``segments_ja`` → ``segments_en`` の cross-module
+    依存を guard する。EN walker の return shape が変わった場合の silent
+    regression を防ぐため、具体的な element children (paragraph + list +
+    image) を loose ``<summary>`` inner に入れて、JA emitter 経由で適切な
+    kind に分類されることを確認する。
+    """
+
+    def test_loose_summary_paragraph_inner(self):
+        md = "<summary><p>Plain paragraph</p></summary>\n"
+        segs = extract_segments_from_markdown(md)
+        paragraphs = [s for s in segs if s["segmentKind"] == "paragraph"]
+        assert len(paragraphs) == 1
+        assert paragraphs[0]["textNorm"] == "plain paragraph"
+
+    def test_loose_summary_mixed_inner(self):
+        md = "<summary><p>Intro</p><ul><li>a</li><li>b</li></ul></summary>\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        # EN walker 経由で paragraph + 2 list-item が emit される
+        assert "paragraph" in kinds
+        assert kinds.count("unordered-list-item") == 2
 
 
 class TestSectionPath:

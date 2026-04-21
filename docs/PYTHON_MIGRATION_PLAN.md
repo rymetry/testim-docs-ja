@@ -542,16 +542,39 @@ def handle_paragraph(tokens: list, start: int, state: WalkState) -> int:
   proper kind に分類してから JA emitter で再 emit する。Phase 1 で port 済の
   ``segments_en`` を library として利用する最初の cross-module 契約
 
+### 146 divergent page の pattern 分布 (architect review L2)
+
+Python が mjs より少ない segment を emit する 146 ページは、以下 3 パターンの
+いずれか (または複数) が該当する。Phase 3 reviewer が「想定内 flatten」と
+「新規 regression」を一目で区別できるよう具体例を載せる:
+
+| Pattern | 対象ページ例 | 説明 |
+| --- | --- | --- |
+| **nested unordered list** | `administration/project-user-management.md`, `settings/cli-settings.md` | `- outer\n  - inner` 形式。nested items の text が親 item に merge |
+| **loose list (indented continuation)** | `administration/encrypted-credentials.md` | `1. step\n\n   continuation paragraph\n\n2. next` 形式。blank 行 + indent の continuation が親 item に吸収 |
+| **indented markdown table inside list** | 一部 API docs | list item 直下の `| a | b |` 行は CommonMark が list content として吸収し、mjs の per-row ``table-cell`` emit は発動しない |
+
+Python extractor は 3 パターンとも CommonMark semantics に沿って正しく処理する。
+mjs line-based 挙動は歴史的な line-regex 起因の bug であり、これらの flatten が
+Issue #368 の core fix。
+
 ### 既知の follow-up (Phase 3 着手前に検討)
 
 - **Boundary stability >= 0.95 の実測**: alignment scoring を Phase 3 で port
   した後、288-page corpus で stability を測定。Phase 2 成果が alignment 層で
   想定通り parity issue を減らすかの final verification
-- **EN walker との flatten 文字列 separator 統一**: Python JA の nested flatten は
-  ``' '.join(inline.content)`` で space separator、EN walker は BS4 text traversal
-  の結果そのままで separator を自動挿入しないケースあり。alignment scoring は
-  weighted-LCS で space 差を吸収するため現状 blocking ではないが、Phase 3 で
-  issue 数を見て separator を揃えるか判断する
+- **EN walker との flatten 文字列 separator 統一** (architect H2): Python JA の
+  nested flatten は ``' '.join(inline.content)`` で space separator、EN walker
+  は BS4 text traversal の結果そのままで separator を自動挿入しないケースあり。
+  alignment scoring は weighted-LCS で space 差を吸収するため現状 blocking では
+  ないが、Phase 3 で issue 数を見て separator を揃えるか判断する。Phase 3 着手
+  時に diagnostic を 1 pass 流して 146 divergent page の textNorm delta を計測し、
+  5% を超えるなら ``segments_shared.create_segment`` の whitespace collapse で
+  両 runtime を揃える
+- **multi-line summary ``lines[i]`` 再処理 pattern の refactor** (python-reviewer
+  MED #1): 現行 ``lines[i] = remainder`` の in-place mutation は immutability
+  convention 違反。``pending: str | None`` slot で explicit に書き直す。挙動
+  変更なしの cleanup なので Phase 4 cutover 前までに対応
 
 ---
 
