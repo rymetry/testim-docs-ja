@@ -44,6 +44,19 @@ class TestMaskSegmentText:
         assert "__GLOSSARY__" in out["maskedText"]
         assert any(m["source"] == "glossary" for m in out["masks"])
 
+    def test_masks_glossary_term_adjacent_to_cjk(self):
+        """CJK 文字に隣接した英語 term も mask される (``\\b`` ASCII 境界)。
+
+        Python default の ``\\b`` は Unicode 境界で、CJK 文字が ``\\w`` 扱いに
+        なるため "Testimの設定" のような JA 隣接テキストで mask が発火しない
+        regression があった。``re.ASCII`` flag で mjs と同一セマンティクスに
+        固定する (post-merge review H1 指摘)。
+        """
+        for text in ("Testimの設定", "設定Testimを使う", "TestimとTestOpsを使う"):
+            out = mask_segment_text(text)
+            glossary_masks = [m for m in out["masks"] if m["source"] == "glossary"]
+            assert glossary_masks, f"expected glossary mask for {text!r}, got none"
+
     def test_equal_length_tie_preserves_insertion_order(self):
         """同長タイが insertion order を保持することを保証する (codex Round 4 指摘)。
 

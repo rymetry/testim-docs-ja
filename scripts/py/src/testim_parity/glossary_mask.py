@@ -168,7 +168,11 @@ def mask_segment_text(text: str) -> dict[str, Any]:
     masked = text
     for term in sorted_terms:
         escaped = re.escape(term)
-        pattern = re.compile(rf"\b{escaped}\b", re.IGNORECASE)
+        # ``re.ASCII`` は ``\b`` を ASCII 境界として評価させる (JS の ``\b`` と
+        # 同一セマンティクス)。Python default の Unicode 境界では CJK 文字が
+        # ``\w`` 扱いになるため、``"Testimの設定"`` のように英語 term が JA 文字
+        # と接する境界で ``\b`` が発火せず、mjs と結果が divergence する。
+        pattern = re.compile(rf"\b{escaped}\b", re.IGNORECASE | re.ASCII)
         for match in pattern.finditer(masked):
             masks.append(
                 {
@@ -198,6 +202,12 @@ def mask_segment_text(text: str) -> dict[str, Any]:
 
 _RESIDUE_MIN_WORDS = 3
 _RESIDUE_MIN_LENGTH = 15
+# ``parity_glossary_mask.mjs:155`` と **意図的に同一** の狭い CJK レンジ。
+# ``source_parity_align_scoring.mjs`` は ``\uF900-\uFAFF`` (CJK 互換) と
+# ``\u4E00-\u9FFF`` (統合漢字の拡張) を含む広い range を使っており、Python 側
+# ``align_scoring.CJK_RE`` はそちらに倣う。両モジュールで range が異なるのは
+# mjs から継承した契約で、**統一してはいけない** (port divergence を作る)。
+# 将来 mjs 側が統一されたタイミングで Python 側も同時に追従する。
 _CJK_CHAR_RE = re.compile(r"[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\uff00-\uffef]")
 _WORD_ASCII_RE = re.compile(r"[a-z]", re.IGNORECASE)
 

@@ -61,6 +61,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
+      - name: Install Node deps
+        # conformance harness (scripts/py/conformance/harness.mjs) が
+        # scripts/lib/project.mjs 経由で npm パッケージ ``gray-matter`` を
+        # import するため、Python テスト実行前に node_modules を解決する。
+        # これが無いと conformance テストが ERR_MODULE_NOT_FOUND で全滅する。
+        working-directory: ${{ github.workspace }}
+        run: npm ci
       - uses: actions/setup-python@v5
         with:
           python-version-file: scripts/py/.python-version
