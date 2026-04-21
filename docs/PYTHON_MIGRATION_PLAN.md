@@ -209,7 +209,7 @@ python-test:
 
 ### Phase 0 verification gate ✅ 全通過
 
-- `uv run pytest` pass — **277 tests, 95%+ coverage** (unit + conformance)。conformance は mjs 出力と byte 一致を保証。`en_source_patches` は dual-source-of-truth drift 検出のため全 34 patch について registry full dump + replay を両 runtime で byte 比較
+- `uv run pytest` pass — **290 tests, 95.60% coverage** (unit + conformance)。conformance は mjs 出力と byte 一致を保証。`en_source_patches` は dual-source-of-truth drift 検出のため全 34 patch について registry full dump + replay を両 runtime で byte 比較
 - `uv run ruff check src tests` pass
 - `uv run ruff format --check src tests` pass
 - `uv run mypy src` pass (strict=false, warn_return_any=true, disallow_untyped_defs=true)。strict 化は Phase 1 以降の follow-up
@@ -238,6 +238,20 @@ push すると CI が失敗する。さらに `test_registry_full_dump_matches_m
 `test_every_patch_replays_identically` が 34 patch 全てについて
 `find → replace` を両 runtime で照合することで、silent drift を 3 重に防ぐ。
 
+### Phase 0 キャリーフォワードノート
+
+PR #370 review サイクルで意図的に残した設計メモ (後続 Phase で再検討する項目)。
+
+- **glossary term ごとの `re.compile()` コスト許容** — `scripts/py/src/testim_parity/glossary_mask.py:175` は term ごとに `re.compile()` を毎回生成する。mjs 側 (`parity_glossary_mask.mjs:126`) も `new RegExp()` を毎回組むため、**behavioral conformance 上は正しい**。最適化 (一括 alternation `\b(term1|term2|...)\b` / pre-compile キャッシュ) は mjs 側の仕様変更とセットで行う。単独 Python 最適化は禁止 — byte-level parity を崩す
+- **GitHub Actions SHA pin の定期検証** — `.github/workflows/ci.yml` の `actions/checkout@<SHA>` 等は `# v4` コメント付きで pinned。SHA と tag の対応は以下で確認 (少なくとも年次 + security advisory 追従時)
+
+  ```bash
+  gh api repos/actions/checkout/git/refs/tags/v4 --jq '.object.sha'
+  ```
+
+  SHA を bump する PR では CI を一度緑確認してから merge。Dependabot の `github-actions` ecosystem を有効化すると自動 PR が出る (未設定)
+- **`__init__.py` flat re-export 不採用** — `scripts/py/src/testim_parity/__init__.py` は re-export を行わず、各モジュールの `__all__` が surface を宣言する契約。Phase 1-4 で leaf が 50+ 追加されても dual maintenance が発生しない。conformance harness (`harness.mjs:115` 付近) の DISPATCH と module-level `__all__` を 1:1 で維持する
+
 ---
 
 ## Phase 1: EN Segment Extractor (BS4 化)
@@ -254,6 +268,11 @@ Phase 1 以降は Python 側に新機能を置く一方で pipeline は当分 mj
 2. **JSON bridge**: `segments.v1.json` schema (Pydantic → JSON Schema 生成) を定義し、両 runtime がそれを read/write。mjs 側は既存の in-memory object からこの JSON へ serialize する wrapper を追加。
 
 **推奨**: Phase 1 開始前に **Library-only** を選択 (変更面積最小、conformance test で drift 検出可能)。`docs/PYTHON_MIGRATION_PLAN.md` の当節に選択結果を記録し、`segments_en.py` は `scripts/detection/check_source_parity.mjs` からは呼ばれない (mjs 実装のまま) 方針を明記。Phase 4 で detection CLI を Python に切り替える時に pipeline wiring。
+
+**Phase 1 着手時の先行チェック**:
+
+- `types-beautifulsoup4` / `types-html5lib` / `lxml-stubs` が PyPI に存在するか確認し、存在すれば `pyproject.toml` の `dev` extras へ追加。Phase 0 時点の `[[tool.mypy.overrides]]` は `html5lib` だけ `ignore_missing_imports` を許容しているが、Phase 1 で `from bs4 import BeautifulSoup` / `import lxml.html` を追加した瞬間に同 override を拡張するか、型スタブを入れて strict を維持するかを判断する (PR 0 review N3)
+- スタブ導入で mypy が first-party コードに対し新しい error を出す可能性があるため、Phase 1.0 着手 PR の最初のコミットで scaffolding (`from bs4 import BeautifulSoup` を module 先頭に置くだけ) + mypy を走らせ、ノイズを先に潰してから実装コミットを積む
 
 ### Module: `source_parity_segments_en.mjs` (709 LOC) → `segments_en.py`
 
