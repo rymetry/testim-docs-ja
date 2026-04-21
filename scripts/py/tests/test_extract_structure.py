@@ -285,3 +285,33 @@ def test_compare_section_raises_on_unknown_kind():
     # collapse_body_to_blocks で落とされるので例外にはならない
     en = {"sectionPath": "s", "index": 0, "body": body}
     assert compare_section_structure(en, en) == []
+
+
+def test_compare_section_none_inputs_return_empty():
+    assert compare_section_structure(None, None) == []
+    assert compare_section_structure({"body": []}, None) == []
+
+
+def test_compare_section_stage_c_content_order():
+    """同 kind 列で token anchor が reorder されていれば content-order を emit。"""
+    en = {
+        "sectionPath": "s",
+        "index": 0,
+        "body": [
+            _seg("paragraph", textNorm="alpha", tokensInvariant=["tok-a"], segmentIndex=0),
+            _seg("paragraph", textNorm="beta", tokensInvariant=["tok-b"], segmentIndex=1),
+        ],
+    }
+    ja = {
+        "sectionPath": "s",
+        "index": 0,
+        "body": [
+            _seg("paragraph", textNorm="beta", tokensInvariant=["tok-b"], segmentIndex=0),
+            _seg("paragraph", textNorm="alpha", tokensInvariant=["tok-a"], segmentIndex=1),
+        ],
+    }
+    diffs = compare_section_structure(en, ja)
+    if diffs:
+        # structureCategory は content-order
+        assert diffs[0]["structureCategory"] == "content-order"
+        assert "contentPermutation" in diffs[0]

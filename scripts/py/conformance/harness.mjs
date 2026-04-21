@@ -129,6 +129,10 @@ import {
   loadSidebarSlugs,
   localCheck,
 } from '../../lib/source_parity_checks.mjs';
+import {
+  alignSegments,
+  parityDiffsToIssues,
+} from '../../lib/source_parity_align.mjs';
 import { formatSourceUnusableSection } from '../../lib/source_parity_summary_format.mjs';
 import {
   isActiveParityIssue,
@@ -573,6 +577,14 @@ const DISPATCH = {
   checks_local: ([doc]) => localCheck(doc),
   checks_compare_snapshot_structure: ([enBody, jaBody]) =>
     compareSnapshotStructure(enBody, jaBody),
+
+  // -------- align (Phase 3 M4) --------
+  // weighted LCS alignment + ParityDiff 生成。diff payload の byte-identical
+  // は baseline identity key (Phase 3 M5) に直結するため厳密に検証する。
+  // Consumer: scripts/py/tests/conformance/test_align_parity.py
+  align_segments: ([enSegments, jaSegments, options]) =>
+    alignSegments(enSegments, jaSegments, options ?? {}),
+  align_parity_diffs_to_issues: ([diffs]) => parityDiffsToIssues(diffs),
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
