@@ -185,6 +185,21 @@ import {
   fingerprint as syncHealthFingerprint,
   validateRunLinkage,
 } from '../../lib/source_sync_health.mjs';
+import { summarizeParityResults } from '../../lib/source_parity_summary.mjs';
+import {
+  BASELINE_ELIGIBLE_TYPES,
+  NOTE_MAX_LENGTH as BASELINE_NOTE_MAX_LENGTH,
+  PRIORITY_VALUES as BASELINE_PRIORITY_VALUES,
+  STRUCTURE_CATEGORIES as BASELINE_STRUCTURE_CATEGORIES,
+  TYPES_ARG_ALLOWLIST as BASELINE_TYPES_ARG_ALLOWLIST,
+  buildBaselineKey,
+  buildBaselineKeyFromEntry,
+  computeOrphanBaselineEntries,
+  computeStructureFingerprint,
+  tagIssuesWithBaseline,
+  validateBaseline,
+  validateTypesArg,
+} from '../../lib/source_parity_baseline.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers (Map / Set を JSON-safe に正規化する)
@@ -609,6 +624,51 @@ const DISPATCH = {
     }
   },
   align_parity_diffs_to_issues: ([diffs]) => parityDiffsToIssues(diffs),
+
+  // -------- baseline (Phase 3 M5) --------
+  // Consumer: scripts/py/tests/conformance/test_baseline_parity.py
+  // baseline identity key は align ParityDiff 出力に直結するため、fingerprint /
+  // build_key / validate / tagging の戻り値 shape を byte-identical に縛る。
+  baseline_eligible_types: () => [...BASELINE_ELIGIBLE_TYPES].sort(),
+  baseline_types_arg_allowlist: () => [...BASELINE_TYPES_ARG_ALLOWLIST].sort(),
+  baseline_priority_values: () => [...BASELINE_PRIORITY_VALUES],
+  baseline_structure_categories: () => [...BASELINE_STRUCTURE_CATEGORIES].sort(),
+  baseline_note_max_length: () => BASELINE_NOTE_MAX_LENGTH,
+  baseline_validate_types_arg: ([types]) => validateTypesArg(types),
+  baseline_compute_structure_fingerprint: ([payload]) =>
+    computeStructureFingerprint(payload),
+  baseline_validate: ([parsed]) => {
+    // validate_baseline は正常時に parsed reference を返すため conformance では
+    // {ok: true} のみ送り返し、Python 側は ValueError を raise するシグネチャに
+    // 合わせる。dispatch 全般と同じ {ok, error} envelope。
+    try {
+      validateBaseline(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  baseline_build_key: ([slug, issue]) => buildBaselineKey(slug, issue),
+  baseline_build_key_from_entry: ([entry]) => buildBaselineKeyFromEntry(entry),
+  baseline_tag_issues: ([slug, issues, entries, fp]) => {
+    const { tagged, invalidated, matchedKeys } = tagIssuesWithBaseline(
+      slug,
+      issues,
+      entries,
+      fp,
+    );
+    return { tagged, invalidated, matchedKeys: [...matchedKeys].sort() };
+  },
+  baseline_orphan_entries: ([slug, entries, matchedKeys]) =>
+    computeOrphanBaselineEntries(slug, entries, new Set(matchedKeys)),
+
+  // -------- summary (Phase 3 M5) --------
+  // Consumer: scripts/py/tests/conformance/test_summary_parity.py
+  // 全 counter (reportableActiveFiles / auditSignalIssues / baselinedIssues /
+  // structureMismatchFiles / ...) は 5-counter=0 DoD に直結するため、mjs と
+  // Python の結果 dict を deep-equal 比較で byte 一致に縛る。
+  summary_summarize: ([results, orphanMeta]) =>
+    summarizeParityResults(results, orphanMeta ?? {}),
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance

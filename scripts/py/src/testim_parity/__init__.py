@@ -58,8 +58,14 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
 - ``testim_parity.align_diffs`` — ``align.py`` の ParityDiff factory 切り出し +
   ``ALIGN_OUTPUT_SCHEMA_VERSION``。``align.py`` から import alias で使う
 
-Phase 3 M5-M7 (baseline / summary / mutation_corpus / detection_reports) は
-別 PR で追加予定。
+**Frozen baseline + 集計 (Phase 3 M5)**:
+
+- ``testim_parity.baseline`` — baseline schema v2 (validate / build_key /
+  structureFingerprint / tag_issues / orphan detection)
+- ``testim_parity.summary`` — parity result を type / severity / ack / baseline
+  の summary 統計に集計する純粋関数。5-counter = 0 DoD の権威ソース
+
+Phase 3 M6-M7 (mutation_corpus / detection_reports) は別 commit で追加予定。
 """
 
 from __future__ import annotations
