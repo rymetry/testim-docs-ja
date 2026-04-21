@@ -40,7 +40,22 @@ DECODE_SAMPLES: list[str] = [
     "unknown &foobar; preserved",
     "mixed &copy; 2026 &reg; &trade;",
     "",
+    # Codex F1: mjs 17-entity subset 外の named entity は **両 runtime とも**
+    # ``decode_entities`` レイヤで原文保持される (mjs の ``_NAMED_ENTITIES`` に
+    # 無いキーは match してもテーブル lookup で null → 原文 return、Python 側の
+    # ``_NAMED_ENTITIES.get()`` も同 17 entry で同じ挙動)。lxml 経由の auto-
+    # decode とは **別の経路**。こちらで正しく一致することを guard する
+    "subset gaps &euro; &hearts; &delta;",
 ]
+
+# Codex F2: Unicode 範囲外 numeric entity は **意図的に divergent**。mjs は
+# ``String.fromCodePoint(0x110000)`` で RangeError を throw し、harness は
+# ``{__error: ...}`` envelope で通す。Python は ``OverflowError`` を catch して
+# 原文保持する (defensive, より lenient)。production segment 抽出経路では
+# BS4 が entity を扱うため ``decode_entities`` は呼ばれず、この divergence は
+# conformance harness 経由でのみ観測される (``test_segments_en.py`` の
+# ``test_out_of_range_numeric_entity_preserved`` が Python 側の正しい挙動を
+# 記録済み。byte-level mjs 一致は意図的に要求しない)。
 
 # extract_segments_from_html 用 sample。slug None / 指定を混在させて両分岐
 # をカバーする。mjs 側 ``options.calloutAllowSlugs`` は harness が

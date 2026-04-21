@@ -210,3 +210,109 @@ class TestConstants:
     def test_callout_normalization_slugs_is_frozenset(self):
         assert isinstance(CALLOUT_NORMALIZATION_SLUGS, frozenset)
         assert "administration/api-access" in CALLOUT_NORMALIZATION_SLUGS
+
+
+class TestHtml5libFallback:
+    """``extract_segments_from_html`` の html5lib fallback 経路を guard。
+
+    plan ``Fallback 戦略`` (``PYTHON_MIGRATION_PLAN.md``): lxml が segment 0 件
+    を返し、かつ HTML が ``_HTML5LIB_FALLBACK_MIN_LEN`` 以上の場合、html5lib で
+    再パースする契約。現行 288-page corpus では発動しないため、mock で分岐を
+    明示的に exercise する (review M2 指摘)。
+    """
+
+    def test_fallback_invoked_when_lxml_returns_empty(self, monkeypatch):
+        """lxml 側 walk が空 list を返すケースで html5lib 側 walk に再試行する。
+
+        ``_walk_soup`` を monkey-patch して、BS4 parser 名 (``builder.NAME``)
+        によって結果を切り替える。lxml 側で必ず空を返すようにし、html5lib 側
+        で segment 1 件を返す fake を用意する。これにより fallback の call path
+        と 2 段目 segment が下流に届くかを検証できる。
+        """
+        from testim_parity import segments_en
+
+        calls: list[str] = []
+
+        def fake_walk_soup(soup, slug, callout_allow_slugs):
+            # bs4 ``BeautifulSoup.builder.NAME`` で parser を特定する
+            parser_name = soup.builder.NAME if soup.builder else "unknown"
+            calls.append(parser_name)
+            if parser_name == "lxml":
+                return []
+            if parser_name == "html5lib":
+                return [
+                    {
+                        "sectionPath": "",
+                        "segmentKind": "paragraph",
+                        "segmentIndex": 0,
+                        "textNorm": "fallback-reached",
+                        "tokensInvariant": [],
+                        "sourceFingerprint": "sha256:test",
+                        "line": None,
+                    }
+                ]
+            return []
+
+        monkeypatch.setattr(segments_en, "_walk_soup", fake_walk_soup)
+
+        # ``_HTML5LIB_FALLBACK_MIN_LEN`` を超える長さの HTML を渡す
+        html = "<body>" + "<p>x</p>" * 200 + "</body>"
+        assert len(html) >= segments_en._HTML5LIB_FALLBACK_MIN_LEN
+
+        segs = segments_en.extract_segments_from_html(html)
+        assert calls == ["lxml", "html5lib"], f"parser order wrong: {calls!r}"
+        assert len(segs) == 1
+        assert segs[0]["textNorm"] == "fallback-reached"
+
+    def test_fallback_skipped_for_short_html(self, monkeypatch):
+        """HTML が閾値未満なら lxml が空でも html5lib は呼ばない。"""
+        from testim_parity import segments_en
+
+        calls: list[str] = []
+
+        def fake_walk_soup(soup, slug, callout_allow_slugs):
+            parser_name = soup.builder.NAME if soup.builder else "unknown"
+            calls.append(parser_name)
+            return []
+
+        monkeypatch.setattr(segments_en, "_walk_soup", fake_walk_soup)
+
+        # 閾値未満の短い HTML
+        html = "<body><p>x</p></body>"
+        assert len(html) < segments_en._HTML5LIB_FALLBACK_MIN_LEN
+
+        segs = segments_en.extract_segments_from_html(html)
+        assert calls == ["lxml"], f"html5lib should not be called: {calls!r}"
+        assert segs == []
+
+    def test_fallback_skipped_when_lxml_returns_segments(self, monkeypatch):
+        """lxml が 1 件でも segment を返したら html5lib は呼ばない (冪等性)。"""
+        from testim_parity import segments_en
+
+        calls: list[str] = []
+
+        def fake_walk_soup(soup, slug, callout_allow_slugs):
+            parser_name = soup.builder.NAME if soup.builder else "unknown"
+            calls.append(parser_name)
+            return [
+                {
+                    "sectionPath": "",
+                    "segmentKind": "paragraph",
+                    "segmentIndex": 0,
+                    "textNorm": "lxml-reached",
+                    "tokensInvariant": [],
+                    "sourceFingerprint": "sha256:lxml",
+                    "line": None,
+                }
+            ]
+
+        monkeypatch.setattr(segments_en, "_walk_soup", fake_walk_soup)
+
+        # 閾値 <以上> だが lxml で既に segment が取れるので fallback 不要
+        html = "<body>" + "<p>x</p>" * 200 + "</body>"
+        assert len(html) >= segments_en._HTML5LIB_FALLBACK_MIN_LEN
+
+        segs = segments_en.extract_segments_from_html(html)
+        assert calls == ["lxml"], f"fallback invoked unnecessarily: {calls!r}"
+        assert len(segs) == 1
+        assert segs[0]["textNorm"] == "lxml-reached"

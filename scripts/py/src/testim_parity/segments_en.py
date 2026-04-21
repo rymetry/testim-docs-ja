@@ -30,6 +30,38 @@ mjs は自前 tokenizer + lightweight DOM を使うが、Python port では BS4/
 - 自前 tokenizer を Python に持ち込むと保守負荷が増える
 
 Phase 1 verification gate (288-page matrix) で segment 一致を hard 確認する。
+
+## 既知の latent divergence (Codex review F1 / review M1)
+
+lxml (BS4 parser) は HTML5 仕様に沿って named entity をすべて decode する一方、
+mjs ``decodeEntities`` は ``_NAMED_ENTITIES`` の 17 entry subset のみを扱う。
+したがって ``&euro;`` / ``&hearts;`` / ``&delta;`` などの subset 外 named entity
+を含む HTML を extract すると、Python (``€`` / ``♥`` / ``δ`` に decode) と mjs
+(``&euro;`` 等を原文保持) で textNorm が divergence する。
+
+**現行 288-page corpus ではこの差に該当するページは 0 件** (``_ALLOWLIST`` も
+空)。しかし将来 MadCap EN snapshot に subset 外 entity が混入したとき、
+288-matrix conformance test が即座に検出する契約になっている。見つかった場合の
+対応方針は以下 2 択:
+
+1. mjs 側 ``_NAMED_ENTITIES`` を拡張して subset を mjs でも decode 対象にする
+   (両 runtime で entity を実文字に揃える)
+2. Python 側で subset 外 entity を pre-escape して BS4 に decode させない
+   (両 runtime で entity を原文保持する)
+
+BS4 の auto-decode は tree 構築時に行われるため「decode 済み text から元 entity
+名を復元する」アプローチは **不可能** (例: ``€`` が ``&euro;`` 由来か literal
+由来か判別不能)。Codex F1 の推奨「re-escape entities before buffering」は
+実装不可能だが、上記 2 択のどちらも conformance matrix が先に検出するため
+defer しても silent drift は起きない契約。
+
+## 既知の defensive path (Codex review F2)
+
+``decode_entities`` public API は conformance harness 経由のみ使用され、
+production segment 抽出経路 (``extract_segments_from_html``) では BS4 が
+entity decode を担うため呼ばれない。``&#x110000;`` のような Unicode 範囲外
+numeric entity は ``OverflowError`` を catch して原文保持するが、この経路は
+conformance test での guard のみが利用する (production 影響なし)。
 """
 
 from __future__ import annotations
