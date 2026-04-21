@@ -377,6 +377,22 @@ class TestListRegionEdgeCases:
         assert kinds == ["unordered-list-item"] * 3
         assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
 
+    def test_hard_break_in_list_item_stripped(self):
+        """Markdown hard-break ``\\`` + newline は空白化して textNorm から除去。
+
+        codex review P2 follow-up #3: ``1. step\\\\\\n   next`` のように list
+        item が hardbreak を使うと、markdown-it-py の ``inline.content`` に
+        raw ``\\\\\\n`` が残る。EN walker は ``<br>`` を単なる word-boundary として
+        扱うため、Python 側も hardbreak を空白化して EN と textNorm を揃える。
+        """
+        md = "1. Step one\\\n   Next sentence.\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "ordered-list-item"
+        # textNorm に backslash が残らない
+        assert "\\" not in segs[0]["textNorm"]
+        assert segs[0]["textNorm"] == "step one next sentence."
+
     def test_top_level_fence_still_terminates_list_region(self):
         """top-level (non-indented) fence は list region を終了させる。
 

@@ -604,7 +604,12 @@ def _flatten_list_region(
         if tok.type == "inline" and item_depth >= 1:
             content = tok.content or ""
             if content:
-                current_parts.append(content)
+                # Markdown hard break (``\`` at end of line) は EN の ``<br>``
+                # に相当し textNorm では単なる word-boundary。raw content に
+                # 残る ``\\\n`` を空白化しないと ``step\\ next`` のように
+                # backslash が textNorm に混入して EN walker と drift する
+                # (codex review P2 follow-up #3)。
+                current_parts.append(content.replace("\\\n", " "))
     return (results, list_start_line, list_end_line)
 
 
