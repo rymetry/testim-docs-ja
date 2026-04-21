@@ -17,7 +17,6 @@ from testim_parity.checks import (
 
 from ._harness import run_batch
 
-
 ENGLISH_ONLY_SAMPLES = [
     "",
     "   ",
@@ -57,6 +56,16 @@ COMPARE_SAMPLES = [
     ("## A\npara\n\n## B\npara\n", "## A\npara\n"),
     ("| a | b |\n| - | - |\n| 1 | 2 |\n", "| a |\n| - |\n| 1 |\n"),
     ("<details>hi</details>\n\n## S\npara\n", "## S\npara\n"),
+    # python-reviewer MEDIUM: table cell token mismatch (同じ shape、cell content 差)
+    (
+        "| header |\n| - |\n| uses `config.js` |\n",
+        "| header |\n| - |\n| uses `other.js` |\n",
+    ),
+    # python-reviewer MEDIUM: table cell english residual (JA 側に英文残留)
+    (
+        "| header |\n| - |\n| Testim scenario description here |\n",
+        "| header |\n| - |\n| Testim scenario description here |\n",
+    ),
 ]
 
 

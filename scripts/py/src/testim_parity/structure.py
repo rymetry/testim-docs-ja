@@ -14,6 +14,22 @@ mjs と byte-identical な diff payload 契約 — ``STRUCTURE_COMPARATOR_KINDS`
 ``baseline.py::compute_structure_fingerprint`` (Phase 3 M5) で identity key
 に hash される。rename / reorder / 削除は破壊的変更で baseline match を
 silently 壊すので schemaVersion bump とセットで行うこと。
+
+**architect H4 指摘対応 — unknown block kind の扱い**::
+
+    本 comparator は ``STRUCTURE_COMPARATOR_KINDS`` 外の block kind を検出
+    すると ``ValueError`` を raise する (mjs も Error throw で等価)。これは
+    fail-fast contract で、新しい segment kind (例: ``footnote``) を extractor
+    に追加する場合は:
+
+    1. ``_SEGMENT_TO_BLOCK_KIND`` と ``STRUCTURE_COMPARATOR_KINDS`` に同時追加
+    2. baseline schemaVersion を bump し migration を組む
+    3. mjs 側も同時更新 (conformance で drift が即座に検出される)
+
+    ``align.py::align_segments`` は本 raise を catch しないため、新 kind が
+    silently merge された場合は 288-page pipeline 全体が失敗する設計。これは
+    意図した fragility で、「未知 kind の silent fallback → baseline key drift
+    → 5-counter 誤計上」という最悪シナリオを防ぐ優先。
 """
 
 from __future__ import annotations
@@ -270,8 +286,8 @@ def _build_content_order_diff(
         structure_category="content-order",
         detail=detail,
     )
-    base["contentPermutation"] = permutation
-    return base
+    # python-reviewer MEDIUM: immutable — base を mutate せず新 dict を返す
+    return {**base, "contentPermutation": permutation}
 
 
 def compare_section_structure(

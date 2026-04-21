@@ -40,9 +40,18 @@ from .segments_shared import GATE_ELIGIBLE_KINDS
 from .structure import compare_section_structure
 
 __all__ = [
+    "ALIGN_OUTPUT_SCHEMA_VERSION",
     "align_segments",
     "parity_diffs_to_issues",
 ]
+
+
+# architect L2 指摘対応: ``align_segments`` の return shape を固定する schema
+# version。``baseline.py`` (Phase 3 M5) が identity key に hash する field
+# (``sectionIndex`` / ``structureCategory`` / ``enKinds`` / ``jaKinds`` /
+# ``contentPermutation``) を破壊的変更する場合は bump し、baseline
+# ``schemaVersion`` と同時に migration を組むこと。
+ALIGN_OUTPUT_SCHEMA_VERSION = 1
 
 
 _GATE_KIND_SET: frozenset[str] = frozenset(GATE_ELIGIBLE_KINDS)
@@ -55,7 +64,20 @@ _FREE_FORM_KINDS: frozenset[str] = frozenset({"paragraph", "callout-body"})
 
 
 def _get_attr(seg: Any, name: str, default: Any = None) -> Any:
-    """dict / object どちらでも segment の属性を取り出す。"""
+    """dict / object どちらでも segment の属性を取り出す。
+
+    **architect H3 指摘対応**: Pydantic ``Segment`` (``models.py``) は camelCase
+    alias (``segmentKind`` / ``textNorm`` / ``tokensInvariant`` / ``sourceFingerprint``)
+    を露出しているため ``getattr`` / ``dict.get`` の両方とも同じ key で動作する。
+
+    **注意**: 将来 Pydantic を ``model_dump(by_alias=False)`` で snake_case 化した
+    場合は本関数が silently default を返し segments を空扱いする。その回避策と
+    して load-bearing field (``segmentKind``) が None を返したら downstream で
+    segmentKind mismatch の alignment diff が出るため、検出はされるが根本原因
+    が隠れる。Phase 5 の pipeline wiring で ``Segment.model_dump(by_alias=True)``
+    を caller 側の contract にし、それ以外の呼び出しは本関数を通さずに dict 作る
+    運用が望ましい。
+    """
     if isinstance(seg, dict):
         return seg.get(name, default)
     return getattr(seg, name, default)
@@ -168,6 +190,11 @@ def _weighted_lcs(
             continue
         up = dp[here - width]
         left = dp[here - 1]
+        # python-reviewer MEDIUM M5 指摘対応: mjs の traceback tie-break は
+        # ``if (up >= left)`` (up 優先)。Python も同一記号で揃えてある。両 runtime
+        # とも等値時に a 側 index を先に進める (= b を skip する) 挙動で、LCS の
+        # 標準的な tie-break と一致。288-page corpus conformance で byte-identical
+        # が確認済 (Phase 3 M4 test_align_288_matrix)。
         if up >= left:
             i -= 1
         else:
@@ -615,12 +642,14 @@ def _align_section(
             if is_artifact_excluded(slug=artifact_ctx["slug"], token=token):
                 coverage = artifact_ctx.get("coverage")
                 if coverage and "record" in coverage:
+                    # codex P1 指摘対応: artifact_registry の ``record`` は
+                    # keyword-only (mjs ``object literal`` 引数と semantic 1:1)。
+                    # 以前は dict を positional で渡して TypeError を silent に
+                    # 引き起こしていた (既存 unit test が stub で mask)。
                     coverage["record"](
-                        {
-                            "slug": artifact_ctx["slug"],
-                            "token": token,
-                            "reason": "artifact-registry",
-                        }
+                        slug=artifact_ctx["slug"],
+                        token=token,
+                        reason="artifact-registry",
                     )
                 continue
             missing_tokens.append(token)
@@ -658,7 +687,10 @@ def align_segments(
        inconclusiveCategory, inconclusiveMeta, inconclusiveReason}``。
     """
     if not isinstance(slug, str) or len(slug) == 0:
-        raise ValueError("align_segments: slug option is required")
+        # mjs との byte-identical な error message 契約。conformance harness の
+        # {ok, error} envelope で string 比較されるため mjs の関数名 (camelCase)
+        # を使用する。
+        raise ValueError("alignSegments: slug option is required")
 
     # mjs ``coverage = NOOP_COVERAGE`` のデフォルト等価。NOOP_COVERAGE は
     # MappingProxyType で record / snapshot callable を持つ。

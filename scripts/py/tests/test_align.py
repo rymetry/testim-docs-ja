@@ -246,25 +246,36 @@ def test_align_token_gap_emits_segment_token_gap():
 
 
 def test_align_with_explicit_coverage_aggregator():
-    """custom coverage を渡して artifact-registry 抑止 hit を受け取る経路。"""
-    records: list[dict] = []
+    """actual ``create_artifact_coverage()`` を渡して signature 整合を確認する。
 
-    def record(entry):
-        records.append(entry)
+    codex P1 指摘対応: 以前は stub が positional ``record(entry)`` を受けて
+    いたため、production の keyword-only signature (``record(slug=..., token=...,
+    reason=...)``) の不一致が mask されていた。ここでは実 aggregator を使って
+    signature 乖離があれば TypeError で即検出する。
+    """
+    from testim_parity.artifact_registry import create_artifact_coverage
 
-    coverage = {"record": record, "snapshot": lambda: records}
-    # token-gap 発生 scenario を作って coverage に record が呼ばれる path をカバー
+    coverage = create_artifact_coverage()
+    # registry 登録済みの slug + token の組で artifact-registry suppression path
+    # を通す (``ARTIFACT_REGISTRY`` の ENTRY_1 から最小 fixture を作る)
+    registered_slug = "testops/insights/dashboard"
+    registered_token = "/docs/index"
     en = [
         _seg("heading", sectionPath="A", textNorm="A"),
         _seg(
             "paragraph",
-            textNorm="some body",
-            tokensInvariant=["not-a-real-artifact"],
+            textNorm="see index",
+            tokensInvariant=[registered_token],
         ),
     ]
     ja = [
         _seg("heading", sectionPath="A", textNorm="A"),
-        _seg("paragraph", textNorm="some body"),
+        _seg("paragraph", textNorm="index を参照"),
     ]
-    result = align_segments(en, ja, slug="x", coverage=coverage)
+    result = align_segments(en, ja, slug=registered_slug, coverage=coverage)
     assert result["inconclusive"] is False
+    # suppression hit を coverage snapshot で確認
+    snapshot = coverage["snapshot"]()
+    assert snapshot["matchedHits"] == 1
+    assert snapshot["bySlug"][registered_slug] == 1
+    assert snapshot["byToken"][registered_token] == 1

@@ -6,8 +6,6 @@ byte 一致を担当する。こちらは Python 側の edge case / branching �
 
 from __future__ import annotations
 
-import pytest
-
 from testim_parity.extract import (
     classify_line,
     detect_en_artifacts,

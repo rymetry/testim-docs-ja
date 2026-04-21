@@ -14,7 +14,6 @@ from testim_parity.checks import (
     local_check,
 )
 
-
 # --- is_english_only_line ---------------------------------------------------
 
 

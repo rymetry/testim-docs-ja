@@ -185,6 +185,14 @@ def build_advisory_review_queue(results: Iterable[Mapping[str, Any]]) -> list[di
             continue
         slug = _file_to_slug(result.get("file"))
         issues = result.get("issues") or []
+        # codex P2 対応: mjs は ``issues.filter`` を呼ぶため list 以外 (dict 等) で
+        # throw する。Python では dict を iterate すると key を受ける silent
+        # fallback になるため、list/tuple 以外を TypeError に倒す。
+        if not isinstance(issues, (list, tuple)):
+            raise TypeError(
+                f"build_advisory_review_queue: result['issues'] must be a list, "
+                f"got {type(issues).__name__}"
+            )
         advisory_source = [issue for issue in issues if is_advisory_review_candidate(issue)]
         advisory_issues: list[dict[str, Any]] = []
         for issue in advisory_source:

@@ -29,7 +29,6 @@ from testim_parity.extract import (
 
 from ._harness import run_batch
 
-
 BODY_SAMPLES: list[str] = [
     "",
     "## Intro\n\npara\n",

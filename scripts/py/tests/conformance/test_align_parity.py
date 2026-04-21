@@ -89,6 +89,39 @@ ALIGN_SAMPLES: list[tuple[list, list, dict]] = [
         ],
         {"slug": "x"},
     ),
+    # python-reviewer HIGH: segment-untranslated (JA paragraph が英語そのまま)
+    (
+        [
+            _seg("heading", sectionPath="A", textNorm="A"),
+            _seg("paragraph", textNorm="Click on the menu item to open settings"),
+        ],
+        [
+            _seg("heading", sectionPath="A", textNorm="A"),
+            _seg("paragraph", textNorm="Click on the menu item to open settings"),
+        ],
+        {"slug": "x"},
+    ),
+    # python-reviewer HIGH: tokenless-near-tie (2 つの同名 heading + tokenless body
+    # で length ratio が近い → inconclusiveCategory == "tokenless-near-tie")
+    (
+        [
+            _seg("heading", sectionPath="Bug fix", textNorm="Bug fix", segmentIndex=0),
+            _seg("paragraph", textNorm="最初のバグ修正内容", segmentIndex=0),
+            _seg("heading", sectionPath="Bug fix", textNorm="Bug fix", segmentIndex=1),
+            _seg("paragraph", textNorm="二番目のバグ修正", segmentIndex=0),
+        ],
+        [
+            _seg("heading", sectionPath="Bug fix", textNorm="Bug fix", segmentIndex=0),
+            _seg("paragraph", textNorm="最初のバグ修正内容", segmentIndex=0),
+            _seg("heading", sectionPath="Bug fix", textNorm="Bug fix", segmentIndex=1),
+            _seg("paragraph", textNorm="二番目のバグ修正", segmentIndex=0),
+        ],
+        {"slug": "x"},
+    ),
+    # typescript-reviewer HIGH: slug 欠落で domain error
+    ([], [], {}),
+    # slug が非文字列 (None) でも domain error
+    ([], [], {"slug": None}),
 ]
 
 
@@ -134,8 +167,7 @@ def mjs_results(repo_root, node_available) -> dict:
         pytest.skip("node not available")
     calls: list = []
     calls.extend(
-        {"function": "align_segments", "args": [en, ja, opts]}
-        for en, ja, opts in ALIGN_SAMPLES
+        {"function": "align_segments", "args": [en, ja, opts]} for en, ja, opts in ALIGN_SAMPLES
     )
     calls.extend(
         {"function": "align_parity_diffs_to_issues", "args": [diffs]} for diffs in DIFF_SAMPLES
@@ -149,9 +181,27 @@ def mjs_results(repo_root, node_available) -> dict:
 
 
 def test_align_segments_matches_mjs(mjs_results):
+    """harness は {ok, result} / {ok, error} envelope で domain error を分離する。
+
+    Python は ``align_segments`` が ``ValueError`` を raise するので、同じ形に
+    包んで比較する (typescript-reviewer HIGH 対応)。
+    """
     for (en, ja, opts), mjs in zip(ALIGN_SAMPLES, mjs_results["align"], strict=True):
-        py = align_segments(en, ja, slug=opts["slug"])
-        assert py == mjs, f"diverge for slug={opts['slug']!r}:\n  py={py!r}\n  mjs={mjs!r}"
+        slug = opts.get("slug")
+        try:
+            result = (
+                align_segments(en, ja, slug=slug)
+                if slug is not None
+                else align_segments(
+                    en,
+                    ja,
+                    slug=slug,  # type: ignore[arg-type]
+                )
+            )
+            py: dict = {"ok": True, "result": result}
+        except (ValueError, TypeError) as e:
+            py = {"ok": False, "error": str(e)}
+        assert py == mjs, f"diverge for slug={slug!r}:\n  py={py!r}\n  mjs={mjs!r}"
 
 
 def test_parity_diffs_to_issues_matches_mjs(mjs_results):

@@ -552,7 +552,7 @@ Python が mjs より少ない segment を emit する 147 ページは、以下
 | --- | --- | --- |
 | **nested unordered list** | `administration/project-user-management.md`, `settings/cli-settings.md` | `- outer\n  - inner` 形式。nested items の text が親 item に merge |
 | **loose list (indented continuation)** | `administration/encrypted-credentials.md` | `1. step\n\n   continuation paragraph\n\n2. next` 形式。blank 行 + indent の continuation が親 item に吸収 |
-| **indented markdown table inside list** | 一部 API docs | list item 直下の `| a | b |` 行は CommonMark が list content として吸収し、mjs の per-row ``table-cell`` emit は発動しない |
+| **indented markdown table inside list** | 一部 API docs | list item 直下の pipe table 行 (例: `\| a \| b \|`) は CommonMark が list content として吸収し、mjs の per-row `table-cell` emit は発動しない |
 | **indented code fence / image inside list** | `advanced-editing/data-driven-testing/configuring-...md`, `running-tests/play-from-here.md` | list item 内の indented `\`\`\`fence` / `![image]` は parent item の textNorm に flatten される (EN HTML walker の ``collectInlineText`` と等価)。mjs は独立 code-block / image segment として emit するため意図的 divergence (codex review P2 #1 で明示的に pin)。top-level (indent 0) の fence / image は従来通り list region を terminate して独立 segment を emit |
 
 Python extractor は 3 パターンとも CommonMark semantics に沿って正しく処理する。
@@ -605,18 +605,50 @@ Phase 3 は **単一 PR に集約** (ユーザ決定 2026-04-21)。ただし ~5,
 
 architect review H3 を反映。linear chain ではなく実際には:
 
-- **M1** (leaf predicates/registry) → {**M2, M3, M4, M6**} **並列着手可**
-- **M5** (baseline + summary) は **M1 + M2 + M3 完了後**
+- **M1** (leaf predicates/registry) → {**M2, M3, M6**} **並列着手可**
+- **M4** (`align`) は **M3 完了後** (``structure.compare_section_structure``
+  を Stage C content-order bijection で呼ぶため)
+- **M5** (baseline + summary) は **M1 + M2 + M3 + M4 完了後**
 - **M7** (detection_reports aggregator) は **全 modules 完了後**
 
 | Milestone | 直接依存 |
 | --- | --- |
 | M2 `acknowledgements` / `source_usability` / `advisory_queue` / `sync_health` | M1 (`issue_state`) |
-| M3 `structure` / `checks` | M1 (`issue_state` / `page_coverage`) |
-| M4 `align` | (独立 — pure scoring) |
-| M5 `baseline` / `summary` | M1 (`summary_format` / `issue_state`) + M2 (`acknowledgements`) + M3 (`structure`) |
+| M3 `structure` / `checks` | M1 (`issue_state` / `page_coverage`) + `align_scoring` (Phase 0) |
+| M4 `align` | **M3 (`structure`)** + `align_scoring` + `glossary_mask` + `normalize` + `segments_shared` + `artifact_registry` (全て Phase 0/M3) |
+| M5 `baseline` / `summary` | M1 (`summary_format` / `issue_state`) + M2 (`acknowledgements`) + M3 (`structure`) + M4 (`align` の identity key field shape) |
 | M6 `mutation_corpus` | (独立 — scoring fixture) |
 | M7 `detection_reports` | 全 modules (aggregator) |
+
+### 既知の follow-up (M5 着手前に整理)
+
+- **artifact_registry の slug を frozenset 化** (architect L1): 現行 registry は
+  2 entry × 最大 7 slug で ``slug in entry["slugs"]`` は O(n) だが十分高速。将来
+  registry が 20 entry を超えたら ``frozenset`` に切替 + JSON serialize helper
+  を足す。現時点では変更しない
+- **Phase 0 `glossary_mask._translate_js_flags_to_python` bug 修正** (2026-04-21
+  288-page conformance で発覚): JS default の ``\\b`` は ASCII 境界だが Python
+  default は Unicode 境界。``u`` フラグ無しの invariant pattern で Python 側に
+  ``re.ASCII`` を明示付与するよう修正した。``integrations/sealights-integration``
+  で ``tokenを`` の境界が Python Unicode mode で match 失敗していた — architect
+  H2 指摘どおり M5 baseline 凍結前に検出できた価値のある drift
+
+### dict-only ingress policy (architect M2 指摘対応)
+
+Phase 3 の全 predicate / transformer 関数は **dict (または Mapping) ingress
+を前提とする**。Pydantic ``Segment`` / 他 model を直接渡すと:
+
+- Phase 1/2 `issue_state` 系 predicate は ``_is_issue_mapping`` で False に倒す
+  (non-dict divergence、production caller は model を ``.model_dump()`` する)
+- Phase 3 M3/M4 transformer (`structure` / `align` / `checks`) は ``_get_attr``
+  で Pydantic camelCase alias を透過するが、これは lenient fallback。
+  Phase 5 pipeline wiring では caller 側で ``Segment.model_dump(by_alias=True)``
+  を通して dict 化する運用に統一する
+
+Phase 4 CLI port (`check_source_parity.py`) で `align_segments` / `local_check`
+等を呼ぶ時、orchestrator が常に dict を渡す契約を type hint と docstring で
+明示する。新しい consumer を追加する PR では本 policy 違反が無いか reviewer
+gate で確認する。
 
 ### M1 実装メモ (2026-04-21)
 

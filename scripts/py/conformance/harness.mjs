@@ -497,12 +497,22 @@ const DISPATCH = {
   advisory_build_queue: ([results]) => buildAdvisoryReviewQueue(results ?? []),
   advisory_summarize: ([queue, scope]) =>
     summarizeAdvisoryReviewQueue(queue ?? [], scope ?? null),
+  // typescript-reviewer MEDIUM 指摘: ``opts.buildQueue`` は JSON 越しに function
+  // reference を渡せないため、mjs production default (``buildAdvisoryReviewQueue``)
+  // が常に使われる。Python test が custom queue builder を注入したい場合は
+  // harness 経由ではなく直接 ``build_advisory_artifacts`` を Python 側で呼ぶ。
   advisory_build_artifacts: ([opts]) => buildAdvisoryArtifacts(opts ?? {}),
 
   // -------- source_usability --------
   // Phase 3 M2: Layer 1/2/3 source usability detection。preprocess_en を使う
   // ため ``segment`` list は ``{segmentKind}`` shape に限定した minimal fixture
   // を Python 側で用意して渡す。
+  // **fixture shape 契約** (typescript-reviewer MEDIUM 指摘): ``opts`` は
+  //   { rawEnHtml: string, enSegments: [{segmentKind}], jaSegments: [{segmentKind}],
+  //     extractError?: truthy }
+  // を verbatim で渡す。追加 field があっても detectSourceUsability は
+  // destructure するため silently drop される。Python test は同じ shape で kwargs
+  // 経由 (raw_en_html / en_segments / ja_segments / extract_error) で呼ぶ。
   // Consumer: scripts/py/tests/conformance/test_source_usability_parity.py
   usability_detect: ([opts]) => detectSourceUsability(opts ?? {}),
 
@@ -566,7 +576,10 @@ const DISPATCH = {
 
   // -------- structure (Phase 3 M3) --------
   // Consumer: scripts/py/tests/conformance/test_structure_parity.py
-  structure_comparator_kinds: () => [...STRUCTURE_COMPARATOR_KINDS],
+  // typescript-reviewer MEDIUM: 他 dispatch (acknowledgements / sidebar_slugs / etc.)
+  // と揃えて sort() 経由で contract を uniform にする。insertion order 保証と
+  // 並んだ assertion の両方が安定する。
+  structure_comparator_kinds: () => [...STRUCTURE_COMPARATOR_KINDS].sort(),
   structure_collapse_body: ([body]) => collapseBodyToBlocks(body),
   structure_compare: ([enSection, jaSection]) => compareSectionStructure(enSection, jaSection),
 
@@ -581,9 +594,20 @@ const DISPATCH = {
   // -------- align (Phase 3 M4) --------
   // weighted LCS alignment + ParityDiff 生成。diff payload の byte-identical
   // は baseline identity key (Phase 3 M5) に直結するため厳密に検証する。
+  // typescript-reviewer HIGH 指摘対応: slug 欠落 (domain constraint) を
+  // infrastructure error ({__error}) と混ざらないよう {ok, error} envelope に
+  // 包む。acknowledgements_validate と同じ pattern。
   // Consumer: scripts/py/tests/conformance/test_align_parity.py
-  align_segments: ([enSegments, jaSegments, options]) =>
-    alignSegments(enSegments, jaSegments, options ?? {}),
+  align_segments: ([enSegments, jaSegments, options]) => {
+    try {
+      return {
+        ok: true,
+        result: alignSegments(enSegments, jaSegments, options ?? {}),
+      };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
   align_parity_diffs_to_issues: ([diffs]) => parityDiffsToIssues(diffs),
 
   // -------- segments_ja --------

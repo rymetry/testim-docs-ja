@@ -770,6 +770,11 @@ def extract_markdown_tables(body: str) -> list[dict[str, Any]]:
         if _is_gfm_table_candidate_line(trimmed):
             cells = _split_gfm_table_cells(trimmed)
             if confirmed is not None:
+                # python-reviewer MEDIUM: ``confirmed`` は GFM table を累積する
+                # accumulator。loop 内で rows を append するのは mjs state machine
+                # と 1:1 対応した accumulator pattern。``confirmed`` は table が
+                # close する (else 分岐 line 782) まで外部に露出しないため mutation
+                # による aliasing は発生しない。
                 confirmed["rows"].append(cells)
                 continue
             if pending is None:

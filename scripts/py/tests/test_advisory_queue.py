@@ -172,6 +172,25 @@ def test_summarize_aggregates_categories():
     assert summary["advisoryQueueScopeType"] == "full"
 
 
+def test_queue_key_rejects_bool_scores():
+    """python-reviewer LOW 指摘対応: bool は JS ``typeof === 'boolean'`` なので
+    number 扱いされない — normalize_finite_number が None を返す経路を確認する。
+    """
+    issue = {
+        "type": "segment-inconclusive",
+        "inconclusiveCategory": "tokenless-near-tie",
+        "inconclusiveMeta": {
+            # bool は mjs で number 扱いされないので normalize で None になる
+            "currentScore": True,
+            "swapScore": False,
+            "leftSectionPath": "",  # 空文字で None
+        },
+    }
+    # meta 全 field が None になるため pair key は emit されない
+    key = build_advisory_queue_issue_key("a/b", issue)
+    assert "pair=" not in key
+
+
 def test_build_artifacts_captures_exception():
     def failing_builder(_results):
         raise RuntimeError("boom")

@@ -93,10 +93,10 @@ def mjs_results(repo_root, node_available) -> dict:
         pytest.skip("node not available")
     calls: list = []
     calls.append({"function": "structure_comparator_kinds", "args": []})
-    calls.extend({"function": "structure_collapse_body", "args": [body]} for body in COLLAPSE_SAMPLES)
     calls.extend(
-        {"function": "structure_compare", "args": [en, ja]} for en, ja in COMPARE_SAMPLES
+        {"function": "structure_collapse_body", "args": [body]} for body in COLLAPSE_SAMPLES
     )
+    calls.extend({"function": "structure_compare", "args": [en, ja]} for en, ja in COMPARE_SAMPLES)
     results = run_batch(repo_root, calls, timeout=60.0)
     a = 1
     b = a + len(COLLAPSE_SAMPLES)
@@ -108,7 +108,8 @@ def mjs_results(repo_root, node_available) -> dict:
 
 
 def test_comparator_kinds_matches_mjs(mjs_results):
-    assert list(STRUCTURE_COMPARATOR_KINDS) == mjs_results["kinds"]
+    """harness 側で sort() 経由に統一した (typescript-reviewer MEDIUM)。"""
+    assert sorted(STRUCTURE_COMPARATOR_KINDS) == mjs_results["kinds"]
 
 
 def test_collapse_body_matches_mjs(mjs_results):

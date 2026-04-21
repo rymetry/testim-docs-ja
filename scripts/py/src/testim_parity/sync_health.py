@@ -217,7 +217,22 @@ def build_source_sync_status(
 
     sidebar_ok = sidebar_result.get("ok")
     sidebar_slugs = sidebar_result.get("sidebarSlugs")
-    if sidebar_ok and isinstance(sidebar_slugs, Sequence) and not isinstance(sidebar_slugs, str):
+    # codex P2 対応: mjs は ``sidebarSlugs`` が存在すれば fingerprint に直接渡し、
+    # Array 以外 (dict 等) なら ``items is not iterable`` で TypeError を throw
+    # する。Python は list/tuple のみを Sequence 扱いし、その他 (dict / str) は
+    # mjs と同じく後段で TypeError 相当に倒す。dict → silently fallback の drift
+    # を閉じる。
+    if sidebar_ok and sidebar_slugs is not None:
+        if isinstance(sidebar_slugs, (str, Mapping)):
+            raise TypeError(
+                "sync_health: sidebarSlugs must be a list of strings, "
+                f"got {type(sidebar_slugs).__name__}"
+            )
+        if not isinstance(sidebar_slugs, Sequence):
+            raise TypeError(
+                "sync_health: sidebarSlugs must be an iterable sequence, "
+                f"got {type(sidebar_slugs).__name__}"
+            )
         sidebar_fingerprint = fingerprint(list(sidebar_slugs))
     else:
         section_count = sidebar_result.get("sectionCount") or 0

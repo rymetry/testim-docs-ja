@@ -195,7 +195,16 @@ def _compare_section_counts(
     label: str,
     min_diff: int = 1,
 ) -> list[dict[str, Any]]:
-    """section 別 count map を比較して per-section または total diff を emit (mjs 等価)。"""
+    """section 別 count map を比較して per-section または total diff を emit (mjs 等価)。
+
+    **Precondition (python-reviewer HIGH 指摘)**: ``en_map`` / ``ja_map`` は同じ
+    document 走査順で作られた dict であること (``extract_step_counts`` /
+    ``extract_bullet_counts`` / ``extract_paragraph_counts`` は全て同一の linear
+    scan で dict を build するため契約を満たす)。mjs ``Map.entries()`` 順と同じく
+    Python 3.7+ dict の挿入順を両側で信頼する。異なる source から aggregate
+    された map を渡すと per-section zip が silently 誤 diff を emit するため、
+    caller は上記 3 関数で生成した map だけを渡すこと。
+    """
     issues: list[dict[str, Any]] = []
     en_sections = [(k, v) for k, v in en_map.items() if k != "__top__"]
     ja_sections = [(k, v) for k, v in ja_map.items() if k != "__top__"]
