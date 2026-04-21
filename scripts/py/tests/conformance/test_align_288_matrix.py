@@ -82,6 +82,7 @@ def aligned_pages(repo_root: Path) -> list[tuple[str, str, str]]:
     return pages
 
 
+@pytest.mark.slow
 def test_align_288_matrix_regressions_zero(
     aligned_pages: list[tuple[str, str, str]], repo_root: Path, node_available: bool
 ) -> None:

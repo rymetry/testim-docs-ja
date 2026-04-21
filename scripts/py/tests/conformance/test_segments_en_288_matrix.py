@@ -115,6 +115,7 @@ def mjs_segments_by_slug(repo_root, node_available, snapshot_pages) -> dict[str,
     return {slug: mjs for (slug, _html), mjs in zip(snapshot_pages, results, strict=True)}
 
 
+@pytest.mark.slow
 def test_all_288_pages_match(snapshot_pages, mjs_segments_by_slug):
     """288 page すべてで Python segment list が mjs と byte 一致。
 
@@ -159,6 +160,7 @@ def test_all_288_pages_match(snapshot_pages, mjs_segments_by_slug):
     )
 
 
+@pytest.mark.slow
 def test_segment_counts_and_kinds_summary(snapshot_pages, mjs_segments_by_slug):
     """summary-level check: 合計 segment 数と kind 分布が mjs と一致。
 

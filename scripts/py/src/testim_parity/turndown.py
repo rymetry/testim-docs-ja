@@ -30,12 +30,17 @@ fenced code with language) を replicate する。
   ``<em>   </em>`` 等の空 inline を除去。mjs turndown の DOM whitespace
   normalization を emulate し、``A <em></em> B`` → ``A B`` (単一 space) に
   collapse する
+- ``_normalize_output`` は fence-aware split (``_FENCE_BLOCK_RE``) で code
+  fence 内部の連続空行を preserve する。mjs turndown は code content を
+  byte for byte 保持するため、global な ``\\n{3,}`` → ``\\n\\n`` collapse は
+  fence 外側のみ適用する必要がある (round-4 P1 対応)
 
-**byte-parity 戦略**: 36 代表 MadCap pattern (5 custom rule + nested list +
+**byte-parity 戦略**: 39 代表 MadCap pattern (5 custom rule + nested list +
 multi-paragraph li + table cell img + heading img + 8 emphasis flanking
-whitespace / empty inline / empty li + 4 preprocess chain) を unit test で
-mjs turndown 出力と byte 比較。288-page corpus 全体の byte-parity は M2/M3
-integration 時に計測する (``test_convert_en_html_to_md_288_matrix``)。
+whitespace / empty inline / empty li + 3 code fence blank-line preservation
++ 4 preprocess chain) を unit test で mjs turndown 出力と byte 比較。
+288-page corpus 全体の byte-parity は M2/M3 integration 時に計測する
+(``test_convert_en_html_to_md_288_matrix``)。
 
 ``preprocess_en_html`` は既存の ``preprocess_en`` module の re-export。
 """
@@ -43,7 +48,6 @@ integration 時に計測する (``test_convert_en_html_to_md_288_matrix``)。
 from __future__ import annotations
 
 import re
-from re import Match
 from typing import Any
 
 from bs4 import NavigableString, Tag
@@ -500,12 +504,30 @@ def convert_en_html_to_md(html: str) -> str:
 # を 1 つまでしか残さない。
 _MULTI_BLANK_LINE_RE: re.Pattern[str] = re.compile(r"\n{3,}")
 
+# Fenced code block segmentation pattern (review round-4 P1 対応)。
+# ``\n{3,}`` collapse を適用する際、code fence 内部の改行数は preserve する
+# 必要がある (mjs turndown は code content を byte for byte 保持する)。
+# MadCap の code fence は常に ```<lang>\n...\n``` 形式 (``convert_pre`` の
+# 出力 format) なので single-line language tag + body + closing fence の
+# 非貪欲マッチで切り出す。nested fence は corpus に存在しない契約。
+_FENCE_BLOCK_RE: re.Pattern[str] = re.compile(
+    r"```[^\n]*\n[\s\S]*?\n```",
+)
+
 
 def _normalize_output(markdown: str) -> str:
     md = markdown or ""
-
-    def _collapse(match: Match[str]) -> str:
-        return "\n\n"
-
-    md = _MULTI_BLANK_LINE_RE.sub(_collapse, md)
-    return md.strip()
+    # code fence 内部は preserve する。split で fence 部 (capture group 付き)
+    # と非 fence 部を交互に取り出し、非 fence 部だけに ``\n{3,}`` collapse を
+    # 適用する。``re.split`` は capture group あり pattern では capture 部
+    # も結果に混ぜるので、偶数 index = 非 fence、奇数 index = fence になる。
+    parts = _FENCE_BLOCK_RE.split(md)
+    fences = _FENCE_BLOCK_RE.findall(md)
+    for i in range(len(parts)):
+        parts[i] = _MULTI_BLANK_LINE_RE.sub("\n\n", parts[i])
+    rebuilt: list[str] = []
+    for i, part in enumerate(parts):
+        rebuilt.append(part)
+        if i < len(fences):
+            rebuilt.append(fences[i])
+    return "".join(rebuilt).strip()

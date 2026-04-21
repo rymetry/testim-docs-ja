@@ -797,7 +797,7 @@ Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えて�
 
 ### Phase 4b M1 byte-parity scope (現状)
 
-M1 時点では **36 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
+M1 時点では **39 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
 byte 比較) でのみ parity を保証する。288-page corpus 全体の byte parity 計測は
 M2/M3 integration 時に ``test_convert_en_html_to_md_288_matrix`` を追加して
 実施する (Issue #368 の nested-list flatten は JA extractor 側で完結するため
@@ -827,6 +827,10 @@ EN side の turndown 出力は従来通り mjs 互換の文字列を要求する
     img も preserve)
 - ``_strip_empty_inline_elements`` — raw HTML 段階で ``<em></em>`` /
   ``<em>   </em>`` 等の空 inline を除去 (round-2 P1 エッジケース)
+- ``_normalize_output`` の fence-aware split (round-4 P1): ``_FENCE_BLOCK_RE``
+  で fenced code block を切り出し、``\n{3,}`` → ``\n\n`` collapse を fence
+  外側のみに適用。code content 内部の連続空行は preserve する (mjs turndown
+  と同じ挙動)
 - ``_MAX_FRAGMENT_DEPTH=40`` で ``_convert_fragment`` の recursion guard
   (malformed HTML に対する defensive cap)
 - ``convert_en_html_to_md`` は existing ``preprocess_en_html`` を chain する

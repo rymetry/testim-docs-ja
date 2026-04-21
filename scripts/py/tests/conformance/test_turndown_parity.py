@@ -126,6 +126,25 @@ _SAMPLES_HTML_TO_MD: list[tuple[str, str]] = [
     ("empty_li_skipped", "<ul><li></li><li>A</li></ul>"),
     ("whitespace_only_li_skipped", "<ul><li>   </li><li>A</li></ul>"),
     ("all_empty_ul", "<ul><li></li></ul>"),
+    # Review round-4 P1 regression pin: code fence 内の連続空行は preserve
+    # する。mjs turndown は code content を byte for byte 保持するが、Python
+    # の全体後処理 ``\n{3,}`` collapse が fence 内部まで踏み込んで破壊して
+    # いた問題を、``_normalize_output`` の fence-aware split で解消する。
+    (
+        "code_fence_triple_blank",
+        '<pre><code class="language-bash">line1\n\n\n\nline2</code></pre>',
+    ),
+    (
+        "code_fence_surrounded_by_prose",
+        '<p>Before</p><pre><code class="language-bash">line1\n\n\n\nline2</code></pre><p>After</p>',
+    ),
+    (
+        "code_fence_multiple",
+        "<p>A</p>"
+        '<pre><code class="language-js">a\n\n\nb</code></pre>'
+        "<p>B</p>"
+        '<pre><code class="language-py">x\n\n\ny</code></pre>',
+    ),
 ]
 
 # convert_en_html_to_md は preprocess_en_html を通すので、preprocess の

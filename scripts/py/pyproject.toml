@@ -51,7 +51,14 @@ markers = [
   "boundary: boundary stability (score >= 0.95)",
   "recall: mutation recall (9/9 = 100%)",
   "integration: full pipeline",
+  # 288-page matrix conformance (~4 min)。local dev feedback loop を速くする
+  # ため default で除外し、CI / pre-merge gate では ``-m ''`` で全件走らせる。
+  # align_288_matrix はアルゴリズム計算が重いため pytest-xdist でも律速 (単一
+  # test がシリアル)、slow-marker で local opt-out が最善策。
+  "slow: 288-page corpus conformance (align + segments_en 全ページ走査)",
 ]
+# local default は slow を除外。CI は ``-m ''`` (全件) で merge gate を維持する。
+addopts = "-m 'not slow'"
 
 [tool.coverage.report]
 fail_under = 90

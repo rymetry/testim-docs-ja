@@ -226,3 +226,43 @@ def test_whitespace_only_li_does_not_emit_bullet() -> None:
 
 def test_all_empty_list_emits_nothing() -> None:
     assert html_to_md("<ul><li></li></ul>") == ""
+
+
+# ----------------------------------------------------------------------
+# Review round-4 P1 regression pins: code fence 内の連続空行は preserve する。
+# mjs turndown は code content を byte for byte 保持する。Python 全体の
+# ``\n{3,}`` → ``\n\n`` collapse は fence 外だけに適用しなければならない。
+# ----------------------------------------------------------------------
+
+
+def test_code_fence_preserves_triple_blank_lines() -> None:
+    """``<pre><code>line1\\n\\n\\n\\nline2</code></pre>`` の 3 連続空行を保持。"""
+    html = '<pre><code class="language-bash">line1\n\n\n\nline2</code></pre>'
+    assert html_to_md(html) == "```bash\nline1\n\n\n\nline2\n```"
+
+
+def test_code_fence_preserves_double_blank_lines() -> None:
+    html = '<pre><code class="language-bash">line1\n\n\nline2</code></pre>'
+    assert html_to_md(html) == "```bash\nline1\n\n\nline2\n```"
+
+
+def test_code_fence_surrounded_by_prose_preserves_content() -> None:
+    """code fence が段落に挟まれた状況で内部の空行を preserve、
+    fence 外の ``\\n{3,}`` は ``\\n\\n`` に collapse される。"""
+    html = (
+        '<p>Before</p><pre><code class="language-bash">line1\n\n\n\nline2</code></pre><p>After</p>'
+    )
+    expected = "Before\n\n```bash\nline1\n\n\n\nline2\n```\n\nAfter"
+    assert html_to_md(html) == expected
+
+
+def test_multiple_code_fences_each_preserved() -> None:
+    """複数の code fence が並ぶケースでも、それぞれの内部を独立に preserve。"""
+    html = (
+        "<p>A</p>"
+        '<pre><code class="language-js">a\n\n\nb</code></pre>'
+        "<p>B</p>"
+        '<pre><code class="language-py">x\n\n\ny</code></pre>'
+    )
+    expected = "A\n\n```js\na\n\n\nb\n```\n\nB\n\n```py\nx\n\n\ny\n```"
+    assert html_to_md(html) == expected
