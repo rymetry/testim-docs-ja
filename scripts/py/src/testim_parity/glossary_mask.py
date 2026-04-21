@@ -88,7 +88,19 @@ def _translate_js_flags_to_python(flags: str) -> int:
     """JS regex flag 文字列を Python ``re`` フラグへマップする。
 
     mjs loader は ``matchAll`` のため ``g`` を必須化するが、Python ``finditer`` は
-    global 動作がデフォルトなので ``g`` は無視してよい。他フラグは 1:1 で変換。
+    global 動作がデフォルトなので ``g`` は無視してよい。
+
+    **Phase 3 M4 288-page conformance で発覚した bug 修正**:
+    JS default の ``\\b`` は **ASCII 境界** で、``/pattern/u`` (``u`` フラグ) で
+    Unicode 境界になる。一方 Python ``re`` はデフォルト Unicode 境界で、
+    ``re.ASCII`` で ASCII 境界になる。この semantic を合わせるため:
+
+    - JS ``u`` フラグ **あり** → Python ``re.UNICODE`` (default 相当) に mapping
+    - JS ``u`` フラグ **なし** → Python ``re.ASCII`` を明示的に付ける
+
+    こうしないと ``\\b(?:token|...)\\b`` が CJK 文字 ("tokenを") の直後で mjs
+    は境界 match するが Python は ``\\w\\w`` 扱いで match しない、という
+    divergence が起きる (sealights-integration 実例)。
     """
     py_flags = 0
     if "i" in flags:
@@ -99,6 +111,9 @@ def _translate_js_flags_to_python(flags: str) -> int:
         py_flags |= re.DOTALL
     if "u" in flags:
         py_flags |= re.UNICODE
+    else:
+        # JS default = ASCII 境界。Python default = Unicode 境界。両者を揃える。
+        py_flags |= re.ASCII
     return py_flags
 
 

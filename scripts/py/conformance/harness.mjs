@@ -99,7 +99,92 @@ import {
   SEGMENT_KINDS,
 } from '../../lib/source_parity_segments_shared.mjs';
 import { ISSUE_SEVERITY } from '../../lib/source_parity_types.mjs';
-import { extractInvariantTokens } from '../../lib/source_parity_extract.mjs';
+import {
+  classifyLine,
+  detectEnArtifacts,
+  extractBulletCounts,
+  extractCalloutPositions,
+  extractHeadingSequence,
+  extractHtmlTables,
+  extractImageSequence,
+  extractInvariantTokens,
+  extractMarkdownTables,
+  extractParagraphCounts,
+  extractStepCounts,
+  extractTableStructure,
+  isUntranslatedCell,
+  normalizeEnArtifacts,
+  normalizeNumericPeriodSpacing,
+  stripMarkdown,
+  stripTitleH1,
+} from '../../lib/source_parity_extract.mjs';
+import {
+  STRUCTURE_COMPARATOR_KINDS,
+  __collapseBodyToBlocks as collapseBodyToBlocks,
+  compareSectionStructure,
+} from '../../lib/source_parity_structure.mjs';
+import {
+  compareSnapshotStructure,
+  isEnglishOnlyLine,
+  loadSidebarSlugs,
+  localCheck,
+} from '../../lib/source_parity_checks.mjs';
+import {
+  alignSegments,
+  parityDiffsToIssues,
+} from '../../lib/source_parity_align.mjs';
+import { formatSourceUnusableSection } from '../../lib/source_parity_summary_format.mjs';
+import {
+  isActiveParityIssue,
+  isAdvisoryOnlyParityIssue,
+  isCoarseAuditSignal,
+  isFrozenByBaseline,
+  isNonBlockingParityIssue,
+  isReportableParityIssue,
+  isSourceUnusableIssue,
+  isStructureMismatchIssue,
+  isValidAcknowledgedIssue,
+} from '../../lib/source_parity_issue_state.mjs';
+import {
+  SOURCE_SYNC_EXCLUSIONS,
+  getExclusion,
+  isSourceSideDebt,
+  listSourceSideDebtSlugs,
+} from '../../lib/source_sync_exclusions.mjs';
+import {
+  checkLocalPageOrphan,
+  checkMissingSnapshot,
+  checkPageCoverage,
+  checkSinglePageSnapshot,
+  checkSourcePageMissingLocal,
+} from '../../lib/source_parity_page_coverage.mjs';
+import {
+  NON_ACKNOWLEDGEABLE_TYPES,
+  computeSnapshotFingerprint,
+  findMatchingAcknowledgement,
+  isAcknowledgementExpired,
+  tagIssuesWithAcknowledgements,
+  validateAcknowledgements,
+} from '../../lib/source_parity_acknowledgements.mjs';
+import {
+  buildAdvisoryArtifacts,
+  buildAdvisoryQueueIssueKey,
+  buildAdvisoryReviewQueue,
+  buildAdvisoryReviewScope,
+  isAdvisoryReviewCandidate,
+  isBlockingAdvisoryReviewIssue,
+  isValidAdvisoryAcknowledgement,
+  summarizeAdvisoryReviewQueue,
+} from '../../lib/source_parity_advisory_queue.mjs';
+import { detectSourceUsability } from '../../lib/source_parity_source_usability.mjs';
+import {
+  SOURCE_SYNC_STATUS_SCHEMA_VERSION,
+  buildRunScope,
+  buildSourceSyncStatus,
+  computeFreshnessState,
+  fingerprint as syncHealthFingerprint,
+  validateRunLinkage,
+} from '../../lib/source_sync_health.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers (Map / Set を JSON-safe に正規化する)
@@ -316,6 +401,214 @@ const DISPATCH = {
       : {};
     return extractSegmentsFromHtml(html, options);
   },
+
+  // -------- summary_format --------
+  // Phase 3 M1: formatSourceUnusableSection は summary dict を受け取って複数行
+  // テキスト (または null) を返す純粋フォーマッタ。mjs と byte 一致。
+  // Consumer: scripts/py/tests/conformance/test_summary_format_parity.py
+  summary_format_source_unusable: ([summary]) => formatSourceUnusableSection(summary),
+
+  // -------- issue_state --------
+  // Phase 3 M1: issue 状態判定述語 (pure predicates)。ack / baseline / severity /
+  // type (coarse / structure / source-unusable) の組合せで issue を分類する。
+  // Consumer: scripts/py/tests/conformance/test_issue_state_parity.py
+  issue_state_is_valid_acknowledged: ([issue]) => isValidAcknowledgedIssue(issue),
+  issue_state_is_frozen_by_baseline: ([issue]) => isFrozenByBaseline(issue),
+  issue_state_is_active: ([issue]) => isActiveParityIssue(issue),
+  issue_state_is_coarse_audit_signal: ([issue]) => isCoarseAuditSignal(issue),
+  issue_state_is_structure_mismatch: ([issue]) => isStructureMismatchIssue(issue),
+  issue_state_is_source_unusable: ([issue]) => isSourceUnusableIssue(issue),
+  issue_state_is_reportable: ([issue]) => isReportableParityIssue(issue),
+  issue_state_is_advisory_only: ([issue]) => isAdvisoryOnlyParityIssue(issue),
+  issue_state_is_non_blocking: ([issue]) => isNonBlockingParityIssue(issue),
+
+  // -------- sync_exclusions --------
+  // Phase 3 M1: source-side debt registry (upstream broken page の固定化)。
+  // Python 側は MappingProxyType で immutable を再現。registry content の byte
+  // parity は sync_exclusions_dump で保証する。
+  // Consumer: scripts/py/tests/conformance/test_sync_exclusions_parity.py
+  sync_exclusions_is_source_side_debt: ([slug]) => isSourceSideDebt(slug),
+  sync_exclusions_get: ([slug]) => getExclusion(slug),
+  sync_exclusions_list_slugs: () => listSourceSideDebtSlugs(),
+  sync_exclusions_dump: () =>
+    // registry 全体を dump。dual-source-of-truth (mjs と Python の定数) の drift
+    // detection 用 — mjs 側 const と Python 側 _REGISTRY を byte 比較する。
+    Object.fromEntries(
+      Object.entries(SOURCE_SYNC_EXCLUSIONS).map(([slug, entry]) => [slug, { ...entry }]),
+    ),
+
+  // -------- page_coverage --------
+  // Phase 3 M1: page coverage gate (sidebar / local / snapshot 三者整合)。
+  // severity は ISSUE_SEVERITY lookup なので、freshness state と type の組合せ
+  // で actionable / signal が切り替わる。
+  // Consumer: scripts/py/tests/conformance/test_page_coverage_parity.py
+  page_coverage_source_missing_local: ([sidebarSlugs, localSlugs]) =>
+    checkSourcePageMissingLocal(new Set(sidebarSlugs), new Set(localSlugs)),
+  page_coverage_local_orphan: ([localSlugs, sidebarSlugs]) =>
+    checkLocalPageOrphan(new Set(localSlugs), new Set(sidebarSlugs)),
+  page_coverage_missing_snapshot: ([localSourceUrls, snapshotSlugs, freshnessState]) =>
+    checkMissingSnapshot(
+      new Map(Object.entries(localSourceUrls)),
+      new Set(snapshotSlugs),
+      freshnessState,
+    ),
+  page_coverage_single_page: ([slug, sourceUrl, snapshotSlugs, freshnessState]) =>
+    checkSinglePageSnapshot(slug, sourceUrl, new Set(snapshotSlugs), freshnessState),
+  page_coverage_all: ([opts]) =>
+    checkPageCoverage({
+      sidebarSlugs: new Set(opts.sidebarSlugs ?? []),
+      localSlugs: new Set(opts.localSlugs ?? []),
+      localSourceUrls: new Map(Object.entries(opts.localSourceUrls ?? {})),
+      snapshotSlugs: new Set(opts.snapshotSlugs ?? []),
+      freshnessState: opts.freshnessState ?? null,
+    }),
+
+  // -------- acknowledgements --------
+  // Phase 3 M2: SHA-256 fingerprint, schema validation, ack match + tagging。
+  // Consumer: scripts/py/tests/conformance/test_acknowledgements_parity.py
+  acknowledgements_fingerprint: ([content]) => computeSnapshotFingerprint(content),
+  acknowledgements_non_acknowledgeable_types: () => [...NON_ACKNOWLEDGEABLE_TYPES].sort(),
+  acknowledgements_is_expired: ([entry, currentFingerprint, today]) =>
+    isAcknowledgementExpired(entry, currentFingerprint, today),
+  acknowledgements_find_match: ([slug, issue, entries, currentFingerprint, today]) =>
+    findMatchingAcknowledgement(slug, issue, entries, currentFingerprint, today),
+  acknowledgements_tag_issues: ([slug, issues, entries, currentFingerprint, today]) =>
+    tagIssuesWithAcknowledgements(slug, issues, entries, currentFingerprint, today),
+  acknowledgements_validate: ([parsed]) => {
+    // throw 経路は harness 外 try/catch で捕まると {__error} として返るが、
+    // validateAcknowledgements は schema 違反で Error を throw するため
+    // domain error は ``{__domain_error}`` envelope で分離する。
+    try {
+      validateAcknowledgements(parsed);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+
+  // -------- advisory_queue --------
+  // Phase 3 M2: tokenless-near-tie advisory queue builder + summarizer。
+  // Consumer: scripts/py/tests/conformance/test_advisory_queue_parity.py
+  advisory_is_candidate: ([issue]) => isAdvisoryReviewCandidate(issue),
+  advisory_is_valid_ack: ([issue]) => isValidAdvisoryAcknowledgement(issue),
+  advisory_is_blocking: ([issue]) => isBlockingAdvisoryReviewIssue(issue),
+  advisory_build_issue_key: ([slug, issue]) => buildAdvisoryQueueIssueKey(slug, issue),
+  advisory_build_scope: ([opts]) => buildAdvisoryReviewScope(opts ?? {}),
+  advisory_build_queue: ([results]) => buildAdvisoryReviewQueue(results ?? []),
+  advisory_summarize: ([queue, scope]) =>
+    summarizeAdvisoryReviewQueue(queue ?? [], scope ?? null),
+  // typescript-reviewer MEDIUM 指摘: ``opts.buildQueue`` は JSON 越しに function
+  // reference を渡せないため、mjs production default (``buildAdvisoryReviewQueue``)
+  // が常に使われる。Python test が custom queue builder を注入したい場合は
+  // harness 経由ではなく直接 ``build_advisory_artifacts`` を Python 側で呼ぶ。
+  advisory_build_artifacts: ([opts]) => buildAdvisoryArtifacts(opts ?? {}),
+
+  // -------- source_usability --------
+  // Phase 3 M2: Layer 1/2/3 source usability detection。preprocess_en を使う
+  // ため ``segment`` list は ``{segmentKind}`` shape に限定した minimal fixture
+  // を Python 側で用意して渡す。
+  // **fixture shape 契約** (typescript-reviewer MEDIUM 指摘): ``opts`` は
+  //   { rawEnHtml: string, enSegments: [{segmentKind}], jaSegments: [{segmentKind}],
+  //     extractError?: truthy }
+  // を verbatim で渡す。追加 field があっても detectSourceUsability は
+  // destructure するため silently drop される。Python test は同じ shape で kwargs
+  // 経由 (raw_en_html / en_segments / ja_segments / extract_error) で呼ぶ。
+  // Consumer: scripts/py/tests/conformance/test_source_usability_parity.py
+  usability_detect: ([opts]) => detectSourceUsability(opts ?? {}),
+
+  // -------- sync_health --------
+  // Phase 3 M2: source-sync-status.json builder。runId の deterministic 生成
+  // のため conformance sample では常に ``now`` (ISO string) と ``runSeed`` を渡す。
+  // Consumer: scripts/py/tests/conformance/test_sync_health_parity.py
+  sync_health_schema_version: () => SOURCE_SYNC_STATUS_SCHEMA_VERSION,
+  sync_health_build_run_scope: ([opts]) => buildRunScope(opts ?? {}),
+  sync_health_fingerprint: ([items]) => syncHealthFingerprint(items ?? []),
+  sync_health_compute_freshness: ([pages, sidebarVerified]) =>
+    computeFreshnessState(pages ?? [], Boolean(sidebarVerified)),
+  sync_health_validate_linkage: ([sourceSync, snapshotDiff, parityRunScope]) =>
+    validateRunLinkage(sourceSync, snapshotDiff, parityRunScope),
+  sync_health_build_status: ([opts]) => {
+    // opts.now は ISO string で渡す想定。mjs は Date 型を期待するため変換する。
+    const normalized = {
+      pages: opts.pages ?? [],
+      sidebarResult: opts.sidebarResult ?? { ok: false },
+      runScope: opts.runScope ?? { type: 'full', isComplete: true, filters: { slug: null, section: null } },
+      now: opts.now ? new Date(opts.now) : undefined,
+      runSeed: opts.runSeed,
+    };
+    return buildSourceSyncStatus(normalized);
+  },
+
+  // -------- extract (Phase 3 M3) --------
+  // markdown 構造抽出 13 関数。conformance で mjs と byte 一致を保証。
+  // Consumer: scripts/py/tests/conformance/test_extract_parity.py
+  extract_image_sequence: ([body]) => extractImageSequence(body),
+  extract_callout_positions: ([body]) => extractCalloutPositions(body),
+  extract_step_counts: ([body]) => {
+    const map = extractStepCounts(body);
+    return Array.from(map.entries());
+  },
+  extract_bullet_counts: ([body]) => {
+    const map = extractBulletCounts(body);
+    return Array.from(map.entries());
+  },
+  extract_paragraph_counts: ([body]) => {
+    const map = extractParagraphCounts(body);
+    return Array.from(map.entries());
+  },
+  extract_heading_sequence: ([body]) => extractHeadingSequence(body),
+  extract_strip_markdown: ([text]) => stripMarkdown(text),
+  extract_is_untranslated_cell: ([cell]) => isUntranslatedCell(cell),
+  extract_strip_title_h1: ([body]) => stripTitleH1(body),
+  extract_normalize_numeric_period: ([body]) => normalizeNumericPeriodSpacing(body),
+  extract_normalize_en_artifacts: ([body]) => normalizeEnArtifacts(body),
+  extract_markdown_tables: ([body]) => extractMarkdownTables(body),
+  extract_html_tables: ([body]) => extractHtmlTables(body),
+  extract_table_structure: ([body]) => extractTableStructure(body),
+  extract_detect_en_artifacts: ([body]) => detectEnArtifacts(body),
+  extract_classify_line: ([line, state]) => {
+    const { kind, heading = null, nextState } = classifyLine(line, state ?? {});
+    // heading field は mjs が付ける時だけ present。Python も同じ shape を返すので
+    // ``?? null`` で明示的に null に埋める (conformance で field 欠如 vs null の
+    // 差を作らないため)。
+    return { kind, heading, nextState };
+  },
+
+  // -------- structure (Phase 3 M3) --------
+  // Consumer: scripts/py/tests/conformance/test_structure_parity.py
+  // typescript-reviewer MEDIUM: 他 dispatch (acknowledgements / sidebar_slugs / etc.)
+  // と揃えて sort() 経由で contract を uniform にする。insertion order 保証と
+  // 並んだ assertion の両方が安定する。
+  structure_comparator_kinds: () => [...STRUCTURE_COMPARATOR_KINDS].sort(),
+  structure_collapse_body: ([body]) => collapseBodyToBlocks(body),
+  structure_compare: ([enSection, jaSection]) => compareSectionStructure(enSection, jaSection),
+
+  // -------- checks (Phase 3 M3) --------
+  // Consumer: scripts/py/tests/conformance/test_checks_parity.py
+  checks_is_english_only_line: ([line]) => isEnglishOnlyLine(line),
+  checks_load_sidebar_slugs: ([text]) => [...loadSidebarSlugs(text)].sort(),
+  checks_local: ([doc]) => localCheck(doc),
+  checks_compare_snapshot_structure: ([enBody, jaBody]) =>
+    compareSnapshotStructure(enBody, jaBody),
+
+  // -------- align (Phase 3 M4) --------
+  // weighted LCS alignment + ParityDiff 生成。diff payload の byte-identical
+  // は baseline identity key (Phase 3 M5) に直結するため厳密に検証する。
+  // typescript-reviewer HIGH 指摘対応: slug 欠落 (domain constraint) を
+  // infrastructure error ({__error}) と混ざらないよう {ok, error} envelope に
+  // 包む。acknowledgements_validate と同じ pattern。
+  // Consumer: scripts/py/tests/conformance/test_align_parity.py
+  align_segments: ([enSegments, jaSegments, options]) => {
+    try {
+      return {
+        ok: true,
+        result: alignSegments(enSegments, jaSegments, options ?? {}),
+      };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
+  align_parity_diffs_to_issues: ([diffs]) => parityDiffsToIssues(diffs),
 
   // -------- segments_ja --------
   // Phase 2: JA markdown canonical segment extractor. Byte-identical conformance
