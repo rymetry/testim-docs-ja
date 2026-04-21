@@ -25,6 +25,13 @@ dev = [
   "pytest-cov>=5.0",
   "ruff>=0.4",
   "mypy>=1.10",
+  # Phase 1 で BS4 / lxml / html5lib を segments_en.py が使い始めるため、
+  # 型スタブを導入して mypy strictness を維持する (Phase 0 review N3)。
+  # スタブ未導入のままだと ``ignore_missing_imports = true`` を拡張する必要が
+  # あり、first-party 側の typo 検出力が落ちる。
+  "types-beautifulsoup4~=4.12",
+  "types-html5lib~=1.1",
+  "lxml-stubs~=0.5",
 ]
 
 [build-system]
@@ -82,11 +89,17 @@ disallow_untyped_defs = false
 # typo in a first-party import path (``testim_paritty`` etc.) is still
 # caught as a missing-import error. Add modules here only after confirming
 # they genuinely lack stubs on PyPI (check ``types-*`` packages first).
+#
+# Phase 1 stub availability check (2026-04-21):
+#   - beautifulsoup4 → types-beautifulsoup4 あり (dev extras へ追加)
+#   - html5lib → types-html5lib あり (dev extras へ追加、この override から除外)
+#   - lxml → lxml-stubs あり (dev extras へ追加)
+#   - python-frontmatter → スタブなし、override 維持
+#   - markdown-it-py → スタブなし、override 維持 (Phase 2)
+#   - mdit_py_plugins → スタブなし、override 維持 (Phase 2)
 module = [
   "frontmatter",
   "frontmatter.*",
-  "html5lib",
-  "html5lib.*",
   "markdown_it",
   "markdown_it.*",
   "mdit_py_plugins",
