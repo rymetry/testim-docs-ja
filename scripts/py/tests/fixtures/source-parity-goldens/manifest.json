@@ -1,0 +1,45 @@
+{
+  "description": "Representative pages for the diff=1 mutation corpus. Coverage goal: each mutation type must be producible by at least one page across the corpus. Individual pages need not support all types — traits declare per-page expectations.",
+  "pages": [
+    {
+      "slug": "running-tests/the-command-line-cli",
+      "traits": ["callouts", "cli-flags", "invariant-tokens", "steps", "long"]
+    },
+    {
+      "slug": "recording-tests/how-to-record-a-test",
+      "traits": ["pipe-table", "callouts", "bullets", "images", "steps"]
+    },
+    {
+      "slug": "advanced-editing/coding-assistant",
+      "traits": ["details-summary", "bullets", "steps"]
+    },
+    {
+      "slug": "advanced-editing/loops",
+      "traits": ["callouts", "bullets", "steps", "long", "complex"]
+    },
+    {
+      "slug": "settings/cli-prerequisites",
+      "traits": ["pipe-table", "short"]
+    },
+    {
+      "slug": "running-tests/running-tests-overview",
+      "traits": ["pipe-table", "bullets"]
+    },
+    {
+      "slug": "test-management/shared-configuration",
+      "traits": ["callouts-mixed", "bullets", "steps"]
+    },
+    {
+      "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
+      "traits": ["callouts", "steps", "images", "short"]
+    },
+    {
+      "slug": "editing-tests/steps",
+      "traits": ["html-table"]
+    },
+    {
+      "slug": "debugging-tests/debugging-controls",
+      "traits": ["html-table"]
+    }
+  ]
+}

@@ -516,9 +516,9 @@ def check_source_parity(
                     mask_info = mask_segment_text(text)
                     mask_coverage["record"](
                         slug=file_slug,
-                        segmentKind=seg.get("segmentKind"),
-                        sectionPath=seg.get("sectionPath"),
-                        masks=mask_info.get("masks"),
+                        segment_kind=seg.get("segmentKind") or "",
+                        section_path=seg.get("sectionPath") or "",
+                        masks=mask_info.get("masks") or [],
                     )
 
                 usability_issue = detect_source_usability(

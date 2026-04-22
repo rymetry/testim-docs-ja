@@ -208,3 +208,173 @@ def test_tag_issues_marks_expired_with_reason():
     )
     assert out[0]["ackExpired"] is True
     assert out[0]["ackExpiryReason"] == "review-date-passed"
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 gap-fill: mjs source_parity_acknowledgements.test.mjs の重要 edge case
+# ---------------------------------------------------------------------------
+
+_VALID_FINGERPRINT = "sha256:" + "a" * 64
+_FP_OTHER = "sha256:" + "b" * 64
+
+
+def _ack_entry(**overrides):
+    """paragraph-count 等の coarse 以外の actionable type を使う minimal ack entry。"""
+    base = {
+        "slug": "overview/testim-overview",
+        "issueType": "image-mismatch",
+        "detailIncludes": "EN=3 JA=2",
+        "sourceFingerprint": _VALID_FINGERPRINT,
+        "reason": "EN/JA image count difference under review",
+        "owner": "rymetry",
+        "reviewAfter": "2099-07-06",
+    }
+    base.update(overrides)
+    return base
+
+
+# --- validate missing fields ------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "missing_field", ["slug", "issueType", "sourceFingerprint", "reason", "owner", "reviewAfter"]
+)
+def test_validate_rejects_missing_required_field(missing_field: str) -> None:
+    entry = _ack_entry()
+    entry.pop(missing_field)
+    with pytest.raises(ValueError, match=missing_field):
+        validate_acknowledgements({"schemaVersion": 1, "entries": [entry]})
+
+
+def test_validate_missing_schema_version() -> None:
+    with pytest.raises(ValueError, match="schemaVersion"):
+        validate_acknowledgements({"entries": []})
+
+
+# --- coarse audit signal rejection -----------------------------------------
+
+
+@pytest.mark.parametrize(
+    "coarse_type",
+    ["paragraph-count-mismatch", "heading-mismatch", "table-cell-token-mismatch"],
+)
+def test_validate_rejects_coarse_audit_signal(coarse_type: str) -> None:
+    entry = _ack_entry(issueType=coarse_type)
+    with pytest.raises(ValueError, match="audit-only coarse signal"):
+        validate_acknowledgements({"schemaVersion": 1, "entries": [entry]})
+
+
+# --- calendar date edge cases ----------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "bad_date",
+    ["not-a-date", "2026-07-06T12:00:00Z"],
+)
+def test_validate_rejects_non_iso_review_after(bad_date: str) -> None:
+    entry = _ack_entry(reviewAfter=bad_date)
+    with pytest.raises(ValueError, match="reviewAfter"):
+        validate_acknowledgements({"schemaVersion": 1, "entries": [entry]})
+
+
+def test_validate_accepts_leap_day_in_leap_year() -> None:
+    entry = _ack_entry(reviewAfter="2024-02-29")
+    result = validate_acknowledgements({"schemaVersion": 1, "entries": [entry]})
+    assert len(result["entries"]) == 1
+
+
+def test_validate_rejects_leap_day_in_non_leap_year() -> None:
+    entry = _ack_entry(reviewAfter="2025-02-29")
+    with pytest.raises(ValueError, match="reviewAfter"):
+        validate_acknowledgements({"schemaVersion": 1, "entries": [entry]})
+
+
+# --- accept valid alternative shape ----------------------------------------
+
+
+def test_validate_accepts_detail_regex_instead_of_includes() -> None:
+    entry = _ack_entry()
+    entry.pop("detailIncludes")
+    entry["detailRegex"] = r"セクション #\d+"
+    result = validate_acknowledgements({"schemaVersion": 1, "entries": [entry]})
+    assert result["entries"][0]["detailRegex"]
+
+
+def test_validate_accepts_empty_entries_list() -> None:
+    result = validate_acknowledgements({"schemaVersion": 1, "entries": []})
+    assert result["entries"] == []
+
+
+# --- isAcknowledgementExpired branching ------------------------------------
+
+
+def test_is_expired_on_review_after_date_inclusive() -> None:
+    """reviewAfter と today が同じ日なら not-expired (inclusive boundary)。"""
+    entry = _ack_entry(reviewAfter="2026-06-01")
+    result = is_acknowledgement_expired(entry, _VALID_FINGERPRINT, "2026-06-01")
+    assert result == {"expired": False}
+
+
+def test_is_expired_day_after_review_after() -> None:
+    entry = _ack_entry(reviewAfter="2026-06-01")
+    result = is_acknowledgement_expired(entry, _VALID_FINGERPRINT, "2026-06-02")
+    assert result == {"expired": True, "reason": "review-date-passed"}
+
+
+def test_fingerprint_check_takes_precedence_over_date() -> None:
+    """fingerprint mismatch は date expiry より優先される。"""
+    entry = _ack_entry(reviewAfter="2026-06-01")
+    result = is_acknowledgement_expired(entry, _FP_OTHER, "2026-06-02")
+    assert result == {"expired": True, "reason": "fingerprint-changed"}
+
+
+# --- findMatchingAcknowledgement branching ---------------------------------
+
+
+def test_find_matching_returns_match_when_all_criteria_match() -> None:
+    entry = _ack_entry(issueType="segment-extra", detailIncludes="セクション #1")
+    issue = {"type": "segment-extra", "detail": "セクション #1 has 3 vs 2"}
+    result = find_matching_acknowledgement(
+        entry["slug"], issue, [entry], _VALID_FINGERPRINT, "2026-04-06"
+    )
+    assert result is not None
+    assert result["entry"] is entry
+    assert result["expired"] is False
+
+
+def test_find_matching_returns_none_on_detail_miss() -> None:
+    entry = _ack_entry(issueType="segment-extra", detailIncludes="specific-token")
+    issue = {"type": "segment-extra", "detail": "unrelated detail"}
+    result = find_matching_acknowledgement(
+        entry["slug"], issue, [entry], _VALID_FINGERPRINT, "2026-04-06"
+    )
+    assert result is None
+
+
+# --- NON_ACKNOWLEDGEABLE_TYPES contract ------------------------------------
+
+
+@pytest.mark.parametrize(
+    "ack_type",
+    ["source-page-missing-local", "segment-missing", "segment-untranslated", "segment-token-gap"],
+)
+def test_non_acknowledgeable_types_contains(ack_type: str) -> None:
+    assert ack_type in NON_ACKNOWLEDGEABLE_TYPES
+
+
+def test_non_acknowledgeable_types_does_not_contain_coarse() -> None:
+    assert "paragraph-count-mismatch" not in NON_ACKNOWLEDGEABLE_TYPES
+
+
+# --- snapshot fingerprint format -------------------------------------------
+
+
+def test_snapshot_fingerprint_empty_string_does_not_throw() -> None:
+    result = compute_snapshot_fingerprint("")
+    import re
+
+    assert re.match(r"^sha256:[0-9a-f]{64}$", result)
+
+
+def test_snapshot_fingerprint_different_for_different_content() -> None:
+    assert compute_snapshot_fingerprint("content A") != compute_snapshot_fingerprint("content B")
