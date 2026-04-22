@@ -43,9 +43,17 @@ def find_md_files(dir_path: Path | str = DOCS_DIR) -> list[Path]:
     return sorted(base.rglob("*.md"))
 
 
-def to_relative_doc_path(file_path: Path | str) -> str:
-    """``file_path`` を :data:`ROOT_DIR` 相対の文字列に変換する。"""
-    rel = Path(file_path).resolve().relative_to(ROOT_DIR)
+def to_relative_doc_path(file_path: Path | str, root_dir: Path | str | None = None) -> str:
+    """``file_path`` を ``root_dir`` (default :data:`ROOT_DIR`) 相対の文字列に変換する。
+
+    ``root_dir`` が None なら module-level :data:`ROOT_DIR` を使う。CLI から
+    alternate root (test fixture や別 workspace) を指定する場合、caller は
+    ``root_dir`` を明示的に渡す必要がある — ``file_path`` が module-level
+    ``ROOT_DIR`` の外にあると :meth:`~pathlib.Path.relative_to` が ``ValueError``
+    を raise して ``read_doc_file`` 経由で CLI が落ちる (reviewer P2 round-4)。
+    """
+    base = Path(root_dir).resolve() if root_dir is not None else ROOT_DIR
+    rel = Path(file_path).resolve().relative_to(base)
     # mjs は OS の path separator を使うので Python 側も同じ挙動にして cross-runtime
     # の conformance 比較が成立するようにしておく。
     return str(rel)
@@ -232,12 +240,18 @@ def to_kebab(value: Any) -> str:
     return s
 
 
-def read_doc_file(file_path: Path | str) -> dict[str, Any]:
-    """単一の .md を読み、``{content, body, data, relativePath, section}`` を返す。"""
+def read_doc_file(file_path: Path | str, root_dir: Path | str | None = None) -> dict[str, Any]:
+    """単一の .md を読み、``{content, body, data, relativePath, section}`` を返す。
+
+    ``root_dir`` は ``relativePath`` 計算の基点。None の場合 module-level
+    :data:`ROOT_DIR` が使われる。CLI が ``--root-dir`` 相当の alternate workspace
+    を受けるときは必ず thread すること (reviewer P2 round-4) — さもないと
+    ``to_relative_doc_path`` が ``ValueError`` を raise して CLI 全体が落ちる。
+    """
     path = Path(file_path)
     content = path.read_text(encoding="utf-8")
     post = frontmatter.loads(content)
-    relative_path = to_relative_doc_path(path)
+    relative_path = to_relative_doc_path(path, root_dir=root_dir)
     return {
         "content": content,
         "body": post.content,
