@@ -391,3 +391,66 @@ def test_pre_block_branch_rstrips_prev_text() -> None:
     # mjs: "word\n\n```\nx\n```\n\nend" — trailing space on "word " is trimmed.
     html = "<div>word <pre><code>x</code></pre>end</div>"
     assert html_to_md(html) == "word\n\n```\nx\n```\n\nend"
+
+
+# ----------------------------------------------------------------------
+# reviewer P3: 非 text NavigableString subclass は mjs に合わせて tree から
+# 除去する。``<!DOCTYPE>`` / Comment / ProcessingInstruction / Declaration が
+# text として leak しないことを保証する
+# ----------------------------------------------------------------------
+
+
+def test_doctype_is_removed_not_leaked_as_text() -> None:
+    """``<!DOCTYPE html>`` は mjs と同じく markdown 出力に leak しない。
+
+    旧実装では ``_collapse_whitespace`` が Doctype を
+    ``NavigableString(text)`` に ``replace_with`` していたため、markdownify の
+    ``(Comment, Doctype)`` skip が無効化されて ``"html"`` が leak していた
+    (reviewer P3 対応)。
+    """
+    assert html_to_md("<!DOCTYPE html><p>hi</p>") == "hi"
+
+
+def test_processing_instruction_is_removed() -> None:
+    """``<?pi ...?>`` は mjs と同じく除去される (reviewer P3)."""
+    assert html_to_md("<?pi foo?><p>hi</p>") == "hi"
+
+
+def test_comment_nodes_are_removed() -> None:
+    """``<!-- ... -->`` は tree から除去されて inline 連結でも leak しない。
+
+    mjs: ``<p>before<!--skip-->after</p>`` → ``"beforeafter"``
+    """
+    assert html_to_md("<!--c--><p>hi</p>") == "hi"
+    assert html_to_md("<p>before<!--skip-->after</p>") == "beforeafter"
+
+
+# ----------------------------------------------------------------------
+# reviewer P2: fragment pipeline (``_convert_fragment``) も top-level と同じ
+# normalization を通す。288-matrix は現状 corpus で divergence を起こさないが、
+# nested ``<ol>`` / table cell 内で将来 regression が発生しないよう structural
+# parity を unit test で pin する
+# ----------------------------------------------------------------------
+
+
+def test_fragment_pipeline_strips_empty_inline_in_ol() -> None:
+    """``_convert_fragment`` が ``_strip_empty_inline_elements`` を通す
+    ことで、nested ``<ol><li><em></em> + text</li></ol>`` の empty emphasis
+    が除去されて mjs と byte-identical になる (reviewer P2)。"""
+    html = '<ol><li value="1"><em></em> + text</li></ol>'
+    assert html_to_md(html) == "1. \\+ text"
+
+
+def test_fragment_pipeline_applies_escape_in_table_cell() -> None:
+    """table cell 内でも turndown escape (``^+ `` → ``\\+ ``) が適用される
+    (reviewer P2)。"""
+    html = "<table><tr><td><em></em>   + item</td></tr></table>"
+    assert html_to_md(html) == "| \\+ item |\n| --- |"
+
+
+def test_fragment_pipeline_applies_br_hardbreak_in_ol() -> None:
+    """nested ``<ol><li>text <br/> more</li></ol>`` でも ``<br>`` の hard
+    break が保持され、``collapseWhitespace`` の boundary trim が適用される
+    (reviewer P2)。"""
+    html = '<ol><li value="1">text <br/> more</li></ol>'
+    assert html_to_md(html) == "1. text  \nmore"

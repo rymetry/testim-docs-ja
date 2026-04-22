@@ -61,7 +61,15 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+from bs4 import (
+    BeautifulSoup,
+    Comment,
+    Declaration,
+    Doctype,
+    NavigableString,
+    ProcessingInstruction,
+    Tag,
+)
 from markdownify import MarkdownConverter
 
 from .preprocess_en import preprocess_en_html
@@ -203,6 +211,26 @@ def _is_pre_element(el: Any) -> bool:
 
 _WHITESPACE_RUN_RE: re.Pattern[str] = re.compile(r"[ \r\n\t]+")
 
+# mjs turndown ``collapseWhitespace`` (L507-510) は text (nodeType 3) と
+# CDATA (nodeType 4) と element (nodeType 1) 以外を DOM から remove する:
+#     else {
+#         node = remove(node);
+#         continue
+#     }
+# BS4 の ``NavigableString`` は Comment / Doctype / ProcessingInstruction /
+# Declaration を subclass として含むため、これらを明示的に除去しないと
+# ``replace_with(NavigableString(text))`` が plain text node に変換してしまい、
+# markdownify の ``_can_ignore`` の ``(Comment, Doctype)`` skip が無効化
+# されて ``<!DOCTYPE html>`` が markdown に ``html`` として leak する
+# (reviewer P3 対応)。``CData`` (nodeType 4) は mjs でも text 扱いなので
+# 本集合には含めない。
+_NON_TEXT_NAVIGABLE_TYPES: tuple[type, ...] = (
+    Comment,
+    Doctype,
+    ProcessingInstruction,
+    Declaration,
+)
+
 
 def _collapse_whitespace(root: Tag | BeautifulSoup) -> None:
     """mjs turndown の ``collapseWhitespace`` を BS4 tree に対して in-place 実行する。
@@ -241,13 +269,21 @@ def _collapse_whitespace(root: Tag | BeautifulSoup) -> None:
 
     def _visit(node: Any) -> Any:
         nonlocal prev_text, keep_leading_ws
-        if isinstance(node, Comment):
-            # turndown は Comment に特別 path を持たないが、markdownify 側で
-            # strip される。collapseWhitespace pass 上は単に skip。
+        if isinstance(node, _NON_TEXT_NAVIGABLE_TYPES):
+            # mjs ``collapseWhitespace`` L507-510: node ≠ text / CDATA /
+            # element は remove する。BS4 の Comment / Doctype /
+            # ProcessingInstruction / Declaration が該当。tree から除去
+            # しないと ``NavigableString(text)`` への ``replace_with`` 後に
+            # markdownify の Comment/Doctype skip が効かなくなり、
+            # ``<!DOCTYPE html>`` が literal text として leak する
+            # (reviewer P3 対応)。全て ``NavigableString`` subclass なので
+            # ``pending_to_remove`` (list[NavigableString]) に append 可。
+            assert isinstance(node, NavigableString)
+            pending_to_remove.append(node)
             return
         if isinstance(node, NavigableString):
-            # NavigableString の subclass (Comment 等) は上で弾かれているので
-            # ここは純粋 text node。
+            # ここは ``type(node) is NavigableString`` (plain text) または
+            # ``CData`` (mjs でも nodeType 4 = text 相当)。
             text = _WHITESPACE_RUN_RE.sub(" ", str(node))
             if (
                 (prev_text is None or str(prev_text).endswith(" "))
@@ -757,6 +793,21 @@ class _TurndownConverter(MarkdownConverter):
         return f"\n\n```{language}\n{code}\n```\n\n"
 
 
+def _run_pipeline(html: str, converter: _TurndownConverter) -> str:
+    """Phase 4b.1 の 5-step pipeline (``html_to_md`` と同一) を共有 helper 化。
+
+    ``html_to_md`` (top-level) と ``_convert_fragment`` (nested) の両方から
+    呼ばれる。fragment path を top-level と同じ normalization に通すことで、
+    ``convert_ol`` / ``convert_table`` 内の nested ``<li>`` / cell content でも
+    ``_strip_empty_inline_elements`` / ``_collapse_whitespace`` /
+    ``_normalize_output`` が確実に適用される (reviewer P2 対応)。
+    """
+    normalized_html = _strip_empty_inline_elements(html)
+    soup = BeautifulSoup(normalized_html, "html.parser")
+    _collapse_whitespace(soup)
+    return _normalize_output(converter.convert_soup(soup))
+
+
 def _convert_fragment(
     html: str,
     options: dict[str, Any] | None = None,
@@ -768,6 +819,13 @@ def _convert_fragment(
     MadCap ``<ol>`` rule の sibling 処理 / table cell 内部処理から呼ばれる。
     parent converter と同じ options を使って nested consistency を保つ。
 
+    Phase 4b.1 以降は ``_run_pipeline`` 経由で top-level と同じ normalization
+    (string-level empty-inline strip → BS4 parse → ``_collapse_whitespace`` →
+    markdownify → ``_normalize_output``) を適用する。288-matrix は現状の
+    corpus では fragment 経路で divergence を起こさないが、structurally
+    parallel な code path を持つと将来 silent divergence が発生するため
+    (reviewer P2)、top-level と同一の pipeline を共有する。
+
     ``_depth`` は `_MAX_FRAGMENT_DEPTH` までの再帰深度 guard。現実の MadCap
     HTML では 5-10 階層程度だが、malformed HTML に対して ``RecursionError``
     を未然に防ぐための defensive cap。超過時は raw HTML を返す。
@@ -776,7 +834,7 @@ def _convert_fragment(
         return html
     converter = _TurndownConverter(**(options or {}))
     converter._fragment_depth = _depth  # nested convert_ol/convert_table が depth+1 で使う
-    return converter.convert(html)
+    return _run_pipeline(html, converter)
 
 
 _EMPTY_INLINE_RE: re.Pattern[str] = re.compile(
@@ -823,15 +881,8 @@ def html_to_md(html: str) -> str:
        ``\\n{3,}`` → ``\\n\\n`` collapse + 全体 trim。code content 内部の
        連続空行は preserve する
     """
-    # Step 1: 空 inline tag を raw string 段階で剥がす
-    normalized_html = _strip_empty_inline_elements(html)
-    # Step 2: BS4 tree parse
-    soup = BeautifulSoup(normalized_html, "html.parser")
-    # Step 3: mjs ``collapseWhitespace`` を tree に pre-pass 適用
-    _collapse_whitespace(soup)
-    # Step 4 + 5: markdownify → 後処理
     converter = _TurndownConverter()
-    return _normalize_output(converter.convert_soup(soup))
+    return _run_pipeline(html, converter)
 
 
 def convert_en_html_to_md(html: str) -> str:
