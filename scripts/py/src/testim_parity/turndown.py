@@ -9,8 +9,8 @@ Python 版は ``markdownify.MarkdownConverter`` を subclass し、必要な
 output format (``*   `` 3-space bullet / ``**bold**`` / ``_italic_`` / ATX heading /
 fenced code with language) を replicate する。
 
-**turndown default rule の Python port**: review round-1/2 P1/P2 対応で以下を
-上書き実装:
+**turndown default rule の Python port**: review round-1/2 P1/P2 + Phase 4b.1
+対応で以下を上書き実装:
 
 - ``convert_li`` — leading ``\\n`` strip + trailing ``\\n+`` collapse +
   ``\\n`` → ``\\n    `` (4-space indent)。nested list / multi-paragraph
@@ -26,21 +26,32 @@ fenced code with language) を replicate する。
 - ``convert_img`` — ``![alt](src "title")`` を常に emit (markdownify default
   の ``_inline`` context alt-text fallback を無効化)。table cell / heading
   内の ``<img>`` を preserve する
+- ``convert_p`` — turndown と同じく paragraph content の trailing ``  \\n``
+  (``<br>`` hard break) を preserve。markdownify default の
+  ``strip(' \\t\\r\\n')`` を回避 (Phase 4b.1)
+- ``escape`` — mjs turndown の 13 escape 規則 (``^-`` / ``^+ `` / ``^# `` /
+  ``` ` ``` / ``_`` / ``[`` / ``]`` / ``^>`` / ``^~~~`` / ``^(\\d+)\\. ``)
+  を ``_turndown_escape`` 経由で適用 (Phase 4b.1)
+- ``autolinks = False`` — ``<a href=URL>URL</a>`` の ``<URL>`` 縮約を無効化
+  (Phase 4b.1)
 - ``_strip_empty_inline_elements`` — raw HTML 段階で ``<em></em>`` /
   ``<em>   </em>`` 等の空 inline を除去。mjs turndown の DOM whitespace
   normalization を emulate し、``A <em></em> B`` → ``A B`` (単一 space) に
   collapse する
+- ``_collapse_whitespace`` — mjs turndown の DOM ``collapseWhitespace`` を
+  BS4 tree 上で pre-pass として再現 (Phase 4b.1)。block / ``<br>`` 境界の
+  leading ws trim + void element 隣接 text の space preservation で、
+  ``<img>\\n<img>`` → ``![](a) ![](b)`` や ``<p>X<br/> Y</p>`` →
+  ``X  \\nY`` を mjs と byte-identical にする
 - ``_normalize_output`` は fence-aware split (``_FENCE_BLOCK_RE``) で code
   fence 内部の連続空行を preserve する。mjs turndown は code content を
   byte for byte 保持するため、global な ``\\n{3,}`` → ``\\n\\n`` collapse は
   fence 外側のみ適用する必要がある (round-4 P1 対応)
 
-**byte-parity 戦略**: 39 代表 MadCap pattern (5 custom rule + nested list +
-multi-paragraph li + table cell img + heading img + 8 emphasis flanking
-whitespace / empty inline / empty li + 3 code fence blank-line preservation
-+ 4 preprocess chain) を unit test で mjs turndown 出力と byte 比較。
-288-page corpus 全体の byte-parity は M2/M3 integration 時に計測する
-(``test_convert_en_html_to_md_288_matrix``)。
+**byte-parity 戦略**: 39 代表 MadCap pattern を unit test で mjs turndown
+出力と byte 比較 + 288-page corpus 全体を
+``tests/conformance/test_turndown_288_matrix.py`` で byte 比較
+(Phase 4b.1 で全 pass)。
 
 ``preprocess_en_html`` は既存の ``preprocess_en`` module の re-export。
 """
@@ -50,7 +61,15 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from bs4 import NavigableString, Tag
+from bs4 import (
+    BeautifulSoup,
+    Comment,
+    Declaration,
+    Doctype,
+    NavigableString,
+    ProcessingInstruction,
+    Tag,
+)
 from markdownify import MarkdownConverter
 
 from .preprocess_en import preprocess_en_html
@@ -62,6 +81,281 @@ _CALLOUT_CLASS_MAP: dict[str, str] = {
     "note": "note",
     "caution": "caution",
 }
+
+# turndown の DOM whitespace collapse 実装で判定に使う block / void 要素集合。
+# source: ``node_modules/turndown/lib/turndown.cjs.js`` (isBlock / isVoid +
+# block-elements.js / void-elements.js の export list)。
+_TURNDOWN_BLOCK_ELEMENTS: frozenset[str] = frozenset(
+    {
+        "address",
+        "article",
+        "aside",
+        "audio",
+        "blockquote",
+        "body",
+        "canvas",
+        "center",
+        "dd",
+        "dir",
+        "div",
+        "dl",
+        "dt",
+        "fieldset",
+        "figcaption",
+        "figure",
+        "footer",
+        "form",
+        "frameset",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "header",
+        "hgroup",
+        "hr",
+        "html",
+        "isindex",
+        "li",
+        "main",
+        "menu",
+        "nav",
+        "noframes",
+        "noscript",
+        "ol",
+        "output",
+        "p",
+        "pre",
+        "section",
+        "table",
+        "tbody",
+        "td",
+        "tfoot",
+        "th",
+        "thead",
+        "tr",
+        "ul",
+    }
+)
+_TURNDOWN_VOID_ELEMENTS: frozenset[str] = frozenset(
+    {
+        "area",
+        "base",
+        "br",
+        "col",
+        "command",
+        "embed",
+        "hr",
+        "img",
+        "input",
+        "keygen",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
+    }
+)
+
+# turndown の escape 関数が適用する 13 の置換ルール (順序保存)。
+# source: ``node_modules/turndown/lib/turndown.cjs.js`` ``var escapes = [...]``。
+# Python ``re`` と JS 正規表現は一部 syntax が異なるため、pattern は JS regex を
+# そのまま Python re に移植した形にしてある ($ / ^ の意味は同じで、本ルールでは
+# ``\Z`` に書き換える必要はない — 全ルールが行頭/終端以外で sub する)。
+_TURNDOWN_ESCAPES: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\\"), r"\\\\"),
+    (re.compile(r"\*"), r"\\*"),
+    (re.compile(r"^-"), r"\\-"),
+    (re.compile(r"^\+ "), r"\\+ "),
+    (re.compile(r"^(=+)"), r"\\\1"),
+    (re.compile(r"^(#{1,6}) "), r"\\\1 "),
+    (re.compile(r"`"), r"\\`"),
+    (re.compile(r"^~~~"), r"\\~~~"),
+    (re.compile(r"\["), r"\\["),
+    (re.compile(r"\]"), r"\\]"),
+    (re.compile(r"^>"), r"\\>"),
+    (re.compile(r"_"), r"\\_"),
+    (re.compile(r"^(\d+)\. "), r"\1\\. "),
+)
+
+
+def _turndown_escape(text: str) -> str:
+    """mjs turndown の ``TurndownService.prototype.escape`` 等価。
+
+    13 regex を順序通り適用する。``escape`` は per-text-node で呼ばれ、
+    converter が emit する markdown marker (``**`` / ``*   `` 等) には
+    適用されない (markdownify の ``process_text`` が text node にだけ
+    escape を呼ぶため)。
+    """
+    if not text:
+        return ""
+    result = text
+    for pattern, replacement in _TURNDOWN_ESCAPES:
+        result = pattern.sub(replacement, result)
+    return result
+
+
+def _is_turndown_block(el: Any) -> bool:
+    return isinstance(el, Tag) and el.name in _TURNDOWN_BLOCK_ELEMENTS
+
+
+def _is_turndown_void(el: Any) -> bool:
+    return isinstance(el, Tag) and el.name in _TURNDOWN_VOID_ELEMENTS
+
+
+def _is_pre_element(el: Any) -> bool:
+    return isinstance(el, Tag) and el.name == "pre"
+
+
+_WHITESPACE_RUN_RE: re.Pattern[str] = re.compile(r"[ \r\n\t]+")
+
+# mjs turndown ``collapseWhitespace`` (L507-510) は text (nodeType 3) と
+# CDATA (nodeType 4) と element (nodeType 1) 以外を DOM から remove する:
+#     else {
+#         node = remove(node);
+#         continue
+#     }
+# BS4 の ``NavigableString`` は Comment / Doctype / ProcessingInstruction /
+# Declaration を subclass として含むため、これらを明示的に除去しないと
+# ``replace_with(NavigableString(text))`` が plain text node に変換してしまい、
+# markdownify の ``_can_ignore`` の ``(Comment, Doctype)`` skip が無効化
+# されて ``<!DOCTYPE html>`` が markdown に ``html`` として leak する
+# (reviewer P3 対応)。``CData`` (nodeType 4) は mjs でも text 扱いなので
+# 本集合には含めない。
+_NON_TEXT_NAVIGABLE_TYPES: tuple[type, ...] = (
+    Comment,
+    Doctype,
+    ProcessingInstruction,
+    Declaration,
+)
+
+
+def _collapse_whitespace(root: Tag | BeautifulSoup) -> None:
+    """mjs turndown の ``collapseWhitespace`` を BS4 tree に対して in-place 実行する。
+
+    source: ``node_modules/turndown/lib/turndown.cjs.js`` の ``collapseWhitespace``
+    関数 (L457-523) の Python port。
+
+    アルゴリズム:
+      1. 全 text node の ``[ \\r\\n\\t]+`` を single ``" "`` に collapse
+      2. block 要素 / ``<br>`` の前後で trailing/leading space を削除
+      3. void 要素 / ``<pre>`` (inline) の隣接 text は leading space を保持
+         (これが ``<img> <img>`` 間の space preservation を成立させる)
+      4. ``<pre>`` 配下は touch しない (code content の byte-for-byte preserve)
+
+    markdownify の ``process_text`` は空白を line-oriented に縮約するため
+    (``\\n`` を preserve)、``<img>\\n<img>`` が ``![](a)\\n![](b)`` になる。
+    本関数は事前に ``\\n`` を ``" "`` に畳み込み、block/br boundary の
+    leading/trailing space のみを削るため、``![](a) ![](b)`` に揃う。
+    """
+    if not isinstance(root, (Tag, BeautifulSoup)):
+        return
+
+    # Comment / Doctype は collapse 対象外 — そのまま残す。markdownify 側で扱う。
+
+    prev_text: NavigableString | None = None
+    keep_leading_ws = False
+
+    pending_to_remove: list[NavigableString] = []
+
+    def _iter(node: Tag | BeautifulSoup) -> Any:
+        # pre 配下は skip (textContent を preserve する)
+        if _is_pre_element(node):
+            return
+        for child in list(node.children):
+            yield from _visit(child)
+
+    def _visit(node: Any) -> Any:
+        nonlocal prev_text, keep_leading_ws
+        if isinstance(node, _NON_TEXT_NAVIGABLE_TYPES):
+            # mjs ``collapseWhitespace`` L507-510: node ≠ text / CDATA /
+            # element は remove する。BS4 の Comment / Doctype /
+            # ProcessingInstruction / Declaration が該当。tree から除去
+            # しないと ``NavigableString(text)`` への ``replace_with`` 後に
+            # markdownify の Comment/Doctype skip が効かなくなり、
+            # ``<!DOCTYPE html>`` が literal text として leak する
+            # (reviewer P3 対応)。全て ``NavigableString`` subclass なので
+            # ``pending_to_remove`` (list[NavigableString]) に append 可。
+            assert isinstance(node, NavigableString)
+            pending_to_remove.append(node)
+            return
+        if isinstance(node, NavigableString):
+            # ここは ``type(node) is NavigableString`` (plain text) または
+            # ``CData`` (mjs でも nodeType 4 = text 相当)。
+            text = _WHITESPACE_RUN_RE.sub(" ", str(node))
+            if (
+                (prev_text is None or str(prev_text).endswith(" "))
+                and not keep_leading_ws
+                and text.startswith(" ")
+            ):
+                text = text[1:]
+            if not text:
+                pending_to_remove.append(node)
+                return
+            # NavigableString は immutable だが ``replace_with`` で新しい
+            # instance に差し替えれば prev_text chain は壊れる。BS4 の
+            # ``.string = value`` は NavigableString のみ書き換え不可なので
+            # 明示的に replace_with を使う。
+            new_text = NavigableString(text)
+            node.replace_with(new_text)
+            prev_text = new_text
+            return
+        if isinstance(node, Tag):
+            # ``<pre>`` は ``_TURNDOWN_BLOCK_ELEMENTS`` に含まれ、mjs
+            # ``collapseWhitespace`` (L492) でも ``isBlock(node) === true`` で
+            # block 分岐を通る (``isPre`` の else-if 分岐には落ちない)。
+            # ``_iter`` 側で ``<pre>`` 配下の children を skip しているので
+            # block 分岐の ``yield from _iter(node)`` は空 iterator を返す。
+            # (reviewer P1 対応: 旧 ``_is_pre_element`` 早期リターンは
+            # ``keep_leading_ws=True`` を設定して mjs の block 分岐
+            # (``keep_leading_ws=False``) と乖離していたため削除)
+            if node.name == "br" or _is_turndown_block(node):
+                if prev_text is not None:
+                    trimmed = re.sub(r" $", "", str(prev_text))
+                    if trimmed != str(prev_text):
+                        new_text = NavigableString(trimmed)
+                        prev_text.replace_with(new_text)
+                        # 空になったら removable 扱い (後で _visit loop 後に消す)
+                        if not trimmed:
+                            pending_to_remove.append(new_text)
+                prev_text = None
+                keep_leading_ws = False
+                # block / br の子供は独立した文脈として再帰
+                # ``<pre>`` の場合は ``_iter`` の pre guard で children が空 iterator になる
+                yield from _iter(node)
+                return
+            if _is_turndown_void(node):
+                prev_text = None
+                keep_leading_ws = True
+                # void 要素は children を持たない
+                return
+            # inline non-void: prev_text があれば keepLeadingWs を解除
+            if prev_text is not None:
+                keep_leading_ws = False
+            yield from _iter(node)
+            return
+
+    # DFS を起動
+    for _ in _iter(root):
+        pass
+
+    # 末尾の prev_text の trailing space を削る
+    if prev_text is not None:
+        trimmed = re.sub(r" $", "", str(prev_text))
+        if trimmed != str(prev_text):
+            if not trimmed:
+                pending_to_remove.append(prev_text)
+            else:
+                new_text = NavigableString(trimmed)
+                prev_text.replace_with(new_text)
+
+    for dead in pending_to_remove:
+        # replace_with 後に parent が None になっている場合があるので防御的に
+        if dead.parent is not None:
+            dead.extract()
+
 
 # ``convert_li`` / ``convert_ul`` の turndown 互換 transformation に使う正規表現。
 # mjs turndown の JS 版: ``content.replace(/^\n+/, '')`` 等価。
@@ -218,6 +512,9 @@ class _TurndownConverter(MarkdownConverter):
         escape_asterisks = False
         escape_underscores = False
         escape_misc = False
+        # ``<a href=URL>URL</a>`` を markdownify default では ``<URL>`` autolink
+        # 形式に縮約するが、mjs turndown は ``[URL](URL)`` 形式を維持する。
+        autolinks = False
 
     class Options(MarkdownConverter.Options):
         heading_style = "atx"
@@ -227,6 +524,44 @@ class _TurndownConverter(MarkdownConverter):
         escape_asterisks = False
         escape_underscores = False
         escape_misc = False
+        autolinks = False
+
+    # ------------------------------------------------------------------
+    # escape — mjs turndown の 13 規則を honor (Phase 4b.1 P2#2 対応)。
+    # markdownify default の ``escape_misc`` / ``escape_asterisks`` /
+    # ``escape_underscores`` では覆えない escape (``^+ `` / ``^# `` / ``` ` ``` /
+    # ``[`` / ``]`` / ``_`` 等) を ensure するため、markdownify の ``escape``
+    # hook を直接 override する。
+    #
+    # NOTE: markdownify converter が emit する marker (``**`` / ``*   `` /
+    # ``[text](href)`` 等) は ``process_text`` → ``escape`` の経路を通らないので、
+    # marker 自体が escape されることはない。
+    # ------------------------------------------------------------------
+    def escape(self, text: str, parent_tags: Any) -> str:
+        return _turndown_escape(text)
+
+    # ------------------------------------------------------------------
+    # <p> — turndown の paragraph rule は ``\n\n + content + \n\n`` で包み、
+    # content の trailing whitespace を trim しない。markdownify default は
+    # ``text.strip(' \t\r\n')`` で ``<br>`` hard-break の ``  \n`` を消して
+    # しまうため、byte-parity が崩れる (Phase 4b.1 trailing_ws 対応)。
+    #
+    # content が純 whitespace-only の場合だけ mjs ``blankReplacement`` 経路で
+    # 空文字にする。それ以外は leading ``\n`` のみ削って ``\n\n`` wrapping を
+    # かける (markdownify は child の前後に既に whitespace を付けるため、単純な
+    # ``\n\n{content}\n\n`` だと余計 ``\n`` が増えるので ``strip('\n')`` で
+    # 揃える — ``strip(' \t\r\n')`` と違い trailing ``  `` は残る)。
+    # ------------------------------------------------------------------
+    def convert_p(self, el: Tag, text: str, parent_tags: Any) -> str:
+        if "_inline" in parent_tags:
+            return " " + (text or "").strip(" \t\r\n") + " "
+        content = text or ""
+        # 先頭末尾の ``\n`` のみ削り、``<br>`` hard-break の trailing ``  `` は
+        # 保持する。blank-only paragraph は無視する (mjs blankReplacement)。
+        content = content.strip("\n")
+        if not content.strip(" \t\r\n"):
+            return ""
+        return "\n\n" + content + "\n\n"
 
     # ------------------------------------------------------------------
     # <em>/<i>/<strong>/<b> — turndown default の ``flankingWhitespace`` +
@@ -458,6 +793,21 @@ class _TurndownConverter(MarkdownConverter):
         return f"\n\n```{language}\n{code}\n```\n\n"
 
 
+def _run_pipeline(html: str, converter: _TurndownConverter) -> str:
+    """Phase 4b.1 の 5-step pipeline (``html_to_md`` と同一) を共有 helper 化。
+
+    ``html_to_md`` (top-level) と ``_convert_fragment`` (nested) の両方から
+    呼ばれる。fragment path を top-level と同じ normalization に通すことで、
+    ``convert_ol`` / ``convert_table`` 内の nested ``<li>`` / cell content でも
+    ``_strip_empty_inline_elements`` / ``_collapse_whitespace`` /
+    ``_normalize_output`` が確実に適用される (reviewer P2 対応)。
+    """
+    normalized_html = _strip_empty_inline_elements(html)
+    soup = BeautifulSoup(normalized_html, "html.parser")
+    _collapse_whitespace(soup)
+    return _normalize_output(converter.convert_soup(soup))
+
+
 def _convert_fragment(
     html: str,
     options: dict[str, Any] | None = None,
@@ -469,6 +819,13 @@ def _convert_fragment(
     MadCap ``<ol>`` rule の sibling 処理 / table cell 内部処理から呼ばれる。
     parent converter と同じ options を使って nested consistency を保つ。
 
+    Phase 4b.1 以降は ``_run_pipeline`` 経由で top-level と同じ normalization
+    (string-level empty-inline strip → BS4 parse → ``_collapse_whitespace`` →
+    markdownify → ``_normalize_output``) を適用する。288-matrix は現状の
+    corpus では fragment 経路で divergence を起こさないが、structurally
+    parallel な code path を持つと将来 silent divergence が発生するため
+    (reviewer P2)、top-level と同一の pipeline を共有する。
+
     ``_depth`` は `_MAX_FRAGMENT_DEPTH` までの再帰深度 guard。現実の MadCap
     HTML では 5-10 階層程度だが、malformed HTML に対して ``RecursionError``
     を未然に防ぐための defensive cap。超過時は raw HTML を返す。
@@ -477,7 +834,7 @@ def _convert_fragment(
         return html
     converter = _TurndownConverter(**(options or {}))
     converter._fragment_depth = _depth  # nested convert_ol/convert_table が depth+1 で使う
-    return converter.convert(html)
+    return _run_pipeline(html, converter)
 
 
 _EMPTY_INLINE_RE: re.Pattern[str] = re.compile(
@@ -505,12 +862,27 @@ def html_to_md(html: str) -> str:
 
     ``preprocess_en_html`` を通さないので callout/details 等の MadCap
     artifact 正規化は caller 責務。通常は ``convert_en_html_to_md`` を使う。
+
+    **Pipeline (5 step, Phase 4b.1)**:
+
+    1. ``_strip_empty_inline_elements(html)`` — raw string 段階で
+       ``<em></em>`` / ``<em>   </em>`` 等の空 inline を剥がす。mjs turndown
+       の DOM whitespace collapse が空 inline を消す挙動と等価にし、後続の
+       text node merge で double-space を生まないようにする
+    2. ``BeautifulSoup(normalized_html, "html.parser")`` — 文字列を BS4 tree
+       に parse
+    3. ``_collapse_whitespace(soup)`` — mjs turndown の DOM
+       ``collapseWhitespace`` を tree 上で in-place 適用 (text node の
+       ``[ \\r\\n\\t]+`` → ``" "`` + block / ``<br>`` 境界の leading/trailing
+       space trim + void 要素隣接 text の leading ws preservation)
+    4. ``_TurndownConverter.convert_soup(soup)`` — markdownify
+       subclass に正規化済 tree を渡し、markdown 文字列に変換
+    5. ``_normalize_output(md)`` — fence-aware split で code fence 外側の
+       ``\\n{3,}`` → ``\\n\\n`` collapse + 全体 trim。code content 内部の
+       連続空行は preserve する
     """
-    # review round-2 P1 (empty/whitespace emphasis)対応: raw HTML 段階で空
-    # inline 要素を除去し、markdownify の text-node whitespace collapse に任せる
-    normalized_html = _strip_empty_inline_elements(html)
     converter = _TurndownConverter()
-    return _normalize_output(converter.convert(normalized_html))
+    return _run_pipeline(html, converter)
 
 
 def convert_en_html_to_md(html: str) -> str:

@@ -300,3 +300,157 @@ def test_code_fence_multi_trailing_blank_lines_preserved() -> None:
     前に保持される (turndown ``code.replace(/\\n$/, '')`` と同じ)。"""
     html = '<pre><code class="language-bash">line1\n\n\n</code></pre>'
     assert html_to_md(html) == "```bash\nline1\n\n\n```"
+
+
+# ----------------------------------------------------------------------
+# Phase 4b.1: turndown default rule port
+#   - escape (13 rules)
+#   - collapseWhitespace
+#   - convert_p preserves <br> hard break
+#   - autolinks disabled
+# ----------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("html", "expected"),
+    [
+        # ``^-`` leading dash escape
+        ("<p>- start</p>", "\\- start"),
+        # ``^+ `` leading plus+space escape (``+ Teammate`` など)
+        ("<p><strong>+ Teammate</strong></p>", "**\\+ Teammate**"),
+        # ``^# `` leading ATX heading escape (callout 本文に ``### Note``)
+        ("<p>### Note about this</p>", "\\### Note about this"),
+        # ``` ` ``` backtick escape
+        ("<p>code `abc` end</p>", "code \\`abc\\` end"),
+        # ``_`` underscore escape (``execute_driver_script``)
+        ("<p>execute_driver_script</p>", "execute\\_driver\\_script"),
+        # ``[`` / ``]`` bracket escape
+        ("<p>[tag]</p>", "\\[tag\\]"),
+        # ``^>`` leading gt escape
+        ("<p>&gt; quoted</p>", "\\> quoted"),
+        # ``^~~~`` leading tilde escape
+        ("<p>~~~fence</p>", "\\~~~fence"),
+        # ``^(\d+)\. `` leading number-dot escape
+        ("<p>1. item</p>", "1\\. item"),
+        # ``^(=+)`` leading equals (setext heading) escape
+        ("<p>=== header</p>", "\\=== header"),
+    ],
+)
+def test_turndown_escape_rules(html: str, expected: str) -> None:
+    assert html_to_md(html) == expected
+
+
+def test_collapse_whitespace_leading_space_after_br() -> None:
+    """``<br>`` 境界 後の leading space を削る (mjs collapseWhitespace)。"""
+    assert html_to_md("<p>text1<br/> text2</p>") == "text1  \ntext2"
+
+
+def test_collapse_whitespace_image_concat_preserves_space() -> None:
+    """隣接 ``<img>`` 間の newline は single space に畳まれる (void element
+    隣接 text は leading space を preserve する turndown の挙動)。"""
+    html = '<div><img src="a.png"/>\n<img src="b.png"/></div>'
+    assert html_to_md(html) == "![](a.png) ![](b.png)"
+
+
+def test_convert_p_preserves_br_hard_break() -> None:
+    """``<p>text<br/> next</p>`` → ``text  \\nnext`` で trailing ``  `` 保持。"""
+    assert html_to_md("<p>text<br/> next</p>") == "text  \nnext"
+
+
+def test_autolinks_disabled() -> None:
+    """``<a href=URL>URL</a>`` は ``[URL](URL)`` で出す (``<URL>`` 縮約しない)。"""
+    url = "https://example.com/foo"
+    assert html_to_md(f'<p><a href="{url}">{url}</a></p>') == f"[{url}]({url})"
+
+
+def test_pre_content_preserved_by_collapse_whitespace() -> None:
+    """``<pre>`` 配下は collapseWhitespace の skip 対象で、code content の
+    連続改行を byte for byte 保持する。"""
+    html = '<pre><code class="language-bash">line1\n\n\nline2</code></pre>'
+    assert html_to_md(html) == "```bash\nline1\n\n\nline2\n```"
+
+
+def test_pre_uses_block_branch_in_collapse_whitespace() -> None:
+    """``<pre>`` は mjs と同じく block 分岐を通り、直後の text node の
+    leading space を strip する (reviewer P1 対応)。
+
+    旧実装は ``<pre>`` を void 相当 (``keep_leading_ws=True``) で扱っていたため、
+    ``<pre>...</pre> after`` の leading space が preserve されて mjs と
+    divergence していた。mjs ``collapseWhitespace`` L492 は ``isBlock(PRE) ==
+    true`` で最初の branch に分岐し ``keep_leading_ws=False`` に倒す。
+    """
+    # mjs: "before\n\n```\nx\n```\n\nafter" — leading space on " after" is
+    # stripped by the block branch.
+    html = "<div>before <pre><code>x</code></pre> after</div>"
+    assert html_to_md(html) == "before\n\n```\nx\n```\n\nafter"
+
+
+def test_pre_block_branch_rstrips_prev_text() -> None:
+    """``<pre>`` の直前 text に trailing space があれば削る (block 分岐の
+    ``prev_text = prev_text.replace(/ $/, '')`` 等価、reviewer P1 対応)。"""
+    # mjs: "word\n\n```\nx\n```\n\nend" — trailing space on "word " is trimmed.
+    html = "<div>word <pre><code>x</code></pre>end</div>"
+    assert html_to_md(html) == "word\n\n```\nx\n```\n\nend"
+
+
+# ----------------------------------------------------------------------
+# reviewer P3: 非 text NavigableString subclass は mjs に合わせて tree から
+# 除去する。``<!DOCTYPE>`` / Comment / ProcessingInstruction / Declaration が
+# text として leak しないことを保証する
+# ----------------------------------------------------------------------
+
+
+def test_doctype_is_removed_not_leaked_as_text() -> None:
+    """``<!DOCTYPE html>`` は mjs と同じく markdown 出力に leak しない。
+
+    旧実装では ``_collapse_whitespace`` が Doctype を
+    ``NavigableString(text)`` に ``replace_with`` していたため、markdownify の
+    ``(Comment, Doctype)`` skip が無効化されて ``"html"`` が leak していた
+    (reviewer P3 対応)。
+    """
+    assert html_to_md("<!DOCTYPE html><p>hi</p>") == "hi"
+
+
+def test_processing_instruction_is_removed() -> None:
+    """``<?pi ...?>`` は mjs と同じく除去される (reviewer P3)."""
+    assert html_to_md("<?pi foo?><p>hi</p>") == "hi"
+
+
+def test_comment_nodes_are_removed() -> None:
+    """``<!-- ... -->`` は tree から除去されて inline 連結でも leak しない。
+
+    mjs: ``<p>before<!--skip-->after</p>`` → ``"beforeafter"``
+    """
+    assert html_to_md("<!--c--><p>hi</p>") == "hi"
+    assert html_to_md("<p>before<!--skip-->after</p>") == "beforeafter"
+
+
+# ----------------------------------------------------------------------
+# reviewer P2: fragment pipeline (``_convert_fragment``) も top-level と同じ
+# normalization を通す。288-matrix は現状 corpus で divergence を起こさないが、
+# nested ``<ol>`` / table cell 内で将来 regression が発生しないよう structural
+# parity を unit test で pin する
+# ----------------------------------------------------------------------
+
+
+def test_fragment_pipeline_strips_empty_inline_in_ol() -> None:
+    """``_convert_fragment`` が ``_strip_empty_inline_elements`` を通す
+    ことで、nested ``<ol><li><em></em> + text</li></ol>`` の empty emphasis
+    が除去されて mjs と byte-identical になる (reviewer P2)。"""
+    html = '<ol><li value="1"><em></em> + text</li></ol>'
+    assert html_to_md(html) == "1. \\+ text"
+
+
+def test_fragment_pipeline_applies_escape_in_table_cell() -> None:
+    """table cell 内でも turndown escape (``^+ `` → ``\\+ ``) が適用される
+    (reviewer P2)。"""
+    html = "<table><tr><td><em></em>   + item</td></tr></table>"
+    assert html_to_md(html) == "| \\+ item |\n| --- |"
+
+
+def test_fragment_pipeline_applies_br_hardbreak_in_ol() -> None:
+    """nested ``<ol><li>text <br/> more</li></ol>`` でも ``<br>`` の hard
+    break が保持され、``collapseWhitespace`` の boundary trim が適用される
+    (reviewer P2)。"""
+    html = '<ol><li value="1">text <br/> more</li></ol>'
+    assert html_to_md(html) == "1. text  \nmore"

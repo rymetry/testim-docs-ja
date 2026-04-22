@@ -790,45 +790,56 @@ Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えて�
 | Milestone | 対象 | 状態 |
 | --- | --- | --- |
 | **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ 39 代表 pattern で mjs と byte-identical (17 unit + 2 parity sample) — PR #375 merged |
-| **M2** | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | 🟡 **orchestration 完了** — 38 unit tests、``parity-check-status.json`` schema / 副作用 shape mjs 互換、DI 完備。M5 conformance (baseline / snapshot_diff) で 2 CLI は mjs byte-parity。**turndown 依存 path の full-corpus byte parity は Phase 4b.1 で解消**、PR #376 |
-| **M3** | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | 🟡 **orchestration 完了** — 33 unit tests (depth tracking / retry / recovery probe / DI stdout+stderr / registry drift / root_dir input isolation)、PR #376 |
-| **M4** | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | ✅ 完了 — 22 unit tests、module coverage 88%、PR #376 |
-| **M5** | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | ✅ 完了 — 14 integration tests、全 byte-identical、semantic delta 0 件、PR #376 |
+| **M2** | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | ✅ **完了** — 38 unit tests、``parity-check-status.json`` schema / 副作用 shape mjs 互換、DI 完備。M5 conformance (baseline / snapshot_diff) で 2 CLI は mjs byte-parity。turndown full-corpus byte parity は Phase 4b.1 で達成 |
+| **M3** | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | ✅ **完了** — 33 unit tests (depth tracking / retry / recovery probe / DI stdout+stderr / registry drift / root_dir input isolation) |
+| **M4** | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | ✅ 完了 — 22 unit tests、module coverage 88% |
+| **M5** | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | ✅ 完了 — 14 integration tests、全 byte-identical、semantic delta 0 件 |
 
-### Phase 4b.1 follow-up (reviewer P2#2 対応)
+### Phase 4b.1 (2026-04-22 完了)
 
 **Goal**: ``convert_en_html_to_md`` を 288-page corpus 全体で mjs と byte-
-identical にする。現状 ~168 / 288 page が divergent (reviewer round-3 の
-調査で確認)。
+identical にする。M1 時点で 168 / 288 page が divergent、Phase 4b.1 で全て
+解消。
 
-| カテゴリ | divergence 件数 | 内容 |
+| カテゴリ | divergence 件数 | 解消方法 |
 | --- | --- | --- |
-| leading_ws | 84 | ``<br/>`` 等の block boundary 後の leading whitespace collapse |
-| other | 43 | whitespace 複合 / markdownify inline detection 差 |
-| trailing_ws | 23 | list item の trailing 2-space (hard line break) |
-| plus_escape | 13 | ``+`` の markdown list-marker escape (``\+``) |
-| image_concat | 4 | 隣接 ``<img>`` の inline 連結 |
-| hash_escape | 1 | paragraph 内 ``#`` の ATX-heading escape (``\#``) |
+| leading_ws | 67 | ``_collapse_whitespace`` — block / ``<br>`` 境界の leading ws trim |
+| other | 74 | ``_turndown_escape`` の 13 escape 規則 + ``autolinks=False`` |
+| trailing_ws | 13 | ``convert_p`` override で ``<br>`` hard break の trailing `` <SP><SP>\\n `` を preserve |
+| plus_escape | 10 | ``_turndown_escape`` の `` ^+<SP> `` rule |
+| image_concat | 3 | ``_collapse_whitespace`` の void element 隣接 text space preservation |
+| hash_escape | 1 | ``_turndown_escape`` の `` ^#<SP> `` rule |
 
-すべて M1 で取り込まなかった turndown default rule の追加 port で解消できる
-(markdownify subclass の converter を拡張 + ``_normalize_output`` の
-post-processing)。
+**実装**:
 
-**Gate**: ``tests/conformance/test_turndown_288_matrix.py`` が ``xfail``
-marker なしで pass する。Phase 6 atomic cutover までには必ず閉じる。
+- ``_collapse_whitespace(root)`` — BS4 tree 上で mjs turndown の
+  ``collapseWhitespace`` (``node_modules/turndown/lib/turndown.cjs.js``
+  L457-523) を in-place 再現。text node を DFS 走査して block / ``<br>``
+  boundary の leading/trailing space を削り、void element 隣接 text の
+  leading space は preserve する
+- ``_turndown_escape(text)`` — mjs turndown の 13 escape 規則を順序通り
+  適用 (``^-`` / `` ^+<SP> `` / ``^(=+)`` / `` ^(#{1,6})<SP> `` /
+  ``` ` ``` / ``^~~~`` / ``[`` / ``]`` / ``^>`` / ``_`` /
+  `` ^(\\d+)\\.<SP> `` / ``\\\\`` / ``\\*``)。
+  ``_TurndownConverter.escape`` が markdownify の per-text-node hook 経由で
+  呼び、converter が emit する marker (``**`` / `` *<SP><SP><SP> `` 等)
+  は escape されない契約を維持
+- ``_TurndownConverter.convert_p`` — ``content.strip("\\n")`` に限定し、
+  trailing `` <SP><SP>\\n `` (``<br>`` hard break) を preserve する。
+  blank-only paragraph は ``""`` に倒す (mjs ``blankReplacement`` 等価)
+- ``_TurndownConverter.DefaultOptions.autolinks = False`` — markdownify
+  default の ``<URL>`` 縮約を無効化
 
-**現時点の test 配置**: 本テストは追加済み (PR #376 reviewer round-3) で
-``@pytest.mark.xfail(strict=False)`` でレポートされる。M2 / M3 orchestration
-が mjs と **同じ parity-check-status schema** を出力することは M5 conformance
-で確認済なので、merge 後も regression gate として機能する。
+**Gate**: ``tests/conformance/test_turndown_288_matrix.py`` が xfail marker
+なしで pass (288 / 288 byte-identical)。Phase 6 atomic cutover で mjs を
+削除するまで regression gate として run し続ける。
 
-### Phase 4b M1 byte-parity scope (現状)
+### Phase 4b M1 byte-parity scope (履歴)
 
-M1 時点では **39 代表 HTML pattern** (mjs turndown 実出力を harness 経由で batch 取得し
-byte 比較) でのみ parity を保証する。288-page corpus 全体の byte parity 計測は
-M2/M3 integration 時に ``test_convert_en_html_to_md_288_matrix`` を追加して
-実施する (Issue #368 の nested-list flatten は JA extractor 側で完結するため
-EN side の turndown 出力は従来通り mjs 互換の文字列を要求する)。
+M1 時点 (2026-04-22) では **39 代表 HTML pattern** で parity を保証。288-page
+corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
+``_turndown_escape`` + ``convert_p`` 追加により達成した。以下は M1 で既に
+存在したカバー範囲:
 
 **M1 カバー範囲**:
 
@@ -937,6 +948,34 @@ CI は `npm run test:all` を実行。mjs テストファイルが 1 つ移植�
 - `scripts/detection/` (9 mjs files)
 - `scripts/pipeline/` (6 mjs files)
 - `scripts/tools/` (6 mjs tool files → py/ に移動済)
+
+### Conformance test migration (Phase 6 cutover 時、reviewer P7 対応)
+
+Phase 4b で導入された cross-runtime conformance test は mjs harness
+(`scripts/py/conformance/harness.mjs`) を spawn する前提で動作するため、mjs
+削除と同時にそのままでは run できなくなる。cutover 時に以下 3 種類へ分岐して
+処理する:
+
+| 種別 | 対象 test | cutover 時の扱い |
+| --- | --- | --- |
+| **A. byte-parity regression gate** | `tests/conformance/test_turndown_288_matrix.py`, `test_segments_en_parity.py`, `test_segments_ja_parity.py` 等 | **golden snapshot 化**: cutover 直前に mjs harness を最後に一度回し、288-page 分の期待出力を `tests/fixtures/golden/<module>.jsonl` に保存。以降の Python-only 実装は本 fixture と byte 比較する。mjs side の仕様変更は発生しない (mjs は削除済) ので fixture は frozen reference として扱う |
+| **B. dual-source-of-truth drift** | `test_en_source_patches_parity.py` | patch の唯一ソースが mjs (`en_source_patches.mjs`) でなくなるため、mjs / JSON の drift 検出目的自体が消滅。cutover 時に test を削除し、patch data を `_en_source_patches_data.json` ではなく Python dict として `en_source_patches.py` に inline 化する |
+| **C. pure helper conformance** | `test_align_scoring_parity.py` / `test_normalize_parity.py` 等 pure-function byte parity | 同じく golden snapshot 化。harness dispatch を fixture-based に書き換える |
+
+**fixture 生成スクリプト** (cutover PR で追加予定、Phase 6 gate の一部):
+
+```bash
+# 最後の mjs run で golden を出力して commit
+node scripts/py/conformance/harness.mjs --dump-golden > tests/fixtures/golden/turndown_288.jsonl
+```
+
+fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加する際の diff
+を review-friendly に保つ。conformance harness は cutover PR で retire する
+(node 呼び出し path が消えるため)。
+
+**Phase 6 gate への影響**: `scripts/__tests__/*.mjs` と同じく、cutover 前に
+harness → golden fixture への書き換え PR を挟む。書き換え後の Python-only
+run が 288-matrix で pass することが Phase 6 gate の前提条件になる。
 
 ### dependency 変更 (cutover 時点で実行)
 
