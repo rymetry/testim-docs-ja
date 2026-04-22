@@ -419,7 +419,7 @@ def check_source_parity(
         file_slug = file_path_to_slug(file_path, docs_dir=docs_dir)
         if resolved_slug and file_slug != resolved_slug:
             continue
-        doc = read_doc_file(file_path)
+        doc = read_doc_file(file_path, root_dir=root_dir)
         if not resolved_slug and not matches_section_filter(
             doc["relativePath"], doc["data"], section
         ):
@@ -650,7 +650,7 @@ def check_source_parity(
         )
         local_source_urls: dict[str, str] = {}
         for file_path in all_files:
-            doc = read_doc_file(file_path)
+            doc = read_doc_file(file_path, root_dir=root_dir)
             if doc["data"].get("sourceUrl"):
                 local_source_urls[file_path_to_slug(file_path, docs_dir=docs_dir)] = doc["data"][
                     "sourceUrl"

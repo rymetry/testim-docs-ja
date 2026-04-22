@@ -365,19 +365,22 @@ def _collect_targets(
     section: str | None,
     resolved_slug: str | None,
     docs_dir: Path | None = None,
+    root_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
     """``<docs_dir>`` の markdown から ``{slug, sourceUrl, relativePath}`` 列を作る。
 
     ``docs_dir`` が None なら module-level ``DOCS_DIR`` を使う。``main(root_dir=...)``
     で test filesystem を注入したときに実 repo の docs を silent に読まないよう、
     caller 側で ``root_dir/src/content/docs`` を明示的に渡す契約 (reviewer P3)。
+    ``root_dir`` は ``read_doc_file`` の ``relativePath`` 計算に使う — None なら
+    module-level ``ROOT_DIR`` (reviewer P2 round-4: alternate root で落ちない)。
     """
     effective_docs_dir = docs_dir if docs_dir is not None else DOCS_DIR
     files = find_md_files(effective_docs_dir)
     targets: list[dict[str, Any]] = []
 
     for file_path in files:
-        doc = read_doc_file(file_path)
+        doc = read_doc_file(file_path, root_dir=root_dir)
         data: dict[str, Any] = doc["data"]
         source_url = data.get("sourceUrl")
         if not source_url:
@@ -514,6 +517,7 @@ def main(
         section=args.section,
         resolved_slug=resolved_slug,
         docs_dir=docs_dir,
+        root_dir=root_dir,
     )
     run_scope = build_run_scope(slug=resolved_slug, section=args.section)
 

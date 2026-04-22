@@ -372,9 +372,7 @@ def test_check_source_parity_malformed_baseline_rejects(tmp_path: Path) -> None:
 # ----------------------------------------------------------------------
 
 
-def test_page_coverage_gate_issue_order_is_deterministic(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_page_coverage_gate_issue_order_is_deterministic(tmp_path: Path) -> None:
     """SIDEBAR_URLS.md 順 + filesystem walk 順で ``_page-coverage-gate`` issue 順を固定。
 
     reviewer P2#1: 以前 ``local_slugs = {...}`` / ``sidebar_slugs`` が Python
@@ -388,13 +386,12 @@ def test_page_coverage_gate_issue_order_is_deterministic(
     - ``local-page-orphan`` × 1 (local 順: foo/only-local)
     - ``missing-*-snapshot`` — sourceUrl 無しなので発火しない
     の順で issue が emit されることを verify する。
-    """
-    import testim_parity.project as project_mod
 
-    # ``read_doc_file`` 内の ``to_relative_doc_path`` が module-level
-    # ``ROOT_DIR`` を読むため、tmp_path を root にしてもそこが実 repo を指す
-    # 限り synthetic MD が読めない。ROOT_DIR も差し替えて完全 isolation。
-    monkeypatch.setattr(project_mod, "ROOT_DIR", tmp_path)
+    reviewer P2 round-4: ``check_source_parity`` は ``root_dir`` を
+    ``read_doc_file`` / ``to_relative_doc_path`` まで thread するため、
+    ``project.ROOT_DIR`` の monkeypatch は不要。DI surface だけで alternate
+    root 実行が成立することを確認する。
+    """
     root = _setup_empty_repo(tmp_path)
 
     # SIDEBAR_URLS.md — 意図的に alphabetical 順ではなく a/c/b の順で配置。

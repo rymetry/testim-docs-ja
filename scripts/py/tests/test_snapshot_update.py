@@ -457,7 +457,7 @@ def test_main_surfaces_exclusion_registry_drift_in_error_log(
     def fake_find_md_files(_dir: Any) -> list[Path]:
         return [synthetic_md]
 
-    def fake_read_doc_file(_path: Path) -> dict[str, Any]:
+    def fake_read_doc_file(_path: Path, root_dir: Path | str | None = None) -> dict[str, Any]:
         return {
             "relativePath": "overview/probe.md",
             "data": {"sourceUrl": "https://docs.tricentis.com/testim/content/x.htm"},
@@ -517,16 +517,14 @@ def test_main_root_dir_injection_switches_docs_dir(
     からだけ target を拾うことを確認する。
     """
     import testim_parity.detection.snapshot_update as su_mod
-    import testim_parity.project as project_mod
 
-    # module-level ``DOCS_DIR`` / ``ROOT_DIR`` を tmp_path に差し替え、
-    # "もし root_dir が効いてなかったら実 repo を読んでしまう" 経路を
-    # fail-fast に変える。``read_doc_file`` 内部の
-    # ``to_relative_doc_path`` が ``project.ROOT_DIR`` を読むためそちらも
-    # 差し替えておく。
+    # module-level ``DOCS_DIR`` を壊して "もし root_dir が効いてなかったら
+    # 実 repo を読んでしまう" 経路を fail-fast に変える。``ROOT_DIR`` の方は
+    # reviewer P2 round-4 対応で ``read_doc_file`` / ``to_relative_doc_path``
+    # が ``root_dir`` kwarg を受けるようになったため、monkeypatch 不要 —
+    # プロダクション DI surface だけで isolation が完結する。
     unreachable = tmp_path / "___NOT_REAL_DOCS___"
     monkeypatch.setattr(su_mod, "DOCS_DIR", unreachable)
-    monkeypatch.setattr(project_mod, "ROOT_DIR", tmp_path)
 
     # tmp_path/src/content/docs/ に 1 件の synthetic MD を置く。
     synthetic_docs = tmp_path / "src" / "content" / "docs" / "overview"
@@ -590,11 +588,12 @@ def test_main_root_dir_injection_resolve_slug_uses_tmp_docs(
     tmp_path のみにある basename を ``--slug`` に渡して解決できることを確認。
     """
     import testim_parity.detection.snapshot_update as su_mod
-    import testim_parity.project as project_mod
 
+    # reviewer P2 round-4: ``read_doc_file`` が ``root_dir`` を受けるように
+    # なったので ``project.ROOT_DIR`` の monkeypatch は不要。DI surface だけで
+    # isolation が完結することを本 test で確認する。
     unreachable = tmp_path / "___NOT_REAL_DOCS___"
     monkeypatch.setattr(su_mod, "DOCS_DIR", unreachable)
-    monkeypatch.setattr(project_mod, "ROOT_DIR", tmp_path)
 
     synthetic_docs = tmp_path / "src" / "content" / "docs" / "guides"
     synthetic_docs.mkdir(parents=True)
