@@ -26,8 +26,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enable auto-merge
+        # Use --merge (not --squash) because the repository disables squash merging
+        # (``allow_squash_merge=false``) to keep a merge-commit-only history that
+        # matches human PR workflow. ``--squash`` failed with ``GraphQL: Merge
+        # method squash merging is not allowed on this repository`` and left
+        # Dependabot PRs stuck (observed on PR #377 astro bump, 2026-04-21).
         if: steps.metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr merge "$PR_URL" --auto --squash
+        run: gh pr merge "$PR_URL" --auto --merge
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
