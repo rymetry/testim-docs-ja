@@ -8,7 +8,7 @@
 を port したら、その module 内の ``__all__`` に name を追加し、conformance
 harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録する。
 
-現在の module surface (Phase 3 M4 時点、layer 順):
+現在の module surface (Phase 4b.1 完了時点、layer 順):
 
 **基盤 (Phase 0)**:
 
@@ -32,7 +32,9 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
 - ``testim_parity.segments_ja`` — markdown-it-py hybrid JA segment 抽出
 - ``testim_parity.segments_ja_html`` — JA 用 HTML / details / table helpers
 - ``testim_parity.turndown`` — HTML→MD 変換 (mjs ``convertEnHtmlToMd``
-  相当、markdownify + MadCap custom converters。Phase 4b M1)
+  相当、markdownify + MadCap custom converters + turndown 互換 escape/
+  collapseWhitespace。Phase 4b M1 / Phase 4b.1 で 288-page corpus 全体で
+  byte-identical)
 
 **基盤 predicates/registry (Phase 3 M1)**:
 
@@ -80,13 +82,16 @@ harness (``scripts/py/conformance/harness.mjs``) の DISPATCH へ同時登録す
   4 issue family (snapshotDiff / parityRegression / sourceSyncHealth /
   parityFollowup) を組み立てる主エントリ。Phase 4 CLI script の build 基盤
 
-**CLI scripts (Phase 4 — complete)**:
+**CLI scripts (Phase 4 + 4b — full port complete)**:
+
+Phase 4 で 21 script を初期 port し、Phase 4b で turndown 依存の 4 script を
+full port に昇格。**全 CLI が Python ネイティブ実装** (mjs subprocess wrapper
+は 0)。Phase 6 atomic cutover 後に npm scripts が Python CLI を直接呼ぶ。
 
 Detection (``testim_parity.detection.*``):
 
 - ``check_patch_review_cadence`` — reviewAfter 過去超過 entry の non-blocking 警告
-- ``check_source_parity`` — 主 parity gate (mjs subprocess wrapper。
-  Phase 4b M2 で full port 予定、``turndown`` module は整備済)
+- ``check_source_parity`` — 主 parity gate (915 LOC full port、Phase 4b M2)
 - ``check_upstream_recovery`` — EN patch / sync exclusion の Axis A/B 集計 →
   ``upstream-recovery-status.json``
 - ``find_untranslated`` — baseline の ``segment-untranslated`` slug を scan
@@ -94,14 +99,14 @@ Detection (``testim_parity.detection.*``):
 - ``generate_parity_baseline`` — schema v2 baseline 生成 (regenerate / slug / types 3 mode)
 - ``render_upstream_recovery_comment`` — PR sticky comment の markdown 書き出し
 - ``snapshot_diff`` — committed vs working tree snapshot の diff (純 Python)
-- ``snapshot_update`` — live EN HTML fetch (HTTP + mjs subprocess wrapper。
-  Phase 4b M3 で full port 予定)
+- ``snapshot_update`` — live EN HTML fetch + turndown 比較 (486 LOC full
+  port、Phase 4b M3)
 
 Pipeline (``testim_parity.pipeline.*``):
 
 - ``apply_llm_translations`` — LLM 翻訳結果を atomic write で doc に反映
-- ``fetch_translate_images`` — HTML→MD 変換 (mjs subprocess wrapper。
-  Phase 4b M4 で ``turndown`` module に切替予定)
+- ``fetch_translate_images`` — HTML→MD 変換 + 画像 DL + リンク書き換え
+  (409 LOC full port、Phase 4b M4)
 - ``generate_untranslated_placeholders`` — ⏳ page の placeholder md 生成
 - ``pipeline`` — 5 step orchestration (url_collect / placeholders / fetch / prepare_llm / apply_llm)
 - ``prepare_llm_tasks`` — 翻訳 task prompt 生成
@@ -116,7 +121,8 @@ Tools (``testim_parity.tools.*``):
 - ``report_frontmatter_categories`` — category 集計 + SIDEBAR と照合
 - ``sync_frontmatter_from_sidebar`` — SIDEBAR_URLS.md → frontmatter category/order
 
-**Phase 5 以降の予定**: pytest 全書き直し / atomic cutover / COPY ボタン追加。
+**Phase 5 以降の予定**: pytest 全書き直し (55 mjs test → pytest) /
+atomic cutover (mjs 削除 + npm scripts 切替) / COPY ボタン追加。
 """
 
 from __future__ import annotations
