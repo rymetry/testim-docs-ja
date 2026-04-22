@@ -368,3 +368,26 @@ def test_pre_content_preserved_by_collapse_whitespace() -> None:
     連続改行を byte for byte 保持する。"""
     html = '<pre><code class="language-bash">line1\n\n\nline2</code></pre>'
     assert html_to_md(html) == "```bash\nline1\n\n\nline2\n```"
+
+
+def test_pre_uses_block_branch_in_collapse_whitespace() -> None:
+    """``<pre>`` は mjs と同じく block 分岐を通り、直後の text node の
+    leading space を strip する (reviewer P1 対応)。
+
+    旧実装は ``<pre>`` を void 相当 (``keep_leading_ws=True``) で扱っていたため、
+    ``<pre>...</pre> after`` の leading space が preserve されて mjs と
+    divergence していた。mjs ``collapseWhitespace`` L492 は ``isBlock(PRE) ==
+    true`` で最初の branch に分岐し ``keep_leading_ws=False`` に倒す。
+    """
+    # mjs: "before\n\n```\nx\n```\n\nafter" — leading space on " after" is
+    # stripped by the block branch.
+    html = "<div>before <pre><code>x</code></pre> after</div>"
+    assert html_to_md(html) == "before\n\n```\nx\n```\n\nafter"
+
+
+def test_pre_block_branch_rstrips_prev_text() -> None:
+    """``<pre>`` の直前 text に trailing space があれば削る (block 分岐の
+    ``prev_text = prev_text.replace(/ $/, '')`` 等価、reviewer P1 対応)。"""
+    # mjs: "word\n\n```\nx\n```\n\nend" — trailing space on "word " is trimmed.
+    html = "<div>word <pre><code>x</code></pre>end</div>"
+    assert html_to_md(html) == "word\n\n```\nx\n```\n\nend"

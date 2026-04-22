@@ -949,6 +949,34 @@ CI は `npm run test:all` を実行。mjs テストファイルが 1 つ移植�
 - `scripts/pipeline/` (6 mjs files)
 - `scripts/tools/` (6 mjs tool files → py/ に移動済)
 
+### Conformance test migration (Phase 6 cutover 時、reviewer P7 対応)
+
+Phase 4b で導入された cross-runtime conformance test は mjs harness
+(`scripts/py/conformance/harness.mjs`) を spawn する前提で動作するため、mjs
+削除と同時にそのままでは run できなくなる。cutover 時に以下 3 種類へ分岐して
+処理する:
+
+| 種別 | 対象 test | cutover 時の扱い |
+| --- | --- | --- |
+| **A. byte-parity regression gate** | `tests/conformance/test_turndown_288_matrix.py`, `test_segments_en_parity.py`, `test_segments_ja_parity.py` 等 | **golden snapshot 化**: cutover 直前に mjs harness を最後に一度回し、288-page 分の期待出力を `tests/fixtures/golden/<module>.jsonl` に保存。以降の Python-only 実装は本 fixture と byte 比較する。mjs side の仕様変更は発生しない (mjs は削除済) ので fixture は frozen reference として扱う |
+| **B. dual-source-of-truth drift** | `test_en_source_patches_parity.py` | patch の唯一ソースが mjs (`en_source_patches.mjs`) でなくなるため、mjs / JSON の drift 検出目的自体が消滅。cutover 時に test を削除し、patch data を `_en_source_patches_data.json` ではなく Python dict として `en_source_patches.py` に inline 化する |
+| **C. pure helper conformance** | `test_align_scoring_parity.py` / `test_normalize_parity.py` 等 pure-function byte parity | 同じく golden snapshot 化。harness dispatch を fixture-based に書き換える |
+
+**fixture 生成スクリプト** (cutover PR で追加予定、Phase 6 gate の一部):
+
+```bash
+# 最後の mjs run で golden を出力して commit
+node scripts/py/conformance/harness.mjs --dump-golden > tests/fixtures/golden/turndown_288.jsonl
+```
+
+fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加する際の diff
+を review-friendly に保つ。conformance harness は cutover PR で retire する
+(node 呼び出し path が消えるため)。
+
+**Phase 6 gate への影響**: `scripts/__tests__/*.mjs` と同じく、cutover 前に
+harness → golden fixture への書き換え PR を挟む。書き換え後の Python-only
+run が 288-matrix で pass することが Phase 6 gate の前提条件になる。
+
 ### dependency 変更 (cutover 時点で実行)
 
 - Remove: `turndown` (全 mjs 削除後、依存するスクリプトが存在しない)

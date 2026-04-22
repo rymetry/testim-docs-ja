@@ -267,12 +267,14 @@ def _collapse_whitespace(root: Tag | BeautifulSoup) -> None:
             prev_text = new_text
             return
         if isinstance(node, Tag):
-            if _is_pre_element(node):
-                # pre subtree を丸ごと skip。後続 text は block 相当として
-                # leading ws を削る (= prev_text/keep_leading_ws をリセット)。
-                prev_text = None
-                keep_leading_ws = True
-                return
+            # ``<pre>`` は ``_TURNDOWN_BLOCK_ELEMENTS`` に含まれ、mjs
+            # ``collapseWhitespace`` (L492) でも ``isBlock(node) === true`` で
+            # block 分岐を通る (``isPre`` の else-if 分岐には落ちない)。
+            # ``_iter`` 側で ``<pre>`` 配下の children を skip しているので
+            # block 分岐の ``yield from _iter(node)`` は空 iterator を返す。
+            # (reviewer P1 対応: 旧 ``_is_pre_element`` 早期リターンは
+            # ``keep_leading_ws=True`` を設定して mjs の block 分岐
+            # (``keep_leading_ws=False``) と乖離していたため削除)
             if node.name == "br" or _is_turndown_block(node):
                 if prev_text is not None:
                     trimmed = re.sub(r" $", "", str(prev_text))
@@ -285,6 +287,7 @@ def _collapse_whitespace(root: Tag | BeautifulSoup) -> None:
                 prev_text = None
                 keep_leading_ws = False
                 # block / br の子供は独立した文脈として再帰
+                # ``<pre>`` の場合は ``_iter`` の pre guard で children が空 iterator になる
                 yield from _iter(node)
                 return
             if _is_turndown_void(node):
@@ -802,15 +805,32 @@ def html_to_md(html: str) -> str:
     ``preprocess_en_html`` を通さないので callout/details 等の MadCap
     artifact 正規化は caller 責務。通常は ``convert_en_html_to_md`` を使う。
 
-    Phase 4b.1 以降は BS4 tree に対して mjs turndown の collapseWhitespace を
-    適用してから markdownify に渡す。これにより block / ``<br>`` 境界の
-    leading space 除去や ``<img>\\n<img>`` → ``![](a) ![](b)`` の space
-    preservation が mjs と byte-identical になる。
+    **Pipeline (5 step, Phase 4b.1)**:
+
+    1. ``_strip_empty_inline_elements(html)`` — raw string 段階で
+       ``<em></em>`` / ``<em>   </em>`` 等の空 inline を剥がす。mjs turndown
+       の DOM whitespace collapse が空 inline を消す挙動と等価にし、後続の
+       text node merge で double-space を生まないようにする
+    2. ``BeautifulSoup(normalized_html, "html.parser")`` — 文字列を BS4 tree
+       に parse
+    3. ``_collapse_whitespace(soup)`` — mjs turndown の DOM
+       ``collapseWhitespace`` を tree 上で in-place 適用 (text node の
+       ``[ \\r\\n\\t]+`` → ``" "`` + block / ``<br>`` 境界の leading/trailing
+       space trim + void 要素隣接 text の leading ws preservation)
+    4. ``_TurndownConverter.convert_soup(soup)`` — markdownify
+       subclass に正規化済 tree を渡し、markdown 文字列に変換
+    5. ``_normalize_output(md)`` — fence-aware split で code fence 外側の
+       ``\\n{3,}`` → ``\\n\\n`` collapse + 全体 trim。code content 内部の
+       連続空行は preserve する
     """
+    # Step 1: 空 inline tag を raw string 段階で剥がす
     normalized_html = _strip_empty_inline_elements(html)
-    converter = _TurndownConverter()
+    # Step 2: BS4 tree parse
     soup = BeautifulSoup(normalized_html, "html.parser")
+    # Step 3: mjs ``collapseWhitespace`` を tree に pre-pass 適用
     _collapse_whitespace(soup)
+    # Step 4 + 5: markdownify → 後処理
+    converter = _TurndownConverter()
     return _normalize_output(converter.convert_soup(soup))
 
 
