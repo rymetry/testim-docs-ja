@@ -363,3 +363,78 @@ def test_check_source_parity_malformed_baseline_rejects(tmp_path: Path) -> None:
         json_out=True,
     )
     assert exit_code == 1
+
+
+# ----------------------------------------------------------------------
+# reviewer P2#1: ``_page-coverage-gate`` の issue 順は deterministic
+# (caller が sidebar/local 挿入順 list を渡す契約。Python ``set`` の
+# hash randomization による run-to-run drift を防ぐ。)
+# ----------------------------------------------------------------------
+
+
+def test_page_coverage_gate_issue_order_is_deterministic(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """SIDEBAR_URLS.md 順 + filesystem walk 順で ``_page-coverage-gate`` issue 順を固定。
+
+    reviewer P2#1: 以前 ``local_slugs = {...}`` / ``sidebar_slugs`` が Python
+    ``set`` のまま ``check_page_coverage`` に渡されていたため、``PYTHONHASHSEED``
+    によって run-to-run で順序が入れ替わった。``parity-check-status.json`` の
+    ``_page-coverage-gate`` の ``issues`` 配列は downstream sync / detection
+    レポートが byte 比較するため、順序が不安定だと diff が常時出る。
+
+    この test は 3 件の sidebar entry + 2 件の local + 0 件 snapshot を用意し:
+    - ``source-page-missing-local`` × 3 (sidebar 順: foo/a, foo/c, foo/b)
+    - ``local-page-orphan`` × 1 (local 順: foo/only-local)
+    - ``missing-*-snapshot`` — sourceUrl 無しなので発火しない
+    の順で issue が emit されることを verify する。
+    """
+    import testim_parity.project as project_mod
+
+    # ``read_doc_file`` 内の ``to_relative_doc_path`` が module-level
+    # ``ROOT_DIR`` を読むため、tmp_path を root にしてもそこが実 repo を指す
+    # 限り synthetic MD が読めない。ROOT_DIR も差し替えて完全 isolation。
+    monkeypatch.setattr(project_mod, "ROOT_DIR", tmp_path)
+    root = _setup_empty_repo(tmp_path)
+
+    # SIDEBAR_URLS.md — 意図的に alphabetical 順ではなく a/c/b の順で配置。
+    # ``load_sidebar_slugs_ordered`` が regex 挿入順 = この並びを保つはず。
+    (root / "docs" / "SIDEBAR_URLS.md").write_text(
+        "- [A](https://docs.tricentis.com/testim/content/foo/a.htm)\n"
+        "- [C](https://docs.tricentis.com/testim/content/foo/c.htm)\n"
+        "- [B](https://docs.tricentis.com/testim/content/foo/b.htm)\n",
+        encoding="utf-8",
+    )
+
+    # local docs — 意図的に alphabetical 順ではなく順序を混ぜる。
+    docs = root / "src" / "content" / "docs" / "foo"
+    docs.mkdir(parents=True)
+    (docs / "only-local.md").write_text("---\ntitle: Only Local\n---\n\nbody\n", encoding="utf-8")
+    (docs / "a.md").write_text("---\ntitle: A\n---\n\nbody\n", encoding="utf-8")
+
+    output_path = root / "parity-check-status.json"
+    exit_code = check_source_parity(
+        root_dir=root,
+        output_path=output_path,
+        stdout=io.StringIO(),
+        stderr=io.StringIO(),
+        json_out=True,
+    )
+    assert exit_code == 1  # reportable coverage issue が出る
+
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    gate_entry = next((f for f in payload["files"] if f["file"] == "_page-coverage-gate"), None)
+    assert gate_entry is not None
+    issues = gate_entry["issues"]
+
+    # ``source-page-missing-local`` は sidebar 挿入順 (a, c, b) で emit される。
+    missing = [i for i in issues if i["type"] == "source-page-missing-local"]
+    missing_slugs = [i["detail"].rsplit(": ", 1)[-1] for i in missing]
+    assert missing_slugs == ["foo/c", "foo/b"], (
+        "sidebar iteration must preserve insertion order from "
+        "load_sidebar_slugs_ordered (set iteration would drift across PYTHONHASHSEED)"
+    )
+    # ``local-page-orphan`` は local slug の filesystem walk 順で emit される。
+    orphans = [i for i in issues if i["type"] == "local-page-orphan"]
+    orphan_slugs = [i["detail"].rsplit(": ", 1)[-1] for i in orphans]
+    assert orphan_slugs == ["foo/only-local"]

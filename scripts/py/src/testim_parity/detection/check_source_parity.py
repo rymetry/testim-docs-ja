@@ -46,7 +46,12 @@ from ..baseline import (
     load_baseline_file,
     tag_issues_with_baseline,
 )
-from ..checks import compare_snapshot_structure, load_sidebar_slugs, local_check
+from ..checks import (
+    compare_snapshot_structure,
+    load_sidebar_slugs,
+    load_sidebar_slugs_ordered,
+    local_check,
+)
 from ..en_source_patches import create_en_source_patch_coverage
 from ..glossary_mask import create_mask_coverage, mask_segment_text
 from ..issue_state import (
@@ -379,7 +384,7 @@ def check_source_parity(
         return 1
     baseline_invalidated_slugs: set[str] = set()
 
-    resolved_slug = resolve_slug(slug) if slug else None
+    resolved_slug = resolve_slug(slug, docs_dir=docs_dir) if slug else None
     if slug and not resolved_slug:
         print(f'❌ Unknown slug: "{slug}". No matching document found.', file=err)
         return 1
@@ -411,7 +416,7 @@ def check_source_parity(
     patch_coverage = create_en_source_patch_coverage()
 
     for file_path in all_files:
-        file_slug = file_path_to_slug(file_path)
+        file_slug = file_path_to_slug(file_path, docs_dir=docs_dir)
         if resolved_slug and file_slug != resolved_slug:
             continue
         doc = read_doc_file(file_path)
@@ -636,16 +641,30 @@ def check_source_parity(
             print("", file=out)
 
     if not resolved_slug:
-        local_slugs = {file_path_to_slug(f) for f in all_files}
+        # mjs ``new Set(allFiles.map(f => filePathToSlug(f)))`` は挿入順を保つ
+        # JS ``Set`` を返す。Python ``set`` は挿入順を保存しないため、
+        # ``dict.fromkeys`` で dedup + ``find_md_files`` の filesystem walk 順を
+        # 明示的に保持した list を ``check_page_coverage`` に渡す (reviewer P2)。
+        local_slugs: list[str] = list(
+            dict.fromkeys(file_path_to_slug(f, docs_dir=docs_dir) for f in all_files)
+        )
         local_source_urls: dict[str, str] = {}
         for file_path in all_files:
             doc = read_doc_file(file_path)
             if doc["data"].get("sourceUrl"):
-                local_source_urls[file_path_to_slug(file_path)] = doc["data"]["sourceUrl"]
+                local_source_urls[file_path_to_slug(file_path, docs_dir=docs_dir)] = doc["data"][
+                    "sourceUrl"
+                ]
+
+        # sidebar_slugs も同じ理由で insertion-order (regex match 順) 版に差し
+        # 替える。page_coverage の ``source-page-missing-local`` issue 順が
+        # mjs と byte-identical になる。既存の ``sidebar_slugs`` set は
+        # single-page mode の ``in`` lookup でのみ使用する。
+        sidebar_slugs_ordered = load_sidebar_slugs_ordered(sidebar_text)
 
         coverage_issues = list(
             check_page_coverage(
-                sidebar_slugs=sidebar_slugs,
+                sidebar_slugs=sidebar_slugs_ordered,
                 local_slugs=local_slugs,
                 local_source_urls=local_source_urls,
                 snapshot_slugs=snapshot_slugs,

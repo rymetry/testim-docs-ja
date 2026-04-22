@@ -466,7 +466,7 @@ def test_main_surfaces_exclusion_registry_drift_in_error_log(
 
     monkeypatch.setattr(su_mod, "find_md_files", fake_find_md_files)
     monkeypatch.setattr(su_mod, "read_doc_file", fake_read_doc_file)
-    monkeypatch.setattr(su_mod, "file_path_to_slug", lambda _p: "overview/probe")
+    monkeypatch.setattr(su_mod, "file_path_to_slug", lambda _p, docs_dir=None: "overview/probe")
     monkeypatch.setattr(su_mod, "is_source_side_debt", lambda _slug: True)
     monkeypatch.setattr(su_mod, "get_exclusion", lambda _slug: None)
 
@@ -496,6 +496,137 @@ def test_main_surfaces_exclusion_registry_drift_in_error_log(
     error_details = [err["detail"] for err in result["sourceSyncStatus"]["errors"]]
     assert any("sync_exclusions registry is missing entry" in detail for detail in error_details)
     assert any("'overview/probe'" in detail for detail in error_details)
+
+
+# ----------------------------------------------------------------------
+# reviewer P3: ``root_dir`` injection は input (docs) も差し替える
+# ----------------------------------------------------------------------
+
+
+def test_main_root_dir_injection_switches_docs_dir(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """``main(root_dir=tmp_path)`` は出力だけでなく input docs も tmp_path に。
+
+    reviewer P3: 以前は ``_collect_targets`` と ``resolve_slug`` が
+    module-level ``DOCS_DIR`` を読んでいたため、alternate root を指定しても
+    実 repo の ``src/content/docs/`` を silent に読んでしまう不整合があった。
+    本 test は synthetic docs を tmp_path に置き、module-level ``DOCS_DIR`` は
+    意図的に "到達できない path" に差し替えた上で、``main()`` が tmp_path 側
+    からだけ target を拾うことを確認する。
+    """
+    import testim_parity.detection.snapshot_update as su_mod
+    import testim_parity.project as project_mod
+
+    # module-level ``DOCS_DIR`` / ``ROOT_DIR`` を tmp_path に差し替え、
+    # "もし root_dir が効いてなかったら実 repo を読んでしまう" 経路を
+    # fail-fast に変える。``read_doc_file`` 内部の
+    # ``to_relative_doc_path`` が ``project.ROOT_DIR`` を読むためそちらも
+    # 差し替えておく。
+    unreachable = tmp_path / "___NOT_REAL_DOCS___"
+    monkeypatch.setattr(su_mod, "DOCS_DIR", unreachable)
+    monkeypatch.setattr(project_mod, "ROOT_DIR", tmp_path)
+
+    # tmp_path/src/content/docs/ に 1 件の synthetic MD を置く。
+    synthetic_docs = tmp_path / "src" / "content" / "docs" / "overview"
+    synthetic_docs.mkdir(parents=True)
+    synthetic_md = synthetic_docs / "page-a.md"
+    synthetic_md.write_text(
+        "---\n"
+        "title: Page A\n"
+        'sourceUrl: "https://docs.tricentis.com/testim/content/overview/page-a.htm"\n'
+        "---\n\nbody\n",
+        encoding="utf-8",
+    )
+
+    def fake_fetch(_url: str) -> dict[str, Any]:
+        return {
+            "html": '<html><div id="mc-main-content"><p>ok</p></div></html>',
+            "status": 200,
+        }
+
+    result = main(
+        [],
+        stdout=io.StringIO(),
+        stderr=io.StringIO(),
+        root_dir=tmp_path,
+        fetch_html_fn=fake_fetch,
+        fetch_toc_fn=lambda: {
+            "sections": [
+                {
+                    "title": "Overview",
+                    "url": "/content/overview/page-a.htm",
+                    "pages": [
+                        {
+                            "slug": "overview/page-a",
+                            "url": "/content/overview/page-a.htm",
+                            "title": "A",
+                        }
+                    ],
+                }
+            ]
+        },
+        sleep_fn=lambda _s: None,
+    )
+
+    # 1 件 fetch 成功。実 repo ではなく tmp_path の synthetic doc を使った証拠。
+    assert result["fetched"] == 1
+    assert result["errors"] == 0
+    # snapshot が tmp_path 配下に書かれる (実 repo には書かれない)。
+    assert (tmp_path / "snapshots" / "en" / "content" / "overview" / "page-a.html").exists()
+
+
+def test_main_root_dir_injection_resolve_slug_uses_tmp_docs(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """``--slug=basename`` の resolution も injected ``root_dir`` を使う。
+
+    reviewer P3 の第 2 症状: ``resolve_slug()`` が module-level ``DOCS_DIR``
+    を見ていたため、``root_dir`` 注入時に basename→full-slug map が
+    実 repo から作られ、tmp_path 側に存在しない basename を誤って受理したり
+    逆の問題が起きた。``DOCS_DIR`` を到達不能な path に差し替えた上で、
+    tmp_path のみにある basename を ``--slug`` に渡して解決できることを確認。
+    """
+    import testim_parity.detection.snapshot_update as su_mod
+    import testim_parity.project as project_mod
+
+    unreachable = tmp_path / "___NOT_REAL_DOCS___"
+    monkeypatch.setattr(su_mod, "DOCS_DIR", unreachable)
+    monkeypatch.setattr(project_mod, "ROOT_DIR", tmp_path)
+
+    synthetic_docs = tmp_path / "src" / "content" / "docs" / "guides"
+    synthetic_docs.mkdir(parents=True)
+    (synthetic_docs / "uniquely-tmp-only.md").write_text(
+        "---\n"
+        "title: Only In Tmp\n"
+        'sourceUrl: "https://docs.tricentis.com/testim/content/guides/uniquely-tmp-only.htm"\n'
+        "---\n\nbody\n",
+        encoding="utf-8",
+    )
+
+    def fake_fetch(_url: str) -> dict[str, Any]:
+        return {
+            "html": '<html><div id="mc-main-content"><p>ok</p></div></html>',
+            "status": 200,
+        }
+
+    result = main(
+        ["--slug=uniquely-tmp-only"],
+        stdout=io.StringIO(),
+        stderr=io.StringIO(),
+        root_dir=tmp_path,
+        fetch_html_fn=fake_fetch,
+        fetch_toc_fn=lambda: {"sections": []},
+        sleep_fn=lambda _s: None,
+    )
+
+    # resolve_slug が tmp_path の basename map を読んで ``guides/uniquely-tmp-only``
+    # に解決 → 1 件 fetch 成功。実 repo を読んでいたら ``Unknown slug`` 早期 return。
+    assert result["fetched"] == 1
+    # sidebar は empty なので verify_sidebar が ok=False → errors 1 件のみ。
+    assert result["errors"] == 1
 
 
 # ----------------------------------------------------------------------

@@ -360,9 +360,20 @@ def run_recovery_probe(
 # ---------------------------------------------------------------------------
 
 
-def _collect_targets(*, section: str | None, resolved_slug: str | None) -> list[dict[str, Any]]:
-    """``src/content/docs/`` の markdown から ``{slug, sourceUrl, relativePath}`` 列を作る。"""
-    files = find_md_files(DOCS_DIR)
+def _collect_targets(
+    *,
+    section: str | None,
+    resolved_slug: str | None,
+    docs_dir: Path | None = None,
+) -> list[dict[str, Any]]:
+    """``<docs_dir>`` の markdown から ``{slug, sourceUrl, relativePath}`` 列を作る。
+
+    ``docs_dir`` が None なら module-level ``DOCS_DIR`` を使う。``main(root_dir=...)``
+    で test filesystem を注入したときに実 repo の docs を silent に読まないよう、
+    caller 側で ``root_dir/src/content/docs`` を明示的に渡す契約 (reviewer P3)。
+    """
+    effective_docs_dir = docs_dir if docs_dir is not None else DOCS_DIR
+    files = find_md_files(effective_docs_dir)
     targets: list[dict[str, Any]] = []
 
     for file_path in files:
@@ -372,7 +383,7 @@ def _collect_targets(*, section: str | None, resolved_slug: str | None) -> list[
         if not source_url:
             continue
 
-        file_slug = file_path_to_slug(file_path)
+        file_slug = file_path_to_slug(file_path, docs_dir=effective_docs_dir)
         if resolved_slug and file_slug != resolved_slug:
             continue
         if section and not matches_section_filter(doc["relativePath"], data, section):
@@ -473,8 +484,17 @@ def main(
     args = _parse_args(argv)
 
     err = stderr if stderr is not None else sys.stderr
+    out = stdout if stdout is not None else sys.stdout
+    effective_root = root_dir if root_dir is not None else ROOT_DIR
+    # ``root_dir`` を input (docs) + output (snapshots/status) の両方に一貫して
+    # 適用する。reviewer P3 対応: 以前は input が ``DOCS_DIR`` 固定で、alternate
+    # root fixture 実行時に実 repo を silent に読んでしまう不整合があった。
+    docs_dir = effective_root / "src" / "content" / "docs" if root_dir is not None else DOCS_DIR
+    content_dir = effective_root / "snapshots" / "en" / "content"
+    sidebar_path = effective_root / "snapshots" / "en" / "sidebar.json"
+    status_path = effective_root / "source-sync-status.json"
 
-    resolved_slug = resolve_slug(args.slug) if args.slug else None
+    resolved_slug = resolve_slug(args.slug, docs_dir=docs_dir) if args.slug else None
     if args.slug and not resolved_slug:
         print(
             f'❌ Unknown slug: "{args.slug}". No matching document found.',
@@ -490,14 +510,12 @@ def main(
             "sourceSyncStatus": None,
         }
 
-    targets = _collect_targets(section=args.section, resolved_slug=resolved_slug)
+    targets = _collect_targets(
+        section=args.section,
+        resolved_slug=resolved_slug,
+        docs_dir=docs_dir,
+    )
     run_scope = build_run_scope(slug=resolved_slug, section=args.section)
-
-    out = stdout if stdout is not None else sys.stdout
-    effective_root = root_dir if root_dir is not None else ROOT_DIR
-    content_dir = effective_root / "snapshots" / "en" / "content"
-    sidebar_path = effective_root / "snapshots" / "en" / "sidebar.json"
-    status_path = effective_root / "source-sync-status.json"
 
     if len(targets) == 0:
         print("No targets found.", file=out)
