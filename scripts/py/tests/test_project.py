@@ -183,6 +183,30 @@ class TestReadDocFile:
         assert result["relativePath"].endswith(".md")
         assert result["section"]  # non-empty section folder
 
+    def test_accepts_explicit_root_dir_for_alternate_workspace(self, tmp_path):
+        """reviewer P2 round-4: ``root_dir`` を渡せば module-level ``ROOT_DIR``
+        の外にある MD でも ``ValueError`` を raise せず relativePath を返す。
+
+        ``main(root_dir=...)`` を alternate workspace で実行する CLI が
+        monkeypatch なしで動くことを保証する regression。
+        """
+        from testim_parity.project import read_doc_file
+
+        # tmp_path は通常の ``ROOT_DIR`` の外側。module-level 版の
+        # ``to_relative_doc_path`` だと ``relative_to`` が即 raise する。
+        docs_dir = tmp_path / "src" / "content" / "docs" / "overview"
+        docs_dir.mkdir(parents=True)
+        md = docs_dir / "page.md"
+        md.write_text(
+            "---\ntitle: T\nsourceUrl: https://example.com/x.htm\n---\n\nbody\n",
+            encoding="utf-8",
+        )
+
+        result = read_doc_file(md, root_dir=tmp_path)
+        assert result["relativePath"] == "src/content/docs/overview/page.md"
+        assert result["data"]["title"] == "T"
+        assert result["body"].strip() == "body"
+
 
 class TestBuildDocsIndex:
     def test_collects_source_content_path(self, tmp_path):
@@ -210,6 +234,25 @@ class TestToRelativeDocPath:
             pytest.skip("SYSTEM_SPEC.md is not present in this worktree")
         rel = to_relative_doc_path(candidate)
         assert rel.endswith("SYSTEM_SPEC.md")
+
+    def test_accepts_explicit_root_dir(self, tmp_path):
+        """reviewer P2 round-4: ``root_dir`` 引数で base を override できる。"""
+        from testim_parity.project import to_relative_doc_path
+
+        deep = tmp_path / "a" / "b" / "c.md"
+        deep.parent.mkdir(parents=True)
+        deep.touch()
+        assert to_relative_doc_path(deep, root_dir=tmp_path) == "a/b/c.md"
+
+    def test_raises_when_path_outside_root_dir(self, tmp_path):
+        """``root_dir`` の外側の path は ``ValueError`` を raise する。"""
+        import pytest
+
+        from testim_parity.project import to_relative_doc_path
+
+        outside = tmp_path.parent / "__outside__" / "x.md"
+        with pytest.raises(ValueError):
+            to_relative_doc_path(outside, root_dir=tmp_path)
 
 
 class TestGetDocSection:

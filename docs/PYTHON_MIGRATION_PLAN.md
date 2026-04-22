@@ -789,11 +789,38 @@ Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えて�
 
 | Milestone | 対象 | 状態 |
 | --- | --- | --- |
-| **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ conformance harness で mjs と byte-identical (17 unit + 2 parity sample) |
-| M2 | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | pending |
-| M3 | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | pending |
-| M4 | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | pending |
-| M5 | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | pending |
+| **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ 39 代表 pattern で mjs と byte-identical (17 unit + 2 parity sample) — PR #375 merged |
+| **M2** | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | 🟡 **orchestration 完了** — 38 unit tests、``parity-check-status.json`` schema / 副作用 shape mjs 互換、DI 完備。M5 conformance (baseline / snapshot_diff) で 2 CLI は mjs byte-parity。**turndown 依存 path の full-corpus byte parity は Phase 4b.1 で解消**、PR #376 |
+| **M3** | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | 🟡 **orchestration 完了** — 33 unit tests (depth tracking / retry / recovery probe / DI stdout+stderr / registry drift / root_dir input isolation)、PR #376 |
+| **M4** | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | ✅ 完了 — 22 unit tests、module coverage 88%、PR #376 |
+| **M5** | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | ✅ 完了 — 14 integration tests、全 byte-identical、semantic delta 0 件、PR #376 |
+
+### Phase 4b.1 follow-up (reviewer P2#2 対応)
+
+**Goal**: ``convert_en_html_to_md`` を 288-page corpus 全体で mjs と byte-
+identical にする。現状 ~168 / 288 page が divergent (reviewer round-3 の
+調査で確認)。
+
+| カテゴリ | divergence 件数 | 内容 |
+| --- | --- | --- |
+| leading_ws | 84 | ``<br/>`` 等の block boundary 後の leading whitespace collapse |
+| other | 43 | whitespace 複合 / markdownify inline detection 差 |
+| trailing_ws | 23 | list item の trailing 2-space (hard line break) |
+| plus_escape | 13 | ``+`` の markdown list-marker escape (``\+``) |
+| image_concat | 4 | 隣接 ``<img>`` の inline 連結 |
+| hash_escape | 1 | paragraph 内 ``#`` の ATX-heading escape (``\#``) |
+
+すべて M1 で取り込まなかった turndown default rule の追加 port で解消できる
+(markdownify subclass の converter を拡張 + ``_normalize_output`` の
+post-processing)。
+
+**Gate**: ``tests/conformance/test_turndown_288_matrix.py`` が ``xfail``
+marker なしで pass する。Phase 6 atomic cutover までには必ず閉じる。
+
+**現時点の test 配置**: 本テストは追加済み (PR #376 reviewer round-3) で
+``@pytest.mark.xfail(strict=False)`` でレポートされる。M2 / M3 orchestration
+が mjs と **同じ parity-check-status schema** を出力することは M5 conformance
+で確認済なので、merge 後も regression gate として機能する。
 
 ### Phase 4b M1 byte-parity scope (現状)
 

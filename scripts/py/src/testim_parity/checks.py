@@ -45,6 +45,7 @@ __all__ = [
     "compare_snapshot_structure",
     "is_english_only_line",
     "load_sidebar_slugs",
+    "load_sidebar_slugs_ordered",
     "local_check",
 ]
 
@@ -99,7 +100,9 @@ def load_sidebar_slugs(sidebar_text: str) -> set[str]:
     """SIDEBAR_URLS.md テキストから Tricentis slug 集合を抽出する (mjs 等価)。
 
     ``match_all_tricentis_urls`` の matches から ``extract_slug`` で slug を
-    派生し、非空のもののみ set に収める (重複は自動的に排除)。
+    派生し、非空のもののみ set に収める (重複は自動的に排除)。``in`` lookup や
+    集合演算を必要とする caller 向け。iteration 順を要求する caller は
+    :func:`load_sidebar_slugs_ordered` を使うこと。
     """
     slugs: set[str] = set()
     for match in match_all_tricentis_urls(sidebar_text):
@@ -107,6 +110,22 @@ def load_sidebar_slugs(sidebar_text: str) -> set[str]:
         if slug:
             slugs.add(slug)
     return slugs
+
+
+def load_sidebar_slugs_ordered(sidebar_text: str) -> list[str]:
+    """SIDEBAR_URLS.md テキストから Tricentis slug を **挿入順で** 抽出する。
+
+    mjs ``loadSidebarSlugs`` は ``new Set()`` を返すが、JS ``Set`` は挿入順 =
+    正規表現マッチ順を保つ。Python ``set`` は挿入順を保存しないため、
+    ``page_coverage`` で iteration 順が必要な caller 用に list 版を提供する。
+    dedup は ``dict.fromkeys`` で first-seen を保つ (mjs Set と同じ semantics)。
+    """
+    slugs: list[str] = []
+    for match in match_all_tricentis_urls(sidebar_text):
+        slug = _extract_slug_from_url(match[0])
+        if slug:
+            slugs.append(slug)
+    return list(dict.fromkeys(slugs))
 
 
 # ---------------------------------------------------------------------------
