@@ -789,11 +789,11 @@ Phase 4b: turndown 等価実装 (markdownify + custom converters) を整えて�
 
 | Milestone | 対象 | 状態 |
 | --- | --- | --- |
-| **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ conformance harness で mjs と byte-identical (17 unit + 2 parity sample) |
-| M2 | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | pending |
-| M3 | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | pending |
-| M4 | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | pending |
-| M5 | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | pending |
+| **M1** | ``testim_parity.turndown`` — mjs ``convertEnHtmlToMd`` / ``turndown.turndown`` 等価 (markdownify + MadCap custom converters: callout / copy-button strip / ol siblings / pipe table / details+summary) | ✅ conformance harness で mjs と byte-identical (17 unit + 2 parity sample) — PR #375 merged |
+| **M2** | ``check_source_parity.py`` full port (915 LOC, turndown 依存解消) | ✅ 完了 — 38 unit tests + M5 conformance (baseline / snapshot_diff) で mjs byte-parity 確認、PR #376 |
+| **M3** | ``snapshot_update.py`` full port (486 LOC, HTTP + retry + BS4) | ✅ 完了 — 31 unit tests (depth tracking / retry / recovery probe / DI stderr + registry drift regression)、PR #376 |
+| **M4** | ``fetch_translate_images.py`` full port (409 LOC, turndown 依存解消) | ✅ 完了 — 22 unit tests、module coverage 88%、PR #376 |
+| **M5** | 4 CLI (generate_parity_baseline / snapshot_diff / check_upstream_recovery / render_upstream_recovery_comment) の end-to-end mjs byte parity | ✅ 完了 — 14 integration tests、全 byte-identical、semantic delta 0 件、PR #376 |
 
 ### Phase 4b M1 byte-parity scope (現状)
 

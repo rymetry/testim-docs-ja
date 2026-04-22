@@ -245,15 +245,24 @@ def test_rewrite_and_download_media_rewrites_absolute_and_relative(tmp_path: Pat
         public_images_dir=tmp_path,
         download_fn=fake_download,
     )
-    # absolute URL
+    # absolute URL (readme.io) → public local path
     assert "![a](/images/guides/setup/alpha.png)" in out
-    # relative path was resolved + rewritten
+    # relative markdown image path was resolved via MadCap base + rewritten
     assert "![b](/images/guides/setup/beta.gif)" in out
-    # <Image /> replaced by markdown image (raw src preserved, not downloaded here)
-    assert "![](images/gamma.png)" in out or "![](/images/guides/setup/gamma.png)" in out
-    # download_fn が 2 件以上 call された (absolute + relative; <Image> の src は
-    # absolute URL でも readme.io でもないので regex pass しない場合あり)
-    assert len(downloaded) >= 2
+    # ``<Image src="images/gamma.png"/>`` の src ``images/gamma.png`` は
+    # ``relativeImgRegex`` にマッチするため、``<Image>`` タグが replace される
+    # *前* に src 文字列が ``/images/guides/setup/gamma.png`` へ substitute
+    # される。その後 ``<Image>`` 専用 regex が ``![](src)`` に置き換えるため、
+    # 最終出力は必ず rewritten path を使った markdown image になる (mjs と同一)。
+    assert "![](/images/guides/setup/gamma.png)" in out
+    # 3 件 (readme.io absolute + MadCap-relative beta + MadCap-relative gamma)
+    # が全て download される。gamma は ``<Image src="images/gamma.png"/>`` の src が
+    # ``relativeImgRegex`` に先に hit するため download 対象に含まれる。
+    assert len(downloaded) == 3
+    downloaded_urls = {url for url, _ in downloaded}
+    assert "https://files.readme.io/alpha.png" in downloaded_urls
+    assert "https://docs.tricentis.com/testim/content/guides/images/beta.gif" in downloaded_urls
+    assert "https://docs.tricentis.com/testim/content/guides/images/gamma.png" in downloaded_urls
 
 
 def test_rewrite_and_download_media_logs_on_failure(tmp_path: Path) -> None:

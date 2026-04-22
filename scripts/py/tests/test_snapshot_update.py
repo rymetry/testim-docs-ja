@@ -382,6 +382,126 @@ def test_verify_sidebar_toc_exception_returns_reason() -> None:
     assert "connection refused" in result["reason"]
 
 
+def test_verify_sidebar_stderr_is_dependency_injectable() -> None:
+    """reviewer M2: ``verify_sidebar`` は ``stderr`` を DI 可能に。
+
+    ``sys.stderr`` をハードコードせず、test で StringIO を受け取れる。
+    """
+    captured = io.StringIO()
+
+    def boom() -> dict[str, Any]:
+        raise RuntimeError("fetch boom")
+
+    result = verify_sidebar(
+        dry_run=True,
+        fetch_toc_fn=boom,
+        sidebar_path=Path("/tmp/unused"),
+        stderr=captured,
+    )
+    assert result["ok"] is False
+    assert "verifySidebar failed: fetch boom" in captured.getvalue()
+
+
+def test_main_stderr_is_dependency_injectable(tmp_path: Path) -> None:
+    """reviewer M2: ``main`` の stderr が ``verify_sidebar`` にも forward される。
+
+    unknown slug 経路 (資料 frontmatter 由来ではない slug) と、sidebar 検証が
+    例外を投げた場合の両方で注入した buffer に書かれることを確認する。
+    """
+    captured = io.StringIO()
+    result = main(
+        ["--slug=___really_not_a_slug___"],
+        stdout=io.StringIO(),
+        stderr=captured,
+        root_dir=tmp_path,
+        fetch_html_fn=lambda _url: {"html": None, "status": 500},
+        fetch_toc_fn=lambda: {"sections": []},
+        sleep_fn=lambda _s: None,
+    )
+    assert result["errors"] == 1
+    assert "Unknown slug" in captured.getvalue()
+
+
+# ----------------------------------------------------------------------
+# reviewer M1: ``get_exclusion`` registry drift の fail-fast guard
+# ----------------------------------------------------------------------
+
+
+def test_main_surfaces_exclusion_registry_drift_in_error_log(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """``is_source_side_debt=True`` なのに ``get_exclusion=None`` → 明示 guard。
+
+    reviewer M1: ``assert exclusion is not None`` は ``python -O`` でスキップ
+    されるため、explicit ``RuntimeError`` guard に置換した。registry drift
+    (``scripts/lib/source_sync_exclusions.mjs`` と Python 側 mirror の
+    dual-source-of-truth skew) が起きても、エラー message に slug + remediation
+    hint を含めて ``source-sync-status.json`` の ``errors`` counter に計上する
+    ことで reviewer に可視化する (mjs の top-level ``catch (error)`` と同じく
+    page 単位の fetch error 経路に流す)。
+
+    production で ``python -O`` 下でも:
+    1. ``RuntimeError`` が明示的 raise される (``assert`` が skip されない)
+    2. outer ``except Exception`` が捕捉して ``excluded-fetch-error`` に
+       計上する (mjs と同じ graceful degradation)
+    3. error detail に drift 警告 message + slug が残る (reviewer に drift を
+       知らせる runtime signal)
+    """
+    import testim_parity.detection.snapshot_update as su_mod
+
+    synthetic_md = tmp_path / "overview" / "probe.md"
+    synthetic_md.parent.mkdir(parents=True, exist_ok=True)
+    synthetic_md.write_text("body\n", encoding="utf-8")
+
+    def fake_find_md_files(_dir: Any) -> list[Path]:
+        return [synthetic_md]
+
+    def fake_read_doc_file(_path: Path) -> dict[str, Any]:
+        return {
+            "relativePath": "overview/probe.md",
+            "data": {"sourceUrl": "https://docs.tricentis.com/testim/content/x.htm"},
+            "body": "body",
+        }
+
+    monkeypatch.setattr(su_mod, "find_md_files", fake_find_md_files)
+    monkeypatch.setattr(su_mod, "read_doc_file", fake_read_doc_file)
+    monkeypatch.setattr(su_mod, "file_path_to_slug", lambda _p: "overview/probe")
+    monkeypatch.setattr(su_mod, "is_source_side_debt", lambda _slug: True)
+    monkeypatch.setattr(su_mod, "get_exclusion", lambda _slug: None)
+
+    def fake_fetch(_url: str) -> dict[str, Any]:
+        return {
+            "html": '<html><div id="mc-main-content"><p>ok</p></div></html>',
+            "status": 200,
+        }
+
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    result = main(
+        [],
+        stdout=stdout,
+        stderr=stderr,
+        root_dir=tmp_path,
+        fetch_html_fn=fake_fetch,
+        fetch_toc_fn=lambda: {"sections": []},
+        sleep_fn=lambda _s: None,
+    )
+
+    # outer ``except Exception`` が RuntimeError を捕捉 → page 単位エラーに計上。
+    assert result["errors"] == 2  # 1 page + sidebar (empty sections)
+    assert result["excluded"] == 0
+    # error detail に明示 guard の remediation hint が残る。
+    assert result["sourceSyncStatus"] is not None
+    error_details = [
+        err["detail"] for err in result["sourceSyncStatus"]["errors"]
+    ]
+    assert any(
+        "sync_exclusions registry is missing entry" in detail for detail in error_details
+    )
+    assert any("'overview/probe'" in detail for detail in error_details)
+
+
 # ----------------------------------------------------------------------
 # MARKER_404 — mjs と byte-identical
 # ----------------------------------------------------------------------

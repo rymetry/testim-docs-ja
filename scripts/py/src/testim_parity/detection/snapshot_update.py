@@ -395,13 +395,16 @@ def verify_sidebar(
     fetched_at: str | None = None,
     sidebar_path: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
+    stderr: Any | None = None,
 ) -> dict[str, Any]:
     """TOC data を取得して sidebar snapshot を検証 + (optional) 書き出す。
 
     mjs ``verifySidebar`` と同じ戻り値 keys を使う (``ok`` / ``sectionCount`` /
-    ``pageCount`` / ``sidebarSlugs`` / ``reason``)。
+    ``pageCount`` / ``sidebarSlugs`` / ``reason``)。``stderr`` が None なら
+    ``sys.stderr`` を使う (test で StringIO を注入できるように DI 対応)。
     """
     output_path = sidebar_path if sidebar_path is not None else SIDEBAR_PATH
+    err = stderr if stderr is not None else sys.stderr
     try:
         toc = fetch_toc_fn() if fetch_toc_fn is not None else fetch_toc_data(base_url=base_url)
         sections = toc.get("sections", [])
@@ -426,7 +429,7 @@ def verify_sidebar(
             "sidebarSlugs": sidebar_slugs,
         }
     except Exception as exc:  # noqa: BLE001 — mjs と同じく reason string で返す
-        print(f"verifySidebar failed: {exc}", file=sys.stderr)
+        print(f"verifySidebar failed: {exc}", file=err)
         return {"ok": False, "reason": str(exc)}
 
 
@@ -455,21 +458,27 @@ def main(
     sleep_fn: Callable[[float], None] | None = None,
     root_dir: Path | None = None,
     stdout: Any | None = None,
+    stderr: Any | None = None,
 ) -> dict[str, Any]:
     """CLI エントリポイント。mjs ``main()`` と同じ戻り値 dict を返す。
 
     テスト容易性のため ``fetch_html_fn`` / ``fetch_toc_fn`` / ``sleep_fn`` /
-    ``root_dir`` を DI できる (プロダクション実行では全て default)。
+    ``root_dir`` / ``stdout`` / ``stderr`` を DI できる (プロダクション実行では
+    全て default)。``stderr`` は unknown slug などの error 行と、下層の
+    ``verify_sidebar`` にも forwarding される (``check_source_parity`` と同じ
+    stdout/stderr 対称パターン)。
     """
     if argv is None:
         argv = sys.argv[1:]
     args = _parse_args(argv)
 
+    err = stderr if stderr is not None else sys.stderr
+
     resolved_slug = resolve_slug(args.slug) if args.slug else None
     if args.slug and not resolved_slug:
         print(
             f'❌ Unknown slug: "{args.slug}". No matching document found.',
-            file=sys.stderr,
+            file=err,
         )
         return {
             "fetched": 0,
@@ -549,10 +558,17 @@ def main(
                     )
                 else:
                     exclusion = get_exclusion(target["slug"])
-                    # get_exclusion は None を返さない (``is_source_side_debt`` が
-                    # True だったので registry に必ずある) が、type narrowing のため
-                    # fallback を持たせる。
-                    assert exclusion is not None
+                    # ``is_source_side_debt`` が True の直後なので ``get_exclusion``
+                    # は非 None を返すはずだが、``python -O`` で ``assert`` が
+                    # スキップされるのを避けるため明示 guard に落とす (registry が
+                    # 競合 edit で欠落した場合もここで fail-fast)。
+                    if exclusion is None:
+                        raise RuntimeError(
+                            f"sync_exclusions registry is missing entry for slug "
+                            f"{target['slug']!r} despite is_source_side_debt=True. "
+                            f"Check scripts/lib/source_sync_exclusions.mjs and its "
+                            f"Python mirror for drift."
+                        )
                     probe = run_recovery_probe(raw_en_html=content, exclusion_entry=exclusion)
                     label = "RECOV" if probe["fetchStatus"] == "excluded-recovered" else "DEBT "
                     print(
@@ -630,6 +646,7 @@ def main(
         dry_run=args.dry_run,
         fetch_toc_fn=fetch_toc_fn,
         sidebar_path=sidebar_path,
+        stderr=err,
     )
     if sidebar_result["ok"]:
         mode = "dry-run" if args.dry_run else "saved"
