@@ -300,3 +300,71 @@ def test_code_fence_multi_trailing_blank_lines_preserved() -> None:
     前に保持される (turndown ``code.replace(/\\n$/, '')`` と同じ)。"""
     html = '<pre><code class="language-bash">line1\n\n\n</code></pre>'
     assert html_to_md(html) == "```bash\nline1\n\n\n```"
+
+
+# ----------------------------------------------------------------------
+# Phase 4b.1: turndown default rule port
+#   - escape (13 rules)
+#   - collapseWhitespace
+#   - convert_p preserves <br> hard break
+#   - autolinks disabled
+# ----------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("html", "expected"),
+    [
+        # ``^-`` leading dash escape
+        ("<p>- start</p>", "\\- start"),
+        # ``^+ `` leading plus+space escape (``+ Teammate`` など)
+        ("<p><strong>+ Teammate</strong></p>", "**\\+ Teammate**"),
+        # ``^# `` leading ATX heading escape (callout 本文に ``### Note``)
+        ("<p>### Note about this</p>", "\\### Note about this"),
+        # ``` ` ``` backtick escape
+        ("<p>code `abc` end</p>", "code \\`abc\\` end"),
+        # ``_`` underscore escape (``execute_driver_script``)
+        ("<p>execute_driver_script</p>", "execute\\_driver\\_script"),
+        # ``[`` / ``]`` bracket escape
+        ("<p>[tag]</p>", "\\[tag\\]"),
+        # ``^>`` leading gt escape
+        ("<p>&gt; quoted</p>", "\\> quoted"),
+        # ``^~~~`` leading tilde escape
+        ("<p>~~~fence</p>", "\\~~~fence"),
+        # ``^(\d+)\. `` leading number-dot escape
+        ("<p>1. item</p>", "1\\. item"),
+        # ``^(=+)`` leading equals (setext heading) escape
+        ("<p>=== header</p>", "\\=== header"),
+    ],
+)
+def test_turndown_escape_rules(html: str, expected: str) -> None:
+    assert html_to_md(html) == expected
+
+
+def test_collapse_whitespace_leading_space_after_br() -> None:
+    """``<br>`` 境界 後の leading space を削る (mjs collapseWhitespace)。"""
+    assert html_to_md("<p>text1<br/> text2</p>") == "text1  \ntext2"
+
+
+def test_collapse_whitespace_image_concat_preserves_space() -> None:
+    """隣接 ``<img>`` 間の newline は single space に畳まれる (void element
+    隣接 text は leading space を preserve する turndown の挙動)。"""
+    html = '<div><img src="a.png"/>\n<img src="b.png"/></div>'
+    assert html_to_md(html) == "![](a.png) ![](b.png)"
+
+
+def test_convert_p_preserves_br_hard_break() -> None:
+    """``<p>text<br/> next</p>`` → ``text  \\nnext`` で trailing ``  `` 保持。"""
+    assert html_to_md("<p>text<br/> next</p>") == "text  \nnext"
+
+
+def test_autolinks_disabled() -> None:
+    """``<a href=URL>URL</a>`` は ``[URL](URL)`` で出す (``<URL>`` 縮約しない)。"""
+    url = "https://example.com/foo"
+    assert html_to_md(f'<p><a href="{url}">{url}</a></p>') == f"[{url}]({url})"
+
+
+def test_pre_content_preserved_by_collapse_whitespace() -> None:
+    """``<pre>`` 配下は collapseWhitespace の skip 対象で、code content の
+    連続改行を byte for byte 保持する。"""
+    html = '<pre><code class="language-bash">line1\n\n\nline2</code></pre>'
+    assert html_to_md(html) == "```bash\nline1\n\n\nline2\n```"

@@ -9,29 +9,25 @@ r"""Phase 4b M2/M3 verification gate: 288-page turndown conversion matrix。
     > 比較する実装を通す。M1 の代表 39 pattern だけでは real orchestration に
     > 入った turndown 経路の全 corpus 検証として不足。
 
-## 現状 (2026-04-22, reviewer P2#2 対応時点)
+## 現状 (2026-04-22, Phase 4b.1 完了時点)
 
-Python の ``convert_en_html_to_md`` は **288 pages のうち ~120 件で mjs と
-byte 一致**、残 ~168 件は以下カテゴリの divergence が残る (M1 scope 外の
-turndown default rule:
+Python の ``convert_en_html_to_md`` は **288 pages すべてで mjs と byte-
+identical**。Phase 4b.1 で以下の turndown default rule を追加 port して
+M1 時点の 168 divergence を解消した:
 
-| カテゴリ | 件数 | 内容 |
-| --- | --- | --- |
-| leading_ws | 84 | ``<br/>`` 等の block boundary 後の leading whitespace collapse |
-| other | 43 | whitespace 複合 / markdownify inline detection 差 |
-| trailing_ws | 23 | list item の trailing 2-space (hard line break) |
-| plus_escape | 13 | ``+`` の markdown list-marker escape (``\+``) |
-| image_concat | 4 | 隣接 ``<img>`` の inline 連結 |
-| hash_escape | 1 | paragraph 内 ``#`` の ATX-heading escape (``\#``) |
+- ``_collapse_whitespace`` — mjs turndown の DOM ``collapseWhitespace`` を
+  BS4 tree 上で pre-pass として再現 (block / ``<br>`` 境界の leading ws trim
+  + void element 隣接 text の space preservation)
+- ``_turndown_escape`` + ``_TurndownConverter.escape`` override — mjs
+  turndown の 13 escape 規則 (``^-`` / ``^+ `` / ``^# `` / ``` ` ``` / ``_``
+  / ``[`` / ``]`` 等) を markdownify の ``escape`` hook 経由で適用
+- ``_TurndownConverter.convert_p`` — paragraph content の trailing ``  \\n``
+  (``<br>`` hard break) を preserve (markdownify default の
+  ``strip(' \\t\\r\\n')`` を回避)
+- ``autolinks = False`` — ``<a href=URL>URL</a>`` の ``<URL>`` 縮約を無効化
 
-これらは M1 で取り込まなかった turndown default escape / flanking whitespace
-rule の港が残っている結果で、**Phase 4b.1 (follow-up PR) で解消**する。
-M2 ``check_source_parity`` / M3 ``snapshot_update`` の orchestration 自体は
-mjs と同じ JSON schema / 副作用で完了しているため、本 test は現時点では
-``xfail(strict=False)`` として gap を可視化しつつ regression gate に使用する。
-
-本テストを Phase 4b.1 で pass させた時点で xfail marker を外し、Phase 6
-atomic cutover までに通る状態を維持する。reviewer P2#2 対応。
+本テストは Phase 6 atomic cutover で mjs を削除するまで regression gate と
+して残す (node 不在環境では skip)。
 
 ## batch 戦略
 
@@ -122,14 +118,6 @@ def mjs_turndown_by_slug(repo_root, node_available, snapshot_pages) -> dict[str,
 
 
 @pytest.mark.slow
-@pytest.mark.xfail(
-    strict=False,
-    reason=(
-        "Phase 4b.1 follow-up: M1 で未港の turndown default escape / "
-        "flanking whitespace rule により ~168/288 pages が mjs と "
-        "byte divergent。詳細カテゴリは module docstring を参照。"
-    ),
-)
 def test_all_288_pages_turndown_matches_mjs(snapshot_pages, mjs_turndown_by_slug):
     """288 page すべてで Python ``convert_en_html_to_md`` が mjs と byte 一致。
 
@@ -176,13 +164,6 @@ def test_all_288_pages_turndown_matches_mjs(snapshot_pages, mjs_turndown_by_slug
 
 
 @pytest.mark.slow
-@pytest.mark.xfail(
-    strict=False,
-    reason=(
-        "Phase 4b.1 follow-up: aggregate byte length と matching page count は "
-        "上記 ``test_all_288_pages_turndown_matches_mjs`` と同じ gap に由来。"
-    ),
-)
 def test_turndown_288_summary_bytes_match(snapshot_pages, mjs_turndown_by_slug):
     """aggregate check: 合計 byte 長が mjs と一致 + 一致率 100%。
 
