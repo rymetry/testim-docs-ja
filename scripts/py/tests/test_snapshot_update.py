@@ -493,12 +493,8 @@ def test_main_surfaces_exclusion_registry_drift_in_error_log(
     assert result["excluded"] == 0
     # error detail に明示 guard の remediation hint が残る。
     assert result["sourceSyncStatus"] is not None
-    error_details = [
-        err["detail"] for err in result["sourceSyncStatus"]["errors"]
-    ]
-    assert any(
-        "sync_exclusions registry is missing entry" in detail for detail in error_details
-    )
+    error_details = [err["detail"] for err in result["sourceSyncStatus"]["errors"]]
+    assert any("sync_exclusions registry is missing entry" in detail for detail in error_details)
     assert any("'overview/probe'" in detail for detail in error_details)
 
 
