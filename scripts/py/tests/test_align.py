@@ -527,3 +527,44 @@ def test_align_groups_diffs_by_section_path() -> None:
     missing = [d for d in result["diffs"] if d["type"] == "segment-missing"]
     assert len(missing) == 1
     assert missing[0]["sectionPath"] == "Setup"
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 follow-up (PR #384 review P1-3):
+#   deleted ``source_parity_align_runtime.test.mjs`` の pin slug content-correctness
+#   guard を Python 側に移植する。実 corpus の primary pin JA file が extractable
+#   segment を ≥3 生成することを検証 (empty-fixture drift guard)。
+# ---------------------------------------------------------------------------
+
+
+def test_primary_pin_slug_ja_file_yields_extractable_segments() -> None:
+    """primary pin slug (``advanced-editing/parameters/hidden-parameters``) の JA
+    file が ``extract_segments_from_markdown`` で ≥ 3 segment を emit する。
+
+    これは baseline 運用 (entries == 0 を維持) と独立に、**content-correctness**
+    を pin する guard。pin file が空になったり section heading のみになると、
+    segment-level gate が意味を失うので、fixture drift で silent degrade しない
+    ように ≥ 3 の non-empty contract を定める。"""
+    from pathlib import Path
+
+    from testim_parity.project import PROJECT_ROOT
+    from testim_parity.segments_ja import extract_segments_from_markdown
+
+    pin_slug = "advanced-editing/parameters/hidden-parameters"
+    ja_path: Path = PROJECT_ROOT / "src" / "content" / "docs" / f"{pin_slug}.md"
+    assert ja_path.exists(), f"primary pin JA file must exist at {ja_path}"
+
+    # frontmatter 除去後の body を渡す契約。簡略化のため frontmatter 境界を
+    # 探索して body のみ読み取る (read_doc_file を使わず minimal 依存)。
+    raw = ja_path.read_text(encoding="utf-8")
+    if raw.startswith("---\n"):
+        end = raw.find("\n---", 4)
+        body = raw[end + 4 :].lstrip("\n") if end >= 0 else raw
+    else:
+        body = raw
+
+    segments = list(extract_segments_from_markdown(body))
+    assert len(segments) >= 3, (
+        f"primary pin must yield ≥ 3 segments to guard against empty-fixture "
+        f"drift (actual: {len(segments)})"
+    )

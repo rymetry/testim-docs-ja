@@ -1268,3 +1268,129 @@ def test_check_source_parity_exit_code_1_when_local_page_orphan(tmp_path: Path) 
         json_out=True,
     )
     assert exit_code == 1
+
+
+# ----------------------------------------------------------------------
+# mask_coverage integration (PR #384 review P1-2):
+#   check_source_parity.py:514-522 の mask_coverage.record() キーワード引数
+#   契約 (snake_case segment_kind / section_path) を E2E で pin する。
+#   snapshot + JA doc の両方が揃い、かつ JA 側に glossary 用語が含まれる
+#   ケースで、debug.maskCoverage が non-empty になることを保証する。
+# ----------------------------------------------------------------------
+
+
+def test_mask_coverage_records_non_empty_masks_from_ja_body(tmp_path: Path) -> None:
+    """JA body に glossary 用語 (Testim / Visual Editor) が含まれる場合、
+    EN HTML snapshot が存在する run で debug.maskCoverage.summary.segmentsMasked
+    が 1 以上になる。これは PR #384 で修正された kwarg name bug
+    (segmentKind → segment_kind) の regression guard。"""
+    root = _setup_empty_repo(tmp_path)
+
+    # JA doc: glossary 用語を含む paragraph を少なくとも 1 つ emit する
+    docs = root / "src" / "content" / "docs" / "mask"
+    docs.mkdir(parents=True)
+    (docs / "page.md").write_text(
+        "---\n"
+        "title: Mask Coverage Test\n"
+        "description: Testim と Visual Editor を使う。\n"
+        "category: Overview\n"
+        "updated: '2026-01-01'\n"
+        "sourceUrl: https://docs.tricentis.com/testim/content/mask/page.htm\n"
+        "---\n"
+        "\n"
+        "## 概要\n"
+        "\n"
+        "Testim と Visual Editor を使ってテストを作成します。\n",
+        encoding="utf-8",
+    )
+
+    # EN HTML snapshot: preprocess + turndown + extract の全段階で例外を出さず、
+    # extract_segments_from_html が 1 つ以上 segment を emit する最小構造。
+    snapshots = root / "snapshots" / "en" / "content" / "mask"
+    snapshots.mkdir(parents=True)
+    (snapshots / "page.html").write_text(
+        "<h2>Overview</h2>\n<p>Use the Testim extension with Visual Editor to create tests.</p>\n",
+        encoding="utf-8",
+    )
+
+    output_path = root / "parity-check-status.json"
+    check_source_parity(
+        root_dir=root,
+        output_path=output_path,
+        stdout=io.StringIO(),
+        stderr=io.StringIO(),
+        slug="mask/page",
+        json_out=True,
+    )
+
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    mask_coverage = payload["debug"]["maskCoverage"]
+
+    # JA body に "Testim" / "Visual Editor" を含む paragraph が 1 つ以上あるので、
+    # mask_coverage.record() が non-empty masks で少なくとも 1 回呼ばれる
+    assert mask_coverage["summary"]["segmentsMasked"] >= 1, (
+        "mask_coverage must capture at least one JA segment that contains "
+        "glossary terms; non-empty segmentsMasked proves that record() was "
+        "called with valid snake_case kwargs (regression guard for PR #384)."
+    )
+    # Glossary counter が "Testim" または "Visual Editor" を含む
+    by_glossary = mask_coverage["summary"]["byGlossaryEntry"]
+    assert any(term in by_glossary for term in ("Testim", "Visual Editor")), (
+        f"byGlossaryEntry must include Testim or Visual Editor, got {by_glossary}"
+    )
+    # masked_segments entries の shape pin: slug / segmentKind / sectionPath /
+    # masks の camelCase key が揃う (artifact parity の契約)
+    masked_segments = mask_coverage["maskedSegments"]
+    assert len(masked_segments) >= 1
+    for entry in masked_segments:
+        assert entry["slug"] == "mask/page"
+        assert "segmentKind" in entry
+        assert "sectionPath" in entry
+        assert isinstance(entry["masks"], list)
+        assert len(entry["masks"]) >= 1
+
+
+def test_mask_coverage_stays_empty_when_ja_body_has_no_glossary_terms(
+    tmp_path: Path,
+) -> None:
+    """JA body が glossary 用語を含まない場合、mask は空で record() は early-return。
+    segmentsMasked は 0 のまま、byGlossaryEntry も空。早期 return 経路の契約 pin。"""
+    root = _setup_empty_repo(tmp_path)
+    docs = root / "src" / "content" / "docs" / "nomatch"
+    docs.mkdir(parents=True)
+    (docs / "page.md").write_text(
+        "---\n"
+        "title: No Match\n"
+        "description: 日本語のみの説明です。\n"
+        "category: Overview\n"
+        "updated: '2026-01-01'\n"
+        "sourceUrl: https://docs.tricentis.com/testim/content/nomatch/page.htm\n"
+        "---\n"
+        "\n"
+        "## 概要\n"
+        "\n"
+        "日本語のみの段落です。専門用語は含まれていません。\n",
+        encoding="utf-8",
+    )
+    snapshots = root / "snapshots" / "en" / "content" / "nomatch"
+    snapshots.mkdir(parents=True)
+    (snapshots / "page.html").write_text(
+        "<h2>Overview</h2>\n<p>Japanese-only content, no glossary terms.</p>\n",
+        encoding="utf-8",
+    )
+
+    output_path = root / "parity-check-status.json"
+    check_source_parity(
+        root_dir=root,
+        output_path=output_path,
+        stdout=io.StringIO(),
+        stderr=io.StringIO(),
+        slug="nomatch/page",
+        json_out=True,
+    )
+
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    mask_coverage = payload["debug"]["maskCoverage"]
+    assert mask_coverage["summary"]["segmentsMasked"] == 0
+    assert mask_coverage["summary"]["byGlossaryEntry"] == {}
+    assert mask_coverage["maskedSegments"] == []

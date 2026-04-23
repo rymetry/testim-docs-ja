@@ -289,6 +289,12 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
    - `scripts/py/tests/test_en_source_patches.py` + `test_en_source_patches_integration.py` (patch-registry invariants + dual-source-of-truth drift)
    - `scripts/py/tests/test_generate_parity_baseline.py` (pre-regen gate) + `tests/conformance/test_generate_parity_baseline_e2e.py` (mjs byte-parity)
    - 各 regression guard (`test_recall.py` 9/9 mutation recall / `test_baseline_recall.py` / `test_segments_boundary.py`)
+   - **Phase 5 で新設された pin (PR #384)**:
+     - `scripts/py/tests/test_mutation_corpus.py` (9/9 mutation recall を slug × mutation-kind matrix で枝分岐検証、recall drift の早期検知)
+     - `scripts/py/tests/test_detection_reports.py` (parity-check-status.json schema / 5-counter accounting / baseline-ack 順序 / sink fan-out の representative contract)
+     - `scripts/py/tests/test_check_source_parity.py::test_mask_coverage_records_non_empty_masks_from_ja_body` (mask_coverage kwarg bug regression guard)
+     - `scripts/py/tests/test_cutover_gate.py` (`@pytest.mark.cutover` self-enforcing gate、`_PY_*_SLUGS` frozenset を Phase 6 で全 empty 化する契約)
+     - `scripts/py/tests/test_lint_docs.py::TestCalloutDirective` (`callout-in-list-item` / `callout-unknown-type` lint rule + code fence skip 契約)
    - 残る 1 mjs test: `scripts/__tests__/lib_redirects.test.mjs` (Astro build graph 経由で `scripts/lib/redirects.mjs` を import するため、Phase 6 cutover 以降も保持する production-only test)
 
 5. **Baseline regen cycle**: PR merge 後の full `--regenerate` は必ず pre-regen fail-closed gate を pass。CI run log に `baseline-regen-gate: pass` を明示。

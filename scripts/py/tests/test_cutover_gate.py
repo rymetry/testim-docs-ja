@@ -14,12 +14,16 @@ Phase 6 cutover PR で ``uv run pytest -m cutover`` を明示的に走らせて�
 
 **追加方法**: 新たに temporary exclusion frozenset を導入する PR では本 module
 の ``_EXCLUSION_REGISTRY`` に entry を足すこと。これが Phase 6 gate の
-single source of truth。
+single source of truth。auto-discovery (``test_exclusion_registry_covers_all_patterns``)
+が tests/ 配下を scan し、pattern 定義が registry に未登録なら fail するので、
+単なる hard-code 漏れは automatically catch される。
 """
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
@@ -133,3 +137,60 @@ def test_exclusion_registry_matches_plan_doc() -> None:
         "Registry drift: update both docs/PYTHON_MIGRATION_PLAN.md Phase 6 "
         "`Self-enforcing cutover gate` table and this registry in the same PR."
     )
+
+
+# drift pattern の module-level 宣言を検出する。``_PY_*_SLUGS`` 命名規約で
+# pin しておく (ad-hoc な命名は PR review で弾く)。
+_DRIFT_PATTERN_RE = re.compile(r"^(_PY_[A-Z][A-Z0-9_]*_SLUGS)\s*(?::[^=]*)?=", re.MULTILINE)
+
+
+def _discover_drift_patterns_in_tests() -> dict[str, set[str]]:
+    """tests/ 配下の Python file を scan し、``_PY_*_SLUGS`` pattern を収集する。
+
+    戻り値は ``{"tests.module": {"_PY_XFAIL_SLUGS", ...}}`` の dict。registry と
+    cross-reference することで、pattern 定義が registry に漏れていないか検証する。
+    """
+    tests_dir = Path(__file__).resolve().parent
+    discovered: dict[str, set[str]] = {}
+    for py_file in tests_dir.rglob("*.py"):
+        if py_file.name in {"conftest.py", "__init__.py"}:
+            continue
+        # conformance は別階層だが同じ規約を適用する (念のため)
+        text = py_file.read_text(encoding="utf-8")
+        matches = _DRIFT_PATTERN_RE.findall(text)
+        if not matches:
+            continue
+        # tests/foo/bar.py → "tests.foo.bar" に変換
+        rel = py_file.relative_to(tests_dir.parent)
+        module_parts = list(rel.with_suffix("").parts)
+        module = ".".join(module_parts)
+        discovered[module] = set(matches)
+    return discovered
+
+
+@pytest.mark.cutover
+def test_exclusion_registry_covers_all_patterns() -> None:
+    """auto-discovery: tests/ 配下で宣言されている全 ``_PY_*_SLUGS`` pattern が
+    ``_EXCLUSION_REGISTRY`` に登録されていることを assert する。
+
+    新規に temporary exclusion を足した PR が registry update を忘れても、この
+    test が fail して漏れを検出する。単なる hard-code 漏れを防ぐ safety net。
+    既存 entry の empty-check は ``test_all_drift_exclusions_are_empty`` が担当。
+    """
+    registered: set[tuple[str, str]] = {
+        (entry.module, entry.attribute) for entry in _EXCLUSION_REGISTRY
+    }
+    discovered = _discover_drift_patterns_in_tests()
+    unregistered: list[str] = []
+    for module, attrs in discovered.items():
+        for attr in attrs:
+            if (module, attr) not in registered:
+                unregistered.append(f"{module}.{attr}")
+
+    if unregistered:
+        pytest.fail(
+            "Drift pattern detected in tests/ but missing from _EXCLUSION_REGISTRY. "
+            "Add entries to docs/PYTHON_MIGRATION_PLAN.md Phase 6 gate table AND "
+            "test_cutover_gate._EXCLUSION_REGISTRY in the same PR.\n\n"
+            "Unregistered:\n" + "\n".join(f"  - {p}" for p in sorted(unregistered))
+        )

@@ -280,6 +280,60 @@ class TestCalloutDirective:
         issues = lint_content(_make_doc(body=body), _TEST_PATH)
         assert any(i["rule"] == "callout-in-list-item" for i in issues)
 
+    def test_unknown_type_inside_code_fence_ignored(self) -> None:
+        """code fence 内の ``:::bogus`` は meta-documentation とみなし lint しない。
+        反例を示す技術解説が実 corpus に入ってきた際の false positive を防ぐ契約。
+        """
+        body = "Example of invalid callout:\n\n```md\n:::bogus-type\ncontent\n:::\n```\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert _rules(issues, "callout-unknown-type") == []
+
+    def test_unknown_type_inside_unlabelled_fence_ignored(self) -> None:
+        """language 指定のない fence (``` alone) でも code block として skip する。"""
+        body = "```\n:::bogus-type\n:::\n```\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert _rules(issues, "callout-unknown-type") == []
+
+    def test_nested_callout_inside_code_fence_ignored(self) -> None:
+        """list-context example 内の indented callout も meta example なので skip。"""
+        body = "```md\n- item\n  :::note\n  nested body\n  :::\n- other\n```\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert _rules(issues, "callout-in-list-item") == []
+
+    def test_valid_callout_after_code_fence_still_checked(self) -> None:
+        """code fence を閉じた後に real な ``:::bogus`` があれば検出する (state recovery)。"""
+        body = (
+            "```md\n"
+            ":::example-only\n"  # meta — should NOT error
+            ":::\n"
+            "```\n"
+            "\n"
+            ":::bogus\n"  # real — SHOULD error
+            "body\n"
+            ":::\n"
+        )
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        hits = _rules(issues, "callout-unknown-type")
+        assert len(hits) == 1
+        assert "bogus" in hits[0]["message"]
+
+    def test_nested_callout_outside_fence_still_errors_after_fence(self) -> None:
+        """fence 後に本物の nested callout があれば検出する (state recovery)。"""
+        body = (
+            "```md\n"
+            "- item\n"
+            "  :::note\n"  # meta example
+            "  :::\n"
+            "```\n"
+            "\n"
+            "- real item\n"
+            "  :::note\n"  # real nested — SHOULD error
+            "  body\n"
+            "  :::\n"
+        )
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert any(i["rule"] == "callout-in-list-item" for i in issues)
+
 
 # ---------------------------------------------------------------------------
 # H. Internal-link target existence (requires slug index)

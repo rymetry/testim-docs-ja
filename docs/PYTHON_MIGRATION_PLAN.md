@@ -924,8 +924,8 @@ graph が `redirects.mjs` を import するため。`redirects.mjs` 自体は Ph
 | mjs test file 数 | 55 | **1** | 54 file delete (turndown / madcap_toc / parity_normalize 他すべて) |
 | mjs test case 数 | 2040 | **6** | `lib_redirects.test.mjs` のみ残置 |
 | pytest file 数 | 68 | **88** | 20 file 新規 + 既存 augment |
-| pytest case 数 | 931 | **1973+** | +1042 以上 (各 agent 追加分を合算) |
-| pytest coverage | 95.60% | **≥ 95%** | `--cov=testim_parity` 維持 |
+| pytest case 数 | 931 | **1989** | +1058 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応 16 追加分を含む) |
+| pytest coverage | 95.60% | **95.60%** | `--cov=testim_parity` Phase 5 完了時点実測 |
 | 5-counter DoD | 0 | **0** | 変更なし |
 | mutation recall (9/9) | 100% | **100%** | `test_recall.py::test_diff_one_mutation_strict_recall_100_percent` gate |
 | 288-matrix slow test | pass | **pass** | turndown / segments_en / align 全 byte-identical |
@@ -960,7 +960,7 @@ gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同
 ### 検証 register (Phase 5 完了時の gate log)
 
 - `npm run test:mjs` — 6 pass (lib_redirects only)
-- `cd scripts/py && uv run pytest -q` — 1973 passed, 1 skipped, 5 deselected (slow marker)
+- `cd scripts/py && uv run pytest -q` — **1989 passed, 1 skipped, 8 deselected** (slow + cutover markers、PR #384 review 対応後の実測値)
 - `cd scripts/py && uv run pytest -m slow` — 288-matrix byte-identical (segments_en / turndown / align)
 - `cd scripts/py && uv run ruff check src tests && uv run ruff format --check src tests` — clean
 - `cd scripts/py && uv run mypy src` — Success: no issues found in 60 source files
@@ -982,6 +982,35 @@ byte-level 差) は **Phase 6 atomic cutover の前に別 PR で解消する**:
   — 共有 module-level cache を fixture-scope でリセットする isolation 強化
 
 これらは Phase 6 cutover gate (conformance test を golden snapshot 化する段階) で解消。
+
+### 削除 mjs test → Python 対応 mapping (PR #384 review P1-3 audit)
+
+Phase 5 で delete した 54 mjs test のうち、reviewer から explicit に確認を求められた 8 file
+の Python 側等価カバレッジを以下に pin する。全て Python unit + conformance で同等以上の
+guard を維持している:
+
+| 削除 mjs test file | mjs test 数 | Python unit test | Python conformance | 備考 |
+| --- | ---: | --- | --- | --- |
+| `source_parity_segments_en.test.mjs` | 48 | `test_segments_en.py` (28) | `test_segments_en_parity.py` + `test_extract_structure.py` | 288-matrix byte-identical conformance で全 corpus 検証 |
+| `source_parity_segments_ja.test.mjs` | 61 | `test_segments_ja.py` (47) | `test_segments_ja_parity.py` | conformance で全 JA doc の byte-identical 保証 |
+| `source_parity_segments_shared.test.mjs` | ~19 | `test_segments_shared.py` (26) | — | Python unit が mjs より多く、`create_segment` / `push_heading` を追加 pin |
+| `madcap_toc.test.mjs` | 24 | `test_madcap_toc.py` (20) | — | core 機能 (slug 抽出 / tree 展開 / promotion) を covered。unicode escape / multi-chunk merge は sidebar 実環境で暗黙検証 |
+| `parity_normalize.test.mjs` | 24 | `test_normalize.py` (26) | `test_normalize_parity.py` | Python unit が mjs を覆い、query/fragment/trailing-slash 全組合せを pin |
+| `parity_artifact_registry.test.mjs` | 6 | `test_artifact_registry.py` (7) | — | Python に `test_noop_coverage` が追加されており mjs より広い |
+| `source_parity_align_runtime.test.mjs` | 14 (4 skipped) | `test_align.py` + `test_summary.py` + `test_check_source_parity.py` | — | `parity_diffs_to_issues` / `summarize_parity_results` / primary-pin sanity guard を 3 file に分散。runtime integration 4 test は M2.5-C baseline=0 の仮定で skip 済み |
+| `turndown.test.mjs` | 70 | `test_turndown.py` (45) | `test_turndown_288_matrix.py` | 288-matrix slow conformance で全 page byte-identical、edge case は unit で pin |
+
+新規に追加した guard (PR #384 review 対応):
+
+- `test_align.py::test_primary_pin_slug_ja_file_yields_extractable_segments` — mjs の
+  "primary pin slug file has extractable segments" を Python に移植。`advanced-editing/parameters/hidden-parameters`
+  が ≥ 3 segment を emit する事実を pin、fixture drift guard として機能する
+- `test_check_source_parity.py::test_mask_coverage_records_non_empty_masks_from_ja_body` +
+  `test_mask_coverage_stays_empty_when_ja_body_has_no_glossary_terms` — mask_coverage kwarg bug
+  の regression guard
+
+**カバレッジ mapping の保守契約**: Phase 6 cutover 時に mjs を完全削除する際、上記 8 file
+の「Python 側対応」列を参照して削除済み guard が復活していないことを verify する。
 
 ---
 
@@ -1016,10 +1045,13 @@ Phase 5 で port 時に発覚した **Python extractor / align drift** を Phase
 | `tests/test_segments_boundary.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | `advanced-editing/loops` boundary stability drift |
 
 **Gate 実装**: `scripts/py/tests/test_cutover_gate.py` に `@pytest.mark.cutover` で
-4 frozenset を enumerate し、`assert len(exclusions) == 0, f"Phase 6 cutover blocked
-by {exclusions}"` する test を置く。`pyproject.toml` の `addopts` は `cutover` marker
-を default skip し (Phase 5 coexistence では ok)、Phase 6 cutover PR で `uv run pytest
--m cutover` を明示的に run して緑を確認する契約。
+5 registry entry (2 attribute 名 × module) を enumerate し、
+`assert len(exclusions) == 0, f"Phase 6 cutover blocked by {exclusions}"` する test を置く。
+`pyproject.toml` の `addopts` は `cutover` marker を default skip し (Phase 5
+coexistence では ok)、Phase 6 cutover PR で `uv run pytest -m cutover` を明示的に run して緑を
+確認する契約。auto-discovery test (`test_exclusion_registry_covers_all_patterns`) が
+tests/ 配下の `_PY_*_SLUGS` 宣言を regex scan し、registry に未登録の pattern があれば
+fail させる safety net を兼ねている (hardcode 漏れの自動検出)。
 
 ### package.json 変更 (全 script rewire table)
 
@@ -1072,6 +1104,27 @@ Phase 6 cutover PR で全 Node backed script を Python CLI に切り替える�
 - `scripts/pipeline/*.mjs` (6 file)
 - `scripts/tools/*.mjs` (6 file → Python に完全移動済)
 - `scripts/py/conformance/harness.mjs` と `tests/conformance/test_*_parity.py` (下記 golden 化)
+
+### CI workflow rewire (`.github/workflows/ci.yml`)
+
+Phase 5 終了時点 の CI は `test` (mjs only)、`python-test` (pytest only、node をダミー install して
+conformance harness を spawn) の 2 job が独立実行される構成。Phase 6 cutover PR では以下を実施する:
+
+| 現行 job | Phase 6 rewire | 理由 |
+| --- | --- | --- |
+| `test` (`npm run test`) | **維持** (lib_redirects.test.mjs のみ、Node 固定) | Astro build graph が redirects.mjs を import する以上、mjs 側の retention test も CI で回す |
+| `python-test` (`uv run pytest --cov`) | **維持 → setup-node 依存削除** | conformance harness (mjs spawn) が golden 化されるので `node` 不要。job 内の `actions/setup-node` step と `npm ci` を削除 |
+| (新規) `python-cutover-gate` | **追加 or python-test に step 追加** | `uv run pytest -m cutover` を cutover PR で走らせ、`_PY_*_SLUGS` frozenset が全て empty を確認 |
+| `build` / `lint` | **維持** | Node のまま (Astro build / markdownlint) |
+
+**Phase 5 → Phase 6 の rewire 契約**:
+
+1. Phase 5 PR (#384) は CI yaml を触らない (既存 2 job のまま coexistence)
+2. Phase 6 cutover PR で CI yaml を 1 commit で atomic 更新:
+   - `python-test` の `setup-node` / `npm ci` step 削除 (conformance golden 化後)
+   - 必要に応じて `python-cutover-gate` job を追加 (`pytest -m cutover` 専用)
+3. rewire 後は `test` job の scope が lib_redirects 残置 mjs test のみになる。future で redirects.mjs
+   が Astro 側から無参照化された日に `test` job も削除する (post-Phase-6 cleanup)
 
 ### Conformance test migration (Phase 6 cutover 時、reviewer P7 対応)
 
