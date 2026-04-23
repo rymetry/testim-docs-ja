@@ -921,11 +921,11 @@ graph が `redirects.mjs` を import するため。`redirects.mjs` 自体は Ph
 
 | 指標 | 着手前 | 完了時 | 備考 |
 | --- | ---: | ---: | --- |
-| mjs test file 数 | 55 | **1** | 54 file delete (turndown / madcap_toc / parity_normalize 他すべて) |
-| mjs test case 数 | 2040 | **6** | `lib_redirects.test.mjs` のみ残置 |
-| pytest file 数 | 68 | **88** | 20 file 新規 + 既存 augment |
-| pytest case 数 | 931 | **1989** | +1058 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応 16 追加分を含む) |
-| pytest coverage | 95.60% | **95.60%** | `--cov=testim_parity` Phase 5 完了時点実測 |
+| mjs test file 数 | 55 | **2** | 54 file delete + PR #384 で Phase 5 coexistence 期間限定の `lint_docs_contract.test.mjs` を追加 (Phase 6 cutover 時に削除) |
+| mjs test case 数 | 2040 | **17** | `lib_redirects.test.mjs` (6) + `lint_docs_contract.test.mjs` (11) |
+| pytest file 数 | 68 | **97** | 20+ 新規 + 既存 augment (conformance 39 + top-level 58、実測は `find scripts/py/tests -name 'test_*.py' -not -path '*__pycache__*' \| wc -l`) |
+| pytest case 数 | 931 | **2000** | +1069 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応 27 追加分を含む: routing/factory/skip-guard/primary-pin/mask-coverage/lint-callout) |
+| pytest coverage | 95.60% | **95.60%** | `slow` marker 込み local 実測 (`uv run pytest -m slow --cov=testim_parity`)。**CI 実効は ~65-70%** — `slow`/`cutover` 除外で 288-page matrix が coverage に計上されない trade-off。`pyproject.toml::[tool.coverage.report] fail_under = 65` が下限 gate として Phase 5 coexistence を regression guard。Phase 6 cutover 後 `fail_under=90` へ戻す |
 | 5-counter DoD | 0 | **0** | 変更なし |
 | mutation recall (9/9) | 100% | **100%** | `test_recall.py::test_diff_one_mutation_strict_recall_100_percent` gate |
 | 288-matrix slow test | pass | **pass** | turndown / segments_en / align 全 byte-identical |
@@ -959,8 +959,8 @@ gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同
 
 ### 検証 register (Phase 5 完了時の gate log)
 
-- `npm run test:mjs` — 6 pass (lib_redirects only)
-- `cd scripts/py && uv run pytest -q` — **1989 passed, 1 skipped, 8 deselected** (slow + cutover markers、PR #384 review 対応後の実測値)
+- `npm run test:mjs` — 17 pass (lib_redirects 6 + lint_docs_contract 11、Phase 5 coexistence 回帰 guard)
+- `cd scripts/py && uv run pytest -q` — **2000 passed, 1 skipped, 8 deselected** (slow + cutover markers、PR #384 review 2 巡目対応後の実測値、281s)
 - `cd scripts/py && uv run pytest -m slow` — 288-matrix byte-identical (segments_en / turndown / align)
 - `cd scripts/py && uv run ruff check src tests && uv run ruff format --check src tests` — clean
 - `cd scripts/py && uv run mypy src` — Success: no issues found in 60 source files
@@ -1099,6 +1099,7 @@ Phase 6 cutover PR で全 Node backed script を Python CLI に切り替える�
 ### 削除対象
 
 - `scripts/__tests__/*.mjs` (lib_redirects.test.mjs 以外すべて → Phase 5 で完了済)
+- **`scripts/__tests__/lint_docs_contract.test.mjs`** — Phase 5 coexistence 期間限定の Node-side 回帰 guard。lint:docs が Phase 6 cutover で Python 実装に切り替わり次第、本 test も `scripts/tools/lint_docs.mjs` 削除と同 commit で **削除** する (Python 側 `test_lint_docs.py::TestCalloutDirective` が単一 SoT になる契約)
 - `scripts/lib/*.mjs` (33 file) **except `redirects.mjs`**
 - `scripts/detection/*.mjs` (9 file)
 - `scripts/pipeline/*.mjs` (6 file)
@@ -1145,7 +1146,7 @@ Phase 4b で導入された cross-runtime conformance test は mjs harness
 のみで、golden dump mode は未実装。Phase 6 cutover PR で **新規 Python script**
 `scripts/py/tools/dump_conformance_goldens.py` を追加する。契約:
 
-```
+```text
 Usage: uv run python -m testim_parity.tools.dump_conformance_goldens [--out tests/fixtures/golden/]
 
 Behavior:

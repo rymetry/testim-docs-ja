@@ -82,3 +82,54 @@ def test_files_fallback_handles_missing_or_bad_values(files_value):
         assert " / 0 ファイル" in out
     else:
         assert f" / {files_value} ファイル" in out
+
+
+# ---------------------------------------------------------------------------
+# Regression guards (PR #384 review P2-2):
+#   field 混同 / key 欠落時の fallback を pin する。mjs からの port で field 名
+#   を取り違えた場合や、snapshotUnusableByType が未設定のケースで壊れないこと
+#   を保証する。
+# ---------------------------------------------------------------------------
+
+
+def test_omits_type_breakdown_when_by_type_is_missing_key():
+    """``snapshotUnusableIssues > 0`` でも ``snapshotUnusableByType`` key が
+    欠落している場合、内訳 section ("type 別内訳") は生成しない。"""
+    summary = {"snapshotUnusableIssues": 3, "snapshotUnusableFiles": 2}
+    out = format_source_unusable_section(summary)
+    assert out is not None
+    assert "type 別内訳" not in out
+
+
+def test_omits_type_breakdown_when_by_type_is_empty_dict():
+    """``snapshotUnusableByType = {}`` のケースも内訳 section 無し。"""
+    summary = {
+        "snapshotUnusableIssues": 3,
+        "snapshotUnusableFiles": 2,
+        "snapshotUnusableByType": {},
+    }
+    out = format_source_unusable_section(summary)
+    assert out is not None
+    assert "type 別内訳" not in out
+
+
+def test_uses_snapshot_unusable_fields_not_structure_mismatch_fields():
+    """formatter は ``snapshotUnusable*`` 系 field のみ参照し、
+    ``structureMismatch*`` の同名 pattern を誤って拾わない (field 混同 regression guard)。
+
+    Phase 6 以降 mjs 無しで Python 実装が独り立ちした際、内部 refactor で field
+    名を取り違えると silent bug を招く。この test は ``structureMismatch*`` 側
+    を完全に埋めた summary を渡して、formatter が ``snapshotUnusableIssues`` を
+    0/未設定 (＝None 返却) として扱うことを保証する。"""
+    # structureMismatch* のみセット。snapshotUnusable* は未設定。
+    summary = {
+        "structureMismatchIssues": 99,
+        "structureMismatchFiles": 42,
+        "structureMismatchByType": {"section-structure-mismatch": 99},
+        # snapshotUnusable* は敢えて未設定 (欠落ケース)
+    }
+    out = format_source_unusable_section(summary)
+    # snapshotUnusable* が無いので None / 空を返す
+    assert out is None, (
+        f"formatter must NOT fall back to structureMismatch* fields; expected None, got: {out!r}"
+    )

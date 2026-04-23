@@ -125,18 +125,91 @@ def test_all_drift_exclusions_are_empty() -> None:
     pytest.fail("\n".join(lines))
 
 
+_PLAN_DOC_PATH: Path = Path(__file__).resolve().parents[3] / "docs" / "PYTHON_MIGRATION_PLAN.md"
+_PLAN_DOC_GATE_SECTION_MARKER: str = "### Self-enforcing cutover gate"
+
+
+def _parse_plan_doc_exclusion_rows() -> set[tuple[str, str]]:
+    """``docs/PYTHON_MIGRATION_PLAN.md`` の「Self-enforcing cutover gate」table を
+    parse し、``{(module_dotted, attribute), ...}`` の set を返す。
+
+    table format (plan doc 側契約):
+
+        | File | Exclusion symbol | Phase 6 cutover までの処理 |
+        | --- | --- | --- |
+        | ``tests/test_foo.py`` | ``_PY_*_SLUGS`` | reason |
+
+    file path は ``tests/test_foo.py`` 形式で記載されており、
+    ``tests.test_foo`` に変換する (``_EXCLUSION_REGISTRY`` の module 表記と対応)。
+    """
+    text = _PLAN_DOC_PATH.read_text(encoding="utf-8")
+    # section boundary で splice
+    marker_idx = text.find(_PLAN_DOC_GATE_SECTION_MARKER)
+    if marker_idx < 0:
+        pytest.fail(
+            f"plan doc '{_PLAN_DOC_PATH}' に section marker "
+            f"'{_PLAN_DOC_GATE_SECTION_MARKER}' が見つからない — doc/registry 同期"
+            "契約が崩れている可能性"
+        )
+    # 次の ``###`` 見出しまでが gate section (または EOF)
+    next_section = text.find("\n### ", marker_idx + len(_PLAN_DOC_GATE_SECTION_MARKER))
+    section_text = text[marker_idx:next_section] if next_section > 0 else text[marker_idx:]
+    # table 行 (先頭 ``| tests/``) を抽出
+    row_re = re.compile(
+        r"^\|\s*`tests/([A-Za-z0-9_/]+)\.py`\s*\|\s*`(_PY_[A-Z0-9_]+)`", re.MULTILINE
+    )
+    rows: set[tuple[str, str]] = set()
+    for match in row_re.finditer(section_text):
+        rel_path = match.group(1)  # e.g. "test_foo" or "subdir/test_bar"
+        module = "tests." + rel_path.replace("/", ".")
+        rows.add((module, match.group(2)))
+    return rows
+
+
 @pytest.mark.cutover
 def test_exclusion_registry_matches_plan_doc() -> None:
-    """registry entry 数は plan doc の Phase 6 self-enforcing gate 表と一致する。
+    """registry と plan doc table の ``(module, attribute)`` tuple が完全一致する。
 
-    plan doc 側の表と本 registry が drift すると gate の信頼性が崩れる。行数が
-    変わったら plan doc + registry の両方を同 PR で update する契約。
+    cardinality だけでなく **正確な tuple set** を cross-reference する。plan doc
+    の表内容が drift (file path typo / attribute 名変更 / 新規 row 追加など) した
+    ら fail する契約。行数チェックだけでは「5 行残ったまま中身が入れ替わる」
+    attack vector を検出できないため、set 比較に強化 (PR #384 code-comment P3)。
     """
-    # plan doc の Phase 6 「Self-enforcing cutover gate」表は 5 行 (test_*)。
-    assert len(_EXCLUSION_REGISTRY) == 5, (
-        "Registry drift: update both docs/PYTHON_MIGRATION_PLAN.md Phase 6 "
-        "`Self-enforcing cutover gate` table and this registry in the same PR."
+    registry: set[tuple[str, str]] = {
+        (entry.module, entry.attribute) for entry in _EXCLUSION_REGISTRY
+    }
+    plan_doc_rows = _parse_plan_doc_exclusion_rows()
+
+    # plan doc に row がないと registry の存在価値がないので fail
+    assert plan_doc_rows, (
+        f"plan doc '{_PLAN_DOC_PATH}' の「Self-enforcing cutover gate」table が "
+        f"空 or parse できない。table format (``| `tests/foo.py` | `_PY_*_SLUGS` | "
+        f"reason |``) を維持すること"
     )
+
+    missing_in_registry = plan_doc_rows - registry
+    extra_in_registry = registry - plan_doc_rows
+    if missing_in_registry or extra_in_registry:
+        lines = [
+            "Registry / plan doc drift detected — keep both in sync:",
+            "",
+        ]
+        if missing_in_registry:
+            lines.append("  plan doc にあるが registry に未登録:")
+            for module, attr in sorted(missing_in_registry):
+                lines.append(f"    - {module}.{attr}")
+            lines.append("")
+        if extra_in_registry:
+            lines.append("  registry にあるが plan doc table に未記載:")
+            for module, attr in sorted(extra_in_registry):
+                lines.append(f"    - {module}.{attr}")
+            lines.append("")
+        lines.append(
+            "Update both docs/PYTHON_MIGRATION_PLAN.md Phase 6 "
+            "`Self-enforcing cutover gate` table and `_EXCLUSION_REGISTRY` in "
+            "the same PR."
+        )
+        pytest.fail("\n".join(lines))
 
 
 # drift pattern の module-level 宣言を検出する。``_PY_*_SLUGS`` 命名規約で

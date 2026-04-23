@@ -70,11 +70,20 @@ markers = [
 addopts = "-m 'not slow and not cutover'"
 
 [tool.coverage.report]
-# Phase 4b-5 temporary: ``slow`` marker を CI default で skip した結果、
-# 288-page matrix が exercise していた segments_en / align 系 path が計上
-# されず、coverage が 68% 前後に下がる。Phase 6 atomic cutover で
-# conformance test 一式を退場させる際に 90 へ戻す。それまでは reviewer が
-# pre-merge に ``uv run pytest -m slow`` で補完する運用。
+# Phase 4b-5 temporary: ``slow`` marker (288-page matrix conformance) を CI
+# default で skip した結果、288-page matrix が exercise していた segments_en /
+# align / turndown 系 path が coverage に計上されず、CI 実効 coverage は ~65-70%
+# まで下がる (slow 込み local 実測は 95.60%、Phase 5 完了時点)。
+#
+# Phase 6 atomic cutover で conformance test 一式を golden snapshot に退場させ、
+# slow marker が不要になる段階で ``fail_under = 90`` へ戻す。それまでは
+# reviewer が pre-merge に ``uv run pytest -m slow`` で補完する運用契約
+# (docs/PYTHON_MIGRATION_PLAN.md Phase 5 実績表 / Phase 6 gate 1 を参照)。
+#
+# ``fail_under = 65`` は **Phase 5 coexistence 下限値**。CI で slow 除外後も
+# 少なくとも 65% は維持する regression guard として機能する (急激な coverage
+# 崩壊を検知する下限 gate)。Phase 5 期間中にこの値を変更する場合は plan doc
+# 側の coverage 記述も同時に update する契約。
 fail_under = 65
 
 [tool.ruff]

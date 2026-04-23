@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from testim_parity.align import align_segments
 from testim_parity.mutation_corpus import MUTATION_TYPES
 from testim_parity.project import ROOT_DIR
@@ -95,16 +97,34 @@ INVERSE_DIFF_TYPE: dict[str, str] = {
 
 
 def _load_manifest() -> list[dict]:
+    if not MANIFEST_PATH.exists():
+        pytest.skip(
+            f"recall benchmark manifest not found at {MANIFEST_PATH}; "
+            "run ``scripts/py/tools/generate_manifest.py`` or checkout a tree with "
+            "``scripts/py/tests/fixtures/source-parity-goldens/`` populated."
+        )
     pages = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["pages"]
     return [p for p in pages if p["slug"] not in _PY_EXTRACTOR_DRIFT_SLUGS]
 
 
 def _read_en_html(slug: str) -> str:
-    return (ROOT_DIR / "snapshots" / "en" / "content" / f"{slug}.html").read_text(encoding="utf-8")
+    path = ROOT_DIR / "snapshots" / "en" / "content" / f"{slug}.html"
+    if not path.exists():
+        pytest.skip(
+            f"EN snapshot missing for recall slug {slug!r} at {path}; "
+            "ensure snapshots/en/content/ is populated before running ``-m slow``."
+        )
+    return path.read_text(encoding="utf-8")
 
 
 def _read_ja_markdown(slug: str) -> str:
-    return (ROOT_DIR / "src" / "content" / "docs" / f"{slug}.md").read_text(encoding="utf-8")
+    path = ROOT_DIR / "src" / "content" / "docs" / f"{slug}.md"
+    if not path.exists():
+        pytest.skip(
+            f"JA markdown missing for recall slug {slug!r} at {path}; "
+            "ensure src/content/docs/ is populated before running ``-m slow``."
+        )
+    return path.read_text(encoding="utf-8")
 
 
 def _diff_id(d: dict) -> str:

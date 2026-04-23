@@ -7,6 +7,8 @@ accounting に寄与させることを Python 側で pin する。
 
 from __future__ import annotations
 
+from typing import Any
+
 from testim_parity.summary import summarize_parity_results
 
 
@@ -103,3 +105,134 @@ def test_summary_orphan_metadata_defaults_to_zero() -> None:
     summary = summarize_parity_results([])
     assert summary["orphanBaselineEntries"] == 0
     assert summary["orphanBaselineByType"] == {}
+
+
+# ---------------------------------------------------------------------------
+# Routing contract (PR #384 review P2-1):
+#   structure-mismatch / source-unusable / coarse-audit の counter が相互に
+#   漏れないことを pin する。mjs 側 ``source_parity.test.mjs`` の 14+ routing
+#   ケースのうち、Python 実装が Phase 6 以降 mjs 無しで stand-alone に運用される
+#   際に regression guard として必須な representative ケースを pin する。
+# ---------------------------------------------------------------------------
+
+
+def _result(*issues: dict[str, Any]) -> dict[str, Any]:
+    """``issues`` を 1 file の parity result に包む helper。"""
+    return {"file": "x.md", "sourceUrl": "", "category": "", "issues": list(issues)}
+
+
+def test_structure_mismatch_does_not_flow_into_audit_signal() -> None:
+    """``section-structure-mismatch`` は ``structureMismatch*`` に流れるが
+    ``auditSignal*`` には流れない (COARSE_SIGNAL_TYPES と STRUCTURE_MISMATCH_TYPES
+    が別 frozenset である契約)。Phase 6 以降で mjs 無しに Python 側で分類ロジックが
+    変更された際に silent merge を起こさないための pin。"""
+    issue = {"type": "section-structure-mismatch", "severity": "actionable"}
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["structureMismatchIssues"] == 1
+    assert summary["structureMismatchByType"] == {"section-structure-mismatch": 1}
+    assert summary["structureMismatchFiles"] == 1
+    # audit channel には流れない
+    assert summary["auditSignalIssues"] == 0
+    assert summary["auditSignalsByType"] == {}
+    assert summary["auditSignalFiles"] == 0
+
+
+def test_source_unusable_does_not_flow_into_audit_signal() -> None:
+    """``snapshot-incomplete`` / ``source-unusable`` は ``snapshotUnusable*`` に
+    流れるが ``auditSignal*`` には流れない。"""
+    snapshot = {"type": "snapshot-incomplete", "severity": "actionable"}
+    unusable = {"type": "source-unusable", "severity": "actionable"}
+    summary = summarize_parity_results([_result(snapshot, unusable)])
+    assert summary["snapshotUnusableIssues"] == 2
+    assert summary["snapshotUnusableByType"] == {
+        "snapshot-incomplete": 1,
+        "source-unusable": 1,
+    }
+    assert summary["snapshotUnusableFiles"] == 1
+    # audit channel には流れない
+    assert summary["auditSignalIssues"] == 0
+    assert summary["auditSignalsByType"] == {}
+
+
+def test_source_unusable_does_not_flow_into_structure_mismatch() -> None:
+    """``snapshot-incomplete`` は ``snapshotUnusable*`` に流れ、
+    ``structureMismatch*`` には漏れない (field 混同の regression guard)。"""
+    issue = {"type": "snapshot-incomplete", "severity": "actionable"}
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["snapshotUnusableIssues"] == 1
+    assert summary["structureMismatchIssues"] == 0
+    assert summary["structureMismatchByType"] == {}
+    assert summary["structureMismatchFiles"] == 0
+
+
+def test_valid_ack_excludes_structure_mismatch_from_counter() -> None:
+    """``acknowledged=True, ackExpired=False`` の ``section-structure-mismatch``
+    は ``structureMismatchIssues`` に加算されない (gate の二重計上防止)。"""
+    issue = {
+        "type": "section-structure-mismatch",
+        "severity": "actionable",
+        "acknowledged": True,
+        "ackExpired": False,
+    }
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["structureMismatchIssues"] == 0
+    assert summary["structureMismatchByType"] == {}
+    assert summary["structureMismatchFiles"] == 0
+    # ack 済 issue は acknowledgedIssues に 1 計上される
+    assert summary["acknowledgedIssues"] == 1
+
+
+def test_expired_ack_keeps_structure_mismatch_in_counter() -> None:
+    """``ackExpired=True`` は valid ack ではないため、``structureMismatchIssues``
+    に加算される (ack 期限切れの明示 counter 維持)。"""
+    issue = {
+        "type": "section-structure-mismatch",
+        "severity": "actionable",
+        "acknowledged": True,
+        "ackExpired": True,
+    }
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["structureMismatchIssues"] == 1
+    assert summary["expiredAcknowledgements"] == 1
+
+
+def test_baselined_excludes_structure_mismatch_from_counter() -> None:
+    """``baselined=True`` の ``section-structure-mismatch`` は
+    ``structureMismatchIssues`` に加算されない (frozen drift は active 対象外)。"""
+    issue = {
+        "type": "section-structure-mismatch",
+        "severity": "actionable",
+        "baselined": True,
+    }
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["structureMismatchIssues"] == 0
+    # baselinedIssues には 1 入る
+    assert summary["baselinedIssues"] == 1
+    assert summary["baselinedByType"] == {"section-structure-mismatch": 1}
+
+
+def test_valid_ack_excludes_source_unusable_from_counter() -> None:
+    """``acknowledged=True, ackExpired=False`` の ``snapshot-incomplete`` は
+    ``snapshotUnusableIssues`` に加算されない。"""
+    issue = {
+        "type": "snapshot-incomplete",
+        "severity": "actionable",
+        "acknowledged": True,
+        "ackExpired": False,
+    }
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["snapshotUnusableIssues"] == 0
+    assert summary["snapshotUnusableByType"] == {}
+
+
+def test_coarse_signal_flows_only_into_audit_channel() -> None:
+    """``paragraph-count-mismatch`` は ``auditSignal*`` にのみ流れる
+    (``structureMismatch*`` や ``snapshotUnusable*`` には無関係)。positive path pin。"""
+    issue = {"type": "paragraph-count-mismatch", "severity": "signal"}
+    summary = summarize_parity_results([_result(issue)])
+    assert summary["auditSignalIssues"] == 1
+    assert summary["auditSignalsByType"] == {"paragraph-count-mismatch": 1}
+    assert summary["auditSignalFiles"] == 1
+    # structureMismatch / snapshotUnusable には無関係
+    assert summary["structureMismatchIssues"] == 0
+    assert summary["snapshotUnusableIssues"] == 0

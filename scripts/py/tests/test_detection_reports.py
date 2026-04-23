@@ -47,22 +47,37 @@ from testim_parity.detection_reports import (
 # ---------------------------------------------------------------------------
 
 
-EMPTY_SNAPSHOT: dict[str, Any] = {
-    "checkedAt": "2026-04-07T00:00:00Z",
-    "summary": {"totalSnapshots": 100, "changed": 0, "added": 0, "removed": 0, "unchanged": 100},
-    "changes": [],
-    "sidebar": {"changed": False, "addedPages": [], "removedPages": []},
-}
-
-EMPTY_PARITY: dict[str, Any] = {
-    "summary": {
+# ``_empty_snapshot()`` / ``_empty_parity()`` は factory function として提供する
+# (PR #384 review P2-4)。以前は module-level dict 定数で、``{**_empty_snapshot(),
+# ...}`` の shallow copy パターンで参照されていたが、nested dict (``summary`` や
+# ``sidebar``) は spread でも shared reference になるため、将来
+# ``build_actionable_report`` が in-place 変更するケースで test 間汚染を招く
+# 潜在リスクがあった。factory が毎回 fresh dict を返す契約に変更。
+def _empty_snapshot() -> dict[str, Any]:
+    return {
         "checkedAt": "2026-04-07T00:00:00Z",
-        "actionableFiles": 0,
-        "signalFiles": 0,
-        "errorFiles": 0,
-    },
-    "files": [],
-}
+        "summary": {
+            "totalSnapshots": 100,
+            "changed": 0,
+            "added": 0,
+            "removed": 0,
+            "unchanged": 100,
+        },
+        "changes": [],
+        "sidebar": {"changed": False, "addedPages": [], "removedPages": []},
+    }
+
+
+def _empty_parity() -> dict[str, Any]:
+    return {
+        "summary": {
+            "checkedAt": "2026-04-07T00:00:00Z",
+            "actionableFiles": 0,
+            "signalFiles": 0,
+            "errorFiles": 0,
+        },
+        "files": [],
+    }
 
 
 def _no_categories_change(slug: str, type_: str = "page-changed", **extras: Any) -> dict[str, Any]:
@@ -263,7 +278,7 @@ def test_coarse_signal_only_does_not_open_parity_issue() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is False
     assert report["parityRegression"]["summary"]["issueCount"] == 0
     assert report["parityRegression"]["topEntries"] == []
@@ -315,17 +330,17 @@ def test_snapshot_diff_opens_when_changes_exist() -> None:
 
 
 def test_snapshot_diff_stays_closed_when_no_changes() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), _empty_parity(), [])
     assert report["snapshotDiff"]["shouldOpenIssue"] is False
     assert report["snapshotDiff"]["summary"]["actionableCount"] == 0
 
 
 def test_snapshot_diff_body_includes_sidebar_changes() -> None:
     snapshot = {
-        **EMPTY_SNAPSHOT,
+        **_empty_snapshot(),
         "sidebar": {"changed": True, "addedPages": ["new-feature"], "removedPages": []},
     }
-    report = build_actionable_report(snapshot, EMPTY_PARITY, [])
+    report = build_actionable_report(snapshot, _empty_parity(), [])
     assert "サイドバー変更" in report["snapshotDiff"]["body"]
     assert "追加ページ: 1" in report["snapshotDiff"]["body"]
 
@@ -362,7 +377,7 @@ def test_validly_acknowledged_issue_does_not_open_parity() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is False
     assert report["parityRegression"]["summary"]["issueCount"] == 0
     # Legacy count fields must not leak into summary.
@@ -397,7 +412,7 @@ def test_expired_ack_on_non_coarse_opens_parity() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is True
     assert report["parityRegression"]["summary"]["issueCount"] == 1
 
@@ -429,7 +444,7 @@ def test_expired_ack_on_coarse_signal_does_not_relight() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is False
     assert report["parityRegression"]["summary"]["issueCount"] == 0
 
@@ -464,7 +479,7 @@ def test_acked_issues_filtered_from_top_entries_but_active_kept() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is True
     assert report["parityRegression"]["summary"]["issueCount"] == 1
     assert "image-mismatch" in report["parityRegression"]["body"]
@@ -698,7 +713,9 @@ FRESH_SYNC: dict[str, Any] = {
 
 
 def test_en_patch_recovery_null_when_upstream_recovery_absent() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": FRESH_SYNC})
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": FRESH_SYNC}
+    )
     assert report["sourceSyncHealth"]["enPatchRecovery"] is None
     assert report["sourceSyncHealth"]["sourceSyncRecovery"] is None
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is False
@@ -718,8 +735,8 @@ def test_empty_upstream_recovery_does_not_open_issue() -> None:
         "mechanisms": {"en_source_patches": [], "source_sync_exclusions": []},
     }
     report = build_actionable_report(
-        EMPTY_SNAPSHOT,
-        EMPTY_PARITY,
+        _empty_snapshot(),
+        _empty_parity(),
         [],
         {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
     )
@@ -757,8 +774,8 @@ def test_stale_en_patch_opens_source_sync_health() -> None:
         },
     }
     report = build_actionable_report(
-        EMPTY_SNAPSHOT,
-        EMPTY_PARITY,
+        _empty_snapshot(),
+        _empty_parity(),
         [],
         {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
     )
@@ -797,8 +814,8 @@ def test_overdue_exclusion_opens_source_sync_health() -> None:
         },
     }
     report = build_actionable_report(
-        EMPTY_SNAPSHOT,
-        EMPTY_PARITY,
+        _empty_snapshot(),
+        _empty_parity(),
         [],
         {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
     )
@@ -836,8 +853,8 @@ def test_unknown_only_upstream_entries_does_not_open() -> None:
         },
     }
     report = build_actionable_report(
-        EMPTY_SNAPSHOT,
-        EMPTY_PARITY,
+        _empty_snapshot(),
+        _empty_parity(),
         [],
         {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
     )
@@ -1048,18 +1065,22 @@ def test_non_fresh_freshness_opens_source_sync(freshness: str) -> None:
         },
         "errors": [{"slug": "a", "detail": "fail"}],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is True
     assert report["sourceSyncHealth"]["freshnessState"] == freshness
 
 
 def test_fresh_does_not_open_source_sync() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": FRESH_SYNC})
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": FRESH_SYNC}
+    )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is False
 
 
 def test_empty_source_sync_does_not_open() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": {}})
+    report = build_actionable_report(_empty_snapshot(), _empty_parity(), [], {"sourceSync": {}})
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is False
 
 
@@ -1076,8 +1097,10 @@ def test_summary_markdown_includes_source_sync_health() -> None:
         },
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
-    md = render_summary_markdown(EMPTY_SNAPSHOT, EMPTY_PARITY, report, [], source_sync)
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
+    md = render_summary_markdown(_empty_snapshot(), _empty_parity(), report, [], source_sync)
     assert re.search(r"## ソース同期状態", md)
     assert "broken" in md
 
@@ -1112,7 +1135,7 @@ CLEAN_PARITY: dict[str, Any] = {
 
 
 def test_parity_followup_always_present() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, CLEAN_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), CLEAN_PARITY, [])
     followup = report["parityFollowup"]
     assert followup is not None
     assert isinstance(followup["shouldOpenIssue"], bool)
@@ -1123,7 +1146,7 @@ def test_parity_followup_always_present() -> None:
 
 
 def test_parity_followup_closed_when_clean() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, CLEAN_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), CLEAN_PARITY, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is False
     assert report["parityFollowup"]["body"] == ""
 
@@ -1158,7 +1181,7 @@ def test_parity_followup_opens_with_baselined_issues() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is True
     assert report["parityFollowup"]["summary"]["baselineDebt"]["baselinedIssues"] == 3
 
@@ -1168,7 +1191,7 @@ def test_parity_followup_opens_with_invalidated_slugs() -> None:
         **CLEAN_PARITY,
         "summary": {**CLEAN_PARITY["summary"], "baselineInvalidatedSlugs": ["overview/page-a"]},
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is True
     assert report["parityFollowup"]["summary"]["baselineDebt"]["baselineInvalidatedSlugs"] == [
         "overview/page-a"
@@ -1200,7 +1223,7 @@ def test_parity_followup_opens_with_complete_advisory_queue_blocking() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is True
     assert report["parityFollowup"]["summary"]["advisoryQueue"]["blockingItems"] == 1
     assert (
@@ -1229,7 +1252,7 @@ def test_parity_followup_partial_scope_does_not_open_on_advisory_alone() -> None
             {"slug": "overview/page-a", "blocking": True, "issueCount": 2, "issues": []}
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is False
 
 
@@ -1241,7 +1264,7 @@ def test_parity_followup_invalidated_slugs_in_body() -> None:
             "baselineInvalidatedSlugs": ["overview/page-a", "settings/config"],
         },
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is True
     assert "overview/page-a" in report["parityFollowup"]["body"]
     assert "settings/config" in report["parityFollowup"]["body"]
@@ -1288,7 +1311,7 @@ def _structure_mismatch_parity() -> dict[str, Any]:
 
 def test_structure_mismatch_exposed_in_summary() -> None:
     parity = _structure_mismatch_parity()
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["summary"]["structureMismatchIssues"] == 5
     assert report["parityRegression"]["summary"]["structureMismatchFiles"] == 3
     assert report["parityRegression"]["summary"]["structureMismatchByType"] == {
@@ -1299,7 +1322,7 @@ def test_structure_mismatch_exposed_in_summary() -> None:
 
 def test_structure_mismatch_defaults_when_absent() -> None:
     parity = {"summary": {"checkedAt": "2026-04-08T00:00:00Z"}, "files": []}
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["summary"]["structureMismatchIssues"] == 0
     assert report["parityRegression"]["summary"]["structureMismatchFiles"] == 0
     assert report["parityRegression"]["summary"]["structureMismatchByType"] == {}
@@ -1307,7 +1330,7 @@ def test_structure_mismatch_defaults_when_absent() -> None:
 
 def test_structure_mismatch_file_in_top_entries() -> None:
     parity = _structure_mismatch_parity()
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert len(report["parityRegression"]["topEntries"]) == 1
     assert (
         report["parityRegression"]["topEntries"][0]["file"]
@@ -1319,7 +1342,7 @@ def test_structure_mismatch_file_in_top_entries() -> None:
 
 def test_parity_body_omits_structure_mismatch_advisory_section() -> None:
     parity = _structure_mismatch_parity()
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert "## Structure Mismatch" not in report["parityRegression"]["body"]
 
 
@@ -1341,7 +1364,7 @@ def test_source_unusable_counters_exposed() -> None:
             },
         },
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     sub = report["parityFollowup"]["summary"]["sourceUnusable"]
     assert sub["snapshotUnusableIssues"] == 3
     assert sub["snapshotUnusableFiles"] == 2
@@ -1352,7 +1375,7 @@ def test_source_unusable_counters_exposed() -> None:
 
 
 def test_source_unusable_defaults_when_absent() -> None:
-    report = build_actionable_report(EMPTY_SNAPSHOT, CLEAN_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), CLEAN_PARITY, [])
     sub = report["parityFollowup"]["summary"]["sourceUnusable"]
     assert sub["snapshotUnusableIssues"] == 0
     assert sub["snapshotUnusableFiles"] == 0
@@ -1369,7 +1392,7 @@ def test_source_unusable_alone_does_not_open_followup() -> None:
             "snapshotUnusableByType": {"snapshot-incomplete": 4, "source-unusable": 1},
         },
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is False
     assert report["parityFollowup"]["body"] == ""
 
@@ -1399,7 +1422,7 @@ def test_source_unusable_section_in_body_when_other_signal_opens() -> None:
             }
         ],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     body = report["parityFollowup"]["body"]
     assert report["parityFollowup"]["shouldOpenIssue"] is True
     assert re.search(r"## ソース使用不可 \(参考\)", body)
@@ -1448,7 +1471,7 @@ def test_all_baselined_does_not_open_parity() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is False
     assert report["parityRegression"]["summary"]["issueCount"] == 0
     assert report["parityRegression"]["topEntries"] == []
@@ -1484,7 +1507,7 @@ def test_baselined_never_in_top_entries_but_active_kept() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is True
     assert "frozen — must not appear" not in report["parityRegression"]["body"]
     assert "segment-extra" in report["parityRegression"]["body"]
@@ -1497,7 +1520,7 @@ def test_baselined_never_in_top_entries_but_active_kept() -> None:
 
 def test_snapshot_diff_body_has_family_marker() -> None:
     snapshot = {
-        **EMPTY_SNAPSHOT,
+        **_empty_snapshot(),
         "summary": {"totalSnapshots": 100, "changed": 1, "added": 0, "removed": 0, "unchanged": 99},
         "changes": [_categorized_change("page-a", content=(1, 0), diff_lines=1)],
     }
@@ -1536,7 +1559,7 @@ def test_source_sync_marker_when_broken() -> None:
         },
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": sync})
+    report = build_actionable_report(_empty_snapshot(), _empty_parity(), [], {"sourceSync": sync})
     assert report["sourceSyncHealth"]["body"].startswith(
         "<!-- detection-family: source-sync-health -->"
     )
@@ -1544,7 +1567,7 @@ def test_source_sync_marker_when_broken() -> None:
 
 def test_source_sync_empty_body_when_fresh() -> None:
     report = build_actionable_report(
-        EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": {"freshnessState": "fresh"}}
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": {"freshnessState": "fresh"}}
     )
     assert report["sourceSyncHealth"]["body"] == ""
 
@@ -1559,7 +1582,7 @@ def test_parity_followup_marker_when_should_open() -> None:
         },
         "files": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["body"].startswith("<!-- detection-family: parity-followup -->")
 
 
@@ -1575,7 +1598,7 @@ def test_actionable_report_exposes_four_families() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [], {"sourceSync": {}})
+    report = build_actionable_report(_empty_snapshot(), parity, [], {"sourceSync": {}})
     keys = {
         report["snapshotDiff"]["key"],
         report["parityRegression"]["key"],
@@ -1608,7 +1631,7 @@ def test_coarse_only_run_all_four_families_closed() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [], {"sourceSync": {}})
+    report = build_actionable_report(_empty_snapshot(), parity, [], {"sourceSync": {}})
     for family in ("snapshotDiff", "parityRegression", "sourceSyncHealth", "parityFollowup"):
         assert report[family] is not None
         assert report[family]["shouldOpenIssue"] is False
@@ -1627,7 +1650,7 @@ def test_parity_only_coarse_no_audit_manifest_entry() -> None:
             }
         ],
     }
-    assert build_audit_manifest(EMPTY_SNAPSHOT, parity) == []
+    assert build_audit_manifest(_empty_snapshot(), parity) == []
 
 
 def test_run_scope_hoisted_to_report_top_level() -> None:
@@ -1644,7 +1667,7 @@ def test_run_scope_hoisted_to_report_top_level() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [], {"sourceSync": {}})
+    report = build_actionable_report(_empty_snapshot(), parity, [], {"sourceSync": {}})
     assert report["runScope"] == {
         "type": "slug",
         "isComplete": False,
@@ -1659,7 +1682,7 @@ def test_run_scope_null_for_legacy_report() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [], {"sourceSync": {}})
+    report = build_actionable_report(_empty_snapshot(), parity, [], {"sourceSync": {}})
     assert report["runScope"] is None
 
 
@@ -1682,7 +1705,7 @@ def test_actionable_opens_for_non_coarse_issue() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityRegression"]["shouldOpenIssue"] is True
     assert report["parityRegression"]["summary"]["issueCount"] == 1
     assert "image-mismatch" in report["parityRegression"]["body"]
@@ -1708,7 +1731,7 @@ def test_mixed_file_filters_coarse_keeps_actionable() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     body = report["parityRegression"]["body"]
     assert report["parityRegression"]["shouldOpenIssue"] is True
     assert "image-mismatch" in body
@@ -1734,7 +1757,7 @@ def test_top_entries_excludes_coarse_only_files() -> None:
         "advisoryQueue": [],
         "advisoryQueueScope": None,
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, parity, [])
+    report = build_actionable_report(_empty_snapshot(), parity, [])
     files = [e["file"] for e in report["parityRegression"]["topEntries"]]
     assert files == ["src/content/docs/real.md"]
 
@@ -2413,8 +2436,10 @@ def test_source_side_debt_section_emitted_when_excluded_pages_exist() -> None:
         ],
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
-    md = render_summary_markdown(EMPTY_SNAPSHOT, EMPTY_PARITY, report, [], source_sync)
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
+    md = render_summary_markdown(_empty_snapshot(), _empty_parity(), report, [], source_sync)
     assert re.search(r"## ソース原文の既知問題", md)
     assert "除外ページ: 1" in md
     assert "未復旧: 1" in md
@@ -2439,8 +2464,10 @@ def test_source_side_debt_section_omitted_when_none() -> None:
         "pages": [],
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
-    md = render_summary_markdown(EMPTY_SNAPSHOT, EMPTY_PARITY, report, [], source_sync)
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
+    md = render_summary_markdown(_empty_snapshot(), _empty_parity(), report, [], source_sync)
     assert "## ソース原文の既知問題" not in md
 
 
@@ -2480,7 +2507,9 @@ def test_source_side_debt_counters_exposed_on_actionable_report() -> None:
         ],
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
     debt = report["sourceSyncHealth"]["sourceSideDebt"]
     assert debt["excludedPages"] == 2
     assert debt["excludedBrokenPages"] == 1
@@ -2520,7 +2549,9 @@ def test_source_side_debt_fresh_with_debt_opens_issue() -> None:
         ],
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is True
     assert "ソース原文の既知問題" in report["sourceSyncHealth"]["body"]
 
@@ -2562,6 +2593,8 @@ def test_source_side_debt_expected_match_label(expected_match: bool, label_patte
         ],
         "errors": [],
     }
-    report = build_actionable_report(EMPTY_SNAPSHOT, EMPTY_PARITY, [], {"sourceSync": source_sync})
-    md = render_summary_markdown(EMPTY_SNAPSHOT, EMPTY_PARITY, report, [], source_sync)
+    report = build_actionable_report(
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": source_sync}
+    )
+    md = render_summary_markdown(_empty_snapshot(), _empty_parity(), report, [], source_sync)
     assert label_pattern in md
