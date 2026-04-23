@@ -251,6 +251,35 @@ class TestCalloutDirective:
         issues = lint_content(_make_doc(body='::::info{title="補足"}\nContent\n::::\n'), _TEST_PATH)
         assert _rules(issues, "callout-unknown-type") == []
 
+    def test_list_nested_callout_is_error(self) -> None:
+        """list item 内に ``:::callout`` を書くと error (plan Phase 2 反映)。"""
+        body = "- item one\n  :::note\n  nested body\n  :::\n- item two\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        hit = next((i for i in issues if i["rule"] == "callout-in-list-item"), None)
+        assert hit is not None
+        assert hit["level"] == "error"
+
+    def test_list_nested_callout_with_ordered_list_is_error(self) -> None:
+        body = "1. step\n   :::warning\n   nested\n   :::\n2. next\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert any(i["rule"] == "callout-in-list-item" for i in issues)
+
+    def test_top_level_callout_is_clean(self) -> None:
+        body = ":::note\nBody\n:::\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert _rules(issues, "callout-in-list-item") == []
+
+    @pytest.mark.parametrize(
+        "indent",
+        [" ", "  ", "   ", "    ", "\t"],
+    )
+    def test_any_leading_whitespace_triggers_rule(self, indent: str) -> None:
+        """leading whitespace を持つ callout line は全て禁止 (Python extractor
+        が list context を追跡しない以上、flatten が ambiguous になる)。"""
+        body = f"- item\n{indent}:::note\n{indent}body\n{indent}:::\n"
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert any(i["rule"] == "callout-in-list-item" for i in issues)
+
 
 # ---------------------------------------------------------------------------
 # H. Internal-link target existence (requires slug index)

@@ -284,11 +284,12 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
    | Codex (external model) | independent second-opinion review |
    | plan-fidelity | plan/spec 文言整合 / marker protocol 遵守 / 未登録 carve-out 検知 |
 
-4. **Test pins (must pass)**:
-   - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` (sentinel slugs の totalIssues=0)
-   - `scripts/__tests__/en_source_patches.test.mjs` / `_integration.test.mjs` (patch-registry invariants)
-   - `scripts/__tests__/generate_parity_baseline.test.mjs` (pre-regen gate)
-   - 各 regression guard
+4. **Test pins (must pass)** (Phase 5 で pytest に移植済):
+   - `scripts/py/tests/test_clean_page_fixtures.py` (sentinel slug の totalIssues=0。意図的 drift は `_PY_XFAIL_SLUGS` で隔離、Phase 6 cutover 前に empty 化)
+   - `scripts/py/tests/test_en_source_patches.py` + `test_en_source_patches_integration.py` (patch-registry invariants + dual-source-of-truth drift)
+   - `scripts/py/tests/test_generate_parity_baseline.py` (pre-regen gate) + `tests/conformance/test_generate_parity_baseline_e2e.py` (mjs byte-parity)
+   - 各 regression guard (`test_recall.py` 9/9 mutation recall / `test_baseline_recall.py` / `test_segments_boundary.py`)
+   - 残る 1 mjs test: `scripts/__tests__/lib_redirects.test.mjs` (Astro build graph 経由で `scripts/lib/redirects.mjs` を import するため、Phase 6 cutover 以降も保持する production-only test)
 
 5. **Baseline regen cycle**: PR merge 後の full `--regenerate` は必ず pre-regen fail-closed gate を pass。CI run log に `baseline-regen-gate: pass` を明示。
 

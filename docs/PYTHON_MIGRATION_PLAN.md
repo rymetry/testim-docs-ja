@@ -987,7 +987,7 @@ byte-level 差) は **Phase 6 atomic cutover の前に別 PR で解消する**:
 
 ## Phase 6: Cutover (atomic 切替)
 
-**Goal**: npm scripts を Python に接続、mjs 削除
+**Goal**: npm scripts を Python に接続、mjs 削除 (redirects.mjs を除く)
 
 ### Cutover gate criteria (全て true)
 
@@ -997,29 +997,81 @@ byte-level 差) は **Phase 6 atomic cutover の前に別 PR で解消する**:
 4. Boundary stability >= 0.95
 5. `npm run build` pass (Astro site 無影響)
 6. `npm run lint` pass
-7. `scripts/__tests__/*.mjs` が全て空 (全移植完了)
+7. `scripts/__tests__/` に `lib_redirects.test.mjs` のみ残存 (他 54 mjs test は Phase 5 で削除済、redirects.mjs は Astro build graph に残るため同 test も production regression gate として維持)
+8. **Cutover exclusion audit**: `uv run pytest -m cutover` が緑 — Phase 5 で導入された `_PY_XFAIL_SLUGS` / `_PY_EXTRACTOR_DRIFT_SLUGS` 等の temporary exclusion frozenset が全て empty であることを assert (下記「Self-enforcing cutover gate」節)
+9. **Golden fixture migration PR** が merge 済 (下記「Conformance test migration」節)
 
-### package.json 変更
+### Self-enforcing cutover gate (`pytest -m cutover`)
 
-```json
-{
-  "scripts": {
-    "test": "cd scripts/py && uv run pytest",
-    "check:parity": "cd scripts/py && uv run python -m testim_parity.detection.check_source_parity",
-    "check:snapshots:fetch": "cd scripts/py && uv run python -m testim_parity.detection.snapshot_update",
-    "check:snapshots:diff": "cd scripts/py && uv run python -m testim_parity.detection.snapshot_diff",
-    "lint:docs": "cd scripts/py && uv run python -m testim_parity.tools.lint_docs"
-  }
-}
-```
+Phase 5 で port 時に発覚した **Python extractor / align drift** を Phase 6 cutover PR
+で解消したかを自動 audit する gate。以下の temporary exclusion set が empty でない
+うちは `pytest -m cutover` が fail する契約:
+
+| File | Exclusion symbol | Phase 6 cutover までの処理 |
+| --- | --- | --- |
+| `tests/test_clean_page_fixtures.py` | `_PY_XFAIL_SLUGS` | Python extractor / align の ~16 slug drift を解消 (alignment 細部 / token-drop recall) |
+| `tests/test_structure_fixtures.py` | `_PY_XFAIL_SLUGS` | 同上 |
+| `tests/test_recall.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | `advanced-editing/loops` (JA extractor の unordered-list-item 欠落) / `running-tests/running-tests-overview` (token-drop 未検出) の修正 |
+| `tests/test_baseline_recall.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | 同上 (recall drift) |
+| `tests/test_segments_boundary.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | `advanced-editing/loops` boundary stability drift |
+
+**Gate 実装**: `scripts/py/tests/test_cutover_gate.py` に `@pytest.mark.cutover` で
+4 frozenset を enumerate し、`assert len(exclusions) == 0, f"Phase 6 cutover blocked
+by {exclusions}"` する test を置く。`pyproject.toml` の `addopts` は `cutover` marker
+を default skip し (Phase 5 coexistence では ok)、Phase 6 cutover PR で `uv run pytest
+-m cutover` を明示的に run して緑を確認する契約。
+
+### package.json 変更 (全 script rewire table)
+
+Phase 6 cutover PR で全 Node backed script を Python CLI に切り替える。Astro build
+統合 script (dev/build/preview/check/astro) および MD lint (markdownlint) は Node
+のまま残す:
+
+| current (Node) | Phase 6 rewire 先 | Python 等価モジュール |
+| --- | --- | --- |
+| `test` | `npm run test:mjs && npm run test:py` | `cd scripts/py && uv run pytest` (+ mjs の lib_redirects 残置分) |
+| `test:mjs` | 維持 (lib_redirects のみ) | — |
+| `test:py` | 維持 | — |
+| `test:all` | 維持 | — |
+| `lint:docs` | Python | `testim_parity.tools.lint_docs` |
+| `check:untranslated` | Python | `testim_parity.detection.find_untranslated` |
+| `lint:glossary` | Python | `testim_parity.tools.check_glossary_duplicates` |
+| `docs:sync-sidebar` | Python | `testim_parity.pipeline.update_sidebar_urls_from_live` |
+| `docs:sync-frontmatter` | Python | `testim_parity.tools.sync_frontmatter_from_sidebar` |
+| `docs:sync-frontmatter:apply` | Python | `testim_parity.tools.sync_frontmatter_from_sidebar --apply` |
+| `docs:pipeline` | Python | `testim_parity.pipeline.pipeline` |
+| `docs:pipeline:full` | Python | `testim_parity.pipeline.pipeline --mode=full` |
+| `docs:pipeline:diff` | Python | `testim_parity.pipeline.pipeline --mode=diff` |
+| `docs:fetch` | Python | `testim_parity.pipeline.fetch_translate_images` |
+| `docs:fix-alt` | Python | `testim_parity.tools.fix_alt_all` |
+| `docs:normalize` | Python | `testim_parity.tools.normalize_docs` |
+| `docs:placeholders` | Python | `testim_parity.pipeline.generate_untranslated_placeholders` |
+| `docs:prepare-llm` | Python | `testim_parity.pipeline.prepare_llm_tasks` |
+| `docs:apply-llm` | Python | `testim_parity.pipeline.apply_llm_translations` |
+| `docs:report-categories` | Python | `testim_parity.tools.report_frontmatter_categories` |
+| `check:parity` | Python | `testim_parity.detection.check_source_parity` |
+| `check:patch-review` | Python | `testim_parity.detection.check_patch_review_cadence` |
+| `check:upstream-recovery` | Python | `testim_parity.detection.check_upstream_recovery` |
+| `check:summary` | Python | `testim_parity.detection.generate_detection_reports` |
+| `generate:parity-baseline` | Python | `testim_parity.detection.generate_parity_baseline` |
+| `check:snapshots:fetch` | Python | `testim_parity.detection.snapshot_update` |
+| `check:snapshots:diff` | Python | `testim_parity.detection.snapshot_diff` |
+| `check:snapshots` | Python | `snapshot_update && snapshot_diff` |
+| `check:snapshots:fetch:dry-run` | Python | `snapshot_update --dry-run` |
+| `regen:py-patches` | 削除 | (dual-source-of-truth drift 解消、`_en_source_patches_data.json` を Python dict に inline 化) |
+| `check:py-patches` | 削除 | 同上 |
+| `lint:md*` / `lint:fix` | 維持 (Node) | markdownlint-cli は Node のまま |
+| `dev` / `build` / `preview` / `astro` / `check` | 維持 (Node) | Astro build は Node native |
+| `format` / `format:check` | 維持 (Node) | prettier は Node のまま |
 
 ### 削除対象
 
-- `scripts/__tests__/` (57 mjs test files)
-- `scripts/lib/` (33 mjs files) **except `redirects.mjs`**
-- `scripts/detection/` (9 mjs files)
-- `scripts/pipeline/` (6 mjs files)
-- `scripts/tools/` (6 mjs tool files → py/ に移動済)
+- `scripts/__tests__/*.mjs` (lib_redirects.test.mjs 以外すべて → Phase 5 で完了済)
+- `scripts/lib/*.mjs` (33 file) **except `redirects.mjs`**
+- `scripts/detection/*.mjs` (9 file)
+- `scripts/pipeline/*.mjs` (6 file)
+- `scripts/tools/*.mjs` (6 file → Python に完全移動済)
+- `scripts/py/conformance/harness.mjs` と `tests/conformance/test_*_parity.py` (下記 golden 化)
 
 ### Conformance test migration (Phase 6 cutover 時、reviewer P7 対応)
 
@@ -1034,20 +1086,39 @@ Phase 4b で導入された cross-runtime conformance test は mjs harness
 | **B. dual-source-of-truth drift** | `test_en_source_patches_parity.py` | patch の唯一ソースが mjs (`en_source_patches.mjs`) でなくなるため、mjs / JSON の drift 検出目的自体が消滅。cutover 時に test を削除し、patch data を `_en_source_patches_data.json` ではなく Python dict として `en_source_patches.py` に inline 化する |
 | **C. pure helper conformance** | `test_align_scoring_parity.py` / `test_normalize_parity.py` 等 pure-function byte parity | 同じく golden snapshot 化。harness dispatch を fixture-based に書き換える |
 
-**fixture 生成スクリプト** (cutover PR で追加予定、Phase 6 gate の一部):
+**Golden fixture 生成の実装契約** (Phase 6 cutover PR で **新規追加** する):
 
-```bash
-# 最後の mjs run で golden を出力して commit
-node scripts/py/conformance/harness.mjs --dump-golden > tests/fixtures/golden/turndown_288.jsonl
+現行 `scripts/py/conformance/harness.mjs` は `stdin → stdout` の batch JSON I/O
+のみで、golden dump mode は未実装。Phase 6 cutover PR で **新規 Python script**
+`scripts/py/tools/dump_conformance_goldens.py` を追加する。契約:
+
+```
+Usage: uv run python -m testim_parity.tools.dump_conformance_goldens [--out tests/fixtures/golden/]
+
+Behavior:
+  1. 各 conformance test file (tests/conformance/test_*_parity.py 等) を import し、
+     test module が公開する ``_build_payload()`` (命名規約) を call して dispatch 要求
+     リスト ``[{function, args}]`` を取得
+  2. 取得した payload を 1 回の node scripts/py/conformance/harness.mjs subprocess に
+     stdin 経由で渡して authoritative な mjs 出力を取得
+  3. 出力を tests/fixtures/golden/<module>.jsonl に書き出す (1 行 = 1 sample)
+  4. 既存 conformance test は golden fixture を読むように書き換える同じ PR 内で
+     更新する (mjs harness import を削除)
 ```
 
-fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加する際の diff
-を review-friendly に保つ。conformance harness は cutover PR で retire する
-(node 呼び出し path が消えるため)。
+`harness.mjs` 自体の書き換えは不要 (本 tool が harness を subprocess として呼ぶ)。
+harness.mjs は Phase 6 cutover PR の最終 commit で **削除** する。
 
-**Phase 6 gate への影響**: `scripts/__tests__/*.mjs` と同じく、cutover 前に
-harness → golden fixture への書き換え PR を挟む。書き換え後の Python-only
-run が 288-matrix で pass することが Phase 6 gate の前提条件になる。
+`scripts/py/tools/dump_conformance_goldens.py` の詳細設計は Phase 6 cutover PR に
+委ねる (本 plan doc は tool の **入出力契約のみ** を pin)。
+
+fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加する際の diff
+を review-friendly に保つ。
+
+**Phase 6 gate への影響**: 全 Phase 6 cutover 作業は 1 PR に集約 (atomic cutover
+原則)。gate 9 (golden fixture migration) の成否は gate 2 (check:parity Python 版)
+と同 PR で検証される。書き換え後の Python-only run が 288-matrix で pass すること
+が Phase 6 merge の前提条件。
 
 ### dependency 変更 (cutover 時点で実行)
 
@@ -1055,6 +1126,7 @@ run が 288-matrix で pass することが Phase 6 gate の前提条件にな�
 - Remove: `gray-matter` (Phase 0.1 で redirects.mjs 自己完結化済 + Phase 4 で全消費者 Python 移行完了後)
   - **注意**: gray-matter は coexistence 期間中は残す。`lint_docs.mjs`, `normalize_docs.mjs`, `report_frontmatter_categories.mjs`, `fetch_translate_images.mjs` が Phase 4 完了まで使用
 - Keep: `markdownlint-cli` (MD lint は Node のまま)
+- Keep: `remark-*` / `rehype-*` / `prettier*` / Astro 依存 (Astro build 統合)
 
 ### Rollback
 

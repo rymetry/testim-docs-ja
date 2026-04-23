@@ -62,6 +62,13 @@ _CODE_BLOCK_RE = re.compile(r"```[\s\S]*?```")
 _INLINE_CODE_RE = re.compile(r"`[^`]*`")
 
 _CALLOUT_RE = re.compile(r"^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$", re.MULTILINE)
+# list item 内に nest された ``:::callout`` を検出するための regex。plan doc
+# Phase 2 でも明文化されている通り、JA parser は list context を追跡しないので
+# indented callout は ambiguous な flatten を招く。docs/WRITING_GUIDE.md で
+# 禁止を明記、ここで lint ガードを pin する契約。
+_LIST_NESTED_CALLOUT_RE = re.compile(
+    r"^[ \t]+:{3,}\s*[a-zA-Z][a-zA-Z-]*(?:\{[^}]*\})?\s*$", re.MULTILINE
+)
 _MARKDOWN_LINK_RE = re.compile(r"\]\(/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^)]+)?\)")
 _HTML_LINK_RE = re.compile(
     r"""<a\b[^>]*href=["']/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^\s"']*)?\s*["'][^>]*>""",
@@ -255,6 +262,24 @@ def check_callouts(body: str, body_start: int, reporter: _Reporter) -> None:
         reporter.err(
             "callout-unknown-type",
             f'Unknown callout type "{match.group(1)}". Valid types: {sorted_types}',
+            _to_absolute_line(line, body_start),
+        )
+
+    # list item 内 nest された ``:::callout`` を検出。plan doc Phase 2 で JA
+    # parser は list context を追跡しないと明記されているため、indented
+    # callout は ambiguous な flatten を招く。top-level でない callout を
+    # 全て不許可にする (docs/WRITING_GUIDE.md 参照)。
+    # NOTE: code fence 内の indented callout は match しない前提で OK —
+    # _LIST_NESTED_CALLOUT_RE は body 全体に finditer するが、実 corpus では
+    # code fence 内に ``^<ws>:::<type>`` が現れるケースは無い。もし将来
+    # 発生したら code_block skip を追加する。
+    for match in _LIST_NESTED_CALLOUT_RE.finditer(body):
+        line = body[: match.start()].count("\n") + 1
+        reporter.err(
+            "callout-in-list-item",
+            "Callout directive nested inside a list item is unsupported "
+            "(JA extractor cannot flatten it deterministically). "
+            "Keep callouts at top level — see docs/WRITING_GUIDE.md.",
             _to_absolute_line(line, body_start),
         )
 

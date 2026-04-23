@@ -56,9 +56,18 @@ markers = [
   # align_288_matrix はアルゴリズム計算が重いため pytest-xdist でも律速 (単一
   # test がシリアル)、slow-marker で local opt-out が最善策。
   "slow: 288-page corpus conformance (align + segments_en 全ページ走査)",
+  # Phase 6 atomic cutover の self-enforcing gate。Phase 5 で port 中に
+  # 発覚した Python extractor / align drift を Phase 6 cutover PR で解消したかを
+  # auto audit する。``_PY_XFAIL_SLUGS`` / ``_PY_EXTRACTOR_DRIFT_SLUGS`` 等の
+  # temporary exclusion frozenset が empty でない限り fail する。Phase 5
+  # coexistence 期間は default skip (empty でない前提)、Phase 6 cutover PR で
+  # ``uv run pytest -m cutover`` を強制 run して緑確認する。
+  "cutover: Phase 6 cutover gate (all drift exclusions must be empty)",
 ]
-# local default は slow を除外。CI は ``-m ''`` (全件) で merge gate を維持する。
-addopts = "-m 'not slow'"
+# local default は slow / cutover を除外。``slow`` は CI default (``-m ''``) で
+# 全件 run される。``cutover`` は Phase 6 cutover PR で明示的に ``-m cutover``
+# を実行するため、coexistence 期間中は CI / local 両方で skip される契約。
+addopts = "-m 'not slow and not cutover'"
 
 [tool.coverage.report]
 # Phase 4b-5 temporary: ``slow`` marker を CI default で skip した結果、
