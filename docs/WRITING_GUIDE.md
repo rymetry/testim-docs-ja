@@ -322,6 +322,32 @@ EN snapshot           →  JA 翻訳
 - 箇条書きの内容を 1 paragraph や 1 list item に統合して bullet 数を減らさない
 - **list item 内に `:::callout` directive を書かない**（lint `callout-in-list-item` で強制）。Python の JA parser は line-based state machine で list context を追跡しないため、indented callout は ambiguous に flatten される。callout を使いたい場合は list の外（top-level）に出す。該当ページの EN 原文で `<div class="note">` 等が list item 内にある場合は、list を一旦閉じて callout、その後別 list として再開する構造にする
 
+#### list item の indent 設計 (EN parser 対称化、Issue #368)
+
+JA parser は EN `collectInlineText` と対称化するため、**list item の「真の nested」** を
+検出するために **indent 深さに従う flatten ルール** を持つ。これは書き分け可能な author-facing
+contract で、EN の HTML 構造に合わせて JA の indent を選ぶ:
+
+- **tight sibling (indent == body_indent)** — line-based emit で **独立した segment になる**
+  - 例: `1. outer\n   - nested` (ordered の body_indent=3、`-` の indent=3)
+  - 想定対応 EN 構造: `<ol><li>outer</li><ul><li>nested</li></ul></ol>` (MadCap fragment の `<ul>` が `<li>` 直下ではなく sibling として配置される)
+  - 現行 288 corpus はこの pattern を 47 file / 263 line 使用。視覚的にはインデントされて見えるが、parity 上は EN sibling `<ul>` と 1:1 対応する
+- **true nested (indent > body_indent、+1 列以上深い)** — active list item に **flatten される**
+  - 例: `1. outer\n    - nested` (ordered の body_indent=3、`-` の indent=4)
+  - 想定対応 EN 構造: `<ol><li>outer<ul><li>nested</li></ul></li></ol>` (`<li>` 直下に nested `<ul>` が入り、EN `collectInlineText` が "outer nested" の 1 segment に flatten)
+  - 288 corpus には現状 0 件。pull-requests unfreeze 等で EN が nested `<ul>` を持つようになった場合、JA を **+1 indent** で書くことで EN `collectInlineText` の 1-segment flatten と対称な出力になる
+
+Issue #368 spec は trigger を `markerIndent >= bodyIndent` としていたが、上記の tight sibling pattern
+(47 file / 263 line) の parity を保つため、実装は **strict `>`** (`markerIndent > bodyIndent`) に narrow 化した
+意図的 deviation。詳細は `scripts/py/src/testim_parity/segments_ja.py` docstring 参照。
+
+**continuation paragraph** / **indented image** / **indented code fence** も同じく
+`leadingWs > bodyIndent` のとき active list item に flatten される:
+
+- `- item\n\n    continuation` → 1 segment "item continuation"
+- `- item\n    ![alt](img)` → 1 segment "item" (image は space 1 個に縮退)
+- ``- step\n\n    ```js\n    var x;\n    ``` `` → 1 segment "step var x;" (fence inner を text flatten)
+
 ### テーブル
 
 - EN HTML テーブル → JA マークダウンテーブルへの変換は許容

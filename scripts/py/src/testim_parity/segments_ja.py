@@ -19,25 +19,51 @@ state machine で以下を吸収する:
 4. **Indented code fence** (``leadingWs > activeItem.bodyIndent`` の
    ``\\`\\`\\`...`` / ``~~~...``) → 開閉 fence 間の inner text のみ append
 
-## Strict-``>`` rule の理由
+## Issue #368 spec からの意図的 divergence — strict-``>`` rule
 
-EN walker との完全対称なら ``markerIndent >= activeItem.bodyIndent`` で nested
-扱いすべきだが、288 corpus には JA author が EN sibling ``<ul>`` (walkBlock 経由で
-非 ``<li>`` 直下の list を sibling として emit する MadCap fragment) の視覚的
-ネスト再現のために ``1. outer\\n   - nested`` (``markerIndent == bodyIndent``)
-pattern を使う 47 file / 263 line が存在する。これらは EN 側が sibling emit する
-ため line-based emit で parity が通る。
+Issue #368 §3.1 は trigger を **``markerIndent >= bodyIndent``** (>=) で spec 化したが、
+本実装は **``markerIndent > bodyIndent``** (strictly greater) に **narrow 化した意図的
+deviation** を採用した。両者の違いと採用理由:
 
-そこで ``markerIndent > bodyIndent`` (strictly greater) のみ nested 扱いする:
+- ``>=`` (Issue #368 原案): ``markerIndent == bodyIndent`` の tight sibling も nested
+  扱いして flatten。ただし 288 corpus には JA author が EN の MadCap fragment (``<ol>`` の
+  直下で ``<ul>`` が sibling 配置される構造) を視覚再現するために
+  ``1. outer\\n   - nested`` (``markerIndent == bodyIndent==3``) pattern を使う **47 file /
+  263 line** が存在し、EN 側が sibling emit するため ``>=`` だと over-flatten して parity
+  を壊す。Issue #368 §5 Phase B ではこの 47 file を top-level に outdent して解消する
+  plan だったが、本 Phase 6b atomic cutover では content restructure を scope 外とした
+- ``>`` (本実装): tight sibling を flatten 対象から除外。288 corpus の既存 pattern を
+  そのまま温存しつつ、**+1 以上深い indent** で書かれた「真の nested」だけ flatten する
+
+### 将来の EN ``<li>`` 直下 nested 対応 (pull-requests unfreeze 等)
+
+現 288 corpus には EN ``<li>`` 直下に nested ``<ul>`` を持つ page は 0 件。将来
+``testops/testops-version-control/pull-requests`` 等の unfreeze で実態が変わった場合、
+JA author は **+1 indent (body_indent より 1 列深い)** で書くことで EN
+``collectInlineText`` の 1-segment flatten と対称な出力を得る。著者向けの contract は
+``docs/WRITING_GUIDE.md`` §「list item の indent 設計 (EN parser 対称化、Issue #368)」
+で定義。
+
+### 吸収対象
+
+``markerIndent > bodyIndent`` / ``leadingWs > bodyIndent`` を満たす以下の 4 pattern を
+active list item の text に吸収する:
 
 - Tight sibling (``markerIndent == bodyIndent``): 独立 segment emit (line-based 互換)
-- True nested (``markerIndent > bodyIndent``, +1 以上深い indent): flatten (EN 対称)
+- True nested marker (``markerIndent > bodyIndent``): flatten (content のみ append)
+- Continuation paragraph (``leadingWs > bodyIndent``): flatten
+- Indented image (``leadingWs > bodyIndent``): space 1 個として吸収 (EN ``<img>`` 対称)
+- Indented code fence (``leadingWs > bodyIndent``): fence inner を text flatten
 
-288 corpus の nested 行は全て ``markerIndent == bodyIndent`` (残りの strict-``>``
-候補 8 行は ``` ``` ``` code fence 内で既に code-block として処理) のため parity は
-byte-identical に維持される。将来 pull-requests unfreeze 等で EN ``<li>`` 直下 nested
-``<ul>`` が入ったとき、JA 作成時に +1 indent で記述することで flatten が走る
-(WRITING_GUIDE に author-facing rule を追記した)。
+288 corpus の nested 行は全て ``markerIndent == bodyIndent`` (残りの strict-``>`` 候補
+8 行は ```yaml fenced code block 内で既に code-block として処理) のため parity は
+byte-identical に維持される。
+
+### Closure 判定
+
+本 deviation と Phase B (content restructure) の両方を対処しない限り Issue #368 は
+厳密には close しない。本実装は **partial resolution** で、Closure は Phase 6.2
+(pull-requests unfreeze 等の実例が入ったとき) の別 PR に委ねる。
 
 ## mjs と byte-identical に維持される挙動
 

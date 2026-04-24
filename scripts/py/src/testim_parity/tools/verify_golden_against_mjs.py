@@ -45,6 +45,24 @@ golden と **byte-identical** であることを確認。これにより以下�
 - Python ``align_segments`` ≡ mjs ``alignSegments``
 
 今後 Python 実装で behavior を変えたら、本 tool で drift 有無を即座に判定できる。
+
+## Retention policy — 6 ヶ月限定の検証 tool
+
+本 tool は **Phase 6b cutover 後 6 ヶ月間** (2026-04-25 から 2026-10-25 まで) の
+drift detection 用。以下の条件が発生した時点で **retire** (削除) する:
+
+1. ``_PRE_CUTOVER_REV`` (現在 ``b406dba7^``) が git history から到達不可能になる
+   - 例: ``git rebase`` / ``squash merge`` / history rewrite で commit ID が失効
+   - 検知方法: ``git rev-parse b406dba7^`` が失敗するようになった時
+2. pre-cutover commit の ``package.json`` に現行 ``node_modules`` が 互換でなくなる
+   - 例: ``turndown`` / ``gray-matter`` を別 library に置換、major version bump
+   - 検知方法: ``node emit_corpus_oracle.mjs`` が ``Cannot find module`` 等で起動失敗
+3. 本 tool の CI invocation が不要と判断された (例: Python 実装が十分 stable で
+   6 ヶ月経過、追加の mjs authority 検証が不要)
+
+retire の際は ``scripts/py/src/testim_parity/tools/verify_golden_against_mjs.py``
+と対応する ``tests/test_pipeline_cli_smoke.py::TestVerifyGoldenAgainstMjs`` を
+削除。``docs/PYTHON_MIGRATION_PLAN.md`` の gate criteria #14 も削除する。
 """
 
 from __future__ import annotations

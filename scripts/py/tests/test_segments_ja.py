@@ -239,11 +239,10 @@ class TestCallout:
     def test_list_inside_callout_keeps_list_kind(self):
         """``:::note`` 内の list item は ``unordered-list-item`` kind で emit される。
 
-        python-reviewer MEDIUM: ``paragraphKind`` state が ``callout-body`` に
-        flip していても、list region handler は ``_flatten_list_region`` の
-        markup から kind を決定するため、``callout-body`` が list item に漏れ
-        込まない契約。Phase 3 alignment で list 粒度比較が壊れないよう、
-        mjs と同じ挙動 (EN ``walkCalloutBody`` と等価) を明示的に test で pin。
+        ``paragraphKind`` state が ``callout-body`` に flip していても、list marker
+        を検出したら ``_ORDERED_RE`` / ``_UNORDERED_RE`` match で list-item kind を
+        emit する (``callout-body`` が list item に漏れ込まない契約)。EN
+        ``walkCalloutBody`` と等価な挙動を pin する。
         """
         md = ":::note\nIntro paragraph.\n\n- item a\n- item b\n:::\n"
         segs = extract_segments_from_markdown(md)
@@ -334,12 +333,19 @@ class TestHorizontalRule:
 
 
 class TestListRegionEdgeCases:
-    """``_collect_list_region`` が non-list content を誤吸収しないことを guard。
+    """strict ``>`` rule の境界条件を pin する regression guard (Issue #368 flatten 後)。
 
-    architect review H1 / M2 指摘の edge case を記録する。``_LIST_REGION_TERMINATOR_RES``
-    は heading / callout / code fence / HTML table / horizontal rule / details
-    token / standalone image を terminator に含めるが、これらの組合せが
-    list region 境界で正しく機能することを具体例で確認する。
+    ``_ActiveListItem`` state machine は ``markerIndent > bodyIndent`` /
+    ``leadingWs > bodyIndent`` のときだけ flatten し、それ以外は line-based emit 相当
+    の boundary flush を行う。本 class は以下の境界条件が正しく機能することを
+    具体例で確認する:
+
+    - top-level code fence (leading_ws == 0) → active list flush
+    - top-level heading / callout / HTML table / details / image / horizontal rule
+      (leading_ws == 0) → active list flush
+    - 1-space indent content (leading_ws < body_indent) → active list flush + paragraph emit
+    - 4-space indent list marker (CommonMark code-block 相当) → line-based emit で拾う
+    - hard-break (``\\\\`` 末尾 + indent == body_indent) → tight sibling として emit
     """
 
     def test_list_ends_at_code_fence_inside_region(self):
@@ -412,11 +418,8 @@ class TestListRegionEdgeCases:
     def test_one_space_indent_after_list_emits_paragraph(self):
         """blank 行 + 1-space indent の行は list continuation にならない。
 
-        codex review P2 follow-up: ``- item\\n\\n x\\n`` のような 1-space indent
-        paragraph は markdown-it-py が list 外の paragraph として parse する。
-        以前の実装では region に含めていたが list-item だけ emit し paragraph
-        を silent に drop していた。list_open.map で実際の list 範囲を特定し、
-        残行を main loop に戻すことで paragraph を正しく emit する。
+        ``- item`` の body_indent=2、`` x`` の leading_ws=1 < 2 → strict ``>`` rule
+        で flatten されず、active list を flush して paragraph emit する。
         """
         md = "- item\n\n x\n"
         segs = extract_segments_from_markdown(md)
@@ -432,13 +435,11 @@ class TestListRegionEdgeCases:
         assert kinds == ["ordered-list-item", "paragraph"]
 
     def test_four_space_indent_list_marker_mjs_fallback(self):
-        """4-space indent された list marker は mjs fallback で list-item 化。
+        """4-space indent された list marker は line-based で list-item 化。
 
-        codex review P2 follow-up: CommonMark は ``    - codeish`` を indented
-        code block として扱い list_item token を emit しない。mjs line-based
-        実装は ``_UNORDERED_RE.test(trimmed)`` で match して list-item emit
-        するため、Python も silent drop せずに ``_emit_lines_as_mjs_fallback_list``
-        で mjs と揃える。
+        CommonMark は ``    - codeish`` を indented code block として扱うが、
+        ``_UNORDERED_RE = ^(\\s*)[-*+]\\s+(.+)$`` は任意の leading whitespace を
+        許容するため line-based emit で list-item として拾う (mjs 互換)。
         """
         md = "    - codeish\n"
         segs = extract_segments_from_markdown(md)
@@ -454,12 +455,11 @@ class TestListRegionEdgeCases:
         assert segs[0]["textNorm"] == "codeish"
 
     def test_fallback_prefix_then_real_list(self):
-        """4-space indent marker (CommonMark code) + real list (codex P2 follow-up).
+        """4-space indent marker + top-level list の混在で両方 emit される。
 
-        ``    - codeish\\n- real\\n`` ではmarkdown-it-py が前者を code_block、
-        後者を list として parse する。prefix を mjs-style で emit してから、
-        CommonMark 側の list を flatten 結果で emit し、全 3 lines を consume
-        する契約。content を silent drop しない。
+        ``    - codeish`` は active_list が無い状態で line-based regex が拾い、
+        新 active (body_indent=6) を作る。続く ``- real`` (indent=0) は body_indent=6
+        を下回るため active_list flush + 新 active emit の 2 segment になる。
         """
         md = "    - codeish\n- real\n"
         segs = extract_segments_from_markdown(md)
@@ -468,13 +468,11 @@ class TestListRegionEdgeCases:
         assert [s["textNorm"] for s in segs] == ["codeish", "real"]
 
     def test_fallback_then_trailing_paragraph(self):
-        """CommonMark が list を認識しないとき trailing content を drop しない。
+        """4-space indent marker の後に blank + 1-space indent content は別 segment。
 
-        ``    - codeish\\n\\n x\\n`` は markdown-it-py が list を検出しない
-        (code_block + paragraph)。現在行 ``    - codeish`` を mjs fallback で
-        emit し、``i`` を 1 だけ進めることで次行以降を main loop に戻す。
-        main loop は blank 行 + 1-space indent paragraph を正しく emit する
-        (codex review P2 follow-up)。
+        ``    - codeish\\n\\n x\\n``: ``    - codeish`` が list-item emit を発火、
+        続く blank 行 peek で次の `` x`` を判定。``x`` の leading_ws=1 < body_indent=6
+        → active flush + paragraph emit の 2 segment。
         """
         md = "    - codeish\n\n x\n"
         segs = extract_segments_from_markdown(md)
@@ -492,11 +490,11 @@ class TestListRegionEdgeCases:
         assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
 
     def test_hard_break_splits_list_item_and_paragraph(self):
-        """``1. step\\`` + indented next line は mjs で 2 segment (bullet + paragraph)。
+        """``1. step\\`` + indented next line (indent == body_indent) は tight sibling emit。
 
-        Phase 2 の markdown-it-py は ``\\\\\\n`` を hardbreak として同じ item に
-        merge していたが、mjs line-based では 2 行が独立 segment。Phase 6b で
-        mjs 挙動に合わせる。
+        ordered の body_indent=3、続く ``   Next sentence.`` の leading_ws=3 は
+        strict ``>`` rule で flatten 対象外 → active flush + paragraph emit の
+        2 segment になる。
         """
         md = "1. Step one\\\n   Next sentence.\n"
         segs = extract_segments_from_markdown(md)
@@ -523,13 +521,11 @@ class TestListRegionEdgeCases:
         ]
 
     def test_indented_table_inside_list_mjs_behavior(self):
-        """indent された markdown table は mjs line-based で table-cell emit される。
+        """indent された markdown table は line-based で table-cell emit される。
 
-        mjs TABLE_ROW_RE は leading whitespace を許容せず ``^\\|`` で match する
-        が、trimmed 行で match するため ``  | h1 | h2 |`` は match する。結果
-        table-cell として emit される (separator row skip、header row は次行が
-        separator のため skip)。Phase 2 では list item に吸収していたが Phase 6b
-        で mjs に揃えた。
+        ``_TABLE_ROW_RE = ^\\|.+\\|\\s*$`` は trimmed 行で match するため
+        ``  | h1 | h2 |`` は match する。結果 table-cell として emit される
+        (separator row skip、header row は次行が separator のため skip)。
         """
         md = "## X\n\n- item with table\n\n  | h1 | h2 |\n  | - | - |\n  | a | b |\n"
         segs = extract_segments_from_markdown(md)
