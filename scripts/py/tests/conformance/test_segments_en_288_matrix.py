@@ -127,8 +127,10 @@ def test_segments_en_page_matches_oracle(slug: str, corpus_oracle: dict) -> None
     ``corpus_oracle`` fixture は session-scope で (suite, slug) key の dict を
     持つ (xdist worker 毎に 1 回だけロード、JSONL file は env var 経由で共有)。
 
-    ``sha256`` field も比較することで、oracle JSONL が tampered / truncated 時
-    に早期検知する (drift 検知の byte-parity fingerprint)。
+    ``sha256`` field も比較することで、**oracle JSONL row の canonical JSON
+    serialization 契約** を pin する (``py == expected`` が既に値一致を保証
+    するため、主目的は mjs 側と Python 側の canonical form 仕様 drift を
+    早期検知すること; JSONL tamper 検知は副次効果)。
     """
     row = corpus_oracle.get(("segments_en", slug))
     assert row is not None, (
@@ -165,10 +167,11 @@ def test_segments_en_page_matches_oracle(slug: str, corpus_oracle: dict) -> None
             detail += f"\n    extra trailing segment: {longer[-1]!r}"
         pytest.fail(f"segment divergence:\n{detail}")
 
-    # sha256 integrity check (oracle JSONL tamper detection)
+    # canonical serialization contract pin (sha256 recomputation matches oracle)
     assert canonical_sha256(expected) == row["sha256"], (
-        f"oracle JSONL sha256 mismatch for segments_en/{slug} — "
-        "JSONL may be truncated or tampered (regenerate via emit_corpus_oracle.mjs)"
+        f"oracle JSONL canonical-JSON sha256 diverged for segments_en/{slug} — "
+        "mjs canonicalStringify / Python json.dumps(sort_keys=True) の仕様が "
+        "drift した可能性あり (regenerate oracle or fix emit_corpus_oracle.mjs)"
     )
 
 

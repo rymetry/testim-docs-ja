@@ -50,8 +50,8 @@ jobs:
     # PR B (Phase 5 CI 高速化): 旧 ``python-test`` を分割した fast feedback gate。
     # ruff / format / mypy / 単体 + conformance fast tests (``not corpus`` /
     # ``not slow`` / ``not cutover`` / ``not parity_smoke``)。288-page corpus +
-    # align batch + full-repo smoke は ``python-corpus`` / ``python-parity-smoke``
-    # に分離した (docs/PYTHON_MIGRATION_PLAN.md 参照)。
+    # align batch + full-repo smoke は ``python-corpus`` / nightly job に分離した
+    # (docs/PYTHON_MIGRATION_PLAN.md 参照)。
     # Node は ``not corpus`` scope の conformance 一部が mjs harness を呼ぶため
     # 必要 (Phase 6b cutover で削除予定)。
     runs-on: ubuntu-latest
@@ -74,9 +74,13 @@ jobs:
         with:
           python-version-file: scripts/py/.python-version
       - name: Install uv
-        # uv のバージョンを固定して、将来の破壊的変更が突然 CI を壊すリスクを
-        # 抑える。bump 時は手動で SHA / テストを回してから上げる。
-        run: pip install 'uv==0.11.7'
+        # astral-sh/setup-uv で uv.lock keyed cache を効かせて dep 解決を高速化
+        # (従来の pip install uv==0.11.7 → setup-uv に移行した PR B 改善)。
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: Check en_source_patches JSON is in sync with mjs registry
@@ -93,10 +97,10 @@ jobs:
       - name: pytest (fast)
         # default addopts (``-m 'not corpus and not slow and not cutover and
         # not parity_smoke'``) を yaml 側で **明示的に重ねて指定**。``parity_smoke``
-        # は PR A で追加した full-repo smoke で ``python-parity-smoke`` job が
-        # 独立に run する。この ``run:`` は静的 pytest command のみで untrusted
-        # input を含まないため command injection リスクは無い。
-        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke' --cov=testim_parity --cov-report=term-missing
+        # (~19 分) は nightly schedule (``nightly-python-oracle.yml``) で run する。
+        # この ``run:`` は静的 pytest command のみで untrusted input を含まないため
+        # command injection リスクは無い。
+        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke' --cov=testim_parity --cov-report=term-missing --durations=20
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -105,31 +109,6 @@ jobs:
           path: scripts/py/.coverage
           if-no-files-found: ignore
           retention-days: 7
-
-  python-parity-smoke:
-    # PR A で追加した full-repo smoke (``check_source_parity`` を real ROOT_DIR
-    # で走らせて schema / maskCoverage shape を pin する)。Phase 5 coexistence
-    # 中は ~5 分かかるため ``python-fast`` から分離。Phase 6b atomic cutover で
-    # Python-only gate になる段階で本 job は恒常化する。
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: scripts/py
-    steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version-file: scripts/py/.python-version
-      - name: Install uv
-        run: pip install 'uv==0.11.7'
-      - name: Sync Python deps
-        run: uv sync --all-extras
-      - name: pytest (parity_smoke)
-        # ``-m 'parity_smoke and not cutover'``: Phase 5 coexistence 中は
-        # cutover-marked 5-counter test は fail するため除外。Phase 6b で外す。
-        # run: 内は静的 pytest command のみで untrusted input を含まないため
-        # command injection リスクは無い。
-        run: uv run pytest -m 'parity_smoke and not cutover' --tb=short
 
   python-corpus:
     # PR B で新設した 288-page corpus conformance gate。segments_en + turndown
@@ -159,7 +138,12 @@ jobs:
         with:
           python-version-file: scripts/py/.python-version
       - name: Install uv
-        run: pip install 'uv==0.11.7'
+        # astral-sh/setup-uv で uv.lock keyed cache を効かせて dep 解決を高速化。
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: Generate corpus oracle JSONL

@@ -1,0 +1,93 @@
+name: Python oracle snapshot (nightly)
+
+# Nightly schedule:
+#
+# 1. ``oracle-snapshot`` — mjs oracle JSONL を emit + artifact upload し、
+#    sha256 一覧のみを軽量 TSV artifact として保存する。Phase 5 coexistence
+#    中は committed golden が無いため drift の **実検出** はしない (artifact
+#    14 日分の手動照合で oracle self-regression を追う運用)。Phase 6a
+#    golden-freeze PR で committed golden JSONL との hash 比較を追加して drift
+#    検知必須 gate に昇格する (docs/PYTHON_MIGRATION_PLAN.md Phase 6a 参照)。
+#
+# 2. ``parity-smoke`` — PR A で追加した Python ``check_source_parity`` full-repo
+#    smoke (~19 分 CI 実測)。required CI に含めると PR feedback loop を破綻
+#    させるため nightly 側に移設した。``cutover`` marker の 5-counter 0 gate は
+#    Phase 6b cutover PR で別途 ``pytest -m cutover`` が run する契約 (本 workflow
+#    では ``not cutover`` で除外)。
+#
+# 実行時間: oracle-snapshot ~2min + parity-smoke ~20min (両 job 並列)。
+#
+# 本 workflow の run: は静的 command のみで、github.event.* 等の untrusted
+# input を一切参照しない (schedule / workflow_dispatch のみ trigger のため
+# command injection リスクは無い)。
+
+on:
+  schedule:
+    # 毎日 UTC 02:00 (JST 11:00) に実行。ubuntu-latest の runner が空いている
+    # 時間帯を狙う (GitHub Actions 混雑ピークを避ける)。
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # 手動 trigger も可能 (Phase 6a 準備時の事前確認用)。
+
+permissions:
+  contents: read
+
+jobs:
+  oracle-snapshot:
+    # mjs oracle 出力の nightly archive (Phase 6a で committed golden との
+    # 比較 gate に昇格する前段)。
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install Node deps
+        working-directory: ${{ github.workspace }}
+        run: npm ci
+      - name: Generate today's oracle JSONL
+        run: |
+          node tools/emit_corpus_oracle.mjs --out .oracle_today.jsonl
+          wc -l .oracle_today.jsonl
+      - name: Extract sha256 summary
+        # sha256 一覧だけ抽出すれば artifact サイズを大幅縮小できる (full JSONL
+        # は MB オーダ、sha256 一覧は KB オーダ)。TSV 形式で suite tab slug tab sha。
+        run: node tools/summarize_corpus_oracle.mjs --in .oracle_today.jsonl --out .oracle_sha256.tsv
+      - name: Upload today's oracle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: nightly-oracle-jsonl
+          path: |
+            scripts/py/.oracle_today.jsonl
+            scripts/py/.oracle_sha256.tsv
+          retention-days: 14
+
+  parity-smoke:
+    # PR A で追加した Python check_source_parity full-repo smoke。CI 実測 ~19 分
+    # と重いため required CI から外し nightly へ移設。schema / maskCoverage
+    # shape の regression は commit 後 24 時間以内に検知される。
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
+      - name: Sync Python deps
+        run: uv sync --all-extras
+      - name: pytest (parity_smoke)
+        # Phase 5 coexistence 中は cutover marker の 5-counter 0 gate は
+        # fail 前提なので除外。Phase 6b cutover PR 側で明示的に run する。
+        run: uv run pytest -m 'parity_smoke and not cutover' --tb=short --durations=10

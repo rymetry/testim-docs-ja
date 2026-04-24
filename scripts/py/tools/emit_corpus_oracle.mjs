@@ -39,11 +39,10 @@
  */
 
 import process from 'node:process';
-import { readFileSync, renameSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, renameSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve as pathResolve, dirname, relative as pathRelative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { glob } from 'node:fs/promises';
 
 import {
   CALLOUT_NORMALIZATION_SLUGS,
@@ -165,18 +164,47 @@ const EN_SNAPSHOT_ROOT = pathResolve(REPO_ROOT, 'snapshots', 'en', 'content');
 const JA_DOCS_ROOT = pathResolve(REPO_ROOT, 'src', 'content', 'docs');
 
 /**
- * Collect (slug, html) pairs from snapshots/en/content/**\/*.html.
+ * Recursively walk a directory and return every file matching ``predicate``.
  *
- * @returns {Promise<Array<{slug: string, html: string}>>}
+ * ``fs.promises.glob`` は Node 22+ 限定のため (``package.json`` engines は
+ * ``>=18 <25`` を宣言)、再帰 ``readdirSync`` で自前実装する。Node 18 対応を
+ * 保つことで CI / local dev の Node version drift に対して defensive。
+ *
+ * @param {string} dir - absolute path
+ * @param {(relPath: string) => boolean} predicate - keeps file if returns true
+ * @returns {string[]} posix-style relative paths from ``dir``
  */
-async function collectEnSnapshots() {
+function collectFilesRecursive(dir, predicate) {
+  /** @type {string[]} */
+  const out = [];
+  /** @param {string} cur @param {string} rel */
+  const walk = (cur, rel) => {
+    const entries = readdirSync(cur, { withFileTypes: true });
+    for (const entry of entries) {
+      const childRel = rel ? `${rel}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        walk(pathResolve(cur, entry.name), childRel);
+      } else if (entry.isFile() && predicate(childRel)) {
+        out.push(childRel);
+      }
+    }
+  };
+  walk(dir, '');
+  return out;
+}
+
+/**
+ * Collect (slug, html) pairs from ``snapshots/en/content/**\/*.html``.
+ *
+ * @returns {Array<{slug: string, html: string}>}
+ */
+function collectEnSnapshots() {
   if (!existsSync(EN_SNAPSHOT_ROOT)) return [];
-  const pairs = [];
-  for await (const entry of glob('**/*.html', { cwd: EN_SNAPSHOT_ROOT })) {
-    const slug = entry.replace(/\.html$/, '');
-    const html = readFileSync(pathResolve(EN_SNAPSHOT_ROOT, entry), 'utf8');
-    pairs.push({ slug, html });
-  }
+  const relPaths = collectFilesRecursive(EN_SNAPSHOT_ROOT, (p) => p.endsWith('.html'));
+  const pairs = relPaths.map((entry) => ({
+    slug: entry.replace(/\.html$/, ''),
+    html: readFileSync(pathResolve(EN_SNAPSHOT_ROOT, entry), 'utf8'),
+  }));
   // Deterministic order (filesystem iteration order is platform-dependent).
   pairs.sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
   return pairs;
@@ -246,10 +274,10 @@ function computeAlignExpected(slug, html) {
 // Main
 // ---------------------------------------------------------------------------
 
-async function main() {
+function main() {
   const { out, suites } = parseArgs(process.argv.slice(2));
 
-  const snapshots = await collectEnSnapshots();
+  const snapshots = collectEnSnapshots();
   if (snapshots.length === 0) {
     console.error(
       `Error: no EN snapshots found under ${EN_SNAPSHOT_ROOT}. ` +
@@ -328,7 +356,9 @@ async function main() {
   );
 }
 
-main().catch((e) => {
+try {
+  main();
+} catch (e) {
   console.error(`emit_corpus_oracle: unexpected fatal error: ${e.stack || e.message}`);
   process.exit(1);
-});
+}
