@@ -113,7 +113,8 @@ def corpus_oracle(
             raise pytest.UsageError(
                 "TESTIM_CORPUS_EXPECTED_JSONL is required under pytest-xdist to "
                 "avoid N-way harness invocation. Run:\n"
-                "  node scripts/py/tools/emit_corpus_oracle.mjs --out /tmp/oracle.jsonl\n"
+                "  node scripts/py/tools/emit_corpus_oracle.mjs --out /tmp/oracle.jsonl "
+                "--suite segments_en,turndown\n"
                 "  TESTIM_CORPUS_EXPECTED_JSONL=/tmp/oracle.jsonl uv run pytest "
                 "-m corpus -n auto --dist load"
             )
@@ -122,8 +123,21 @@ def corpus_oracle(
         tmp_dir = tmp_path_factory.mktemp("corpus_oracle")
         jsonl_path = (tmp_dir / "oracle.jsonl").resolve()
         emit_script = repo_root / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs"
+        # ``--suite segments_en,turndown`` で PR B の ``corpus`` marker scope に
+        # 合わせる。default ``all`` は ``align`` も生成するが、現行
+        # ``test_align_288_matrix.py`` は ``slow`` marker で本 loader を経由せず
+        # 独自 harness を使うため、align rows を fallback で生成しても誰も読まず
+        # subprocess 時間を浪費するだけ。また nightly oracle-snapshot と同様に
+        # 将来 Phase 6a golden 化する際に align rows が紛れ込む余地を消す。
         subprocess.run(
-            ["node", str(emit_script), "--out", str(jsonl_path)],
+            [
+                "node",
+                str(emit_script),
+                "--out",
+                str(jsonl_path),
+                "--suite",
+                "segments_en,turndown",
+            ],
             check=True,
             timeout=600,
             cwd=repo_root,

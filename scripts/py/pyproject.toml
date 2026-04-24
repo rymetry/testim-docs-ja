@@ -92,11 +92,12 @@ markers = [
   "cutover: Phase 6 cutover gate (all drift exclusions must be empty)",
   # PR A (``MaskCoverage`` blocker 修正) の acceptance gate。実 ROOT_DIR に
   # 対して Python ``check_source_parity`` CLI を走らせ、schema / maskCoverage
-  # shape を pin する。単発 run に ~5 分かかるため default skip とし、CI では
-  # 専用 step (``pytest -m parity_smoke``) で明示 run する。Phase 6b atomic
-  # cutover 後は ``python-parity-smoke`` が Python-only fast/corpus gate の
-  # 1 segment として標準化される (docs/PYTHON_MIGRATION_PLAN.md 参照)。
-  "parity_smoke: Python check_source_parity full-repo smoke (~5min, opt-in)",
+  # shape を pin する。**CI 実測 ~19 分** (PR #386 round 1 で測定) のため
+  # required PR CI からは外し、``.github/workflows/nightly-python-oracle.yml``
+  # の ``parity-smoke`` job で毎日 1 回 run する (docs/PYTHON_MIGRATION_PLAN.md
+  # 参照)。Phase 6b atomic cutover 後は Python-only gate になり実行時間が
+  # 短縮される見込みで、そのタイミングで required CI 再昇格を検討する。
+  "parity_smoke: Python check_source_parity full-repo smoke (~19min CI, nightly during Phase 5)",
   # Real-repo snapshot integration benchmarks (``test_structure_fixtures.py``
   # / ``test_source_usability_fixtures.py``). 実 EN HTML snapshot + JA
   # markdown を load して align + structure comparator / source-usability
@@ -108,10 +109,11 @@ markers = [
   # 導入した。
   "real_repo: real-repo snapshot integration benchmarks (real EN HTML / JA md)",
 ]
-# default addopts は 6 marker (corpus / slow / cutover / parity_smoke /
-# recall / boundary) を **local でも CI でも** 除外する。PR feedback loop に
-# 乗る pytest は単位時間で走る必要があり、full-repo manifest benchmark
-# (~10 min〜1 時間オーダー) は全て opt-in に寄せる方針。
+# default addopts は 7 marker (corpus / slow / cutover / parity_smoke /
+# recall / boundary / real_repo) を **local でも CI でも** 除外する。PR feedback
+# loop に乗る pytest は単位時間で走る必要があり、full-repo manifest benchmark
+# (~10 min〜1 時間オーダー) や real-repo integration (~1 test 80+s) は全て
+# opt-in に寄せる方針。
 #
 # - ``corpus`` (288-page segments_en + turndown conformance, xdist 対応) は
 #   ~10s で走る軽量 gate だが ``python-fast`` の coverage 計測とは独立 run

@@ -934,9 +934,11 @@ CI は PR B で分割済み:
   で feedback loop を停止させていたため nightly 移設)。
 
 local では `npm run test:all` で mjs + `test:py:full` (`-m 'not cutover'`、
-corpus / slow / parity_smoke / recall / boundary は全て run される) を連続実行。
-日常 iteration 用には `npm run test:quick` (mjs + 6 marker exclude)、full-repo
-quality gate だけ回したい時は `npm run test:py:quality` (`-m 'recall or boundary'`)。
+corpus / slow / parity_smoke / recall / boundary / real_repo は全て run される) を
+連続実行。日常 iteration 用には `npm run test:quick` (mjs + 7 marker exclude:
+corpus / slow / cutover / parity_smoke / recall / boundary / real_repo)、full-repo
+quality gate だけ回したい時は `npm run test:py:quality`
+(`-m 'recall or boundary or real_repo'`)。
 mjs テストファイルは当初 54/55 を
 delete したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5
 終了時点で **3 file** が残存している:

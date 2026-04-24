@@ -62,8 +62,17 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: npm ci
       - name: Generate today's oracle JSONL
+        # ``--suite segments_en,turndown`` で明示制限。``emit_corpus_oracle.mjs``
+        # の default は ``all`` (segments_en + turndown + align) だが、現行
+        # ``test_align_288_matrix.py`` は Python-generated segments を mjs align
+        # に渡す narrow conformance (mjs extractor + mjs align を emit する
+        # oracle tool とは保証対象が異なる)。Phase 6a golden freeze PR で
+        # committed golden 化する想定の nightly artifact に align rows が混ざる
+        # と、保証対象違いの data を golden に流用するリスクが残る。Phase 6b
+        # で align 用 2-stage oracle を実装した段階で本 suite 制限を外し
+        # ``align`` も artifact に含める契約。
         run: |
-          node tools/emit_corpus_oracle.mjs --out .oracle_today.jsonl
+          node tools/emit_corpus_oracle.mjs --out .oracle_today.jsonl --suite segments_en,turndown
           wc -l .oracle_today.jsonl
       - name: Extract sha256 summary
         # sha256 一覧だけ抽出すれば artifact サイズを大幅縮小できる (full JSONL
