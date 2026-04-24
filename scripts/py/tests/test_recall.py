@@ -14,6 +14,7 @@ Acceptance:
 from __future__ import annotations
 
 import json
+from functools import cache
 from pathlib import Path
 
 import pytest
@@ -23,6 +24,14 @@ from testim_parity.mutation_corpus import MUTATION_TYPES
 from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
+
+# Full-repo mutation recall benchmark. Runs ``_analyze_page`` for every
+# representative manifest page × every mutation type — a 10+ minute workload
+# on CI. Excluded from the ``python-fast`` PR gate (see pyproject.toml
+# ``addopts``) and exercised by the ``python-quality-full`` nightly job. The
+# Phase 6b cutover PR is expected to run this marker as a required gate
+# (docs/PYTHON_MIGRATION_PLAN.md Phase 6b 参照).
+pytestmark = pytest.mark.recall
 
 MANIFEST_PATH: Path = Path(__file__).parent / "fixtures" / "source-parity-goldens" / "manifest.json"
 
@@ -262,7 +271,13 @@ def _cascade_size(
     return count
 
 
+@cache
 def _analyze_page(slug: str) -> dict:
+    # Memoised per slug: ``test_diff_one_mutation_strict_recall_100_percent``
+    # and ``test_segment_move_recall_is_informational`` both iterate the full
+    # manifest, so without a cache each slug is analysed twice (doubling the
+    # already heavy mutation fan-out). Returned dicts are read-only in both
+    # call sites, so cache sharing is safe.
     html = _read_en_html(slug)
     ja_original = _read_ja_markdown(slug)
     en_segments = extract_segments_from_html(html)

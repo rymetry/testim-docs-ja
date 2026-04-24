@@ -10,6 +10,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from testim_parity.acknowledgements import compute_snapshot_fingerprint
 from testim_parity.align import align_segments, parity_diffs_to_issues
 from testim_parity.baseline import tag_issues_with_baseline
@@ -17,6 +19,12 @@ from testim_parity.mutation_corpus import MUTATION_TYPES
 from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
+
+# Full-repo baseline absorption benchmark. Same cost profile as
+# ``test_recall.py`` (manifest × mutation fan-out) — kept out of the
+# ``python-fast`` PR gate and exercised nightly (see pyproject.toml addopts
+# and .github/workflows/nightly-python-oracle.yml ``python-quality-full``).
+pytestmark = pytest.mark.recall
 
 MANIFEST_PATH: Path = Path(__file__).parent / "fixtures" / "source-parity-goldens" / "manifest.json"
 

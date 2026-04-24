@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+from functools import cache
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,13 @@ from testim_parity.align import align_segments, parity_diffs_to_issues
 from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
+
+# Full-repo zero-drift sentinel suite. Three parametrized tests each run
+# ``_run_structure_comparator`` for every ``CLEAN_PAGE_SLUGS`` entry, so
+# running in ``python-fast`` triples the structural compare workload per PR.
+# Excluded from default addopts, exercised nightly via
+# ``python-quality-full`` (see .github/workflows/nightly-python-oracle.yml).
+pytestmark = pytest.mark.boundary
 
 SNAPSHOTS_DIR: Path = ROOT_DIR / "snapshots" / "en" / "content"
 JA_CONTENT_DIR: Path = ROOT_DIR / "src" / "content" / "docs"
@@ -98,7 +106,13 @@ def _extract_ja_body(md_content: str) -> str:
     return without_fm.strip()
 
 
+@cache
 def _run_structure_comparator(slug: str) -> dict:
+    # Memoised per slug. Three parametrized tests
+    # (``test_alignment_is_conclusive`` / ``test_structure_issues_are_zero``
+    # / ``test_total_issues_are_zero``) call this with identical slug sets,
+    # so without a cache every clean-page slug is aligned three times.
+    # Returned dict is read-only at every call site.
     raw_en_html = (SNAPSHOTS_DIR / f"{slug}.html").read_text(encoding="utf-8")
     ja_md = (JA_CONTENT_DIR / f"{slug}.md").read_text(encoding="utf-8")
     ja_body = _extract_ja_body(ja_md)

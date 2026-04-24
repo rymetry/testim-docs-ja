@@ -46,12 +46,14 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-  python-test:
-    # Covers the in-flight Python port (see docs/PYTHON_MIGRATION_PLAN.md).
-    # Runs unit tests, conformance tests (which spawn node against mjs
-    # sources), lint, format, and type-check. Node is installed because the
-    # conformance harness at scripts/py/conformance/harness.mjs imports
-    # scripts/lib/*.mjs. Drop this job only after the cutover in Phase 6.
+  python-fast:
+    # PR B (Phase 5 CI 高速化): 旧 ``python-test`` を分割した fast feedback gate。
+    # ruff / format / mypy / 単体 + conformance fast tests (``not corpus`` /
+    # ``not slow`` / ``not cutover`` / ``not parity_smoke``)。288-page corpus +
+    # align batch + full-repo smoke は ``python-corpus`` / nightly job に分離した
+    # (docs/PYTHON_MIGRATION_PLAN.md 参照)。
+    # Node は ``not corpus`` scope の conformance 一部が mjs harness を呼ぶため
+    # 必要 (Phase 6b cutover で削除予定)。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -66,16 +68,19 @@ jobs:
         # conformance harness (scripts/py/conformance/harness.mjs) が
         # scripts/lib/project.mjs 経由で npm パッケージ ``gray-matter`` を
         # import するため、Python テスト実行前に node_modules を解決する。
-        # これが無いと conformance テストが ERR_MODULE_NOT_FOUND で全滅する。
         working-directory: ${{ github.workspace }}
         run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version-file: scripts/py/.python-version
       - name: Install uv
-        # uv のバージョンを固定して、将来の破壊的変更が突然 CI を壊すリスクを
-        # 抑える。bump 時は手動で SHA / テストを回してから上げる。
-        run: pip install 'uv==0.11.7'
+        # astral-sh/setup-uv で uv.lock keyed cache を効かせて dep 解決を高速化
+        # (従来の pip install uv==0.11.7 → setup-uv に移行した PR B 改善)。
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: Check en_source_patches JSON is in sync with mjs registry
@@ -89,25 +94,98 @@ jobs:
         run: uv run ruff format --check src tests
       - name: mypy
         run: uv run mypy src
-      - name: pytest
-        # Phase 4b-5 の一時措置: ``slow`` marker (288-page matrix conformance) は
-        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。``cutover`` も
-        # Phase 6 cutover PR 専用なので skip。Phase 6 atomic cutover で mjs 削除 +
-        # conformance test 退場に伴って自然解消する。
+      - name: pytest (fast)
+        # default addopts の 7 marker (``not corpus and not slow and not
+        # cutover and not parity_smoke and not recall and not boundary and
+        # not real_repo``) を yaml 側で **明示的に重ねて指定**。重い gate は
+        # nightly 側で run する:
         #
-        # ``pyproject.toml`` の ``addopts = "-m 'not slow and not cutover'"`` が
-        # default で効くが、CI yaml でも **明示的** に ``-m`` を重ねて「slow を
-        # CI から外す契約」を yaml レベルで可視化する (PR #384 user request:
-        # 意図の pin、pyproject.toml 変更時の silent 無効化防止)。Merge gate の
-        # shape drift 検出は local ``uv run pytest -m slow`` で reviewer が
-        # 明示的に pre-merge 実行する運用。
-        run: uv run pytest -m 'not slow and not cutover' --cov=testim_parity --cov-report=term-missing
+        #   - ``parity_smoke`` (CI 実測 ~19 分) / ``recall`` / ``boundary`` /
+        #     ``real_repo`` → ``nightly-python-oracle.yml``
+        #     (``parity-smoke`` / ``python-quality-full``)
+        #   - ``corpus`` → ``python-corpus`` (同 CI yaml 内 job)
+        #   - ``slow`` / ``cutover`` → local / Phase 6b 手動 run
+        #
+        # ``--durations=30`` で top 30 の実効時間を毎回出し、fast gate 内の
+        # 新規律速を早期検知する (marker 移設後の fast gate 内で潜在的に重い
+        # test が沈む事故を防ぐ defense in depth)。
+        #
+        # この ``run:`` は静的 pytest command のみで untrusted input を
+        # 含まないため command injection リスクは無い。
+        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary and not real_repo' --cov=testim_parity --cov-report=term-missing --durations=30
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-coverage
           path: scripts/py/.coverage
+          # ``.coverage`` は dot-prefixed の hidden file。upload-artifact@v4
+          # は default で hidden file を skip するため、この flag を付けないと
+          # "No files were found" で artifact が空になる (PR #386 round 3 で
+          # 発覚した bug)。pytest-cov が ``scripts/py/.coverage`` を生成する
+          # contract は維持する。
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
+
+  python-corpus:
+    # PR B で新設した 288-page corpus conformance gate。segments_en + turndown
+    # の full parametrized test を pytest-xdist ``-n auto --dist load`` で並列
+    # 実行する (8 worker 実測 ~10s、目標 2:30 を大幅下回り)。oracle は
+    # ``node scripts/py/tools/emit_corpus_oracle.mjs`` が事前生成し、全 worker
+    # が ``TESTIM_CORPUS_EXPECTED_JSONL`` 環境変数経由で同じ JSONL を読む
+    # (silent な N-way harness 再呼び出しを防ぐ契約)。align 288-matrix は
+    # ``slow`` marker 側で serial run されるため本 job には含まない (plan doc
+    # Phase 5 CI 高速化節参照)。
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install Node deps
+        # emit_corpus_oracle.mjs が scripts/lib/* を import する経路で
+        # gray-matter 等の npm パッケージが要る。
+        working-directory: ${{ github.workspace }}
+        run: npm ci
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        # astral-sh/setup-uv で uv.lock keyed cache を効かせて dep 解決を高速化。
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
+      - name: Sync Python deps
+        run: uv sync --all-extras
+      - name: Generate corpus oracle JSONL
+        # 288 page × 2 suite (segments_en + turndown) の expected を mjs
+        # authority で 1 回だけ emit。atomic temp+rename で partial 状態を
+        # 残さない (emit_corpus_oracle.mjs docstring 参照)。
+        run: node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl --suite segments_en,turndown
+      - name: pytest (corpus)
+        # xdist ``-n auto --dist load`` で 576 parametrized test を worker 間に
+        # 動的分散する。stdout interleave 対策として ``--tb=short``
+        # + ``--junitxml`` artifact を併用する。
+        # ``TESTIM_CORPUS_EXPECTED_JSONL`` は **絶対パス** 必須 (conftest.py の
+        # loader fixture 契約、相対 path は xdist worker cwd semantics を壊す)。
+        # run: 内は静的 pytest command のみで untrusted input を含まないため
+        # command injection リスクは無い。
+        env:
+          TESTIM_CORPUS_EXPECTED_JSONL: ${{ github.workspace }}/scripts/py/.corpus_expected.jsonl
+        run: uv run pytest -m corpus -n auto --dist load --tb=short --junitxml=corpus-junit.xml
+      - name: Upload corpus junit
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: corpus-junit
+          path: scripts/py/corpus-junit.xml
           if-no-files-found: ignore
           retention-days: 7
 

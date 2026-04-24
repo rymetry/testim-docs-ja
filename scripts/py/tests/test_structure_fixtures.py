@@ -18,6 +18,14 @@ from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
 
+# Real-repo structure regression guard. Each parametrized slug runs the full
+# align + structure comparator stack on an actual EN snapshot + JA markdown
+# pair (CI 実測: single slug ~80s on ubuntu-latest). Excluded from the
+# ``python-fast`` PR gate and exercised by the ``python-quality-full`` nightly
+# job (see .github/workflows/nightly-python-oracle.yml). Phase 6b cutover PR
+# will escalate ``real_repo`` to required alongside ``recall`` / ``boundary``.
+pytestmark = pytest.mark.real_repo
+
 SNAPSHOTS_DIR: Path = ROOT_DIR / "snapshots" / "en" / "content"
 JA_CONTENT_DIR: Path = ROOT_DIR / "src" / "content" / "docs"
 

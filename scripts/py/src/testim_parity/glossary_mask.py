@@ -9,6 +9,7 @@ prose を含む」かを分類する。
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,13 @@ INVARIANT_PATH: Path = _ROOT / "docs" / "INVARIANT_TOKENS.md"
 # mask record の順序が mjs と byte 一致する。
 _glossary_cache: list[str] | None = None
 _patterns_cache: list[dict[str, Any]] | None = None
+# ``mask_segment_text`` が呼ぶ per-term regex compile を run 1 回に amortize
+# するための cache。2788 glossary term × ``re.compile`` の per-call コストが
+# PR #386 の ``python-fast`` gate で律速だったため module cache 化した
+# (旧: 1 call ~30ms × N segments × many tests → ~30-60s 節約)。sort 順序は
+# mask record の mjs 互換契約なので ``_glossary_cache`` と同じ insertion-stable
+# sort を使う。
+_sorted_glossary_regexes_cache: list[tuple[str, re.Pattern[str]]] | None = None
 
 
 def _clear_caches() -> None:
@@ -32,9 +40,10 @@ def _clear_caches() -> None:
     名前マングリング対象にならないものの、``from ... import __clear_caches`` は
     syntactically 許可されていても読みにくいため)。
     """
-    global _glossary_cache, _patterns_cache
+    global _glossary_cache, _patterns_cache, _sorted_glossary_regexes_cache
     _glossary_cache = None
     _patterns_cache = None
+    _sorted_glossary_regexes_cache = None
 
 
 def load_glossary(path: Path | str = GLOSSARY_PATH) -> list[str]:
@@ -162,6 +171,35 @@ _GLOSSARY_PLACEHOLDER = "__GLOSSARY__"
 _INVARIANT_PLACEHOLDER = "__INVARIANT__"
 
 
+def _get_sorted_glossary_regexes() -> list[tuple[str, re.Pattern[str]]]:
+    """``mask_segment_text`` 用の sorted (term, compiled regex) リスト (cache 付き)。
+
+    ``(term, compiled_regex)`` のペアを insertion-stable に長さ降順で並べる
+    (``sorted(..., key=len, reverse=True)``)。mask record の順序契約は
+    ``glossary`` list の挿入順 → stable 長さ降順 sort により mjs と byte 一致
+    する前提で、cache 化しても ``re.compile`` の flag / pattern は一切変えない
+    ため observable 出力は不変。initial call の 1 回だけ 2788 term を compile
+    し、以降は同一 pattern object を使い回す。``_clear_caches()`` で reset
+    される (test で underlying ``docs/GLOSSARY.md`` を差し替えるケース用)。
+    """
+    global _sorted_glossary_regexes_cache
+    if _sorted_glossary_regexes_cache is not None:
+        return _sorted_glossary_regexes_cache
+
+    glossary = load_glossary()
+    sorted_terms = sorted(glossary, key=len, reverse=True)
+    compiled: list[tuple[str, re.Pattern[str]]] = []
+    for term in sorted_terms:
+        escaped = re.escape(term)
+        # ``re.ASCII`` は ``\b`` を ASCII 境界として評価させる (JS の ``\b`` と
+        # 同一セマンティクス)。Python default の Unicode 境界では CJK 文字が
+        # ``\w`` 扱いになるため、``"Testimの設定"`` のように英語 term が JA 文字
+        # と接する境界で ``\b`` が発火せず、mjs と結果が divergence する。
+        compiled.append((term, re.compile(rf"\b{escaped}\b", re.IGNORECASE | re.ASCII)))
+    _sorted_glossary_regexes_cache = compiled
+    return compiled
+
+
 def mask_segment_text(text: str) -> dict[str, Any]:
     """glossary 用語 + invariant pattern をマスクし、マスク済みテキストと記録を返す。
 
@@ -172,22 +210,14 @@ def mask_segment_text(text: str) -> dict[str, Any]:
     if not isinstance(text, str) or len(text) == 0:
         return {"maskedText": text, "masks": []}
 
-    glossary = load_glossary()
     patterns = load_invariant_patterns()
     masks: list[dict[str, Any]] = []
 
-    # 長さ降順 stable sort。``glossary`` は挿入順を保った list なので、同長タイ
-    # は入力ファイルでの登場順 (JS Set insertion order と同一) が保持される。
-    sorted_terms = sorted(glossary, key=len, reverse=True)
-
     masked = text
-    for term in sorted_terms:
-        escaped = re.escape(term)
-        # ``re.ASCII`` は ``\b`` を ASCII 境界として評価させる (JS の ``\b`` と
-        # 同一セマンティクス)。Python default の Unicode 境界では CJK 文字が
-        # ``\w`` 扱いになるため、``"Testimの設定"`` のように英語 term が JA 文字
-        # と接する境界で ``\b`` が発火せず、mjs と結果が divergence する。
-        pattern = re.compile(rf"\b{escaped}\b", re.IGNORECASE | re.ASCII)
+    # ``_get_sorted_glossary_regexes()`` は sort + compile を session 1 回に
+    # amortize する cache。同順序・同 flag のペアが返るため観測出力は変わらない
+    # (PR #386 round 3 の python-fast 高速化)。
+    for term, pattern in _get_sorted_glossary_regexes():
         for match in pattern.finditer(masked):
             masks.append(
                 {
@@ -274,21 +304,43 @@ def classify_segment(text: str) -> dict[str, Any]:
     return {"isFullyMasked": False, "residue": english_portion}
 
 
-def create_mask_coverage() -> dict[str, Any]:
+@dataclass
+class MaskCoverage:
     """run 単位で使うマスク coverage の stateful 集計器。
 
-    ``record(...)`` と ``to_json()`` を持つ dict を返す (mjs の closure bag と対応)。
+    ``record(...)`` で segment ごとの mask を追加し、``to_json()`` で
+    ``parity-check-status.json`` の ``debug.maskCoverage`` に出力する dict を
+    返す (mjs の closure bag と対応する型付き object)。
+
+    旧実装は dict callback (``{"record": fn, "toJSON": fn}``) を返していたが、
+    duck-typed API では mypy / IDE 補完が効かず、snake_case kwarg 契約の drift を
+    早期検知できなかった (PR #384 round 1 の kwarg name bug が該当)。型付き
+    class 化することで callback 呼び出し側 (check_source_parity.py) の静的検査を
+    通す。``to_json()`` の出力 shape は旧 ``toJSON`` と byte-identical で、
+    ``debug.maskCoverage`` の JSON 契約は不変。
     """
-    entries: list[dict[str, Any]] = []
-    by_glossary: dict[str, int] = {}
-    by_pattern: dict[str, int] = {}
+
+    _entries: list[dict[str, Any]] = field(default_factory=list)
+    _by_glossary: dict[str, int] = field(default_factory=dict)
+    _by_pattern: dict[str, int] = field(default_factory=dict)
 
     def record(
-        *, slug: str, segment_kind: str, section_path: str, masks: list[dict[str, Any]]
+        self,
+        *,
+        slug: str,
+        segment_kind: str,
+        section_path: str,
+        masks: list[dict[str, Any]],
     ) -> None:
+        """1 segment 分の mask 記録を追加する。
+
+        ``masks`` が空 / 非 list の場合は早期 return する (mjs 旧実装と同じ)。
+        kwargs は **snake_case** が契約: ``segment_kind`` / ``section_path``。
+        camelCase 渡しは ``TypeError`` になる (regression guard として意図的)。
+        """
         if not isinstance(masks, list) or not masks:
             return
-        entries.append(
+        self._entries.append(
             {
                 "slug": slug,
                 "segmentKind": segment_kind,
@@ -298,26 +350,39 @@ def create_mask_coverage() -> dict[str, Any]:
         )
         for mask in masks:
             if mask.get("source") == "glossary":
-                by_glossary[mask["entry"]] = by_glossary.get(mask["entry"], 0) + 1
+                self._by_glossary[mask["entry"]] = self._by_glossary.get(mask["entry"], 0) + 1
             elif mask.get("source") == "invariant-pattern":
-                by_pattern[mask["pattern"]] = by_pattern.get(mask["pattern"], 0) + 1
+                self._by_pattern[mask["pattern"]] = self._by_pattern.get(mask["pattern"], 0) + 1
 
-    def to_json() -> dict[str, Any]:
+    def to_json(self) -> dict[str, Any]:
+        """``debug.maskCoverage`` 用の JSON-serializable dict を返す。
+
+        出力 shape は旧 closure bag の ``toJSON()`` と byte-identical (外部
+        consumer である parity-check-status.json の contract を保つ)。
+        """
         return {
-            "maskedSegments": list(entries),
+            "maskedSegments": list(self._entries),
             "summary": {
-                "segmentsMasked": len(entries),
-                "byGlossaryEntry": dict(by_glossary),
-                "byInvariantPattern": dict(by_pattern),
+                "segmentsMasked": len(self._entries),
+                "byGlossaryEntry": dict(self._by_glossary),
+                "byInvariantPattern": dict(self._by_pattern),
             },
         }
 
-    return {"record": record, "toJSON": to_json}
+
+def create_mask_coverage() -> MaskCoverage:
+    """新しい ``MaskCoverage`` instance を返す factory。
+
+    関数名は旧 dict-returning API との互換性のため維持する (call site が
+    ``create_mask_coverage()`` を呼ぶ点は不変)。
+    """
+    return MaskCoverage()
 
 
 __all__ = [
     "GLOSSARY_PATH",
     "INVARIANT_PATH",
+    "MaskCoverage",
     "_clear_caches",
     "load_glossary",
     "load_invariant_patterns",

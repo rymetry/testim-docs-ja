@@ -904,16 +904,44 @@ corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
     "test:mjs": "node --test scripts/__tests__/*.mjs",
     "test:py": "cd scripts/py && uv run pytest",
     "test:py:cov": "cd scripts/py && uv run pytest --cov=testim_parity --cov-report=term-missing",
+    "test:py:quick": "cd scripts/py && uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary and not real_repo'",
     "test:py:slow": "cd scripts/py && uv run pytest -m slow",
-    "test:all": "npm run test:mjs && npm run test:py"
+    "test:py:corpus": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl --suite segments_en,turndown && TESTIM_CORPUS_EXPECTED_JSONL=\"$PWD/.corpus_expected.jsonl\" uv run pytest -m corpus -n auto --dist load --tb=short",
+    "test:py:parity-smoke": "cd scripts/py && uv run pytest -m 'parity_smoke and not cutover' --tb=short",
+    "test:py:quality": "cd scripts/py && uv run pytest -m 'recall or boundary or real_repo' --tb=short --durations=30",
+    "test:py:cutover": "cd scripts/py && uv run pytest -o addopts= -m cutover",
+    "test:py:full": "cd scripts/py && uv run pytest -m 'not cutover'",
+    "test:quick": "npm run test:mjs && npm run test:py:quick",
+    "test:all": "npm run test:mjs && npm run test:py:full"
   }
 }
 ```
 
-CI の `test` job は `npm run test` (mjs only)、`python-test` job は pytest をそれぞれ独立実行。
-local では `npm run test:all` で両方を連続実行可能。mjs テストファイルは当初 54/55 を delete
-したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5 終了時点で
-**3 file** が残存している:
+CI は PR B で分割済み:
+
+- **required (PR feedback loop, pull_request trigger)**: `node-test` (mjs only),
+  `python-fast` (ruff / format / mypy / `pytest -m 'not corpus and not slow and not
+  cutover and not parity_smoke and not recall and not boundary and not real_repo'`),
+  `python-corpus` (288-page conformance, pytest-xdist `-n auto --dist load`)。
+  astral-sh/setup-uv + `uv.lock` keyed cache で uv install 高速化。
+- **nightly (`.github/workflows/nightly-python-oracle.yml`)**: `oracle-snapshot` が mjs
+  oracle JSONL + sha256 TSV を 14 日 artifact 保存、`parity-smoke` が PR A の
+  full-repo `check_source_parity` smoke を走らせる (CI 実測 ~19 分、required から分離)、
+  `python-quality-full` が `recall` + `boundary` + `real_repo` marker の full-repo
+  benchmark (`test_recall.py` / `test_baseline_recall.py` / `test_segments_boundary.py` /
+  `test_clean_page_fixtures.py` / `test_structure_fixtures.py` /
+  `test_source_usability_fixtures.py`) を走らせる (CI 実測 ~30 分、旧 default pytest
+  で feedback loop を停止させていたため nightly 移設)。
+
+local では `npm run test:all` で mjs + `test:py:full` (`-m 'not cutover'`、
+corpus / slow / parity_smoke / recall / boundary / real_repo は全て run される) を
+連続実行。日常 iteration 用には `npm run test:quick` (mjs + 7 marker exclude:
+corpus / slow / cutover / parity_smoke / recall / boundary / real_repo)、full-repo
+quality gate だけ回したい時は `npm run test:py:quality`
+(`-m 'recall or boundary or real_repo'`)。
+mjs テストファイルは当初 54/55 を
+delete したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5
+終了時点で **3 file** が残存している:
 
 - `scripts/__tests__/lib_redirects.test.mjs` (6 test) — Astro build graph が `redirects.mjs`
   を import するため恒久保持 (Phase 6 以降、Astro 依存解消時の post-Phase-6 cleanup で削除)
@@ -984,6 +1012,99 @@ gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同
 - `npm run check:parity` — **5-counter = 0 維持**
 - `npm run build` — 290 pages pass
 
+### Phase 5 CI 高速化 (PR B, post-Phase-5 別 PR)
+
+Phase 5 完了後の follow-up として、288-page corpus conformance の CI 所要時間を短縮する
+infrastructure 整備を PR B として分離実装する。Phase 5 の本体 (pytest port) とは独立なので
+別 PR で扱う。
+
+**目標**: `corpus` gate を ubuntu-latest で 2:30 以下 (escalation 閾値: 3 回測定中央値 > 3:00
+なら次 PR で `pytest-split` + matrix 分割追加)。
+
+**変更点**:
+
+- **`emit_corpus_oracle.mjs` 新設**: `scripts/py/tools/emit_corpus_oracle.mjs` が
+  288 page × {segments_en, turndown, align} 分の mjs 側 expected を JSONL で 1 回だけ生成。
+  1 row = `{schemaVersion:1, suite, slug, sha256, expected}`。`sha256` は `expected` の
+  canonical JSON (`sort_keys=True, separators=(",", ":")`) に対する SHA-256 で、tamper / truncate
+  検知の fingerprint として機能。出力は atomic temp+rename で partial file を残さない。
+- **`corpus` marker 導入 (segments_en + turndown)**: `test_segments_en_288_matrix.py` と
+  `test_turndown_288_matrix.py` を slug-parametrize (1 slug = 1 pytest case, 計 576 test)。
+  `corpus_oracle` session-scope fixture (`tests/conformance/conftest.py`) が worker 毎に
+  1 回だけ JSONL を in-memory dict 化し、test は `(suite, slug)` key で lookup する。
+  xdist 並列化で実測 **~10s** (8 worker Mac, 目標 2:30 を大幅下回り)。
+- **`slow` marker 維持 (align 288-matrix)**: `test_align_288_matrix.py` は Python-generated
+  segments を mjs align に流し込む narrow conformance の設計上 oracle 化が 2-stage pipeline を
+  要する。Phase 6b cutover で committed golden fixture 化する段階まで serial 1-test batch の
+  まま `slow` marker で残す (CI では skip、reviewer が local で明示 run)。
+- **`pytest-xdist[psutil]` dev 依存追加**: `python-corpus` job は `-n auto --dist load
+  --junitxml=corpus-junit.xml` で worker 間動的分散 + interleave 対策。
+- **CI job 分割**: `python-test` (single) → required (`python-fast` と
+  `python-corpus`) + nightly (`parity-smoke` / `oracle-snapshot` /
+  `python-quality-full`)。PR A の parity_smoke (~19 分 CI 実測) は required
+  feedback loop を破綻させるため nightly 側に移設。Node 依存は `python-fast`
+  (一部 conformance が mjs harness を呼ぶ) / `python-corpus` (oracle 生成) /
+  `oracle-snapshot` / `python-quality-full` (`test_clean_page_fixtures.py` 等で
+  構造比較に mjs lib を import する経路があるため `npm ci` を揃える) のみ。
+  setup-uv + uv.lock keyed cache も同時に導入済。
+- **`recall` / `boundary` / `real_repo` marker の nightly 移設**: 旧 default
+  pytest に含まれていた以下の full-repo benchmark を `pytestmark` で module-
+  level tag し、default `addopts` から除外。required PR CI では走らず、
+  nightly `python-quality-full` job で `-m 'recall or boundary or real_repo'`
+  として run する。Phase 6b cutover PR で required 昇格する (cutover gate
+  criteria 3 番 "Mutation recall: 9/9 = 100%" の execution vehicle)。
+  - `recall` (CI 実測 ~24 分): `test_recall.py` / `test_baseline_recall.py`
+  - `boundary` (CI 実測 ~1-5 分/test): `test_segments_boundary.py` /
+    `test_clean_page_fixtures.py`
+  - `real_repo` (CI 実測 28-83s/test, round 3 追加): `test_structure_fixtures.py`
+    / `test_source_usability_fixtures.py` の real EN snapshot + JA md
+    integration tests
+  - 重複計算削減: `test_recall.py::_analyze_page` / `test_segments_boundary.py
+    ::_analyze_page` / `test_clean_page_fixtures.py::_run_structure_comparator`
+    に `@functools.cache` を付与。同一 slug が複数 test / mutation
+    loop 内で再計算されていた問題を nightly 移設と同時に解消。
+  - glossary masking の regex compile cache (round 3): `mask_segment_text` が
+    毎回 2788 glossary term を sort + compile していた hotspot を
+    `_get_sorted_glossary_regexes()` で session 1 回に amortize。observable
+    (sort 順序 / flag / mask record shape) は不変、`_clear_caches()` で reset
+    される (test で `docs/GLOSSARY.md` を差し替えるケース用)。
+  - coverage artifact bug fix (round 3): `upload-artifact@v4` が default で
+    hidden file を skip する挙動に気づいていなかったため
+    `scripts/py/.coverage` の artifact upload が空になっていた。
+    `include-hidden-files: true` で修正 (速度ではなく観測性の修正)。
+  - 将来的な改善 (Phase 6b 以降): `test_recall.py` / `test_baseline_recall.py`
+    を 1 slug = 1 test に parametrize して `pytest-xdist -n auto --dist load`
+    で並列化する。現状は single-test 内で manifest を loop しているため
+    xdist の効果が限定的なので、Phase 5 では serial run + `functools.cache`
+    で済ませた (`corpus` marker で実装済の slug-parametrize の pattern を
+    後続 PR で踏襲する)。
+
+**oracle JSONL の CI 契約**: `TESTIM_CORPUS_EXPECTED_JSONL` env var **絶対パス必須**
+(xdist worker の cwd semantics を壊さないため)。env var 未 set + xdist 内 = fail (silent
+な N-way harness 再呼び出しを防ぐ)。local non-xdist fallback では `conftest.py` fixture が
+emit_corpus_oracle.mjs を 1 回だけ subprocess 起動して session 内で生成する。
+
+**Phase 6 以降**: Phase 6a golden-freeze PR で mjs oracle と committed golden JSONL の差分
+監視を nightly `oracle-snapshot` の diff 比較 step を追加して必須昇格として扱う
+(`nightly-python-oracle.yml`)。Phase 6b atomic cutover で mjs harness 削除後、`slow`
+marker (align) は golden fixture 比較に置換されて退場し、`corpus` marker が Python-only
+gate の segment として恒常化する。`parity_smoke` marker は Phase 6b 以降 required CI へ
+再昇格 (Python-only gate になれば実行時間も短縮される見込み)。
+
+**PR A (MaskCoverage) の実際の acceptance**: plan の当初案では "PR A で 5-counter 0 smoke"
+だったが、Phase 5 中は Python extractor drift により full-repo 5-counter 0 は fail 前提
+なので、PR A の実際の acceptance は **(1) Python CLI が完走、(2) `parity-check-status.json`
+schema が mjs contract と一致、(3) `debug.maskCoverage` output が `MaskCoverage.to_json()`
+byte-identical** の 3 点に縮小した。5-counter = 0 assertion は `@pytest.mark.cutover`
+で Phase 6b cutover gate に退避してある (`test_check_source_parity_smoke.py::
+test_python_cli_five_counter_dod_passes_full_repo`)。
+
+**dual-source-of-truth 注記**: `emit_corpus_oracle.mjs` と既存 `conformance/harness.mjs`
+は両方とも `scripts/lib/source_parity_*.mjs` を import + dispatch する。Phase 5/6a 期間中
+は並存し、API drift 時は両方更新が必要 (`scripts/lib/*.mjs` を touch する PR の review
+checklist に含める)。Phase 6b cutover で両方 retire (mjs harness 削除 + committed golden
+への移行) する前提。
+
 ### 既知の follow-up (Phase 6 着手前に検討)
 
 Phase 5 の並列 port 中に発見された Python 側 parity drift (mjs と Python extractor / align の
@@ -1033,13 +1154,27 @@ reviewer から explicit に確認を求められた 8 file の Python 側等価
 
 ---
 
-## Phase 6: Cutover (atomic 切替)
+## Phase 6: Cutover (6a golden-freeze → 6b atomic 切替)
 
-**Goal**: npm scripts を Python に接続、mjs 削除 (redirects.mjs を除く)
+**Goal**: mjs harness を golden fixture に退場させ、production scripts を Python CLI へ切替、mjs 削除 (redirects.mjs を除く)
 
-### Cutover gate criteria (全て true)
+### Phase 6a: Golden-freeze PR (cutover 前の oracle 凍結)
 
-1. `uv run pytest` — 全 pass、coverage >= 90% (**同 PR 内で `pyproject.toml::[tool.coverage.report] fail_under` を 65 → 90 へ戻す**。Phase 5 coexistence の下限 gate 65 は、slow marker 除外で 288-matrix が exercise する path が計上されないための一時措置。Phase 6 で conformance test を golden 化し slow marker を廃止する段階で 90 へ復帰)
+Phase 6b atomic cutover の **prerequisite** として別 PR で以下を実施する:
+
+1. `scripts/py/tools/emit_corpus_oracle.mjs --out tests/conformance/__oracle__/corpus_golden.jsonl --suite segments_en,turndown` を走らせ、golden JSONL を commit (+ `corpus_golden.sha256.tsv` も同時 commit)
+2. `nightly-python-oracle.yml` の `oracle-snapshot` job に「committed golden との diff 比較 step」を追加し、drift 検出で **fail させる必須 gate に昇格**
+3. Phase 6a merge 後は main の committed golden が authority となり、nightly drift は mjs oracle self-regression の検出 gate として機能する
+
+Phase 6a PR 自体は small scope (fixture commit + nightly workflow diff check step 追加のみ)。
+
+### Phase 6b: Atomic cutover PR
+
+**Goal**: npm scripts を Python に接続、mjs 削除 (redirects.mjs を除く)、`cutover` marker gate を 1 回限り強制 run して緑を確認。
+
+### Cutover gate criteria (Phase 6b PR 内で全て true)
+
+1. `uv run pytest` — 全 pass、coverage >= 90% (**同 PR 内で `pyproject.toml::[tool.coverage.report] fail_under` を Phase 5 下限値 → 90 へ戻す**。Phase 5 coexistence の下限 gate は、corpus / slow marker 除外で 288-matrix が exercise する path が計上されないための一時措置。Phase 6b で conformance test を committed golden に退場させ、`slow` marker を廃止、`corpus` が Python-only gate として恒常化する段階で 90 へ復帰)
 2. `npm run check:parity` via Python — 5-counter = 0
 3. Mutation recall: 9/9 = 100%
 4. Boundary stability >= 0.95
@@ -1048,8 +1183,8 @@ reviewer から explicit に確認を求められた 8 file の Python 側等価
 7. `scripts/__tests__/` に以下 2 file のみ残存 (他全 mjs test は Phase 5 + Phase 6 で削除済):
    - `lib_redirects.test.mjs` — `scripts/lib/redirects.mjs` が Astro build graph に残るため production regression gate として維持
    - `sync_detection_issues.test.mjs` — `.github/scripts/sync-detection-issues.cjs` が GitHub Actions 側 production tooling で Phase 6 cutover の scope 外 (下記「Phase 6.1: GitHub Actions tooling port」で別途処理)。Phase 6 atomic cutover PR では touch しない
-8. **Cutover exclusion audit**: `uv run pytest -m cutover` が緑 — Phase 5 で導入された `_PY_XFAIL_SLUGS` / `_PY_EXTRACTOR_DRIFT_SLUGS` 等の temporary exclusion frozenset が全て empty であることを assert (下記「Self-enforcing cutover gate」節)
-9. **Golden fixture migration PR** が merge 済 (下記「Conformance test migration」節)
+8. **Cutover exclusion audit**: `uv run pytest -m cutover` が緑 — Phase 5 で導入された `_PY_XFAIL_SLUGS` / `_PY_EXTRACTOR_DRIFT_SLUGS` 等の temporary exclusion frozenset + PR A の 5-counter full-repo smoke (`test_python_cli_five_counter_dod_passes_full_repo`) が全て empty / pass することを assert (下記「Self-enforcing cutover gate」節)
+9. **Phase 6a golden-freeze PR** が merge 済 (committed golden JSONL が main に存在し、nightly drift workflow が diff 比較 gate として機能していること)
 10. **Lint rule audit**: `scripts/tools/lint_docs.mjs` の全 rule (frontmatter / link / feature-name / code-block / callout / image) が `scripts/py/src/testim_parity/tools/lint_docs.py` で 1:1 で等価実装済であることを、cutover PR の review 時に明示的に confirm する (mjs 側 rule 追加を Python に port し忘れた場合 `lint_docs_contract.test.mjs` は callout scope しか catch しない)
 
 ### Self-enforcing cutover gate (`pytest -m cutover`)

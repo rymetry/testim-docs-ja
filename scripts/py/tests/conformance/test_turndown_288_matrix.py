@@ -1,8 +1,8 @@
 r"""Phase 4b M2/M3 verification gate: 288-page turndown conversion matrix。
 
 ``snapshots/en/content/**/*.html`` 全ページを Python の
-``convert_en_html_to_md`` と mjs ``turndown.mjs::convertEnHtmlToMd`` で変換
-して byte 比較する。PYTHON_MIGRATION_PLAN.md の Phase 4b M2/M3 scope:
+``convert_en_html_to_md`` と JSONL oracle (mjs 側の値) で byte 比較する。
+PYTHON_MIGRATION_PLAN.md の Phase 4b M2/M3 scope:
 
     > M2 ``check_source_parity.py`` は snapshot の Markdown 化に turndown を
     > 使う。M3 ``snapshot_update.py`` は extract 後に turndown で structure
@@ -26,15 +26,16 @@ M1 時点の 168 divergence を解消した:
   ``strip(' \\t\\r\\n')`` を回避)
 - ``autolinks = False`` — ``<a href=URL>URL</a>`` の ``<URL>`` 縮約を無効化
 
+## xdist 並列化 (PR B)
+
+PR B で serial 1 test → **slug-parametrized 288 test** に分解し、pytest-xdist
+``-n auto --dist load`` で worker 間に動的分散する。mjs harness は ``python-
+corpus`` job で 1 回だけ spawn して expected JSONL を生成し、全 worker が
+``TESTIM_CORPUS_EXPECTED_JSONL`` env var 経由でそれを共有する (詳細は
+``tests/conformance/conftest.py`` の ``corpus_oracle`` fixture)。
+
 本テストは Phase 6 atomic cutover で mjs を削除するまで regression gate と
-して残す (node 不在環境では skip)。
-
-## batch 戦略
-
-mjs 側は 1 回の node プロセスで 288 call を batch 処理する (harness.mjs の
-batch dispatch 契約)。単純な 288 逐次 spawn だと ~30s かかるため、fixture
-scope=module で batch を 1 度だけ実行する (segments_en 288-matrix と同じ
-pattern)。
+して残す (node 不在環境では oracle fallback 経由で skip)。
 
 ## Allowlist lifecycle
 
@@ -56,12 +57,13 @@ Entry の shape:
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
 from testim_parity.turndown import convert_en_html_to_md
 
-from ._harness import run_batch
+from .conftest import canonical_sha256
 
 SNAPSHOT_ROOT_PARTS = ("snapshots", "en", "content")
 
@@ -80,110 +82,112 @@ class AllowEntry:
 _ALLOWLIST: dict[str, AllowEntry] = {}
 
 
-def _collect_snapshots(repo_root) -> list[tuple[str, str]]:
-    """``(slug, html)`` のリストを返す。slug は拡張子なしの相対パス。"""
+def _collect_slugs() -> list[str]:
+    """Collect slug list at **collect time** for ``@pytest.mark.parametrize``."""
+    repo_root = Path(__file__).resolve().parents[4]
     root = repo_root
     for part in SNAPSHOT_ROOT_PARTS:
         root = root / part
     if not root.exists():
         return []
-    pairs: list[tuple[str, str]] = []
+    slugs: list[str] = []
     for path in sorted(root.rglob("*.html")):
         rel = path.relative_to(root).with_suffix("")
         slug = rel.as_posix()
-        pairs.append((slug, path.read_text(encoding="utf-8")))
-    return pairs
-
-
-@pytest.fixture(scope="module")
-def snapshot_pages(repo_root) -> list[tuple[str, str]]:
-    pages = _collect_snapshots(repo_root)
-    if not pages:
-        pytest.skip("snapshots/en/content/ が空 — snapshot fetch 未実行")
-    return pages
-
-
-@pytest.fixture(scope="module")
-def mjs_turndown_by_slug(repo_root, node_available, snapshot_pages) -> dict[str, str]:
-    if not node_available:
-        pytest.skip("node not available")
-    # 288 call を 1 回の node spawn で batch 処理する。harness 側は ``turndown_
-    # convert_en_html_to_md`` dispatch を既に持つ (M1 commit ff7c370)。
-    calls = [
-        {"function": "turndown_convert_en_html_to_md", "args": [html]}
-        for _slug, html in snapshot_pages
-    ]
-    results = run_batch(repo_root, calls, timeout=300.0)
-    return {slug: mjs for (slug, _html), mjs in zip(snapshot_pages, results, strict=True)}
-
-
-@pytest.mark.slow
-def test_all_288_pages_turndown_matches_mjs(snapshot_pages, mjs_turndown_by_slug):
-    """288 page すべてで Python ``convert_en_html_to_md`` が mjs と byte 一致。
-
-    M1 の 39 代表 pattern を超えて、実 corpus 全体で turndown 等価性を
-    hard 確認する。divergence はすべて集約して report する。
-    """
-    divergences: list[str] = []
-    for slug, html in snapshot_pages:
         if slug in _ALLOWLIST:
-            continue  # intentional divergence
-        py = convert_en_html_to_md(html)
-        mjs = mjs_turndown_by_slug[slug]
-        if py != mjs:
-            # diff の先頭を抽出して noise を抑える。1 行目の unified diff 的な
-            # 表示にする (完全 diff は冗長、first-difference line が最も役立つ)。
-            py_lines = py.splitlines()
-            mjs_lines = mjs.splitlines()
-            first_diff_line: int | None = None
-            for i in range(min(len(py_lines), len(mjs_lines))):
-                if py_lines[i] != mjs_lines[i]:
-                    first_diff_line = i
-                    break
-            detail = (
-                f"  slug={slug}\n"
-                f"    py_lines={len(py_lines)} mjs_lines={len(mjs_lines)}"
-                f" py_bytes={len(py)} mjs_bytes={len(mjs)}"
-            )
-            if first_diff_line is not None:
-                detail += (
-                    f"\n    first diff at line {first_diff_line + 1}:"
-                    f"\n      py  = {py_lines[first_diff_line]!r}"
-                    f"\n      mjs = {mjs_lines[first_diff_line]!r}"
-                )
-            elif len(py_lines) != len(mjs_lines):
-                longer = py_lines if len(py_lines) > len(mjs_lines) else mjs_lines
-                detail += f"\n    extra trailing line: {longer[-1]!r}"
-            divergences.append(detail)
+            continue
+        slugs.append(slug)
+    return slugs
 
-    assert not divergences, (
-        f"{len(divergences)} page(s) diverged from mjs turndown:\n"
-        + "\n".join(divergences[:10])
-        + ("\n... (truncated)" if len(divergences) > 10 else "")
+
+_ALL_SLUGS = _collect_slugs()
+
+
+def _read_html(slug: str) -> str:
+    """Load EN snapshot HTML for a slug."""
+    repo_root = Path(__file__).resolve().parents[4]
+    path = repo_root
+    for part in SNAPSHOT_ROOT_PARTS:
+        path = path / part
+    return (path / f"{slug}.html").read_text(encoding="utf-8")
+
+
+@pytest.mark.corpus
+@pytest.mark.parametrize("slug", _ALL_SLUGS)
+def test_turndown_page_matches_oracle(slug: str, corpus_oracle: dict) -> None:
+    """1 slug = 1 test: Python ``convert_en_html_to_md`` が oracle と byte 一致。
+
+    xdist ``-n auto --dist load`` で 288 case が worker 間に動的分散される。
+    ``sha256`` field も比較することで、**oracle JSONL row の canonical JSON
+    serialization 契約** を pin する (``py == expected`` が既に値一致を保証
+    するため、主目的は mjs 側と Python 側の canonical form 仕様 drift を
+    早期検知すること; JSONL tamper 検知は副次効果)。
+    """
+    row = corpus_oracle.get(("turndown", slug))
+    assert row is not None, (
+        f"oracle JSONL missing turndown row for slug={slug!r}. "
+        "Re-run `node scripts/py/tools/emit_corpus_oracle.mjs` to regenerate."
+    )
+
+    html = _read_html(slug)
+    py = convert_en_html_to_md(html)
+    expected = row["expected"]
+
+    if py != expected:
+        py_lines = py.splitlines()
+        mjs_lines = expected.splitlines()
+        first_diff_line: int | None = None
+        for i in range(min(len(py_lines), len(mjs_lines))):
+            if py_lines[i] != mjs_lines[i]:
+                first_diff_line = i
+                break
+        detail = (
+            f"  slug={slug}\n"
+            f"    py_lines={len(py_lines)} mjs_lines={len(mjs_lines)}"
+            f" py_bytes={len(py)} mjs_bytes={len(expected)}"
+        )
+        if first_diff_line is not None:
+            detail += (
+                f"\n    first diff at line {first_diff_line + 1}:"
+                f"\n      py  = {py_lines[first_diff_line]!r}"
+                f"\n      mjs = {mjs_lines[first_diff_line]!r}"
+            )
+        elif len(py_lines) != len(mjs_lines):
+            longer = py_lines if len(py_lines) > len(mjs_lines) else mjs_lines
+            detail += f"\n    extra trailing line: {longer[-1]!r}"
+        pytest.fail(f"turndown divergence:\n{detail}")
+
+    assert canonical_sha256(expected) == row["sha256"], (
+        f"oracle JSONL canonical-JSON sha256 diverged for turndown/{slug} — "
+        "mjs canonicalStringify / Python json.dumps(sort_keys=True) の仕様が "
+        "drift した可能性あり (regenerate oracle or fix emit_corpus_oracle.mjs)"
     )
 
 
-@pytest.mark.slow
-def test_turndown_288_summary_bytes_match(snapshot_pages, mjs_turndown_by_slug):
-    """aggregate check: 合計 byte 長が mjs と一致 + 一致率 100%。
+@pytest.mark.corpus
+def test_turndown_summary_bytes_match(corpus_oracle: dict) -> None:
+    """Aggregate check: 合計 byte 長が mjs と一致 + 一致率 100%。
 
-    ``test_all_288_pages_turndown_matches_mjs`` が throw した場合でも、
-    ここで aggregate な divergence の規模を把握できる補助 assert。
+    slug-parametrized test が throw した場合でも、ここで aggregate な
+    divergence の規模を把握できる補助 assert。single-test で残す。
     """
     py_total_bytes = 0
     mjs_total_bytes = 0
     matching_pages = 0
-    for slug, html in snapshot_pages:
-        if slug in _ALLOWLIST:
+    checked = 0
+    for slug in _ALL_SLUGS:
+        row = corpus_oracle.get(("turndown", slug))
+        if row is None:
             continue
+        checked += 1
+        html = _read_html(slug)
         py = convert_en_html_to_md(html)
-        mjs = mjs_turndown_by_slug[slug]
+        mjs = row["expected"]
         py_total_bytes += len(py.encode("utf-8"))
         mjs_total_bytes += len(mjs.encode("utf-8"))
         if py == mjs:
             matching_pages += 1
 
-    checked = len(snapshot_pages) - len(_ALLOWLIST)
     assert py_total_bytes == mjs_total_bytes, (
         f"aggregate byte length mismatch: py={py_total_bytes} mjs={mjs_total_bytes}"
     )

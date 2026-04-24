@@ -9,3 +9,9 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+# PR B (CI 高速化) で emit_corpus_oracle.mjs が生成する oracle JSONL。
+# test:py:corpus / python-corpus job が実行時に書き出す artifact で、
+# git では追跡しない (CI run 毎に fresh な mjs 出力が authoritative)。
+.corpus_expected.jsonl
+.oracle_today.jsonl
+corpus-junit.xml

@@ -9,11 +9,20 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 from testim_parity.align import align_segments, parity_diffs_to_issues
 from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
 from testim_parity.source_usability import detect_source_usability
+
+# Real-repo source-usability integration. Each test loads an actual EN
+# snapshot + JA markdown pair and exercises ``detect_source_usability``
+# end-to-end (CI 実測: one integration test ~38s on ubuntu-latest). Same
+# ``python-fast`` exclusion / nightly escalation contract as
+# ``test_structure_fixtures.py``.
+pytestmark = pytest.mark.real_repo
 
 SNAPSHOTS_DIR: Path = ROOT_DIR / "snapshots" / "en" / "content"
 JA_CONTENT_DIR: Path = ROOT_DIR / "src" / "content" / "docs"
