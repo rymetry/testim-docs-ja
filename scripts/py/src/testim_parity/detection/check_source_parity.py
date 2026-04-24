@@ -451,7 +451,11 @@ def check_source_parity(
         snapshot_fingerprint: str | None = None
 
         if snapshot_path.exists():
-            raw_en_html = snapshot_path.read_text(encoding="utf-8")
+            # ``read_text`` は ``\r\n`` を ``\n`` に normalize してしまう。
+            # ``en_source_patches`` の ``find`` 文字列は MadCap 生 HTML の
+            # ``\r\n`` を含むため、normalize させず raw bytes から decode する
+            # (mjs ``fs.readFileSync(path, 'utf8')`` と同じ挙動)。
+            raw_en_html = snapshot_path.read_bytes().decode("utf-8")
             snapshot_fingerprint = compute_snapshot_fingerprint(raw_en_html)
 
             en_body: str | None = None

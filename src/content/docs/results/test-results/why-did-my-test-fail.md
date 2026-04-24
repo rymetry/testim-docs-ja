@@ -175,8 +175,8 @@ Testim は、次のような異なる警告タイプを識別します。
 
 - テストの[ベース URL](/docs/running-tests/base-url)が正しいことを確認します。
 - リモートグリッドで実行している場合は、テスト環境がグリッドからアクセス可能であることを確認します。
-  - **内部サーバー/localhost:** [トンネル](/docs/integrations/dedicated-run-tunnel)を有効にするために連絡してください。
-  - **制限付きのパブリック環境（VPN/Geolocation）:** カスタム/サードパーティグリッドの IP をホワイトリストに追加するか、Testim グリッドユーザーの場合は[Testim グリッド IP](/docs/security/testim-grid-ips)をホワイトリストに追加してください。
+- **内部サーバー/localhost:** [トンネル](/docs/integrations/dedicated-run-tunnel)を有効にするために連絡してください。
+- **制限付きのパブリック環境（VPN/Geolocation）:** カスタム/サードパーティグリッドの IP をホワイトリストに追加するか、Testim グリッドユーザーの場合は[Testim グリッド IP](/docs/security/testim-grid-ips)をホワイトリストに追加してください。
 
 ### 9. Failed to Set Text
 

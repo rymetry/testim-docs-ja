@@ -38,15 +38,8 @@ SLUGS_ALL: tuple[str, ...] = (
     "results/test-runs",
 )
 
-# Phase 5 port 時点で mjs runtime は 0 issue だが Python runtime が構造 issue を
-# 出す slug。latent cross-runtime drift — 解消は別 PR (Python extractor fine-tune)。
-_PY_XFAIL_SLUGS: frozenset[str] = frozenset(
-    {
-        "results/test-results/network-logs",
-        "advanced-editing/validations/email-validation",
-        "results/test-runs",
-    }
-)
+# Phase 6b cutover で解消済 (test_clean_page_fixtures.py の note 参照)。
+_PY_XFAIL_SLUGS: frozenset[str] = frozenset()
 
 SLUGS: tuple[str, ...] = tuple(s for s in SLUGS_ALL if s not in _PY_XFAIL_SLUGS)
 

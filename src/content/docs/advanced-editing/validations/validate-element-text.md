@@ -221,11 +221,11 @@ HTML: アプリ内の HTML 要素を参照できます。\
 JS（JavaScript）: 任意の JS 式を定義できます。**Expected Value フィールドでパラメーターを使用するには:**
 
 1. 以下のいずれかの方法でパラメーターを定義します。
-   - **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps)を参照してください。
+- **カスタムステップにパラメーターを追加する（Web のみ）** - カスタムステップを作成し、そのカスタムステップにパラメーターを追加できます。詳細な手順については、[カスタム JavaScript ステップのパラメーター](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps)を参照してください。
 
-   - **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing)を参照してください。
+- **テストデータにパラメーターを追加する** - テストの最初のステップである **Setup** ステップに**テストデータ**を追加してパラメーターを定義することもできます。詳細な手順については、[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing)を参照してください。
 
-   - **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/running-tests/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing)を参照してください。
+- **設定ファイルにパラメーターを追加する（Web のみ）** - [設定ファイル](/docs/running-tests/configuration-file-run-hooks)にパラメーターを追加できます。詳細な手順については、[設定ファイルを使用したデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing)を参照してください。
 
 ![Untitled_Project.gif](/images/validations/validate-element-text/fbf2f95-Untitled_Project.gif)
 

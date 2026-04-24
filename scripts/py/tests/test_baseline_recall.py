@@ -39,15 +39,8 @@ _BASELINE_ELIGIBLE: frozenset[str] = frozenset(
     }
 )
 
-# Phase 5 port 時点の Python extractor / align drift で boundary や alignment が
-# mjs と異なる slug。mjs では 100% green、Python では false positive / structural
-# drift が出るため一時的に除外 (別 PR で解消)。
-_PY_EXTRACTOR_DRIFT_SLUGS: frozenset[str] = frozenset(
-    {
-        "advanced-editing/loops",
-        "running-tests/running-tests-overview",
-    }
-)
+# Phase 6b cutover で解消済 (test_recall.py の note 参照)。
+_PY_EXTRACTOR_DRIFT_SLUGS: frozenset[str] = frozenset()
 
 
 def _load_manifest() -> list[dict]:

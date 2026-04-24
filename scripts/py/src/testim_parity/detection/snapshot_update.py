@@ -588,8 +588,7 @@ def main(
                         raise RuntimeError(
                             f"sync_exclusions registry is missing entry for slug "
                             f"{target['slug']!r} despite is_source_side_debt=True. "
-                            f"Check scripts/lib/source_sync_exclusions.mjs and its "
-                            f"Python mirror for drift."
+                            f"Check testim_parity.sync_exclusions for registry drift."
                         )
                     probe = run_recovery_probe(raw_en_html=content, exclusion_entry=exclusion)
                     label = "RECOV" if probe["fetchStatus"] == "excluded-recovered" else "DEBT "

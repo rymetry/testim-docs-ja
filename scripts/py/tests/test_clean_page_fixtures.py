@@ -70,30 +70,13 @@ CLEAN_PAGE_SLUGS_ALL: tuple[str, ...] = (
     "salesforce-testing/create-a-salesforce-test",
 )
 
-# mjs runtime は 0 issue / Python runtime は複数 issue を出す latent cross-runtime
-# drift slug (Phase 5 port 時点)。mjs conformance harness (test_align_parity.py 等)
-# は synthetic fixture で byte parity 済みだが、大規模 real-world snapshot では
-# 下位差分が出る slug 群。Phase 5 では xfail で pin し、drift 解消は別 PR。
-_PY_XFAIL_SLUGS: frozenset[str] = frozenset(
-    {
-        "salesforce-testing/salesforce-testing-getting-started",
-        "test-management/shared-steps-library/managing-shared-steps-and-folders",
-        "salesforce-testing/salesforce-steps/sfdc-document-validation",
-        "editing-tests/editing-your-tests/editing-target-element-properties",
-        "integrations/test-management-integrations/xray-integration",
-        "integrations/grid-management",
-        "administration/secrets",
-        "advanced-editing/validations/validate-download",
-        "advanced-editing/validations/validate-element-text",
-        "testops/insights/reports",
-        "editing-tests/groups",
-        "administration/project-and-user-management",
-        "running-tests/run-in-incognito",
-        "advanced-editing/validations/html-attribute-validation",
-        "test-management/locators-auto-improve",
-        "salesforce-testing/create-a-salesforce-test",
-    }
-)
+# Phase 6b cutover で解消済: segments_ja.py を mjs line-based に戻し、
+# check_source_parity で raw bytes 読み取り化したことで Python runtime も
+# mjs と同じ 0 issue に揃った。cutover gate (test_cutover_gate.py) が本
+# frozenset が empty であることを assert するため、**新たな drift slug を
+# 追加する場合は別 Issue で parser 側を修正する** のが規律 (baseline を
+# 使わず parser / content で解消する、feedback_parity_phase_discipline)。
+_PY_XFAIL_SLUGS: frozenset[str] = frozenset()
 
 CLEAN_PAGE_SLUGS: tuple[str, ...] = tuple(
     s for s in CLEAN_PAGE_SLUGS_ALL if s not in _PY_XFAIL_SLUGS

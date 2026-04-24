@@ -509,7 +509,7 @@ def _render_source_side_debt_subsection(debt: Mapping[str, Any], _pages: Any) ->
         f"- 復旧候補: {debt['excludedRecoveredPages']}",
         "",
         "英語原文が壊れておりパリティ比較の前提を満たさないページです。",
-        "`scripts/lib/source_sync_exclusions.mjs` の除外レジストリで管理され、",
+        "`scripts/py/src/testim_parity/sync_exclusions.py` の除外レジストリで管理され、",
         "スナップショット取得は実行するがファイルは上書きせず、手動作成した",
         "スナップショットを凍結参照として保持します。",
         "",
@@ -560,7 +560,8 @@ def _render_source_side_debt_subsection(debt: Mapping[str, Any], _pages: Any) ->
         lines.extend(
             [
                 "英語原文が復旧した可能性があります。人間が確認の上、",
-                "`scripts/lib/source_sync_exclusions.mjs` から該当 slug を除外解除してください。",
+                "`scripts/py/src/testim_parity/sync_exclusions.py` "
+                "から該当 slug を除外解除してください。",
                 "(自動解除はしません — 一時的な原文側の揺れで誤検知を作らないため)",
                 "",
             ]
@@ -941,8 +942,8 @@ def _build_parity_followup_body(
         lines.extend(
             [
                 "",
-                "対応: `node scripts/detection/generate_parity_baseline.mjs --slug=<slug>` "
-                "で該当 slug を再生成すると孤立エントリーが削除されます。",
+                "対応: `uv run python -m testim_parity.detection.generate_parity_baseline "
+                "--slug=<slug>` で該当 slug を再生成すると孤立エントリーが削除されます。",
                 "",
             ]
         )

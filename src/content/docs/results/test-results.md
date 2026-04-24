@@ -24,26 +24,26 @@ keywords:
 テストレベルでは、テスト結果に以下の情報が表示されます:
 
 - **テスト結果サマリー** - テスト結果サマリーには以下の情報が含まれます:
-  - テストが成功または失敗したかの表示
-  - テスト実行時間
-  - 実行設定情報（テストのベース URL、ターゲットデバイス、アプリケーション名）
+- テストが成功または失敗したかの表示
+- テスト実行時間
+- 実行設定情報（テストのベース URL、ターゲットデバイス、アプリケーション名）
 - **テスト情報** - **i**アイコンをクリックしてテスト情報を表示します。テスト情報には以下が含まれます:
-  - Ext. version - Testim Extension ソフトウェアのバージョン
-  - Source - テストがローカルまたはリモートで実行されたか
-  - Run mode - 実行で使用されたフレームワーク（例: Appium）
-  - Grid name - 実行で使用されたグリッド
-  - Run config. - このテスト実行中に使用されたテスト設定。詳細については、[設定ライブラリ - Web](/docs/test-management/shared-configuration)および[設定ライブラリ - モバイル](/docs/test-management/configuration-library-mobile)を参照してください。
-  - Zoom level - テスト実行で使用されたズームレベル
-  - OS - テスト実行で使用されたオペレーティングシステム
-  - Browser - テスト実行で使用されたブラウザとブラウザバージョン
-  - Date (UTC) - テストが実行された UTC 日付
-  - Time - テストが実行された UTC 時刻
+- Ext. version - Testim Extension ソフトウェアのバージョン
+- Source - テストがローカルまたはリモートで実行されたか
+- Run mode - 実行で使用されたフレームワーク（例: Appium）
+- Grid name - 実行で使用されたグリッド
+- Run config. - このテスト実行中に使用されたテスト設定。詳細については、[設定ライブラリ - Web](/docs/test-management/shared-configuration)および[設定ライブラリ - モバイル](/docs/test-management/configuration-library-mobile)を参照してください。
+- Zoom level - テスト実行で使用されたズームレベル
+- OS - テスト実行で使用されたオペレーティングシステム
+- Browser - テスト実行で使用されたブラウザとブラウザバージョン
+- Date (UTC) - テストが実行された UTC 日付
+- Time - テストが実行された UTC 時刻
 - **3 点メニュー** - クリックして以下のメニューを開きます:
-  - コンソールログを表示 - テスト実行のコンソールログを表示します。詳細については、[コンソールログ](/docs/results/test-results/network-logs-copy)を参照してください。
-  - ネットワークログを表示 - テスト実行のネットワークログを表示します。詳細については、[ネットワークログ](/docs/results/test-results/network-logs)を参照してください。
-  - テスト履歴を表示 - 選択したテストにフィルタリングしながら、[テスト実行](/docs/results/test-runs)画面を表示します。
-  - 実行を表示 - 選択したテストにフィルタリングしながら、[実行画面](/docs/results/execution-runs-screen)を表示します。
-  - PDF 実行レポートを生成 - テスト実行結果の詳細な PDF レポートを生成します。詳細については、[テスト実行 PDF レポート](/docs/results/test-run-pdf-report)を参照してください。
+- コンソールログを表示 - テスト実行のコンソールログを表示します。詳細については、[コンソールログ](/docs/results/test-results/network-logs-copy)を参照してください。
+- ネットワークログを表示 - テスト実行のネットワークログを表示します。詳細については、[ネットワークログ](/docs/results/test-results/network-logs)を参照してください。
+- テスト履歴を表示 - 選択したテストにフィルタリングしながら、[テスト実行](/docs/results/test-runs)画面を表示します。
+- 実行を表示 - 選択したテストにフィルタリングしながら、[実行画面](/docs/results/execution-runs-screen)を表示します。
+- PDF 実行レポートを生成 - テスト実行結果の詳細な PDF レポートを生成します。詳細については、[テスト実行 PDF レポート](/docs/results/test-run-pdf-report)を参照してください。
 - **改善されたステップを表示** - 自動的に改善されたロケーターを持つステップを表示するトグル。詳細については、[ロケーター: 自動改善](/docs/test-management/locators-auto-improve)を参照してください。
 - **ステップカウント** - ステップカウンターは、テストステップの総数をカウントするライブカウンターです。ステップとグループ（内部グループを含む）をカウントしますが、フックはカウントしません。カウンターは、ステップを追加または削除すると動的に更新されます。
 

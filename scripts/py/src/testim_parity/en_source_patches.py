@@ -1,23 +1,63 @@
 """EN source-boundary patch registry + runtime coverage 集計器。
 
-``scripts/lib/en_source_patches.mjs`` の port。Route W (Plan v4, 2026-04-17) は
-``preprocess_en_html`` 境界で壊れた EN snapshot を修復し、extractor / alignSegments
-/ turndown 相当が単一の canonical HTML を見るようにする。各 patch は pre-turndown HTML
-への literal ``find → replace`` で、slug allowlist にスコープされる。
+Route W (Plan v4, 2026-04-17) は ``preprocess_en_html`` 境界で壊れた EN snapshot を
+修復し、extractor / alignSegments / turndown 相当が単一の canonical HTML を見るように
+する。各 patch は pre-turndown HTML への literal ``find → replace`` で、slug allowlist
+にスコープされる。
 
-**データ戦略**: patch registry 本体は ``_en_source_patches_data.json`` として本モジュール
-と同居させる。JSON は ``scripts/lib/en_source_patches.mjs`` から生成され、両 runtime で
-同じ single source of truth を使う (700 行超の HTML fragment を手書きで移植するのは
-非現実的)。conformance harness が mjs registry を再 export するので、``apply_en_source_patches``
-出力の byte-level parity を integration test で検証できる。
+## Source of truth — ``_en_source_patches_data.json``
 
-契約:
+**``_en_source_patches_data.json`` が唯一の authoritative source** (Phase 6b cutover
+以降)。mjs ``scripts/lib/en_source_patches.mjs`` は削除済で、以降 Python module と
+JSON が 1:1 対応する。JSON を直接編集 (VSCode の JSON editor / 手書き) することで
+patch を追加・更新する。700+ 行の HTML fragment を Python dict に inline 化すると
+編集性が激しく落ちるため、JSON で保持する。
 
-* Python からは registry は immutable (frozen dict の tuple)。
-* :func:`apply_en_source_patches` は引数に副作用なし。
-* coverage のみ stateful。
+### Schema (``_en_source_patches_data.json``)
+
+```jsonc
+{
+  "defectClasses": ["typo", "href-miswire", "madcap-artifact", "stale-reference"],
+  "patches": [
+    {
+      "id": "UD-XXXN-slug-style-id",         // unique patch id (kebab-case)
+      "slugs": ["category/slug-one", ...],   // target slug allowlist
+      "defectClass": "typo",                 // defectClasses のいずれか
+      "find": "<p>Verify -this action",      // literal HTML fragment
+      "replace": "<p>Verify - this action",  // 置換後の literal
+      "rationale": "MadCap authoring typo ...",  // 人間向け説明
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-001",  // tracker link
+      "addedAt": "2026-04-17",               // ISO date
+      "reviewAfter": "2026-10-17"            // 6-month review due date
+    }
+  ]
+}
+```
+
+### Validation
+
+``testim_parity.tools.validate_en_source_patches`` を run することで JSON schema
++ business rule (``find`` が非空 / ``slugs`` が非空 list / ``addedAt`` が ISO8601 date /
+``defectClass`` が allowlist 内) を検証できる。CI ``python-fast`` job の required step
+に登録済。
+
+### 契約
+
+* Python からは registry は immutable (frozen dict の tuple、``MappingProxyType`` wrap)。
+* :func:`apply_en_source_patches` は引数に副作用なし (``replace.join(split)`` で
+  新 string を返す)。
+* coverage のみ stateful (呼び出し側が ``create_en_source_patch_coverage`` を渡す)。
 * :data:`DEFECT_CLASSES` は 4 種類の allowlist — それ以外は reviewer gate / machine
   check で reject する。
+
+### 更新手順
+
+1. ``_en_source_patches_data.json`` を編集 (新 patch 追加 / 既存 patch 修正)
+2. ``uv run python -m testim_parity.tools.validate_en_source_patches`` で schema
+   + business rule 検証
+3. ``uv run pytest tests/test_en_source_patches.py`` で unit test regression check
+4. ``docs/UPSTREAM_DEFECTS.md`` の ``linkedDefect`` 先に ``reviewAfter`` を追記
+5. PR で reviewer gate (``defectClass`` allowlist + 6-month review rule を assert)
 """
 
 from __future__ import annotations

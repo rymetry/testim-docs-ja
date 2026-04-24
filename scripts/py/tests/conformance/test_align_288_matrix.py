@@ -1,143 +1,116 @@
-"""288-page corpus での ``align_segments`` の mjs byte 一致 conformance。
+"""288-page corpus での ``align_segments`` の byte-identical conformance。
 
-architect H2 指摘対応: Phase 3 M4 完了時点で 288-page の実 body を使って
-mjs vs Python の ``align_segments`` 出力を byte 比較する。shape drift が
-M5 baseline identity key 凍結前に検出されることを保証する。
+Phase 6b cutover 前は mjs harness を毎回 spawn して align の byte parity を
+確認していたが、mjs 削除に伴い **committed golden JSONL 比較** に移行した。
+oracle は ``scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl`` の
+``suite="align"`` 行を読み、slug 毎に ``align_segments`` の出力を canonical
+SHA-256 で比較する。Phase 6a の segments_en / turndown と同じ契約で ``corpus``
+marker に合流し、pytest-xdist の worker に均等分散する。
 
-Implementation
----------------
+Drift 検知:
 
-本 test は以下のステップで動く:
+1. ``npm run test:py:corpus:drift`` で summarize(committed JSONL) vs committed
+   TSV を比較し、committed golden 側の tamper を検出する
+2. 本 test が Python ``align_segments`` の live output を committed JSONL と
+   byte 比較して Python 側の drift を検出する
 
-1. ``src/content/docs/`` 配下の JA markdown 全ページを収集
-2. 対応する EN snapshot (``snapshots/en/content/<slug>.html``) があるページだけ
-   対象にする (snapshot 欠落は ``missing-snapshot`` 経路なので align 対象外)
-3. EN HTML → segments (``segments_en.extract_segments_from_html``)
-4. JA markdown → segments (``segments_ja.extract_segments_from_markdown``)
-5. ``align_segments(en, ja, slug=...)`` を Python / mjs 両方で走らせ結果を byte 比較
-
-Phase 2 conformance (``test_segments_ja_parity.py``) と同じく、意図的に
-divergent な slug (``_DIVERGENT_ALLOWLIST``) は allowlist に計上する。現状は
-Phase 2 nested list flatten 由来の 147 slug が divergent。segment 数が mjs と
-一致する slug のみ align を走らせ byte 比較する。
-
-## PR B coexistence note
-
-PR B で ``slow`` marker を ``corpus`` に rename した際、本 test は
-**slug-parametrize しない** 設計を維持した: oracle 経由で align を比較する
-には、oracle 側も Python-generated segments を入力にする必要がある (旧 test
-は Python と mjs 両方に Python segments を流し込んで「align byte-parity」を
-narrow に検証する設計だった)。オフライン oracle 化は Python 側での segments
-dump → mjs oracle 再入力という 2-stage pipeline を要するため、Phase 6b
-cutover で golden fixture 化する段階で整理する (それまで segments_en /
-turndown とは異なり serial 1 test のまま ``-n auto`` worker の 1 人が担当)。
-
-Note: node spawn コストを抑えるため 288 page 全体を 1 batch で処理する。
-mjs 側で align_segments まで流すため batch timeout を 600s に拡張する。
+Phase 6b atomic cutover PR で align golden を commit し、mjs 削除と同時に本 test
+を committed 読み込みに書き換えた (plan doc Phase 6b 「align 288-matrix golden 化」節)。
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
+import re
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from testim_parity.align import align_segments
-from testim_parity.segments_en import extract_segments_from_html
+from testim_parity.project import ROOT_DIR
+from testim_parity.segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
 
-from ._harness import run_batch
+pytestmark = pytest.mark.corpus
 
-SNAPSHOT_ROOT_PARTS = ("src", "content", "docs")
-EN_SNAPSHOT_ROOT_PARTS = ("snapshots", "en", "content")
-
-
-def _collect_aligned_pages(repo_root: Path) -> list[tuple[str, str, str]]:
-    """``(slug, en_html, ja_body)`` のリストを返す。
-
-    JA markdown と EN HTML snapshot の両方が存在する slug のみ対象。Phase 2
-    の nested list flatten で segment 数が divergent なページは、align での
-    heading-count-mismatch 経路が両 runtime で同じなので batch は通す。
-    """
-    ja_root = repo_root
-    for part in SNAPSHOT_ROOT_PARTS:
-        ja_root = ja_root / part
-    en_root = repo_root
-    for part in EN_SNAPSHOT_ROOT_PARTS:
-        en_root = en_root / part
-
-    if not ja_root.exists() or not en_root.exists():
-        return []
-
-    pairs: list[tuple[str, str, str]] = []
-    for ja_path in sorted(ja_root.rglob("*.md")):
-        rel = ja_path.relative_to(ja_root).with_suffix("")
-        slug = rel.as_posix()
-        en_path = en_root / rel.with_suffix(".html")
-        if not en_path.exists():
-            continue
-        try:
-            en_html = en_path.read_text(encoding="utf-8")
-            ja_body = ja_path.read_text(encoding="utf-8")
-        except OSError:
-            continue
-        pairs.append((slug, en_html, ja_body))
-    return pairs
+_GOLDEN_PATH = (Path(__file__).parent / "__oracle__" / "corpus_golden.jsonl").resolve()
 
 
-@pytest.fixture(scope="module")
-def aligned_pages(repo_root: Path) -> list[tuple[str, str, str]]:
-    pages = _collect_aligned_pages(repo_root)
-    if not pages:
-        pytest.skip("JA / EN snapshot corpus が空 — 同期されていない")
-    return pages
+def _canonical_sha256(value: Any) -> str:
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
 
 
-@pytest.mark.slow
-def test_align_288_matrix_regressions_zero(
-    aligned_pages: list[tuple[str, str, str]], repo_root: Path, node_available: bool
-) -> None:
-    """288 page (対応 snapshot 有) で Python align 出力が mjs と byte-identical。
-
-    EN HTML → segments / JA md → segments を Python 側で生成し、その segment 列を
-    mjs harness と Python 両方に渡して align_segments の diffs / inconclusive
-    shape を byte 比較する (extractor 側の conformance は Phase 1/2 で担保済)。
-
-    Phase 2 nested list flatten で segment count が divergent な slug は、align の
-    ``heading-count-mismatch`` 経路が両 runtime で同値なので同じ ``inconclusive``
-    結果になる。divergent 経路自体も conformance 対象。
-    """
-    if not node_available:
-        pytest.skip("node not available")
-
-    # Python 側の segment 列を先に作り、mjs には segments を直接渡す
-    # (mjs 側でも extractor を走らせて同じ結果になることは Phase 1/2 で保証済み)
-    calls: list[dict] = []
-    py_results: list[dict] = []
-
-    for slug, en_html, ja_body in aligned_pages:
-        # segments_en / segments_ja は既に dict を返す (Phase 1/2 契約)
-        en_segments = extract_segments_from_html(en_html, slug=slug, callout_allow_slugs=None)
-        ja_segments = extract_segments_from_markdown(ja_body)
-
-        calls.append(
-            {
-                "function": "align_segments",
-                "args": [list(en_segments), list(ja_segments), {"slug": slug}],
-            }
+def _load_align_golden() -> dict[str, dict[str, Any]]:
+    """committed golden JSONL から ``suite="align"`` 行のみ抽出して slug 辞書で返す。"""
+    if not _GOLDEN_PATH.exists():
+        pytest.skip(
+            f"committed align golden not found at {_GOLDEN_PATH}. "
+            "Run ``npm run test:py:corpus:regen`` to emit it."
         )
-        py_result = align_segments(en_segments, ja_segments, slug=slug)
-        py_results.append({"ok": True, "result": py_result})
+    by_slug: dict[str, dict[str, Any]] = {}
+    for raw in _GOLDEN_PATH.read_text(encoding="utf-8").splitlines():
+        raw = raw.strip()
+        if not raw:
+            continue
+        row = json.loads(raw)
+        if row.get("suite") != "align":
+            continue
+        by_slug[row["slug"]] = row
+    return by_slug
 
-    mjs_results = run_batch(repo_root, calls, timeout=600.0)
 
-    regressions: list[str] = []
-    for (slug, _, _), py_env, mjs_env in zip(aligned_pages, py_results, mjs_results, strict=True):
-        if py_env != mjs_env:
-            regressions.append(slug)
+def _extract_ja_body(md_content: str) -> str:
+    without_fm = re.sub(r"^---[\s\S]*?---\n", "", md_content, count=1, flags=re.MULTILINE)
+    return without_fm.strip()
 
-    assert not regressions, (
-        f"{len(regressions)} page(s) diverge align output:\n"
-        + "\n".join(f"  {slug}" for slug in regressions[:20])
-        + (f"\n  ... ({len(regressions) - 20} more)" if len(regressions) > 20 else "")
+
+def _align_slugs() -> list[str]:
+    golden = _load_align_golden()
+    return sorted(golden.keys())
+
+
+@pytest.mark.parametrize("slug", _align_slugs())
+def test_align_byte_identical_with_committed_golden(slug: str) -> None:
+    """slug 毎に ``align_segments`` の live 出力が committed golden と byte 一致。
+
+    Phase 6b cutover で mjs authority 削除後、**committed JSONL が唯一の
+    authoritative oracle**。本 test が fail したら Python 側の drift なので、
+    root cause (``segments_en`` / ``segments_ja`` / ``align`` の変更) を特定して
+    必要なら content / parser 側を修正 + golden を regenerate する。
+    """
+    golden = _load_align_golden()
+    expected_row = golden[slug]
+
+    en_snapshot = (
+        (ROOT_DIR / "snapshots" / "en" / "content" / f"{slug}.html").read_bytes().decode("utf-8")
+    )
+    ja_md_path = ROOT_DIR / "src" / "content" / "docs" / f"{slug}.md"
+    if not ja_md_path.exists():
+        pytest.skip(f"JA markdown missing for {slug}")
+    ja_body = _extract_ja_body(ja_md_path.read_text(encoding="utf-8"))
+
+    en_segments = extract_segments_from_html(
+        en_snapshot, slug=slug, callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS
+    )
+    ja_segments = extract_segments_from_markdown(ja_body)
+
+    try:
+        actual = {"ok": True, "result": align_segments(en_segments, ja_segments, slug=slug)}
+    except Exception as exc:  # noqa: BLE001 — match mjs-side outer catch
+        actual = {"ok": False, "error": str(exc)}
+
+    expected = expected_row["expected"]
+    assert actual == expected, (
+        f"align drift for {slug}: live output differs from committed golden. "
+        f"Re-run ``npm run test:py:corpus:regen`` if the change is intentional."
+    )
+
+    # sha256 も独立に検証 (tamper 防止の二重 gate)
+    assert _canonical_sha256(actual) == expected_row["sha256"], (
+        f"align sha256 drift for {slug}: {_canonical_sha256(actual)} vs "
+        f"committed {expected_row['sha256']}"
     )

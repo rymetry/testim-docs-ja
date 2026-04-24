@@ -106,16 +106,16 @@ qTest でテストが変更された場合（新しいバージョン番号）�
 
 - **Name** - Testim のテスト名
 - **Status** - 実行のステータス。表示されるステータスは qTest ステータスで、Testim ステータスから以下のように変換されます（Testim → qTest）:
-  - ABORTED - Unexecuted
-  - SKIPPED (Testim で隔離されたステータス) - Blocked
-  - TIMEOUT - Failed
-  - PASSED - Passed
-  - FAILED - Failed
+- ABORTED - Unexecuted
+- SKIPPED (Testim で隔離されたステータス) - Blocked
+- TIMEOUT - Failed
+- PASSED - Passed
+- FAILED - Failed
 
 4. **Execution History** 内には、以下の情報を含む **Test Log Details** ペインがあります:
-   - Result URL - Testim のテスト結果を開きます
-   - Console Logs URL - Testim のコンソールログを開きます
-   - Network Logs URL - Testim のネットワークログを開きます
+- Result URL - Testim のテスト結果を開きます
+- Console Logs URL - Testim のコンソールログを開きます
+- Network Logs URL - Testim のネットワークログを開きます
 
 :::info
 スイート実行は qTest で 1 つの実行として表示されます。特定の実行をクリックして、スイート内のすべてのテストの結果を確認してください。

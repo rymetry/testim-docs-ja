@@ -1,126 +1,82 @@
 name: Python oracle snapshot (nightly)
 
-# Nightly schedule:
+# Phase 6b cutover 以降の nightly schedule:
 #
-# 1. ``oracle-snapshot`` — mjs oracle JSONL を emit + artifact upload し、
-#    committed golden (scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl)
-#    との byte-identical 比較を行う。drift 検出で fail する必須 gate (Phase 6a
-#    以降の運用、docs/PYTHON_MIGRATION_PLAN.md Phase 6a 参照)。
-#    artifact は 14 日分保持して debug 用 snapshot として使える。
-#    Phase 6b cutover で mjs 削除時に本 job も retire 予定。
+# 1. ``oracle-snapshot`` — Python ``emit_corpus_oracle`` で live JSONL を生成し、
+#    committed golden と byte-identical 比較する drift gate。mjs は削除済みなので
+#    emit は Python 実装に切替。Python 実装が committed golden と drift するのは
+#    Python 側 segments_en / turndown / align の挙動が変わったときのみで、
+#    main merge 後の silent drift を 24 時間以内に検知する safety net として機能。
 #
-# 2. ``parity-smoke`` — PR A で追加した Python ``check_source_parity`` full-repo
-#    smoke (~19 分 CI 実測)。required CI に含めると PR feedback loop を破綻
-#    させるため nightly 側に移設した。``cutover`` marker の 5-counter 0 gate は
-#    Phase 6b cutover PR で別途 ``pytest -m cutover`` が run する契約 (本 workflow
-#    では ``not cutover`` で除外)。
+# 2. ``parity-smoke`` — Python ``check_source_parity`` full-repo smoke (~19 分)。
+#    required CI だと feedback loop 破綻なので nightly 移設。cutover marker は
+#    Phase 6b merge 後は 0 slug 維持される前提なので通常含めない。
 #
-# 3. ``python-quality-full`` — ``recall`` / ``boundary`` / ``real_repo``
-#    marker の full-repo benchmark (``test_recall.py`` /
-#    ``test_baseline_recall.py`` / ``test_segments_boundary.py`` /
-#    ``test_clean_page_fixtures.py`` / ``test_structure_fixtures.py`` /
-#    ``test_source_usability_fixtures.py``)。旧 default pytest で実行して
-#    いたが CI 実測 24 分 + と重く PR feedback loop を停止させていたため
-#    nightly 側に移設した。``real_repo`` marker は round 3 で追加 (real EN
-#    snapshot + JA md を end-to-end で走らせる integration 群)。Phase 6b
-#    cutover PR で required 昇格させる (docs/PYTHON_MIGRATION_PLAN.md
-#    Phase 6b 参照)。
+# 3. ``python-quality-full`` — ``recall`` / ``boundary`` / ``real_repo`` marker の
+#    full-repo benchmark。PR CI (python-fast) の scope 外で、毎日 1 回 run する。
 #
-# 実行時間: oracle-snapshot ~2min + parity-smoke ~20min + python-quality-full
-# ~30min (3 job 並列、longest ~30min)。
-#
-# 本 workflow の run: は静的 command のみで、github.event.* 等の untrusted
-# input を一切参照しない (schedule / workflow_dispatch のみ trigger のため
-# command injection リスクは無い)。
+# 本 workflow の run: は静的 command のみで untrusted input を一切参照しない。
 
 on:
   schedule:
-    # 毎日 UTC 02:00 (JST 11:00) に実行。ubuntu-latest の runner が空いている
-    # 時間帯を狙う (GitHub Actions 混雑ピークを避ける)。
     - cron: '0 2 * * *'
   workflow_dispatch:
-    # 手動 trigger も可能 (Phase 6a 準備時の事前確認用)。
 
 permissions:
   contents: read
 
 jobs:
   oracle-snapshot:
-    # mjs oracle 出力の nightly archive (Phase 6a で committed golden との
-    # 比較 gate に昇格する前段)。
+    # Python-based nightly oracle drift safety net (Phase 6b cutover 後の新設計)。
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: scripts/py
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          node-version: '22'
-          cache: 'npm'
-      - name: Install Node deps
-        working-directory: ${{ github.workspace }}
-        run: npm ci
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
+      - name: Sync Python deps
+        run: uv sync --all-extras
       - name: Generate today's oracle JSONL
-        # ``--suite segments_en,turndown`` で明示制限。``emit_corpus_oracle.mjs``
-        # の default は ``all`` (segments_en + turndown + align) だが、現行
-        # ``test_align_288_matrix.py`` は Python-generated segments を mjs align
-        # に渡す narrow conformance (mjs extractor + mjs align を emit する
-        # oracle tool とは保証対象が異なる)。Phase 6a golden freeze PR で
-        # committed golden 化する想定の nightly artifact に align rows が混ざる
-        # と、保証対象違いの data を golden に流用するリスクが残る。Phase 6b
-        # で align 用 2-stage oracle を実装した段階で本 suite 制限を外し
-        # ``align`` も artifact に含める契約。
+        # Python 実装で 3 suite (segments_en + turndown + align) 全て生成。
         run: |
-          node tools/emit_corpus_oracle.mjs --out .oracle_today.jsonl --suite segments_en,turndown
+          uv run python -m testim_parity.tools.emit_corpus_oracle --out .oracle_today.jsonl
           wc -l .oracle_today.jsonl
       - name: Extract sha256 summary
-        # sha256 一覧だけ抽出すれば artifact サイズを大幅縮小できる (full JSONL
-        # は MB オーダ、sha256 一覧は KB オーダ)。TSV 形式で suite tab slug tab sha。
-        run: node tools/summarize_corpus_oracle.mjs --in .oracle_today.jsonl --out .oracle_sha256.tsv
+        run: uv run python -m testim_parity.tools.summarize_corpus_oracle --in .oracle_today.jsonl --out .oracle_sha256.tsv
       - name: Diff live oracle + sha256 TSV against committed golden
-        # Phase 6a 以降の必須 drift gate。committed golden との 2 段階比較:
-        #   1) .oracle_today.jsonl (live mjs) vs committed JSONL
-        #      — mjs self-regression / scripts/lib drift の検出
-        #   2) summarize(committed JSONL) vs committed sha256 TSV
-        #      — committed TSV が stale なまま merge されるのを防止
-        #      (PR #387 review P2-1 対応)
-        #
-        # PR CI (python-corpus) でも同じ 2 段 drift check を step 化しているが、
-        # nightly は PR を経由しない直接 push / dependabot merge 等でも drift
-        # を拾える safety net として run する (required gate の代替ではなく
-        # 二重化)。
+        # 2 段階 drift gate (PR CI python-corpus の二重化 safety net):
+        #   Step 1: Python live JSONL vs committed JSONL
+        #   Step 2: summarize(committed JSONL) vs committed sha256 TSV
+        # PR を経由しない直接 push 等での drift を拾う。
         run: |
           GOLDEN_JSONL=tests/conformance/__oracle__/corpus_golden.jsonl
           GOLDEN_TSV=tests/conformance/__oracle__/corpus_golden.sha256.tsv
 
-          # Step 1: live mjs JSONL vs committed JSONL
+          # Step 1: live Python JSONL vs committed JSONL
           if ! diff -q .oracle_today.jsonl "$GOLDEN_JSONL"; then
             echo ""
-            echo "::error::Nightly oracle drift: live mjs output != committed golden JSONL."
-            echo "Regenerate and commit:"
-            echo "  node scripts/py/tools/emit_corpus_oracle.mjs \\"
-            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
-            echo "    --suite segments_en,turndown"
-            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
-            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
-            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
+            echo "::error::Nightly oracle drift: Python live output != committed golden JSONL."
+            echo "Regenerate via (from repo root):"
+            echo "  npm run test:py:corpus:regen"
             exit 1
           fi
 
-          # Step 2: committed JSONL を再 summarize して committed TSV と diff。
-          # Step 1 で live JSONL == committed JSONL が保証されているので、
-          # 本 step が fail するのは「TSV を手動編集/regen し忘れた」ケース。
-          # 既存 ``.oracle_sha256.tsv`` は live summary なので committed 比較
-          # 用ではない (それとは別に fresh file を書き出して diff する)。
-          node tools/summarize_corpus_oracle.mjs --in "$GOLDEN_JSONL" --out .oracle_committed_expected.tsv
+          # Step 2: committed JSONL の hash と committed TSV が一致するか
+          uv run python -m testim_parity.tools.summarize_corpus_oracle --in "$GOLDEN_JSONL" --out .oracle_committed_expected.tsv
           if ! diff -q .oracle_committed_expected.tsv "$GOLDEN_TSV"; then
             echo ""
             echo "::error::Nightly oracle TSV drift: committed JSONL hashes != committed TSV."
-            echo "The sha256 TSV manifest is stale. Regenerate locally:"
-            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
-            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
-            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
+            echo "Regenerate via (from repo root):"
+            echo "  npm run test:py:corpus:regen"
             exit 1
           fi
       - name: Upload today's oracle
@@ -130,23 +86,13 @@ jobs:
           path: |
             scripts/py/.oracle_today.jsonl
             scripts/py/.oracle_sha256.tsv
-          # ``.oracle_today.jsonl`` / ``.oracle_sha256.tsv`` は dot-prefixed の
-          # hidden file (``.gitignore`` 側で wildcard 無視されるための契約)。
-          # upload-artifact@v4 は default で hidden file を skip するため、
-          # 本 flag が無いと artifact が空で success になってしまう (python-fast
-          # ``.coverage`` と同じ根本原因、PR #386 round 5 で指摘)。
           include-hidden-files: true
-          # 本 job の第一目的は nightly oracle archive なので、artifact が空の
-          # ままの silent success は契約違反。``error`` で fail させて気付ける
-          # ようにする (上の emit / summarize step が何らかの原因で空 file を
-          # 出力した場合も本 gate で拾う).
           if-no-files-found: error
           retention-days: 14
 
   parity-smoke:
-    # PR A で追加した Python check_source_parity full-repo smoke。CI 実測 ~19 分
-    # と重いため required CI から外し nightly へ移設。schema / maskCoverage
-    # shape の regression は commit 後 24 時間以内に検知される。
+    # Phase 6b cutover 後も required CI へ昇格させず nightly 維持する scope
+    # (python-fast と coverage / runtime を分ける設計)。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -165,41 +111,22 @@ jobs:
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: pytest (parity_smoke)
-        # Phase 5 coexistence 中は cutover marker の 5-counter 0 gate は
-        # fail 前提なので除外。Phase 6b cutover PR 側で明示的に run する。
+        # Phase 6b cutover 後は cutover marker の 5-counter gate は green 維持が
+        # 前提 (new drift は発生時に parser / content 側で解決する規律)。本 job
+        # では parity_smoke のみに絞る。
         run: uv run pytest -m 'parity_smoke and not cutover' --tb=short --durations=10
 
   python-quality-full:
-    # recall / boundary / real_repo marker の full-repo benchmark。旧 default
-    # pytest で実行していたが CI 実測 24 分 + (recall+boundary) + 150s 超
-    # (real_repo) と重く PR feedback loop を停止させていたため nightly 移設。
-    # Issue #368 / Phase 6b cutover で必要な quality gate なので **消さずに**
-    # 毎日 1 回 run する。cutover marker は Phase 6b cutover PR 側で強制 run
-    # するため本 job では除外。
-    #
-    # 将来的な改善 (Phase 6b 以降): test_recall.py / test_baseline_recall.py を
-    # 1 slug = 1 test に parametrize して ``pytest-xdist -n auto --dist load``
-    # で並列化する。現状は single-test 内で manifest を loop しているため
-    # xdist の効果が限定的なので、nightly では serial run のまま
-    # ``functools.cache`` / module-level constant で重複計算を削ることを優先
-    # した (PR B 実装範囲)。
+    # recall / boundary / real_repo marker の full-repo benchmark。Phase 6b
+    # cutover 後も node 不要で動く (segments_en / segments_ja / align は Python
+    # 完結)。将来 ``test_recall`` を parametrize + xdist で並列化する improvement は
+    # Phase 6b 以降の別 PR で行う。
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: scripts/py
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-      - name: Install Node deps
-        # recall / boundary テストは Python segments_en / segments_ja のみを
-        # 使うため node_modules は直接不要だが、scripts/py/tools の一部経路が
-        # scripts/lib/* を load する際に gray-matter を期待するので ``npm ci``
-        # を入れて共通 setup と揃えた。
-        working-directory: ${{ github.workspace }}
-        run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version-file: scripts/py/.python-version
@@ -212,7 +139,4 @@ jobs:
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: pytest (recall + boundary + real_repo)
-        # ``-m 'recall or boundary or real_repo'`` で full-repo benchmark を
-        # run。``--durations=30`` で top 30 の律速を可視化する (Phase 6b で
-        # xdist 並列化する際の optimizer input)。
         run: uv run pytest -m 'recall or boundary or real_repo' --tb=short --durations=30

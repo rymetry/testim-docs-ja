@@ -24,8 +24,8 @@ keywords:
 ![Salesforce のユーザー詳細画面](/images/salesforce-utilities/setting-mfa-for-salesforce/bc293ae-image.png)
 
 2. **アプリ登録: ワンタイムパスワード認証アプリ**で、サードパーティの認証アプリ（Google Authenticator、Microsoft Authenticator など）をすでに登録している場合は、シークレットキーを取得するために切断してから再接続する必要があります。
-   - **ユーザー詳細**で、**アプリ登録 - ワンタイムパスワード認証アプリ**設定の**切断**をクリックします。
-   - サードパーティの認証アプリを登録したことがない場合は、次のステップに進みます。
+- **ユーザー詳細**で、**アプリ登録 - ワンタイムパスワード認証アプリ**設定の**切断**をクリックします。
+- サードパーティの認証アプリを登録したことがない場合は、次のステップに進みます。
 
 ![アプリ登録（ワンタイムパスワード認証アプリ）の切断](/images/salesforce-utilities/setting-mfa-for-salesforce/e1f92f2-image_1.png)
 

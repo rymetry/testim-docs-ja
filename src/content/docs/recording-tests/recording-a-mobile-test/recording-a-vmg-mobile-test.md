@@ -44,12 +44,12 @@ Virtual Mobile Grid は、さまざまな iOS シミュレーターと Android �
 :::
 
 - **アプリケーション要件** -
-  - **Enhanced Mode** - 以下の要件が適用されます:
-    - ネイティブアプリ - Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
-    - WebView を含むネイティブアプリ
-    - React Native アプリ
-    - Flutter アプリ
-  - **Appium Mode** - このモードでは、ネイティブアプリのみがサポートされます。Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
+- **Enhanced Mode** - 以下の要件が適用されます:
+- ネイティブアプリ - Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
+- WebView を含むネイティブアプリ
+- React Native アプリ
+- Flutter アプリ
+- **Appium Mode** - このモードでは、ネイティブアプリのみがサポートされます。Android デバイスの場合は Java または Kotlin アプリ。iOS デバイスの場合は Objective C または Swift。
 
 ## モバイルテストの記録
 

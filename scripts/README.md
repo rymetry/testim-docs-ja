@@ -45,9 +45,11 @@ npm test                       # 全テスト実行
 
 ### 品質チェック系
 
-#### snapshot_update.mjs / snapshot_diff.mjs
+#### snapshot_update / snapshot_diff (`testim_parity.detection`)
 
 英語原文のスナップショットベースの変更検知。各ページの HTML コンテンツ（`#mc-main-content`）をローカルに保存し、MadCap Flare TOC データからサイドバー JSON を生成して、git diff で変更を検知する。
+
+Phase 6b cutover 以降の実体: `testim_parity.detection.snapshot_update` / `testim_parity.detection.snapshot_diff` (Python)。
 
 ```bash
 npm run check:snapshots                # 取得→比較を一括実行
@@ -61,7 +63,7 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
 
-**Source-side debt の除外運用**: `scripts/lib/source_sync_exclusions.mjs` の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
+**Source-side debt の除外運用**: `testim_parity.sync_exclusions` (旧 `scripts/lib/source_sync_exclusions.mjs`) の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
 
 - snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)
 - fetch 成功時は recovery probe を実行 (`detectSourceUsability()` を再利用し、`extractor-empty` / `shallow-snapshot` / `escaped-details-residue` をそのまま判定。JA 非依存 — synthetic segments を使用)
@@ -80,22 +82,24 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 ---
 
-#### check_source_parity.mjs
+#### check_source_parity (`testim_parity.detection.check_source_parity`)
 
-日本語ドキュメントの翻訳品質をローカルチェックする。
+日本語ドキュメントの翻訳品質をローカルチェックする。Phase 6b cutover で mjs → Python に移行済。
 
 ```bash
-npm run check:parity                                      # ローカルチェック
-npm run check:parity -- --slug=overview/testim-overview            # 単一ページ
-node scripts/detection/check_source_parity.mjs --section="概要"     # セクション絞り込み
-node scripts/detection/check_source_parity.mjs --json               # JSON 出力
-npm run check:parity -- --fail-on=actionable              # actionable + error で exit 1
-npm run check:parity -- --fail-on=any                     # acknowledgement を除いた active issue > 0 で exit 1
+npm run check:parity                                          # ローカルチェック
+npm run check:parity -- --slug=overview/testim-overview       # 単一ページ
+npm run check:parity -- --section="概要"                      # セクション絞り込み
+npm run check:parity -- --json                                # JSON 出力
+npm run check:parity -- --fail-on=actionable                  # actionable + error で exit 1
+npm run check:parity -- --fail-on=any                         # acknowledgement を除いた active issue > 0 で exit 1
+# 直接実行する場合:
+uv run python -m testim_parity.detection.check_source_parity --slug=overview/testim-overview
 ```
 
 **ローカルチェック（actionable）:**
 
-`localCheck()` は body のみを見るため、sidebar 関係の検査は **page coverage gate** に集約されている (`scripts/lib/source_parity_page_coverage.mjs`)。
+`local_check()` は body のみを見るため、sidebar 関係の検査は **page coverage gate** に集約されている (`testim_parity.detection.source_parity_page_coverage`)。
 
 | チェック項目                | 検出内容                                       | エミッタ           |
 | --------------------------- | ---------------------------------------------- | ------------------ |
@@ -130,7 +134,7 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 | `snapshot-incomplete`         | EN snapshot が shallow/extractor-empty で比較不能  | advisory     |
 | `source-unusable`             | EN snapshot が malformed details で復元不能        | advisory     |
 
-**audit-only signals**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `scripts/lib/source_parity_types.mjs` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
+**audit-only signals**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `testim_parity.detection.source_parity_types` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
 
 **structure comparator**: `alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに canonical block sequence を比較する。block 単位の語彙は `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種に凍結されており、segment 単位の list item / table cell は比較前に対応する list / table block に畳まれる。
 
@@ -154,7 +158,7 @@ npm run check:parity -- --fail-on=any                     # acknowledgement を�
 
 **acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。
 
-`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を保証する。
+`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`scripts/py/tests/test_source_parity_usability_ack_integration.py` が detector→matcher round-trip を保証する。
 
 acknowledgement の対象外:
 
@@ -163,9 +167,9 @@ acknowledgement の対象外:
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
-**`--types` 契約**: `generate_parity_baseline.mjs --types=<csv>` は structure/source-unusable 系の partial migration 用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validateTypesArg` が fail-fast する。`scripts/__tests__/generate_parity_baseline.test.mjs` の `validateTypesArg` suite が契約を固定している。
+**`--types` 契約**: `uv run python -m testim_parity.detection.generate_parity_baseline --types=<csv>` は structure/source-unusable 系の partial migration 用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validate_types_arg` が fail-fast する。`scripts/py/tests/test_generate_parity_baseline.py` の `validate_types_arg` suite が契約を固定している。
 
-**Orphan baseline entry の検出**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/__tests__/source_parity_orphan_integration.test.mjs` が固定している (temp dir 上の copy を使った isolated test)。
+**Orphan baseline entry の検出**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/py/tests/test_source_parity_orphan_integration.py` が固定している (temp dir 上の copy を使った isolated test)。
 
 **出力**: `parity-check-status.json`。
 
@@ -173,31 +177,32 @@ acknowledgement の対象外:
 
 ### Parity detection — glossary mask と URL normalize (Phase 0, 2026-04-14 以降)
 
-- `scripts/lib/parity_glossary_mask.mjs`: `docs/GLOSSARY.md` と `docs/INVARIANT_TOKENS.md` を読み、segment text を Testim 用語 + invariant pattern でマスクする
-- `scripts/lib/parity_normalize.mjs`: URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
-- `scripts/detection/check_source_parity.mjs` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.* を読まない**契約）
-- 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/__tests__/parity_glossary_mask.test.mjs` に追加する
+- `testim_parity.glossary_mask` (旧 `scripts/lib/parity_glossary_mask.mjs`): `docs/GLOSSARY.md` と `docs/INVARIANT_TOKENS.md` を読み、segment text を Testim 用語 + invariant pattern でマスクする
+- `testim_parity.detection.parity_normalize` (旧 `scripts/lib/parity_normalize.mjs`): URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
+- `testim_parity.detection.check_source_parity` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.* を読まない**契約）
+- 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/py/tests/test_glossary_mask.py` に追加する
 
 ---
 
 ### EN source patches (Route W, 2026-04-17 以降)
 
-- `scripts/lib/en_source_patches.mjs`: broken EN HTML snapshot を `preprocessEnHtml` 境界で修復する slug-scope literal find→replace patch 層
-- `preprocessEnHtml(html, { slug, patchCoverage })` が optional 第 2 引数で patch application + coverage 集計を driver。slug 未指定時は no-op (backward-compat)
-- `scripts/detection/check_source_parity.mjs` は run 単位 `createEnSourcePatchCoverage()` で集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
+- `testim_parity.en_source_patches` (旧 `scripts/lib/en_source_patches.mjs`): broken EN HTML snapshot を `preprocess_en_html` 境界で修復する slug-scope literal find→replace patch 層。定義データは `scripts/py/src/testim_parity/_en_source_patches_data.json` に JSON で authoritative に保持
+- `preprocess_en_html(html, slug=..., patch_coverage=...)` が optional 引数で patch application + coverage 集計を driver。slug 未指定時は no-op (backward-compat)
+- `testim_parity.detection.check_source_parity` は run 単位で `create_en_source_patch_coverage()` を集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
 - 4 enum (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) 以外は登録不可、各 entry は `docs/UPSTREAM_DEFECTS.md#UD-NNN` の anchor へ結線必須
+- registry の schema / business rule 検証は `uv run python -m testim_parity.tools.validate_en_source_patches`
 - 運用 SOP: `docs/UPSTREAM_DEFECTS.md`
 
 ---
 
-### find_untranslated.mjs — baseline 残債の個別スキャン (診断系)
+### find_untranslated — baseline 残債の個別スキャン (`testim_parity.detection.find_untranslated`)
 
-baseline に `segment-untranslated` として凍結された各ページを開いて、未翻訳ブロック単位で行番号と residue (英語残差) を報告する診断ツール。
+baseline に `segment-untranslated` として凍結された各ページを開いて、未翻訳ブロック単位で行番号と residue (英語残差) を報告する診断ツール。Phase 6b で Python 移植済。
 
 ```bash
-npm run check:untranslated                                  # baseline の全 untranslated slug をスキャン
-npm run check:untranslated -- --slug=overview/testim-overview   # 単一ページ
-npm run check:untranslated -- --limit=5                     # 先頭 N ファイルのみ
+npm run check:untranslated                                          # baseline の全 untranslated slug をスキャン
+npm run check:untranslated -- --slug=overview/testim-overview       # 単一ページ
+npm run check:untranslated -- --limit=5                             # 先頭 N ファイルのみ
 ```
 
 **引数**:
@@ -210,18 +215,20 @@ npm run check:untranslated -- --limit=5                     # 先頭 N ファイ
 - `0` — 正常終了（0 件も含む）
 - `2` — `--slug` 明示指定で対象ファイル不在 / path-traversal 違反 (T8 / T17 / plan §3.2)
 
-**内部構造**: `splitMarkdownBlocks(markdown)` → `findUntranslatedBlocks(blocks)` → `printFindings(slug, filePath, findings)` の 3 関数 (plan §3.2 T7)。test は `scripts/__tests__/find_untranslated.test.mjs` を参照。
+**内部構造**: `split_markdown_blocks(markdown)` → `find_untranslated_blocks(blocks)` → `print_findings(slug, file_path, findings)` の 3 関数。test は `scripts/py/tests/test_find_untranslated.py` を参照。
 
 ---
 
-#### lint_docs.mjs
+#### lint_docs (`testim_parity.tools.lint_docs`)
 
-WRITING_GUIDE.md に基づく Markdown 構文・frontmatter の検証。
+WRITING_GUIDE.md に基づく Markdown 構文・frontmatter の検証。Phase 6b cutover で Python 実装に昇格。
 
 ```bash
 npm run lint:docs
-node scripts/tools/lint_docs.mjs --path="src/content/docs/overview/*.md"
-node scripts/tools/lint_docs.mjs --section="概要"
+npm run lint:docs -- --path="src/content/docs/overview/*.md"
+npm run lint:docs -- --section="概要"
+# 直接実行する場合:
+uv run python -m testim_parity.tools.lint_docs --path="src/content/docs/overview/testim-overview.md"
 ```
 
 **検証項目**: sourceUrl 形式、必須 frontmatter（title, category, updated）、description プレースホルダー残留、内部リンクターゲット存在確認（パスベース `/docs/{folder}/{slug}` 形式のみ）、Testim 機能名の英語保持、コードブロック言語指定、callout タイプ、画像ファイル存在確認
@@ -230,12 +237,14 @@ node scripts/tools/lint_docs.mjs --section="概要"
 
 ---
 
-#### generate_detection_reports.mjs
+#### generate_detection_reports (`testim_parity.detection.generate_detection_reports`)
 
 `check:snapshots` と `check:parity` の JSON を読み込み、人間向け summary と監査台帳を生成する。
 
 ```bash
 npm run check:summary
+# 直接実行する場合:
+uv run python -m testim_parity.detection.generate_detection_reports
 ```
 
 **出力**:
@@ -248,88 +257,100 @@ npm run check:summary
 
 ### 同期・パイプライン系
 
-#### pipeline.mjs
+#### pipeline (`testim_parity.pipeline.pipeline`)
 
-翻訳パイプラインのオーケストレーター。5 ステップを順番に実行し、チェックポイントで途中再開が可能。
+翻訳パイプラインのオーケストレーター。5 ステップを順番に実行し、チェックポイントで途中再開が可能。Phase 6b cutover で Python 実装に昇格。
 
 ```bash
 npm run docs:pipeline                              # diff モード（変更分のみ）
 npm run docs:pipeline:full                         # full モード（全件）
 npm run docs:pipeline -- --section="Overview"      # セクション絞り込み
 npm run docs:pipeline -- --no-resume               # 最初から実行
+# 直接実行する場合:
+uv run python -m testim_parity.pipeline.pipeline --mode=full --section="Overview"
 ```
 
 **実行ステップ**:
 
-| #   | ステップ       | スクリプト                             | 内容                                    |
-| --- | -------------- | -------------------------------------- | --------------------------------------- |
-| 1   | `url_collect`  | update_sidebar_urls_from_live.mjs      | サイドバー URL 収集                     |
-| 2   | `placeholders` | generate_untranslated_placeholders.mjs | 未翻訳プレースホルダー作成（full のみ） |
-| 3   | `fetch`        | fetch_translate_images.mjs             | 英語原文・画像取得                      |
-| 4   | `prepare_llm`  | prepare_llm_tasks.mjs                  | LLM 翻訳タスク準備                      |
-| 5   | `apply_llm`    | apply_llm_translations.mjs             | 翻訳結果反映                            |
+| #   | ステップ       | Python module                                               | 内容                                    |
+| --- | -------------- | ----------------------------------------------------------- | --------------------------------------- |
+| 1   | `url_collect`  | `testim_parity.pipeline.update_sidebar_urls_from_live`      | サイドバー URL 収集                     |
+| 2   | `placeholders` | `testim_parity.pipeline.generate_untranslated_placeholders` | 未翻訳プレースホルダー作成（full のみ） |
+| 3   | `fetch`        | `testim_parity.pipeline.fetch_translate_images`             | 英語原文・画像取得                      |
+| 4   | `prepare_llm`  | `testim_parity.pipeline.prepare_llm_tasks`                  | LLM 翻訳タスク準備                      |
+| 5   | `apply_llm`    | `testim_parity.pipeline.apply_llm_translations`             | 翻訳結果反映                            |
 
 **チェックポイント**: `scripts/.checkpoint` に進捗を保存。同じ `mode`/`section` なら途中ステップから再開する。`--no-resume` で強制リセット。
 
 ---
 
-#### update_sidebar_urls_from_live.mjs
+#### update_sidebar_urls_from_live (`testim_parity.pipeline.update_sidebar_urls_from_live`)
 
 英語サイト（docs.tricentis.com/testim）のサイドバーをスクレイピングし、`docs/SIDEBAR_URLS.md` を更新する。
 
 ```bash
 npm run docs:sync-sidebar
+# 直接実行する場合:
+uv run python -m testim_parity.pipeline.update_sidebar_urls_from_live
 ```
 
 サイトマップ XML → ナビゲーション HTML の順でフォールバックしながら URL を収集。既存の翻訳ステータス（✅🔍 / ✅ / ⏳）を保持する。収集 0 件なら即停止。
 
 ---
 
-#### fetch_translate_images.mjs
+#### fetch_translate_images (`testim_parity.pipeline.fetch_translate_images`)
 
 英語原文ページから HTML を取得し、Markdown に変換。画像をダウンロードしてローカルパスに書き換える。
 
 ```bash
 npm run docs:fetch
-node scripts/pipeline/fetch_translate_images.mjs --mode=full
-node scripts/pipeline/fetch_translate_images.mjs --slug=overview/testim-overview
-node scripts/pipeline/fetch_translate_images.mjs --section="Overview" --limit=5
+npm run docs:fetch -- --mode=full
+npm run docs:fetch -- --slug=overview/testim-overview
+npm run docs:fetch -- --section="Overview" --limit=5
+# 直接実行する場合:
+uv run python -m testim_parity.pipeline.fetch_translate_images --mode=full
 ```
 
 **キャッシュ**: `scripts/.cache/docs-state.json` にコンテンツハッシュを保存し、diff モードで変更検出に利用。
 
 ---
 
-#### generate_untranslated_placeholders.mjs
+#### generate_untranslated_placeholders (`testim_parity.pipeline.generate_untranslated_placeholders`)
 
 SIDEBAR_URLS.md で ⏳（未翻訳）のページに対して、frontmatter 付きのプレースホルダー Markdown を作成する。
 
 ```bash
 npm run docs:placeholders
-node scripts/pipeline/generate_untranslated_placeholders.mjs --section="Overview"
+npm run docs:placeholders -- --section="Overview"
+# 直接実行する場合:
+uv run python -m testim_parity.pipeline.generate_untranslated_placeholders --section="Overview"
 ```
 
 ---
 
-#### prepare_llm_tasks.mjs
+#### prepare_llm_tasks (`testim_parity.pipeline.prepare_llm_tasks`)
 
 翻訳対象ドキュメントの本文を抽出し、LLM 翻訳用タスクファイルを `llm/tasks/` に生成する。
 
 ```bash
 npm run docs:prepare-llm
-node scripts/pipeline/prepare_llm_tasks.mjs --slug=overview/testim-overview
-node scripts/pipeline/prepare_llm_tasks.mjs --section="Overview"
+npm run docs:prepare-llm -- --slug=overview/testim-overview
+npm run docs:prepare-llm -- --section="Overview"
+# 直接実行する場合:
+uv run python -m testim_parity.pipeline.prepare_llm_tasks --slug=overview/testim-overview
 ```
 
 ---
 
-#### apply_llm_translations.mjs
+#### apply_llm_translations (`testim_parity.pipeline.apply_llm_translations`)
 
 `llm/translations/` の翻訳結果を、既存 frontmatter を保持したまま doc ファイルに適用する。
 
 ```bash
 npm run docs:apply-llm
-node scripts/pipeline/apply_llm_translations.mjs --section="Overview"
+npm run docs:apply-llm -- --section="Overview"
+# 直接実行する場合:
+uv run python -m testim_parity.pipeline.apply_llm_translations --section="Overview"
 ```
 
 ---
@@ -376,13 +397,15 @@ python3 scripts/tools/verify_notation.py
 
 ---
 
-#### normalize_docs.mjs
+#### normalize_docs (`testim_parity.tools.normalize_docs`)
 
 ドキュメントの内容と frontmatter を正規化する。
 
 ```bash
 npm run docs:normalize
-node scripts/tools/normalize_docs.mjs --section="概要"
+npm run docs:normalize -- --section="概要"
+# 直接実行する場合:
+uv run python -m testim_parity.tools.normalize_docs --section="概要"
 ```
 
 **主な変換**: 機能名の日本語→英語置換（`Testim拡張機能` → `Testim Extension`）、frontmatter フィールド順序統一
@@ -397,7 +420,7 @@ node scripts/tools/normalize_docs.mjs --section="概要"
 
 ---
 
-### fix_alt_all.mjs
+### fix_alt_all (`testim_parity.tools.fix_alt_all`)
 
 alt テキストが空の画像にデフォルトの代替テキストを一括挿入する（markdownlint MD045 対応）。
 
@@ -409,19 +432,20 @@ npm run docs:fix-alt
 
 ---
 
-### sync_frontmatter_from_sidebar.mjs
+### sync_frontmatter_from_sidebar (`testim_parity.tools.sync_frontmatter_from_sidebar`)
 
 SIDEBAR_URLS.md のセクション構造に基づいて、各ドキュメントの `category` と `order` を同期する。
 
 ```bash
 npm run docs:sync-frontmatter           # ドライラン
 npm run docs:sync-frontmatter:apply     # 実際にファイルを更新
-node scripts/tools/sync_frontmatter_from_sidebar.mjs --list-unmatched
+# 直接実行 (unmatched 列挙):
+uv run python -m testim_parity.tools.sync_frontmatter_from_sidebar --list-unmatched
 ```
 
 ---
 
-### report_frontmatter_categories.mjs
+### report_frontmatter_categories (`testim_parity.tools.report_frontmatter_categories`)
 
 frontmatter の `category` フィールドの分布を集計し、SIDEBAR_URLS.md との不整合を報告する。
 
@@ -431,61 +455,63 @@ npm run docs:report-categories
 
 ---
 
-### 共有ライブラリ
+### 共有ライブラリ (Phase 6b cutover 後: Python modules)
 
-#### lib/sidebar.mjs
+Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移行済。以下は主要モジュールの対応表 (旧 mjs → 現 Python)。
 
-複数のスクリプトから利用される SIDEBAR_URLS.md パーサー。
+#### testim_parity.sidebar / testim_parity.project
 
-| エクスポート関数                           | 用途                                      |
-| ------------------------------------------ | ----------------------------------------- |
-| `parseSidebarSections(text)`               | Markdown テキストをセクション配列にパース |
-| `loadSidebarSections()`                    | ファイルから読み込んでパース              |
-| `findSidebarSection(sections, name)`       | セクション名で検索                        |
-| `getSectionSlugSet(section)`               | セクション内のスラグを Set で返す         |
-| `filterItemsBySection(items, sectionName)` | アイテムをセクションでフィルタ            |
-| `extractJapaneseLabel(sectionTitle)`       | セクション見出しから日本語ラベルを抽出    |
+複数のスクリプトから利用される SIDEBAR_URLS.md パーサーと repo root / slug index 抽象層。
 
-**利用スクリプト**: lint_docs, fetch_translate_images, prepare_llm_tasks, apply_llm_translations, normalize_docs, generate_untranslated_placeholders, report_frontmatter_categories, sync_frontmatter_from_sidebar
+| エクスポート関数 (Python snake_case)         | 用途                                      |
+| -------------------------------------------- | ----------------------------------------- |
+| `parse_sidebar_sections(text)`               | Markdown テキストをセクション配列にパース |
+| `load_sidebar_sections()`                    | ファイルから読み込んでパース              |
+| `find_sidebar_section(sections, name)`       | セクション名で検索                        |
+| `get_section_slug_set(section)`              | セクション内のスラグを Set で返す         |
+| `filter_items_by_section(items, section)`    | アイテムをセクションでフィルタ            |
+| `extract_japanese_label(section_title)`      | セクション見出しから日本語ラベルを抽出    |
+
+**利用モジュール**: `lint_docs`, `fetch_translate_images`, `prepare_llm_tasks`, `apply_llm_translations`, `normalize_docs`, `generate_untranslated_placeholders`, `report_frontmatter_categories`, `sync_frontmatter_from_sidebar`
 
 #### そのほかの共有ライブラリ
 
-| ファイル                                 | 用途                                                                          |
-| ---------------------------------------- | ----------------------------------------------------------------------------- |
-| `lib/project.mjs`                        | repo ルート、docs 探索、slug index、FM 読出し                                 |
-| `lib/markdown_utils.mjs`                 | Markdown 除去、description 自動生成                                           |
-| `lib/madcap_toc.mjs`                     | MadCap Flare TOC データ解析、slug 抽出、サイドバー JSON 生成                  |
-| `lib/turndown.mjs`                       | TurndownService + MadCap Flare カスタムルール（callout, ordered-list, table） |
-| `lib/source_parity.mjs`                  | parity API の facade（checks / types / summary を再 export）                  |
-| `lib/source_parity_checks.mjs`           | parity の個別チェックロジック                                                 |
-| `lib/source_parity_types.mjs`            | parity issue type 定義・検出パターン                                          |
-| `lib/source_parity_summary.mjs`          | parity 集計・要約生成                                                         |
-| `lib/source_parity_acknowledgements.mjs` | parity acknowledgement モデル                                                 |
-| `lib/source_parity_page_coverage.mjs`    | ページ単位の coverage gate                                                    |
-| `lib/source_parity_segments_shared.mjs`  | canonical segment 型・正規化・fingerprint                                     |
-| `lib/source_parity_segments_en.mjs`      | EN HTML 直接 canonical segment extractor (turndown 非依存)                    |
-| `lib/source_parity_segments_ja.mjs`      | JA markdown canonical segment extractor                                       |
-| `lib/source_parity_align.mjs`            | section-anchored exact diff engine (segment-missing / extra / ...)            |
-| `lib/source_sync_health.mjs`             | source-sync freshness state                                                   |
-| `lib/mutation_corpus.mjs`                | diff=1 mutation 生成 (recall 測定用)                                          |
-| `lib/detection_reports.mjs`              | summary / issue body / audit manifest 生成                                    |
-| `lib/cli.mjs`                            | 直実行判定などの CLI 補助                                                     |
+| Python module (現行)                                     | 旧 mjs ファイル                          | 用途                                                               |
+| -------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------ |
+| `testim_parity.project`                                  | `lib/project.mjs`                        | repo ルート、docs 探索、slug index、FM 読出し                      |
+| `testim_parity.markdown_utils`                           | `lib/markdown_utils.mjs`                 | Markdown 除去、description 自動生成                                |
+| `testim_parity.madcap_toc`                               | `lib/madcap_toc.mjs`                     | MadCap Flare TOC データ解析、slug 抽出                             |
+| `testim_parity.turndown`                                 | `lib/turndown.mjs`                       | EN HTML → Markdown 変換 (markdownify + MadCap rules)               |
+| `testim_parity.detection.source_parity_types`            | `lib/source_parity_types.mjs`            | parity issue type 定義・検出パターン                               |
+| `testim_parity.detection.source_parity_summary`          | `lib/source_parity_summary.mjs`          | parity 集計・要約生成                                              |
+| `testim_parity.detection.source_parity_acknowledgements` | `lib/source_parity_acknowledgements.mjs` | parity acknowledgement モデル                                      |
+| `testim_parity.detection.source_parity_page_coverage`    | `lib/source_parity_page_coverage.mjs`    | ページ単位の coverage gate                                         |
+| `testim_parity.segments_shared`                          | `lib/source_parity_segments_shared.mjs`  | canonical segment 型・正規化・fingerprint                          |
+| `testim_parity.segments_en`                              | `lib/source_parity_segments_en.mjs`      | EN HTML 直接 canonical segment extractor (turndown 非依存)         |
+| `testim_parity.segments_ja`                              | `lib/source_parity_segments_ja.mjs`      | JA markdown canonical segment extractor                            |
+| `testim_parity.align`                                    | `lib/source_parity_align.mjs`            | section-anchored exact diff engine (segment-missing / extra / ...) |
+| `testim_parity.sync_exclusions`                          | `lib/source_sync_exclusions.mjs`         | Source-side debt registry                                          |
+| `testim_parity.en_source_patches`                        | `lib/en_source_patches.mjs`              | EN HTML slug-scope patch (`_en_source_patches_data.json` 駆動)     |
+| `testim_parity.mutation_corpus`                          | `lib/mutation_corpus.mjs`                | diff=1 mutation 生成 (recall 測定用)                               |
+| `testim_parity.detection.detection_reports`              | `lib/detection_reports.mjs`              | summary / issue body / audit manifest 生成                         |
+
+唯一残存する mjs は `scripts/lib/redirects.mjs` (Astro build graph が直接 import) と `.github/scripts/sync-detection-issues.cjs` (GitHub Actions 側 issue 同期、Phase 6.1 で扱う)。詳細は本文書末尾の「残存 mjs テスト」節を参照。
 
 ##### canonical segment 抽出の位置づけ
 
-`source_parity_segments_*.mjs` は exact diff engine が EN / JA を比較するための最小単位 (segment) を生成する canonical segment extractor。
+`testim_parity.segments_*` は exact diff engine が EN / JA を比較するための最小単位 (segment) を生成する canonical segment extractor。
 
-- **EN extractor**: `source_parity_segments_en.mjs` — MadCap Flare HTML を直接 tokenize → tree → walk して segment を生成する。turndown の markdown 変換層を経由しない。
-- **JA extractor**: `source_parity_segments_ja.mjs` — JA markdown を line-by-line で分類し、pipe table / HTML table / callout / details / image / list を segment にマップする。
-- **共通**: `source_parity_segments_shared.mjs` — `Segment` 型、`normalizeSegmentText`, `computeSegmentFingerprint`, `pushHeading` / `buildSectionPath`, `createSegment` factory。
-- **境界安定性ベンチマーク**: `__tests__/source_parity_segments_boundary.test.mjs` が代表 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。結果は `__tests__/fixtures/source-parity-goldens/segment-boundary-report.json` に書き出される（レビュー時に参照可）。
+- **EN extractor**: `testim_parity.segments_en` — MadCap Flare HTML を直接 tokenize → tree → walk して segment を生成する。turndown の markdown 変換層を経由しない。
+- **JA extractor**: `testim_parity.segments_ja` — JA markdown を line-by-line で分類し、pipe table / HTML table / callout / details / image / list を segment にマップする。
+- **共通**: `testim_parity.segments_shared` — `Segment` 型、`normalize_segment_text`, `compute_segment_fingerprint`, `push_heading` / `build_section_path`, `create_segment` factory。
+- **境界安定性ベンチマーク**: `scripts/py/tests/test_segments_boundary.py` が代表 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。
 
 ##### Section-anchored exact diff engine
 
-`source_parity_align.mjs` は canonical segments を入力として EN / JA を最小単位で比較し、5 種の diff issue type を出力する section-anchored exact diff engine。
+`testim_parity.align` は canonical segments を入力として EN / JA を最小単位で比較し、5 種の diff issue type を出力する section-anchored exact diff engine。
 
-- **入力**: `extractSegmentsFromHtml(en)` と `extractSegmentsFromMarkdown(ja)` の出力 (gate-eligible kinds + heading)
-- **出力**: `{ diffs, sectionsAligned, inconclusive, inconclusiveReason }`
+- **入力**: `extract_segments_from_html(en)` と `extract_segments_from_markdown(ja)` の出力 (gate-eligible kinds + heading)
+- **出力**: `{ diffs, sections_aligned, inconclusive, inconclusive_reason }`
 
 **アルゴリズム**:
 
@@ -525,11 +551,11 @@ npm run docs:report-categories
 
 **Runtime wiring (primary gate)**:
 
-`check_source_parity.mjs` は `alignSegments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compareSnapshotStructure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
+`testim_parity.detection.check_source_parity` は `align_segments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compare_snapshot_structure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
 
-runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`source_parity_align_runtime.test.mjs` が facade re-export、`parityDiffsToIssues` の shape、`summarizeParityResults` の primary-gate / baseline 集計、`check_source_parity --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
+runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`scripts/py/tests/test_source_parity_align_runtime.py` が facade re-export、`parity_diffs_to_issues` の shape、`summarize_parity_results` の primary-gate / baseline 集計、`npm run check:parity -- --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
 
-**Recall ベンチマーク**: `__tests__/source_parity_recall.test.mjs` が代表 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る。
+**Recall ベンチマーク**: `scripts/py/tests/test_recall.py` が代表 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る (Phase 6b cutover で `recall` marker が required step に昇格)。
 
 検出は **section-scoped + signature-aware**:
 
@@ -579,9 +605,9 @@ frozen baseline 機構は exact diff engine を deterministic に primary gate �
 
 **ファイル**:
 
-- `scripts/lib/source_parity_baseline.mjs` — schema validation, key 生成,
+- `testim_parity.detection.source_parity_baseline` — schema validation, key 生成,
   page-level invalidation を含む tagging（純粋関数のみ）
-- `scripts/detection/generate_parity_baseline.mjs` — baseline 生成 CLI (schema v2)
+- `testim_parity.detection.generate_parity_baseline` — baseline 生成 CLI (schema v2)
   - `--regenerate` で full、`--slug=<csv>` で partial 再生成、`--types=<csv>` で
     structure family のみ部分再生成 (`section-structure-mismatch` /
     `segment-order-mismatch` の 2 種のみ許可)
@@ -664,7 +690,7 @@ gate と重複した noise を `parity-regression` issue body と gate exit code
 新規 / 欠落ページの gate signal なので残す。`content-root-missing` は
 emitter が存在しないため allowlist に入れない。
 
-**counter contract** (`source_parity_summary.mjs`):
+**counter contract** (`testim_parity.detection.source_parity_summary`):
 
 - `reportableActiveFiles` / `reportableActiveActionableFiles` — coarse
   signal を除いた active file 数。`gate exit code` と `parityRegression`
@@ -705,9 +731,9 @@ npm run check:parity -- --include-audit-signals  # 詳細表示
 ## Detection artifact 契約
 
 検知パイプラインが生成する 3 つの JSON artifact はすべて
-`schemaVersion` を持ち、`generate_detection_reports.mjs --strict` (CI で
-使用) は `loadDetectionInputs({ strict: true })` 経由で
-`validateDetectionInputs` を必ず通過させる。
+`schemaVersion` を持ち、`npm run check:summary -- --strict` (= `uv run python -m testim_parity.detection.generate_detection_reports --strict`、CI で
+使用) は `load_detection_inputs(strict=True)` 経由で
+`validate_detection_inputs` を必ず通過させる。
 
 - **`snapshot-diff-status.json`** (`schemaVersion: 1`) —
   必須 top-level: `runId`, `sourceSyncRunId`, `sourceInventoryFingerprint`,
@@ -761,76 +787,82 @@ sync される。partial run / 壊れた artifact は `sync-detection-issues.cjs
 
 ## テスト
 
+Phase 6b atomic cutover (2026-04-24/25) で detection / pipeline / lib / tools の
+実装を Python に統合済み。mjs テストは Astro build graph に残る `redirects.mjs` と
+GitHub Actions 側 `sync-detection-issues.cjs` の 2 本だけ。
+
 ```bash
-npm test    # node --test scripts/__tests__/*.mjs
+npm run test:mjs                                      # 残存 2 mjs tests
+npm run test:py                                       # Python 全 test (default addopts)
+npm run test:py:quick                                 # fast gate only
+(cd scripts/py && uv run pytest -m corpus -n auto)    # 864 corpus matrix (20s)
+(cd scripts/py && uv run pytest -m 'recall or boundary or real_repo' -o addopts=)
 ```
 
-| テストファイル                                       | 対象スクリプト                          |
-| ---------------------------------------------------- | --------------------------------------- |
-| `__tests__/check_source_parity.test.mjs`             | check_source_parity.mjs                 |
-| `__tests__/lint_docs.test.mjs`                       | lint_docs.mjs                           |
-| `__tests__/fetch_translate_images.test.mjs`          | fetch_translate_images.mjs              |
-| `__tests__/update_sidebar_urls.test.mjs`             | update_sidebar_urls_from_live.mjs       |
-| `__tests__/pipeline.test.mjs`                        | pipeline.mjs                            |
-| `__tests__/snapshot_diff.test.mjs`                   | snapshot_diff.mjs                       |
-| `__tests__/source_parity.test.mjs`                   | lib/source_parity.mjs                   |
-| `__tests__/detection_reports.test.mjs`               | lib/detection_reports.mjs               |
-| `__tests__/lib_project.test.mjs`                     | lib/project.mjs                         |
-| `__tests__/apply_llm_translations.test.mjs`          | apply_llm_translations.mjs              |
-| `__tests__/lib_markdown_utils.test.mjs`              | lib/markdown_utils.mjs                  |
-| `__tests__/lib_sidebar_label.test.mjs`               | lib/sidebar.mjs                         |
-| `__tests__/turndown.test.mjs`                        | lib/turndown.mjs                        |
-| `__tests__/snapshot_update.test.mjs`                 | snapshot_update.mjs                     |
-| `__tests__/madcap_toc.test.mjs`                      | lib/madcap_toc.mjs                      |
-| `__tests__/mutation_corpus.test.mjs`                 | lib/mutation_corpus.mjs                 |
-| `__tests__/source_parity_acknowledgements.test.mjs`  | lib/source_parity_acknowledgements.mjs  |
-| `__tests__/source_parity_page_coverage.test.mjs`     | lib/source_parity_page_coverage.mjs     |
-| `__tests__/source_sync_health.test.mjs`              | lib/source_sync_health.mjs              |
-| `__tests__/source_sync_exclusions.test.mjs`          | lib/source_sync_exclusions.mjs          |
-| `__tests__/source_parity_source_side_debt.test.mjs`  | source-side debt 契約統合               |
-| `__tests__/source_parity_segments_shared.test.mjs`   | lib/source_parity_segments_shared.mjs   |
-| `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
-| `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |
-| `__tests__/source_parity_segments_boundary.test.mjs` | canonical segment 境界安定性ベンチマーク|
-| `__tests__/source_parity_align.test.mjs`             | lib/source_parity_align.mjs             |
-| `__tests__/source_parity_recall.test.mjs`            | diff=1 mutation recall ベンチマーク     |
-| `__tests__/source_parity_align_runtime.test.mjs`     | exact diff engine runtime integration   |
-| `__tests__/source_parity_advisory_queue.test.mjs`    | tokenless-near-tie review queue helper  |
-| `__tests__/sync_detection_issues.test.mjs`           | 4-family issue sync (family-key match)  |
-| `__tests__/source_parity_issue_state.test.mjs`       | 共有 issue-state predicates             |
+### Python テスト構成 (`scripts/py/tests/`)
+
+| ファイル | 対象 |
+| --- | --- |
+| `conformance/test_segments_en_288_matrix.py` | segments_en vs committed golden |
+| `conformance/test_turndown_288_matrix.py` | turndown vs committed golden |
+| `conformance/test_align_288_matrix.py` | align vs committed golden |
+| `test_segments_en.py` / `test_segments_ja.py` | segment extractor unit |
+| `test_align.py` / `test_align_scoring.py` | align weighted LCS |
+| `test_checks.py` | coarse audit (section / callout / image order) |
+| `test_check_source_parity.py` / `test_check_source_parity_smoke.py` | parity gate |
+| `test_snapshot_diff.py` / `test_snapshot_update.py` | snapshot pipeline |
+| `test_pipeline.py` / `test_pipeline_cli_smoke.py` / `test_apply_llm_translations.py` | translation pipeline |
+| `test_lint_docs.py` / `test_lint_docs_main_smoke.py` | lint rules + CLI |
+| `test_tools_cli_smoke.py` | tools CLI smoke |
+| `test_emit_corpus_oracle.py` | corpus oracle emitter |
+| `test_validate_en_source_patches.py` | JSON patch registry schema |
+| `test_recall.py` / `test_baseline_recall.py` / `test_segments_boundary.py` | quality regression |
+
+### 残存 mjs テスト (`scripts/__tests__/`)
+
+| ファイル | 対象 | 維持理由 |
+| --- | --- | --- |
+| `lib_redirects.test.mjs` | `scripts/lib/redirects.mjs` | Astro build graph が直接 import |
+| `sync_detection_issues.test.mjs` | `.github/scripts/sync-detection-issues.cjs` | GitHub Actions 側 tooling (Phase 6.1 で扱う) |
 
 ---
 
-## npm スクリプト対応表
+## npm スクリプト対応表 (Phase 6b 以降)
 
-| npm コマンド                    | スクリプト                                | 用途                               |
-| ------------------------------- | ----------------------------------------- | ---------------------------------- |
-| `lint`                          | lint:md && lint:docs                      | 全 lint 実行                       |
-| `lint:md`                       | lint:md:content && lint:md:repo           | markdownlint 実行                  |
-| `lint:md:content`               | markdownlint (docs content)               | コンテンツ MD lint（MD001 無効）   |
-| `lint:md:repo`                  | markdownlint (repo docs, .github)         | リポジトリ MD lint                 |
-| `lint:docs`                     | lint_docs.mjs                             | 構文・frontmatter 検証             |
-| `check:snapshots`               | snapshot_update.mjs && snapshot_diff.mjs  | スナップショット取得→比較          |
-| `check:snapshots:fetch`         | snapshot_update.mjs                       | スナップショット取得               |
-| `check:snapshots:fetch:dry-run` | snapshot_update.mjs --dry-run             | スナップショット取得（ドライラン） |
-| `check:snapshots:diff`          | snapshot_diff.mjs                         | スナップショット差分比較           |
-| `check:parity`                  | check_source_parity.mjs                   | 翻訳品質チェック（ローカル）       |
-| `check:summary`                 | generate_detection_reports.mjs            | summary / audit manifest 生成      |
-| `docs:sync-sidebar`             | update_sidebar_urls_from_live.mjs         | サイドバー URL 同期                |
-| `docs:sync-frontmatter`         | sync_frontmatter_from_sidebar.mjs         | frontmatter 同期（ドライラン）     |
-| `docs:sync-frontmatter:apply`   | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行）           |
-| `docs:pipeline`                 | pipeline.mjs                              | パイプライン（デフォルト）         |
-| `docs:pipeline:diff`            | pipeline.mjs --mode=diff                  | パイプライン（diff）               |
-| `docs:pipeline:full`            | pipeline.mjs --mode=full                  | パイプライン（full）               |
-| `docs:fetch`                    | fetch_translate_images.mjs                | 英語原文・画像取得                 |
-| `docs:normalize`                | normalize_docs.mjs                        | ドキュメント正規化                 |
-| `docs:fix-alt`                  | fix_alt_all.mjs                           | alt テキスト一括挿入               |
-| `docs:placeholders`             | generate_untranslated_placeholders.mjs    | プレースホルダー作成               |
-| `docs:prepare-llm`              | prepare_llm_tasks.mjs                     | LLM タスク準備                     |
-| `docs:apply-llm`                | apply_llm_translations.mjs                | LLM 翻訳適用                       |
-| `docs:report-categories`        | report_frontmatter_categories.mjs         | カテゴリ集計                       |
-| `format`                        | prettier --write                          | コードフォーマット                 |
-| `format:check`                  | prettier --check                          | フォーマットチェック（CI 用）      |
+| npm コマンド                    | 実体                                                                  | 用途                                   |
+| ------------------------------- | --------------------------------------------------------------------- | -------------------------------------- |
+| `lint`                          | `lint:md && lint:docs`                                                | 全 lint 実行                           |
+| `lint:md`                       | `lint:md:content && lint:md:repo`                                     | markdownlint 実行                      |
+| `lint:md:content`               | markdownlint (docs content)                                           | コンテンツ MD lint (MD001 無効)        |
+| `lint:md:repo`                  | markdownlint (repo docs, .github)                                     | リポジトリ MD lint                     |
+| `lint:docs`                     | `uv run python -m testim_parity.tools.lint_docs`                      | 構文・frontmatter 検証                 |
+| `lint:glossary`                 | `uv run python -m testim_parity.tools.check_glossary_duplicates`      | glossary 重複検知                      |
+| `check:snapshots`               | snapshot fetch + diff (Python)                                        | スナップショット取得→比較              |
+| `check:snapshots:fetch`         | `uv run python -m testim_parity.detection.snapshot_update`            | スナップショット取得                   |
+| `check:snapshots:diff`          | `uv run python -m testim_parity.detection.snapshot_diff`              | スナップショット差分比較               |
+| `check:parity`                  | `uv run python -m testim_parity.detection.check_source_parity`        | 翻訳品質チェック (local)               |
+| `check:summary`                 | `uv run python -m testim_parity.detection.generate_detection_reports` | summary / audit manifest               |
+| `check:untranslated`            | `uv run python -m testim_parity.detection.find_untranslated`          | 未翻訳 page 検出                       |
+| `docs:sync-sidebar`             | `python -m testim_parity.pipeline.update_sidebar_urls_from_live`      | サイドバー URL 同期                    |
+| `docs:sync-frontmatter`         | `python -m testim_parity.tools.sync_frontmatter_from_sidebar`         | frontmatter 同期 (dry-run)             |
+| `docs:sync-frontmatter:apply`   | `... --apply`                                                         | frontmatter 同期 (実行)                |
+| `docs:pipeline`                 | `python -m testim_parity.pipeline.pipeline`                           | パイプライン (diff default)            |
+| `docs:pipeline:full`            | `python -m testim_parity.pipeline.pipeline --mode=full`               | パイプライン (full)                    |
+| `docs:fetch`                    | `python -m testim_parity.pipeline.fetch_translate_images`             | 英語原文・画像取得                     |
+| `docs:normalize`                | `python -m testim_parity.tools.normalize_docs`                        | ドキュメント正規化                     |
+| `docs:fix-alt`                  | `python -m testim_parity.tools.fix_alt_all`                           | alt テキスト一括挿入                   |
+| `docs:placeholders`             | `python -m testim_parity.pipeline.generate_untranslated_placeholders` | プレースホルダー作成                   |
+| `docs:prepare-llm`              | `python -m testim_parity.pipeline.prepare_llm_tasks`                  | LLM タスク準備                         |
+| `docs:apply-llm`                | `python -m testim_parity.pipeline.apply_llm_translations`             | LLM 翻訳適用                           |
+| `docs:report-categories`        | `python -m testim_parity.tools.report_frontmatter_categories`         | カテゴリ集計                           |
+| `test:py`                       | `cd scripts/py && uv run pytest`                                      | Python 全 test (default addopts)       |
+| `test:py:quick`                 | marker filter 付き fast gate                                          | CI fast 相当                           |
+| `test:py:corpus`                | `pytest -m corpus -n auto --dist load`                                | 288×3 matrix 並列                      |
+| `test:py:corpus:regen`          | `uv run python -m testim_parity.tools.emit_corpus_oracle`             | committed golden 再生成                |
+| `test:py:corpus:drift`          | drift check (committed vs live Python)                                | 暫定 drift gate                        |
+| `test:mjs`                      | `node --test lib_redirects.test.mjs sync_detection_issues.test.mjs`   | 残存 mjs tests (2 本)                  |
+| `format`                        | `prettier --write`                                                    | コードフォーマット                     |
+| `format:check`                  | `prettier --check`                                                    | フォーマットチェック (CI 用)           |
 
 ---
 

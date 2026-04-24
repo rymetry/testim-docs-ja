@@ -205,9 +205,9 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/bd656ae-2023-01-03_14-58-41.png)
 
 5. **After each step handler** または **After test handler** を選択した場合、**Run on** オプションで実行条件を選びます。
-   - **Always** – 常に実行
-   - **Success** – ステップ／テストが成功した場合のみ実行
-   - **Failure** – ステップ／テストが失敗した場合のみ実行
+- **Always** – 常に実行
+- **Success** – ステップ／テストが成功した場合のみ実行
+- **Failure** – ステップ／テストが失敗した場合のみ実行
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/7e42513-2023-01-04_14-36-47small.png)
 
@@ -237,18 +237,18 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/50907d5-2023-01-03_15-48-32.png)
 
 4. **Before/After Hooks** セクションで作成したいフックタイプにチェックを入れます。
-   - Before test handler – テスト前に実行
-   - Before each step handler – 各ステップ前に実行
-   - After each step handler – 各ステップ後に実行
-   - After test handler – テスト後に実行
+- Before test handler – テスト前に実行
+- Before each step handler – 各ステップ前に実行
+- After each step handler – 各ステップ後に実行
+- After test handler – テスト後に実行
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/b5ea260-2023-01-03_15-49-37.png)
 
 5. ドロップダウンから、フックとして実行したい共有ステップまたは共有グループを選択します。
 6. **After each step handler** または **After test handler** を選択した場合、**Run on** で実行条件を選びます。
-   - **Always** – 常に実行
-   - **Success** – ステップ／テストが成功した場合のみ実行
-   - **Failure** – ステップ／テストが失敗した場合のみ実行
+- **Always** – 常に実行
+- **Success** – ステップ／テストが成功した場合のみ実行
+- **Failure** – ステップ／テストが失敗した場合のみ実行
 7. **Add** をクリックします。  
    これで、作成したフック構成が関連テストで利用可能になります。
 
@@ -279,9 +279,9 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 
 4. ドロップダウンから、フックとして実行したい共有ステップまたは共有グループを選択します。
 5. **After each step handler** または **After test handler** を選択した場合、**Run on** で次のいずれかを選びます。
-   - Always – 常に実行
-   - Success – ステップ／テストが成功した場合のみ実行
-   - Failure – ステップ／テストが失敗した場合のみ実行
+- Always – 常に実行
+- Success – ステップ／テストが成功した場合のみ実行
+- Failure – ステップ／テストが失敗した場合のみ実行
 6. **Change** をクリックして保存します。  
    これで、そのテストは新しいデフォルト構成（フック設定を含む）を使用するようになります。
 
@@ -292,32 +292,32 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 一部の Test Configuration Hooks には、テスト実行時の情報を取得するための追加パラメーターが用意されています。これらはステップ／テスト側から参照できるため、カスタムステップ内でログ出力やカスタム検証に利用できます。
 
 - **After each step handler parameters** – After each step フックで利用できるオブジェクトとパラメーター:
-  - `_stepData`
-    - `testName` – テスト名
-    - `name` – ステップ名
-  - `_stepInternalData`
-    - `hookType` – フック種別（例: `afterStep`）
-    - `path` – ステップの URL
-    - `stepId` – ステップ ID
-    - `projectId` – プロジェクト ID
-    - `branch` – ブランチ名
-    - `testId` – テスト ID
-    - `testResultId` – テスト結果 ID
-    - `type` – ステップ種別（例: `action-code-step`）
-    - `failureReason` – 失敗理由（失敗時）
-    - `errorType` – エラータイプ（エラーがある場合）
+- `_stepData`
+- `testName` – テスト名
+- `name` – ステップ名
+- `_stepInternalData`
+- `hookType` – フック種別（例: `afterStep`）
+- `path` – ステップの URL
+- `stepId` – ステップ ID
+- `projectId` – プロジェクト ID
+- `branch` – ブランチ名
+- `testId` – テスト ID
+- `testResultId` – テスト結果 ID
+- `type` – ステップ種別（例: `action-code-step`）
+- `failureReason` – 失敗理由（失敗時）
+- `errorType` – エラータイプ（エラーがある場合）
 
 - **After test handler parameters** – After test フックで利用できるオブジェクトとパラメーター:
-  - `_stepData`
-    - `testName` – テスト名
-  - `_stepInternalData`
-    - `hookType` – フック種別（例: `afterTest`）
-    - `projectId` – プロジェクト ID
-    - `branch` – ブランチ名
-    - `testId` – テスト ID
-    - `testResultId` – テスト結果 ID
-    - `failureReason` – 失敗理由（失敗時）
-    - `errorType` – エラータイプ（エラーがある場合）
+- `_stepData`
+- `testName` – テスト名
+- `_stepInternalData`
+- `hookType` – フック種別（例: `afterTest`）
+- `projectId` – プロジェクト ID
+- `branch` – ブランチ名
+- `testId` – テスト ID
+- `testResultId` – テスト結果 ID
+- `failureReason` – 失敗理由（失敗時）
+- `errorType` – エラータイプ（エラーがある場合）
 
 ## Config File でフックを作成する {#creating-hooks-via-the-config-file}
 

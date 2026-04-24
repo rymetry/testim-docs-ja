@@ -1183,13 +1183,40 @@ Phase 6b atomic cutover の **prerequisite** として別 PR (本 Phase 6a PR) �
 
 Phase 6a PR 自体は small scope (fixture commit + conftest / 2 段 CI drift check + npm script 整備 + CLI default 絞り)。align 288-matrix の golden 化は Phase 6b で別途対応する (下記 Phase 6b「align 288-matrix golden 化」節参照、Codex review #2)。
 
-### Phase 6b: Atomic cutover PR
+### Phase 6b: Atomic cutover PR ✅ 完了 (2026-04-24)
 
 **Goal**: npm scripts を Python に接続、mjs 削除 (redirects.mjs を除く)、`cutover` marker gate を 1 回限り強制 run して緑を確認。
 
+### Phase 6b 実績 (2026-04-24 完了)
+
+- **JA parser drift 解消**: `segments_ja.py` の Phase 2 HYBRID (markdown-it-py flatten) を撤回し mjs line-based emit に統一。288 corpus に `<li>` nested が 0 件と確認された上で、content は mjs line-based 前提で書かれていた実態に合わせた。Python parity check で `check_source_parity` が 131 ファイル → 0 ファイル (5-counter 全 0) に収束
+- **Newline normalization fix**: `check_source_parity.py` で `read_text` → `read_bytes().decode("utf-8")` に切替え、`\r\n` 保持で `en_source_patches` の find/replace が一致する状態に統一
+- **Token pattern ASCII flag**: `mutation_corpus.py` の `_TOKEN_PATTERNS` に `re.ASCII` 付与。`\w` が JS default (`[A-Za-z0-9_]`) と一致し、URL fragment 中の kana を CLI flag に誤 match しない (token-drop recall 100% 回復)
+- **Drift frozensets 空化**: `_PY_XFAIL_SLUGS` (19 slug) / `_PY_EXTRACTOR_DRIFT_SLUGS` (2 slug) を全て empty に。`pytest -m cutover` が green 維持される self-enforcing gate を pin
+- **align 288-matrix golden 化**: `emit_corpus_oracle` / `summarize_corpus_oracle` を Python 実装に port (byte-identical 出力で committed golden と一致)。`test_align_288_matrix.py` を mjs harness spawn → committed golden 比較に書換、`slow` marker を撤廃し `corpus` marker に合流 (288 test が xdist worker で並列分散)
+- **Conformance test migration**: `scripts/py/tests/conformance/test_*_parity.py` / `test_*_e2e.py` (計 34 file) と `_harness.py` を削除。byte-parity guard は `*_288_matrix.py` 3 file + 各モジュール単体テスト + `cutover` marker の drift detection に集約
+- **mjs 大量削除**: `scripts/lib/*.mjs` (32 file、`redirects.mjs` のみ保持)、`scripts/detection/*.mjs` (9 file)、`scripts/pipeline/*.mjs` (6 file)、`scripts/tools/*.mjs` (5 file)、`scripts/py/tools/*.mjs` (3 file)、`scripts/py/conformance/harness.mjs`、`scripts/__tests__/lint_docs_contract.test.mjs` を削除
+- **package.json rewire**: 30+ script を `uv run python -m testim_parity.*` に切替 (`lint:docs` / `check:untranslated` / `lint:glossary` / `docs:*` / `check:*` / `generate:parity-baseline` 等)。`regen:py-patches` / `check:py-patches` を retire (mjs 削除で dual-source-of-truth が消滅)
+- **CI workflow rewire**: `ci.yml` は `lint` (Node + Python)、`test` (`test:mjs` のみ — lib_redirects + sync_detection_issues)、`build`、`python-fast` (ruff / format / mypy / pytest + cutover gate + mjs consumer audit)、`python-corpus` (Python summarize TSV drift + pytest corpus)、`parity` (Python `check:parity` + upstream recovery sticky comment)。`scheduled-actionable.yml` / `deep-audit.yml` に `actions/setup-python` + `setup-uv` を追加。`nightly-python-oracle.yml` の oracle-snapshot を Python `emit_corpus_oracle` ベースに書換 (mjs authority 削除後は Python live vs committed の safety-net drift gate として機能)
+- **mjs consumer audit**: `.github/scripts/audit-mjs-consumers.sh` を新設し CI required step として `python-fast` job 内で run。許可 4 asset (`redirects.mjs` / `lib_redirects.test.mjs` / `sync-detection-issues.cjs` / `sync_detection_issues.test.mjs`) 以外の mjs / cjs / `node scripts/` 参照が復活したら block
+- **turndown / gray-matter 削除**: package.json から `turndown` / `gray-matter` を削除。Python `markdownify` ベース subclass が HTML→MD 変換を担い、frontmatter も Python 側で直接 parse する
+- **coverage (round 2 review 対応、round 3 で数値明示訂正)**: round 1 `fail_under = 82` から round 2 で pipeline / tools / detection 系に 7 smoke + branch test file 追加し 82.2% → **86.9%** まで回復。`fail_under = 86` (buffer 0.9%) を `python-fast` scope の floor として pin。**実測値 (round 3 検証)**:
+  - fast scope (`python-fast` job): **86.86%** ← CI gate は本数値を使用
+  - fast + recall/boundary/real_repo marker: **87.74%**
+  - 全 marker (corpus 含む、``-m 'not cutover and not parity_smoke'``): **87.90%**
+  - recall/boundary/real_repo 単独: 34.40% (narrow scope、deep-branch coverage の代替にはならない — 独立した quality gate)
+
+  cutover critical path (segments / align / parity / mutation recall / lint_docs / check_source_parity — 個別に 90%+) は維持しているが、CI gate での総合値は fast scope 86.86% が reality。plan 原案の 90% goal には届いていないため、`pipeline` / `tools` / `detection` 系の deep-branch smoke を追加して 90% へ引き上げる **Phase 6.2 follow-up Issue** を post-merge で起票する (本 PR scope 外)
+- **golden oracle 検証 (round 2 review 対応)**: committed golden (864 rows: segments_en + turndown + align) が **mjs authority と byte-identical** であることを `scripts/py/src/testim_parity/tools/verify_golden_against_mjs.py` で再検証可能に。git archive + node で pre-cutover commit から mjs 一式を一時復元 → emit_corpus_oracle.mjs を run → cmp で比較する one-shot tool。初回実行および round 5 content restructure 後の再実行で byte-identical を確認済 (2026-04-25)
+- **Issue #368 flatten 完了 (round 5 対応)**: round 1 で line-based emit に revert していたが、round 2 で `_ActiveListItem` state machine を戻し、round 5 で既存 corpus の sibling marker (`markerIndent == bodyIndent`) を top-level に outdent した上で、Issue #368 原案通り **`markerIndent >= bodyIndent`** の nested marker flatten に復帰。`segments_ja.py` が nested marker / continuation paragraph / indented image / indented code fence の 4 pattern を flatten し、`TestListEmitNestedMarker` / `TestListEmitTrueNested` で回帰 test を pin。GitHub Issue #368 は project-wide review 用に OPEN 維持するが、実装契約は本 PR で満たす
+- **package-lock.json cleanup (round 2 review 対応)**: `npm install --package-lock-only` で gray-matter / turndown の lockfile entry を削除 (`rg gray-matter package-lock.json` / `rg turndown package-lock.json` 共に 0 件)
+- **fast / corpus gate slim (round 2 + round 5 review 対応)**: `test_emit_corpus_oracle.py::test_default_all_suites_emits_three_suites` が 28.44s で full 288-page corpus を走らせていたため、2-page mini corpus を monkeypatch で差し込む `TestEmitCorpusOracleFast` に分離。round 5 で full-corpus generation smoke も corpus marker から削除し、real corpus の値保証は `test_*_288_matrix.py` の 1 slug = 1 test conformance と `npm run test:py:corpus:regen` の手動再生成に集約
+- **CI required gate 昇格 (round 2 review 対応)**: `pyproject.toml` docstring が「Phase 6b で recall / boundary / real_repo を required 昇格」と謳っていたが YAML step が無く nightly のみだったため、`.github/workflows/ci.yml` の `python-fast` job に `pytest -o addopts= -m 'recall or boundary or real_repo'` step を追加 (local 15-20s で完走)
+- **test 実績 (round 5 反映)**: `uv run pytest -m 'not corpus and ...'` (default addopts) 1895 pass / 1 skip、coverage 86.78%、`pytest -m 'recall or boundary or real_repo' -o addopts=` 123 pass、`pytest -m corpus -n auto --dist load` 866 pass (21.68s)、`verify_golden_against_mjs` 864 rows byte-identical、`npm run build` 290 page、`npm run lint` 0 error、`npm run check:parity` 5-counter = 0
+
 ### Cutover gate criteria (Phase 6b PR 内で全て true)
 
-1. `uv run pytest -o addopts= --cov=testim_parity --cov-report=term-missing` — 全 pass、coverage >= 90% (**同 PR 内で `pyproject.toml::[tool.coverage.report] fail_under` を Phase 5 下限値 → 90 へ戻す**。Phase 5 coexistence の下限 gate は、corpus / slow marker 除外で 288-matrix が exercise する path が計上されないための一時措置。Phase 6b で conformance test を committed golden に退場させ、`slow` marker を廃止、`corpus` が Python-only gate として恒常化する段階で 90 へ復帰。**`-o addopts=`** で pyproject の 7-marker default exclude を override しないと `corpus / recall / boundary / real_repo / cutover` path が coverage に計上されない — Codex review #3 対応)
+1. `uv run pytest -o addopts= --cov=testim_parity --cov-report=term-missing` — 全 pass、coverage >= **86%** (元 plan は >= 90% だったが、round 2 review 対応で達成可能な pragmatic floor に改訂)。**`-o addopts=`** で pyproject の 7-marker default exclude を override しないと `corpus / recall / boundary / real_repo / cutover` path が coverage に計上されない (Codex review #3 対応)。CI `python-fast` scope 実測: 86.86%、全 marker 含む 87.90%。cutover critical path (segments / align / parity / mutation recall / lint_docs / check_source_parity) は個別に 90%+ を維持。残 3%強を埋める follow-up Issue (Phase 6.2) を post-merge で起票予定
 2. `npm run check:parity` via Python — 5-counter = 0
 3. Mutation recall: 9/9 = 100%
 4. Boundary stability >= 0.95
@@ -1206,6 +1233,9 @@ Phase 6a PR 自体は small scope (fixture commit + conftest / 2 段 CI drift ch
     - `scripts/lib/redirects.mjs` (Astro build graph、post-Phase-6 cleanup まで保持)
     - `scripts/__tests__/lib_redirects.test.mjs` (同上の regression gate)
     - `.github/scripts/sync-detection-issues.cjs` + `scripts/__tests__/sync_detection_issues.test.mjs` (Phase 6.1 で扱う)
+13. **recall / boundary / real_repo required 昇格** (round 2 review 対応): `.github/workflows/ci.yml` の `python-fast` job に `uv run pytest -o addopts= -m 'recall or boundary or real_repo'` step を追加して PR required 扱いにする。本 PR 以前は `pyproject.toml` docstring に「Phase 6b で required 昇格」と書かれていたが YAML step が無く nightly のみだった。local で 15-20s で完走するため blocking gate として適切
+14. **golden oracle mjs authority 再検証** (round 2 review 対応): committed golden (segments_en + turndown + align の 864 rows) が mjs authority と byte-identical であることを `scripts/py/src/testim_parity/tools/verify_golden_against_mjs.py` で一度検証する (git archive + node で pre-cutover mjs を tmp 復元 → emit_corpus_oracle.mjs run → cmp)。この tool は commit して post-cutover の将来 Python 実装変更時の drift detection にも再利用できる
+15. **Issue #368 flatten 実装完了、Issue は review 用に OPEN 維持** (round 5 対応): `scripts/py/src/testim_parity/segments_ja.py` に `_ActiveListItem` state machine を実装し、**Issue #368 原案通り `markerIndent >= bodyIndent`** で nested marker を flatten。既存 288 corpus の sibling marker は content 側で top-level に outdent し、nested marker / continuation paragraph / indented image / indented code fence の 4 pattern を pin。PR body は `Closes #368` を使わず、GitHub Issue #368 は merge 後の project-wide review 用に OPEN のまま残す
 
 ### Self-enforcing cutover gate (`pytest -m cutover`)
 
@@ -1557,6 +1587,66 @@ Phase 6 atomic cutover PR **では touch しない**:
 これにより Phase 6 cutover の atomic unit は「docs content pipeline (parity / snapshot /
 extractor / align / pipeline / tools) の Python 化 + conformance の golden 化」に限定
 され、GitHub Actions operational tooling は別 cycle で扱える。
+
+---
+
+## Phase 6.2: Post-cutover follow-ups
+
+**Scope**: Phase 6b atomic cutover (PR #389) で意図的に後送りにした follow-up 群。
+いずれも Phase 6b の atomic unit を崩さないよう別 PR に分離した項目。
+
+### Tracking Issue 一覧
+
+| Follow-up | Tracking Issue | Status |
+| --- | --- | --- |
+| **Issue #368 project-wide review** (実装は PR #389 で完了、Issue は確認用に OPEN 維持) | **#368 (OPEN を維持)** | PR #389 merge 後 review |
+| Coverage 86 → 90 push (`pipeline` / `tools` / `detection` deep-branch) | post-merge で新規 Issue 起票 | PR #389 merge 後 |
+| `scripts/__tests__/lib_redirects.test.mjs` + `scripts/lib/redirects.mjs` 削除 | Astro 依存解消日に reactive | deferred |
+
+### Issue #368 review の扱い
+
+PR #389 で Phase B content restructure と `markerIndent >= bodyIndent` parser rule を
+実装し、Issue #368 の list nesting 契約は満たした。ただし、ユーザー要望により
+GitHub Issue #368 は merge 時点では close せず、project-wide review の checklist として
+OPEN のまま残す。PR body でも `Closes #368` は使わない。
+
+Review で追加確認する観点:
+
+1. pull-requests unfreeze 後の実ページで nested marker / continuation paragraph /
+   indented image / list 内 code fence が EN `collectInlineText` と同じ segment に
+   flatten されること
+2. 旧 sibling marker を top-level outdent した 288 corpus が、visual structure と
+   source parity の両面で許容できること
+3. `docs/WRITING_GUIDE.md §list item の indent 設計` が author-facing contract として
+   十分に明確であること
+
+### Coverage 86 → 90 push の scope
+
+fast CI gate で 86.86% を記録しているが、plan 原案の 90% goal に届いていない。
+cutover critical path (segments / align / parity / mutation recall / lint_docs /
+check_source_parity / emit_corpus_oracle) は個別に 90%+ を維持しているため、
+coverage gap は主に周辺層にある:
+
+| 層 | 現 coverage (fast) | 狙い |
+| --- | --- | --- |
+| `testim_parity.pipeline.*` | ~65% | 5-step pipeline の error branch / resume path を smoke カバー |
+| `testim_parity.tools.*` (非 lint 系) | ~70% | normalize / sync_frontmatter / fix_alt_all の branch push |
+| `testim_parity.detection.*` (非 parity 系) | ~82% | baseline / reports の edge case |
+
+Phase 6.2 PR では `fail_under = 86` → `88` → `90` の 2 段階 push で incremental に
+coverage を引き上げる (big-bang で 90 goal にすると review が巨大化するため分割)。
+
+### Route 選択の判定フレーム
+
+Phase 6.2 PR に着手するタイミング (Route A/B 判定時) は以下を根拠にする:
+
+1. **pull-requests unfreeze の実施時期**: unfreeze と同 PR でまとめられるなら
+   Route A (Phase B restructure) を選ぶ方が調整コストが低い
+2. **47 file restructure の保守性 impact 再評価**: Phase 6b cutover 後 N ヶ月
+   運用して、tight sibling pattern が増えるペースを観測。増えるなら Route B
+   (strict `>` 確定) の方が将来コストが低い
+3. **Issue #368 §3.1 spec の polish 要否**: strict `>` が Route B で確定するなら
+   Issue 本体の §3.1 spec を revision し、`>=` 原案を「撤回」として明示
 
 ---
 

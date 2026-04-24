@@ -90,8 +90,8 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 8. 選択した要素の設定を確認、置換、または調整したい場合は、Properties パネルの手順に従ってください。
 9. Element 条件のタイプを指定します。オプション:
-   - Visible – 要素がページ上で可視の場合にのみステップを実行します。
-   - Not visible – 要素がページ上で不可視の場合にのみステップを実行します。
+- Visible – 要素がページ上で可視の場合にのみステップを実行します。
+- Not visible – 要素がページ上で不可視の場合にのみステップを実行します。
 10. 必要に応じて [拡張条件設定](/docs/editing-tests/conditions/advanced-conditions-settings) でタイムアウト設定を調整します。
 11. **Toggle Breakpoint** を再度クリックしてブレークポイントを解除します。
 
@@ -174,10 +174,10 @@ HTML パラメーターや JavaScript パラメーターを条件内で定義し
 ![Set condition ウィンドウ](/images/conditions/conditions/fc64429-setcondition.png)
 
 5. カスタム条件にパラメーターを使用する場合は、次のように定義します:
-   - 右側のペインで **+ PARAMS** ボタンをクリックします。
-   - **JavaScript パラメーター:** ドロップダウンから **JS** を選択し、JavaScript パラメーターを入力します。
-   - **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。次の手順を実行します:
-     - AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)の手順に従ってください。
+- 右側のペインで **+ PARAMS** ボタンをクリックします。
+- **JavaScript パラメーター:** ドロップダウンから **JS** を選択し、JavaScript パラメーターを入力します。
+- **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。次の手順を実行します:
+- AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)の手順に従ってください。
 
 ![パラメーター追加](/images/conditions/conditions/5eed156-custom2_r.png)
 

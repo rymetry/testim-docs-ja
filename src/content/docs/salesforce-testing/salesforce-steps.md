@@ -41,9 +41,9 @@ Salesforce のレコード操作には、次の Salesforce 操作が含まれま
 - [検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-validate) - 現在のレコードがフィールドと一致することを検証します。すべてのフィールドが完全に一致する場合にのみ、テストステップが合格します。
 - [クイックアクション](/docs/salesforce-testing/salesforce-steps/sfdc-step-quickactions) - 現在のレコードで利用可能なクイックアクションを実行します。クイックアクションには、新しいタスクの作成、通話のログ記録、新しいイベント、メールなどのオプションが含まれます。アクションは、フィールドで指定された値を使用して実行されます。
 - [関連リストアクション](/docs/salesforce-testing/salesforce-steps/sfdc-step-relatedlistaction) - 現在のレコードについて、関連リスト内のレコードタイプに対してアクションを実行します。現在のレコードに対して次のようなアクションを実行できます:
-  - Create - 関連リスト内のタイプの新しいレコードを作成します。
-  - Verify - 関連リスト内のタイプのレコードの値または数を検証します。返されたレコードのフィールドにフィルターを適用できます。
-  - View - 関連リスト内のタイプのレコードを表示します。返されたレコードのフィールドにフィルターを適用できます。
+- Create - 関連リスト内のタイプの新しいレコードを作成します。
+- Verify - 関連リスト内のタイプのレコードの値または数を検証します。返されたレコードのフィールドにフィルターを適用できます。
+- View - 関連リスト内のタイプのレコードを表示します。返されたレコードのフィールドにフィルターを適用できます。
 - [削除](/docs/salesforce-testing/salesforce-steps/sfdc-step-delete) - 現在のレコードを削除します。
 - [選択リストオプションの検証](/docs/salesforce-testing/salesforce-steps/sfdc-step-verifypicklistoptions) - レコードを作成する際に、特定のフィールドのドロップダウンメニュー（選択リスト）に特定のオプションが表示される、または表示されないことを検証します。
 

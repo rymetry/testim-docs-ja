@@ -323,9 +323,9 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 **Variable name** – Cookie 情報を保存する変数名（既定値 = _myCookie_）。
 
 - **Variable scope** – 変数をどの範囲で参照できるか:
-  - **Local**: 同一スコープ内のステップ間で共有
-  - **Test**: 同一テスト内のステップ／グループ間で共有
-  - **Suite**: 同じテストスイート内のテスト間で共有
+- **Local**: 同一スコープ内のステップ間で共有
+- **Test**: 同一テスト内のステップ／グループ間で共有
+- **Suite**: 同じテストスイート内のテスト間で共有
 - **When this step fails** – ステップ失敗時の挙動。
 - **When to run step** – ステップ実行条件。詳細は [Conditions](/docs/editing-tests/conditions) を参照してください。
 - **Override timeout** – 既定のタイムアウト時間を上書き（ミリ秒）。

@@ -62,18 +62,18 @@ mobile テストには次の Grid を使用できます。
 3. **Add New Grid** をクリックします。
 4. Grid type を選択します。\
    web 用に選択できるのは次のとおりです。
-   - Custom Grid: 独自の Selenium Grid
-   - Saucelabs
-   - Browserstack
-   - LambdaTest
+- Custom Grid: 独自の Selenium Grid
+- Saucelabs
+- Browserstack
+- LambdaTest
 
-   mobile 用に選択できるのは次のとおりです。
+mobile 用に選択できるのは次のとおりです。
 
-   - Virtual Mobile Grid
-   - TDC
-   - Saucelabs
-   - Browserstack
-   - Testim HeadSpin Mobile
+- Virtual Mobile Grid
+- TDC
+- Saucelabs
+- Browserstack
+- Testim HeadSpin Mobile
 5. 各 Grid に対応する項目を入力します。詳細は後続の各記事を参照してください。
 6. **Add** をクリックします。\
    Grid の編集または削除を行うには、Grid 設定ボックスにカーソルを重ねて目的の操作をクリックします。

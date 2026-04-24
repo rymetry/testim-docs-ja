@@ -14,7 +14,13 @@ concurrency:
 
 jobs:
   lint:
+    # Phase 6b cutover: ``npm run lint`` は ``lint:md`` (markdownlint-cli, Node) +
+    # ``lint:docs`` (``testim_parity.tools.lint_docs`` via ``uv run``) を連結する
+    # ため、Node と Python 両方のセットアップが必要。
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -22,9 +28,25 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
+      - name: Sync Python deps
+        working-directory: scripts/py
+        run: uv sync --all-extras
       - run: npm run lint
 
   test:
+    # Phase 6b cutover: ``scripts/__tests__/`` に残る mjs test は以下 2 file のみ:
+    #   - lib_redirects.test.mjs (redirects.mjs は Astro build graph から使われる)
+    #   - sync_detection_issues.test.mjs (Phase 6.1 で扱う scope 外 asset)
+    # ``test:py`` は ``python-fast`` / ``python-corpus`` で独立に run するため、
+    # 本 job は Node-only の regression guard として軽量に保つ。
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -33,7 +55,7 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - run: npm run test
+      - run: npm run test:mjs
 
   build:
     runs-on: ubuntu-latest
@@ -47,35 +69,21 @@ jobs:
       - run: npm run build
 
   python-fast:
-    # PR B (Phase 5 CI 高速化): 旧 ``python-test`` を分割した fast feedback gate。
-    # ruff / format / mypy / 単体 + conformance fast tests (``not corpus`` /
-    # ``not slow`` / ``not cutover`` / ``not parity_smoke``)。288-page corpus +
-    # align batch + full-repo smoke は ``python-corpus`` / nightly job に分離した
-    # (docs/PYTHON_MIGRATION_PLAN.md 参照)。
-    # Node は ``not corpus`` scope の conformance 一部が mjs harness を呼ぶため
-    # 必要 (Phase 6b cutover で削除予定)。
+    # Phase 6b cutover: mjs 削除に伴い ``setup-node`` / ``npm ci`` / ``regen_en_source_patches``
+    # step を削除。dual-source-of-truth drift check は en_source_patches を Python dict
+    # に inline 化する follow-up (plan doc Phase 6 Conformance test migration B) で
+    # 恒久的に retire する計画。本 job は ruff / format / mypy / 単体 + cutover gate +
+    # mjs consumer audit を run する fast-feedback PR gate。
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: scripts/py
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-      - name: Install Node deps
-        # conformance harness (scripts/py/conformance/harness.mjs) が
-        # scripts/lib/project.mjs 経由で npm パッケージ ``gray-matter`` を
-        # import するため、Python テスト実行前に node_modules を解決する。
-        working-directory: ${{ github.workspace }}
-        run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version-file: scripts/py/.python-version
       - name: Install uv
-        # astral-sh/setup-uv で uv.lock keyed cache を効かせて dep 解決を高速化
-        # (従来の pip install uv==0.11.7 → setup-uv に移行した PR B 改善)。
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
         with:
           version: '0.11.7'
@@ -83,11 +91,6 @@ jobs:
           cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
-      - name: Check en_source_patches JSON is in sync with mjs registry
-        # dual-source-of-truth の drift 検出。mjs 側 registry を編集したら
-        # `npm run regen:py-patches` を実行して JSON を再生成する必要がある。
-        working-directory: ${{ github.workspace }}
-        run: node scripts/py/tools/regen_en_source_patches.mjs --check
       - name: Ruff lint
         run: uv run ruff check src tests
       - name: Ruff format check
@@ -95,76 +98,68 @@ jobs:
       - name: mypy
         run: uv run mypy src
       - name: pytest (fast)
-        # default addopts の 7 marker (``not corpus and not slow and not
-        # cutover and not parity_smoke and not recall and not boundary and
-        # not real_repo``) を yaml 側で **明示的に重ねて指定**。重い gate は
-        # nightly 側で run する:
-        #
-        #   - ``parity_smoke`` (CI 実測 ~19 分) / ``recall`` / ``boundary`` /
-        #     ``real_repo`` → ``nightly-python-oracle.yml``
-        #     (``parity-smoke`` / ``python-quality-full``)
-        #   - ``corpus`` → ``python-corpus`` (同 CI yaml 内 job)
-        #   - ``slow`` / ``cutover`` → local / Phase 6b 手動 run
-        #
-        # ``--durations=30`` で top 30 の実効時間を毎回出し、fast gate 内の
-        # 新規律速を早期検知する (marker 移設後の fast gate 内で潜在的に重い
-        # test が沈む事故を防ぐ defense in depth)。
-        #
-        # この ``run:`` は静的 pytest command のみで untrusted input を
-        # 含まないため command injection リスクは無い。
-        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary and not real_repo' --cov=testim_parity --cov-report=term-missing --durations=30
+        # default addopts (6 marker exclude) を yaml 側で **明示的に重ねて指定** し
+        # silent 無効化を防ぐ defense in depth。``slow`` marker は Phase 6b cutover
+        # で retire 済 (align が corpus marker に合流した)。
+        run: uv run pytest -m 'not corpus and not cutover and not parity_smoke and not recall and not boundary and not real_repo' --cov=testim_parity --cov-report=term-missing --durations=30
+      - name: pytest (cutover gate)
+        # Phase 6b cutover required step: ``_PY_XFAIL_SLUGS`` / ``_PY_EXTRACTOR_DRIFT_SLUGS``
+        # 等の exclusion frozenset が empty であることを assert する self-enforcing gate。
+        # ``-o addopts=`` で default addopts を override しないと ``cutover`` marker
+        # が skip される (Codex review #4 対応)。
+        run: uv run pytest -o addopts= -m cutover
+      - name: pytest (recall / boundary / real_repo — required)
+        # Phase 6b cutover round-2 review P2 対応: recall (mutation corpus),
+        # boundary (segment count regressions), real_repo (slug-level parity
+        # smoke) の 3 marker は local で 15-20s で完走する軽量な品質 gate。
+        # pyproject.toml docstring が「Phase 6b で required 昇格」と謳っていた
+        # が CI YAML に step が無く nightly のみだったため、PR 毎に block
+        # できるよう required step として昇格させる。``-o addopts=`` で
+        # default exclusion を override して marker を解禁する。
+        run: uv run pytest -o addopts= -m 'recall or boundary or real_repo' --tb=short --durations=30
+      - name: en_source_patches schema validation
+        # Phase 6b cutover round-2 review P2 対応: _en_source_patches_data.json
+        # は mjs source 削除後 Python の sole source-of-truth なので、patch 編集時の
+        # schema 違反 (defectClass allowlist / ISO date / id uniqueness 等) を
+        # CI で catch する。production JSON 34 patches の validation が 0.1s 弱。
+        run: uv run python -m testim_parity.tools.validate_en_source_patches
+      - name: mjs consumer audit
+        # Phase 6b cutover required step: 許可 4 asset 以外の mjs / cjs 参照が
+        # package.json / .github / scripts 配下に残っていないことを assert する
+        # (Codex review #5 対応)。allow-list:
+        #   - scripts/lib/redirects.mjs         (Astro build graph)
+        #   - scripts/__tests__/lib_redirects.test.mjs
+        #   - .github/scripts/sync-detection-issues.cjs  (Phase 6.1 scope)
+        #   - scripts/__tests__/sync_detection_issues.test.mjs
+        working-directory: ${{ github.workspace }}
+        run: bash .github/scripts/audit-mjs-consumers.sh
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-coverage
           path: scripts/py/.coverage
-          # ``.coverage`` は dot-prefixed の hidden file。upload-artifact@v4
-          # は default で hidden file を skip するため、この flag を付けないと
-          # "No files were found" で artifact が空になる (PR #386 round 3 で
-          # 発覚した bug)。pytest-cov が ``scripts/py/.coverage`` を生成する
-          # contract は維持する。
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
 
   python-corpus:
-    # PR B で新設した 288-page corpus conformance gate。segments_en + turndown
-    # の full parametrized test を pytest-xdist ``-n auto --dist load`` で並列
-    # 実行する (8 worker 実測 ~10s、目標 2:30 を大幅下回り)。
-    #
-    # Phase 6a 以降: oracle は main にある committed golden
-    # (``scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl``) を使う。
-    # env var / node subprocess 不要なので xdist worker でも stable。
-    #
-    # Drift check (本 job 内 step): mjs で live oracle を再生成して committed
-    # golden と byte-identical 一致するか確認する。mjs lib を変更したのに
-    # committed golden を regenerate し忘れた PR を必ず fail させる required gate
-    # として機能する (docs/PYTHON_MIGRATION_PLAN.md Phase 6a 節参照、Codex
-    # review #1 「nightly は required gate にならない」への対応)。
-    #
-    # align 288-matrix は ``slow`` marker 側で serial run されるため本 job には
-    # 含まない (Phase 6b で golden 化予定、plan doc Phase 5 CI 高速化節参照)。
+    # Phase 6b cutover: mjs 削除に伴い "live mjs vs committed" drift check step は
+    # retire。committed golden が唯一の authority なので、PR CI で確認すべき drift は:
+    #   - committed JSONL を summarize した結果が committed TSV と一致するか
+    #     (誰かが JSONL だけ regen して TSV を忘れたら block)
+    # これは安価 (node 不要) なので本 job に残す。``corpus`` marker は segments_en /
+    # turndown / align を合流した 864 test を xdist ``-n auto --dist load`` で並列実行。
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: scripts/py
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-      - name: Install Node deps
-        # emit_corpus_oracle.mjs が scripts/lib/* を import する経路で
-        # gray-matter 等の npm パッケージが要る (drift check step で必要)。
-        working-directory: ${{ github.workspace }}
-        run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version-file: scripts/py/.python-version
       - name: Install uv
-        # astral-sh/setup-uv で uv.lock keyed cache を効かせて dep 解決を高速化。
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
         with:
           version: '0.11.7'
@@ -172,59 +167,21 @@ jobs:
           cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
-      - name: Oracle drift check (live mjs + sha256 TSV vs committed golden)
-        # 2 段階 drift check:
-        #   1) live mjs JSONL vs committed JSONL (mjs authority の drift 検出)
-        #   2) summarize(committed JSONL) vs committed sha256 TSV (PR #387
-        #      review P2-1 対応、committed TSV が stale なまま merge される
-        #      のを防ぐ)
-        # どちらも fail-loud で PR を block する required gate。Phase 6b で
-        # mjs 削除時に本 step も retire 予定。
-        #
-        # 静的 pytest / node command のみで untrusted input を含まないため
-        # command injection リスクは無い。
+      - name: Oracle sha256 TSV drift check
+        # summarize(committed JSONL) vs committed TSV。committed golden の tamper
+        # あるいは TSV regen 忘れを block する (PR #387 review P2-1 対応、
+        # Phase 6b でも引き続き required)。
         run: |
           GOLDEN_JSONL=tests/conformance/__oracle__/corpus_golden.jsonl
           GOLDEN_TSV=tests/conformance/__oracle__/corpus_golden.sha256.tsv
-
-          # Step 1: live mjs output vs committed JSONL
-          node tools/emit_corpus_oracle.mjs --out .corpus_live.jsonl --suite segments_en,turndown
-          if ! diff -q .corpus_live.jsonl "$GOLDEN_JSONL"; then
-            echo ""
-            echo "::error::Oracle drift detected: mjs live output != committed golden JSONL."
-            echo "mjs lib or scripts/lib/* was changed without regenerating the committed golden."
-            echo "Run locally (from repo root):"
-            echo "  node scripts/py/tools/emit_corpus_oracle.mjs \\"
-            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
-            echo "    --suite segments_en,turndown"
-            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
-            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
-            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
-            echo "and commit the regenerated fixture in the same PR."
-            exit 1
-          fi
-
-          # Step 2: summarize(committed JSONL) vs committed TSV.
-          # 誰かが committed JSONL を regenerate したが TSV を regen し忘れると
-          # Phase 6b の debug/review 用 hash manifest が stale になるため block。
-          node tools/summarize_corpus_oracle.mjs --in "$GOLDEN_JSONL" --out .corpus_live.sha256.tsv
+          uv run python -m testim_parity.tools.summarize_corpus_oracle --in "$GOLDEN_JSONL" --out .corpus_live.sha256.tsv
           if ! diff -q .corpus_live.sha256.tsv "$GOLDEN_TSV"; then
-            echo ""
             echo "::error::Oracle sha256 TSV drift: committed JSONL hashes != committed TSV."
-            echo "The sha256 TSV manifest is stale relative to the committed JSONL."
-            echo "Run locally (from repo root) to regenerate TSV:"
-            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
-            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
-            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
+            echo "Run locally to regen TSV:"
+            echo "  npm run test:py:corpus:regen"
             exit 1
           fi
       - name: pytest (corpus)
-        # xdist ``-n auto --dist load`` で 576 parametrized test を worker 間に
-        # 動的分散する。stdout interleave 対策として ``--tb=short``
-        # + ``--junitxml`` artifact を併用する。
-        # conftest.py の loader fixture が committed golden を最優先するため
-        # env var は不要。本 step は static pytest command のみで command
-        # injection リスクは無い。
         run: uv run pytest -m corpus -n auto --dist load --tb=short --junitxml=corpus-junit.xml
       - name: Upload corpus junit
         if: always()
@@ -236,32 +193,20 @@ jobs:
           retention-days: 7
 
   parity:
+    # Phase 6b cutover: ``npm run check:parity`` は既に Python CLI にぶら下がって
+    # いる (package.json の rewire 済) ため、本 job は Python 経由で動く。
+    # ``check:upstream-recovery`` / sticky comment も Python を呼ぶ。
     runs-on: ubuntu-latest
     permissions:
       contents: read
       # Sticky PR comment (Phase B Task 4). PR comments route through the
-      # issues REST endpoint (`github.rest.issues.{list,create,update,delete}Comment`),
-      # so `issues: write` alone is sufficient — `pull-requests: write` was
-      # previously granted but unused (Codex C5). No untrusted event input is
-      # interpolated into shell/scripts — the comment body is built from
-      # upstream-recovery-status.json (generated in-run) and static text.
+      # issues REST endpoint, so `issues: write` alone is sufficient.
       issues: write
     concurrency:
-      # Serialise the sticky comment upsert per PR so successive pushes
-      # don't race a delete+create pair.
       group: parity-upstream-recovery-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-      - run: npm ci
-      # Python setup required because the Render step below delegates to
-      # testim_parity.detection.render_upstream_recovery_comment (Phase 4
-      # migration, docs/PYTHON_MIGRATION_PLAN.md L721-728). The rest of the
-      # job still uses mjs until Phase 6 atomic cutover.
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version-file: scripts/py/.python-version
@@ -281,8 +226,6 @@ jobs:
           retention-days: 7
 
       - name: Check upstream recovery (non-blocking)
-        # Phase B (Task 4): standalone aggregator; exits 0 unconditionally.
-        # Consumers decide via the JSON artifact.
         if: always()
         continue-on-error: true
         run: npm run check:upstream-recovery
@@ -296,20 +239,6 @@ jobs:
           retention-days: 7
 
       - name: Render upstream recovery sticky comment body
-        # Delegates markdown rendering to
-        # testim_parity.detection.render_upstream_recovery_comment, which
-        # imports render_upstream_recovery_sticky_comment from
-        # testim_parity.detection_reports. This eliminates logic duplication
-        # between the CI step and the Python detection_reports module (same
-        # contract as the mjs predecessor tracked in PR #363). The script
-        # writes upstream-recovery-comment.md when signals exist and prints
-        # `has_signals=true|false` on stdout for the upsert step below.
-        #
-        # Phase 4 switch (docs/PYTHON_MIGRATION_PLAN.md L721-728): mjs
-        # entrypoint scripts/detection/render_upstream_recovery_comment.mjs
-        # replaced by the Python module. The Python default for root_dir is
-        # testim_parity.project.ROOT_DIR so running from scripts/py still
-        # reads/writes the artifacts at the repo root.
         id: render_upstream_recovery_comment
         if: >-
           always() && github.event_name == 'pull_request'
@@ -320,11 +249,6 @@ jobs:
           uv run python -m testim_parity.detection.render_upstream_recovery_comment >> "$GITHUB_OUTPUT"
 
       - name: Sticky PR comment — upstream recovery (upsert)
-        # Idempotent upsert via hidden marker. The body was rendered by the
-        # previous step so this inline script only handles the GitHub API
-        # calls (list / update / create / delete). All error paths are
-        # caught so a transient API failure does not mark the parity job
-        # as failed (the comment is informational only).
         if: >-
           always() && github.event_name == 'pull_request'
           && hashFiles('upstream-recovery-status.json') != ''
@@ -339,9 +263,6 @@ jobs:
               const MARKER = '<!-- upstream-recovery: sticky -->';
               const hasSignals = process.env.HAS_SIGNALS === 'true';
 
-              // Find any existing sticky comment. Cap per_page at 100 and
-              // stop as soon as we locate the marker — PRs with a very long
-              // comment history should not fan out to hundreds of API calls.
               let existing = null;
               for await (const { data: page } of github.paginate.iterator(
                 github.rest.issues.listComments,
@@ -357,7 +278,6 @@ jobs:
               }
 
               if (!hasSignals) {
-                // No stale/overdue signals — delete any prior sticky comment.
                 if (existing) {
                   await github.rest.issues.deleteComment({
                     owner: context.repo.owner,
@@ -368,7 +288,6 @@ jobs:
                 return;
               }
 
-              // Signals present → read pre-rendered body and upsert.
               const body = fs.readFileSync('upstream-recovery-comment.md', 'utf8');
 
               if (existing) {
@@ -387,10 +306,6 @@ jobs:
                 });
               }
             } catch (err) {
-              // Non-blocking: a transient GitHub API failure (rate-limit /
-              // network / permissions hiccup) must not mark the parity job
-              // as failed. Surface via core.warning so reviewers can see it
-              // in the Actions log, but do not re-throw.
               core.warning(
                 `Sticky upstream-recovery comment upsert failed: ${err.message}`,
               );

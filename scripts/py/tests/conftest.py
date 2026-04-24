@@ -6,7 +6,6 @@ Phase 0 で確立したので、後続モジュール port 側で file ごとに
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -61,27 +60,9 @@ def make_segment():
 def repo_root() -> Path:
     """testim-docs-ja worktree のルート絶対 path。
 
-    conformance テストは mjs source (``scripts/lib/*.mjs``) へ ``node`` を
-    spawn する必要があり、この fixture で session あたり 1 回だけ解決する。
+    Phase 6b cutover で mjs harness は削除され、現時点で node subprocess を
+    spawn するテストは残っていない。``repo_root`` 単体は conformance /
+    check_source_parity 等で snapshot / content ディレクトリの base として
+    まだ広く使われるため session fixture のまま保持する。
     """
     return Path(__file__).resolve().parents[3]
-
-
-@pytest.fixture(scope="session")
-def node_available(repo_root: Path) -> bool:
-    """``node`` が PATH にあり invocable なら True。
-
-    conformance テストのうち node を呼ぶものは node 不在環境で skip する
-    (Python-only CI 等)。local dev では常に node がある前提。
-    """
-    try:
-        subprocess.run(
-            ["node", "--version"],
-            cwd=repo_root,
-            check=True,
-            capture_output=True,
-            timeout=10,
-        )
-    except (FileNotFoundError, subprocess.SubprocessError):
-        return False
-    return True
