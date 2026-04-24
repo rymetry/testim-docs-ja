@@ -35,7 +35,7 @@
     "test:py:slow": "cd scripts/py && uv run pytest -m slow",
     "test:py:corpus": "cd scripts/py && uv run pytest -m corpus -n auto --dist load --tb=short",
     "test:py:corpus:regen": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out tests/conformance/__oracle__/corpus_golden.jsonl --suite segments_en,turndown && node tools/summarize_corpus_oracle.mjs --in tests/conformance/__oracle__/corpus_golden.jsonl --out tests/conformance/__oracle__/corpus_golden.sha256.tsv",
-    "test:py:corpus:drift": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out .corpus_live.jsonl --suite segments_en,turndown && diff -q .corpus_live.jsonl tests/conformance/__oracle__/corpus_golden.jsonl",
+    "test:py:corpus:drift": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out .corpus_live.jsonl --suite segments_en,turndown && diff -q .corpus_live.jsonl tests/conformance/__oracle__/corpus_golden.jsonl && node tools/summarize_corpus_oracle.mjs --in tests/conformance/__oracle__/corpus_golden.jsonl --out .corpus_live.sha256.tsv && diff -q .corpus_live.sha256.tsv tests/conformance/__oracle__/corpus_golden.sha256.tsv",
     "test:py:parity-smoke": "cd scripts/py && uv run pytest -m 'parity_smoke and not cutover' --tb=short",
     "test:py:quality": "cd scripts/py && uv run pytest -m 'recall or boundary or real_repo' --tb=short --durations=30",
     "test:py:cutover": "cd scripts/py && uv run pytest -o addopts= -m cutover",

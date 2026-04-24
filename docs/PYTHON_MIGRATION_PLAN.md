@@ -1168,15 +1168,20 @@ Phase 6b atomic cutover の **prerequisite** として別 PR (本 Phase 6a PR) �
    2. committed golden (default、新設)
    3. xdist + 何も無い → `pytest.UsageError` (fail-loud)
    4. single-process + 何も無い → live `emit_corpus_oracle.mjs` spawn (fallback)
-3. `.github/workflows/ci.yml` `python-corpus` job に **live mjs vs committed golden の drift check step** を追加 (Codex review #1「nightly は required gate にならない」への対応 — PR CI で drift を必ず検出する)。`TESTIM_CORPUS_EXPECTED_JSONL` と live emit step は削除し、pytest は committed golden を直接読む
-4. `.github/workflows/nightly-python-oracle.yml` の `oracle-snapshot` job に「committed golden との diff 比較 step」を追加し、drift 検出で **fail させる safety net gate** (PR CI 側の drift check と二重化)
+3. `.github/workflows/ci.yml` `python-corpus` job に **2 段 drift check step** を追加 (PR #387 review #1 / P2-1 対応):
+   - Step A: live mjs JSONL vs committed JSONL (mjs authority の drift 検出)
+   - Step B: summarize(committed JSONL) vs committed sha256 TSV (committed TSV stale 防止)
+
+   `TESTIM_CORPUS_EXPECTED_JSONL` と旧 live emit step は削除し、pytest は committed golden を直接読む
+4. `.github/workflows/nightly-python-oracle.yml` の `oracle-snapshot` job にも同じ **2 段 diff 比較 step** を追加し、drift 検出で **fail させる safety net gate** (PR CI 側の drift check と二重化、直接 push / dependabot merge 等で PR を経由しない drift を拾う)
 5. `package.json` script を再構成:
    - `test:py:corpus`: env var / live emit 不要 (committed golden 直読み)
-   - `test:py:corpus:regen`: committed golden と sha256 TSV を再生成
-   - `test:py:corpus:drift`: local で live vs committed の drift を確認
-6. Phase 6a merge 後は main の committed golden が authority となり、mjs lib を変更する際は同 PR で `npm run test:py:corpus:regen` を走らせて committed golden も更新する契約
+   - `test:py:corpus:regen`: committed golden JSONL + sha256 TSV を再生成
+   - `test:py:corpus:drift`: local で 2 段 drift (JSONL + TSV) を確認
+6. `emit_corpus_oracle.mjs` の `--suite` default を `all` → `segments_en,turndown` に変更 (PR #387 review P2-2 対応)。`align` は Phase 6b の 2-stage oracle 実装まで experimental 扱いで、明示 opt-in 時は stderr で保証対象違いを warning する
+7. Phase 6a merge 後は main の committed golden が authority となり、mjs lib を変更する際は同 PR で `npm run test:py:corpus:regen` を走らせて committed golden も更新する契約
 
-Phase 6a PR 自体は small scope (fixture commit + conftest / CI drift check + npm script 整備)。align 288-matrix の golden 化は Phase 6b で別途対応する (下記 Phase 6b「align 288-matrix golden 化」節参照、Codex review #2)。
+Phase 6a PR 自体は small scope (fixture commit + conftest / 2 段 CI drift check + npm script 整備 + CLI default 絞り)。align 288-matrix の golden 化は Phase 6b で別途対応する (下記 Phase 6b「align 288-matrix golden 化」節参照、Codex review #2)。
 
 ### Phase 6b: Atomic cutover PR
 

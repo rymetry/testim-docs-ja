@@ -172,19 +172,26 @@ jobs:
           cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
-      - name: Oracle drift check (live mjs vs committed golden)
-        # mjs で live oracle を再生成して committed golden と diff 比較する。
-        # mjs lib を変更したのに ``tests/conformance/__oracle__/corpus_golden.jsonl``
-        # を regenerate し忘れた PR をここで fail させる。Phase 6a の required
-        # drift gate (Phase 6b cutover で mjs 削除時に本 step も retire 予定)。
+      - name: Oracle drift check (live mjs + sha256 TSV vs committed golden)
+        # 2 段階 drift check:
+        #   1) live mjs JSONL vs committed JSONL (mjs authority の drift 検出)
+        #   2) summarize(committed JSONL) vs committed sha256 TSV (PR #387
+        #      review P2-1 対応、committed TSV が stale なまま merge される
+        #      のを防ぐ)
+        # どちらも fail-loud で PR を block する required gate。Phase 6b で
+        # mjs 削除時に本 step も retire 予定。
         #
         # 静的 pytest / node command のみで untrusted input を含まないため
         # command injection リスクは無い。
         run: |
+          GOLDEN_JSONL=tests/conformance/__oracle__/corpus_golden.jsonl
+          GOLDEN_TSV=tests/conformance/__oracle__/corpus_golden.sha256.tsv
+
+          # Step 1: live mjs output vs committed JSONL
           node tools/emit_corpus_oracle.mjs --out .corpus_live.jsonl --suite segments_en,turndown
-          if ! diff -q .corpus_live.jsonl tests/conformance/__oracle__/corpus_golden.jsonl; then
+          if ! diff -q .corpus_live.jsonl "$GOLDEN_JSONL"; then
             echo ""
-            echo "::error::Oracle drift detected: mjs live output != committed golden."
+            echo "::error::Oracle drift detected: mjs live output != committed golden JSONL."
             echo "mjs lib or scripts/lib/* was changed without regenerating the committed golden."
             echo "Run locally (from repo root):"
             echo "  node scripts/py/tools/emit_corpus_oracle.mjs \\"
@@ -194,6 +201,21 @@ jobs:
             echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
             echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
             echo "and commit the regenerated fixture in the same PR."
+            exit 1
+          fi
+
+          # Step 2: summarize(committed JSONL) vs committed TSV.
+          # 誰かが committed JSONL を regenerate したが TSV を regen し忘れると
+          # Phase 6b の debug/review 用 hash manifest が stale になるため block。
+          node tools/summarize_corpus_oracle.mjs --in "$GOLDEN_JSONL" --out .corpus_live.sha256.tsv
+          if ! diff -q .corpus_live.sha256.tsv "$GOLDEN_TSV"; then
+            echo ""
+            echo "::error::Oracle sha256 TSV drift: committed JSONL hashes != committed TSV."
+            echo "The sha256 TSV manifest is stale relative to the committed JSONL."
+            echo "Run locally (from repo root) to regenerate TSV:"
+            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
+            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
+            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
             exit 1
           fi
       - name: pytest (corpus)

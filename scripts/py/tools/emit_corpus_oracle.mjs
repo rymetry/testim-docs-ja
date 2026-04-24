@@ -13,8 +13,18 @@
  * Options:
  *   --out <path>   出力先 JSONL (必須)。絶対パスまたは cwd 相対。temp file に
  *                  書いて成功時だけ rename する (atomic write)。
- *   --suite <list> カンマ区切り suite 名 (default: ``all``)。有効値:
- *                  ``segments_en``, ``turndown``, ``align``。``all`` は全 suite。
+ *   --suite <list> カンマ区切り suite 名 (default: ``segments_en,turndown``)。
+ *                  有効値: ``segments_en``, ``turndown``, ``align``。
+ *                  ``all`` は全 suite。
+ *                  **``align`` suite は experimental** — 現行
+ *                  ``test_align_288_matrix.py`` は Python-generated segments
+ *                  を mjs ``alignSegments()`` に渡す 2-stage conformance で、
+ *                  本 tool の ``align`` (mjs extractor + mjs align) とは
+ *                  保証対象が異なる。Phase 6b で 2-stage oracle (新規)
+ *                  に置換予定。それまで ``align`` を golden / nightly
+ *                  artifact に混ぜると "保証対象違いの data が流用される"
+ *                  リスクがあるため、default は 2 suite のみ。``align`` は
+ *                  明示 opt-in したときに stderr で warning を出す。
  *
  * Output format (JSONL, 1 row per line):
  *   {
@@ -70,7 +80,12 @@ import { alignSegments } from '../../lib/source_parity_align.mjs';
  */
 function parseArgs(argv) {
   let out = null;
-  let suiteArg = 'all';
+  // Phase 6a で default を ``all`` → ``segments_en,turndown`` に変更 (PR #387
+  // review P2)。``align`` は Phase 6b で 2-stage oracle に置換予定の experimental
+  // suite で、現行 ``test_align_288_matrix.py`` の保証対象 (Python extractor →
+  // mjs align) と異なるため default 生成からは外す。明示 opt-in したときは
+  // 下の stderr warning で再度注意喚起する。
+  let suiteArg = 'segments_en,turndown';
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--out') {
@@ -84,7 +99,8 @@ function parseArgs(argv) {
     } else if (arg === '-h' || arg === '--help') {
       console.error(
         'Usage: node scripts/py/tools/emit_corpus_oracle.mjs --out <path>\n' +
-          '                                                 [--suite all|segments_en,turndown,align]',
+          '                                                 [--suite segments_en,turndown[,align]|all]\n' +
+          '                                                 (default: segments_en,turndown)',
       );
       process.exit(0);
     } else {
@@ -111,6 +127,19 @@ function parseArgs(argv) {
       console.error(`Unknown suite: ${s}. Valid: ${[...validSuites].join(', ')}`);
       process.exit(2);
     }
+  }
+  if (suites.has('align')) {
+    // ``align`` を opt-in した caller に現行 test_align_288_matrix との保証対象
+    // 違いを明示的に警告する (PR #387 review P2 対応、Phase 6b で 2-stage
+    // oracle に置換するまで golden / nightly artifact への流用を防ぐ).
+    console.error(
+      '[emit_corpus_oracle] WARNING: ``align`` suite is experimental.\n' +
+        '  Current test_align_288_matrix.py feeds Python-generated segments into\n' +
+        '  mjs alignSegments(), which is a different contract from this tool\'s\n' +
+        '  (mjs extractor + mjs align). Do NOT commit these align rows into\n' +
+        '  tests/conformance/__oracle__/ as golden. Phase 6b will replace this\n' +
+        '  with a 2-stage oracle (plan doc: Phase 6b align 288-matrix golden 化).',
+    );
   }
   return { out, suites };
 }
