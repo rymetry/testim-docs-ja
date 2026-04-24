@@ -12,6 +12,7 @@ import remarkCalloutDirectives from '@microflash/remark-callout-directives';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import expressiveCode from 'astro-expressive-code';
 import { buildRedirectMap } from './scripts/lib/redirects.mjs';
 import rehypeWrapTable from './src/lib/rehype-wrap-table.ts';
 
@@ -104,26 +105,12 @@ export default defineConfig({
       ],
       rehypeWrapTable,
     ],
-    shikiConfig: {
-      theme: 'github-dark-dimmed',
-      wrap: true,
-      transformers: [
-        {
-          name: 'code-title',
-          pre(node) {
-            // meta文字列からtitleを抽出
-            const meta = this.options.meta?.__raw || '';
-            const titleMatch = meta.match(/title="([^"]+)"/);
-
-            if (titleMatch) {
-              const title = titleMatch[1];
-              node.properties['data-title'] = title;
-              node.properties['data-has-title'] = 'true';
-            }
-          },
-        },
-      ],
-    },
+    // Phase 7: astro-expressive-code がすべての fenced code block を
+    // 独自に rendering するため、Astro の ``markdown.shikiConfig`` は EC には
+    // **効かない**。theme / wrap は integrations 側の ``expressiveCode({...})``
+    // へ移した (``themes: ['github-dark-dimmed']`` / ``defaultProps.wrap``)。
+    // shikiConfig を残すと「設定が効いている」と誤解される + dead config が
+    // 残るだけなので削除した。EC を外す reversion 時のみ復活させる契約。
   },
 
   fonts: [
@@ -137,6 +124,63 @@ export default defineConfig({
   ],
 
   integrations: [
+    // Phase 7: Expressive Code は react() / sitemap() より **前** に並べる。
+    // EC は Astro の markdown pipeline に rehype processor を注入するため、
+    // 他の integration より先に読み込ませて安定 initialization を保つ (docs の
+    // "Install Expressive Code with Astro" 節に準拠)。
+    expressiveCode({
+      // 既存サイトの code block は github-dark-dimmed で慣熟しているため
+      // 継続する。EC は Shiki を下位で呼ぶので theme 名は Shiki と同じ。
+      themes: ['github-dark-dimmed'],
+      // 旧 ``shikiConfig.wrap: true`` の挙動 (長い code 行を折り返す、
+      // ``white-space: pre-wrap``) を EC に移植する。本設定が無いと EC の
+      // ``<pre>`` は default で ``white-space: pre`` になり、既存の長い
+      // curl コマンド等が横スクロール表示に変わって UX regression になる
+      // (PR #388 review P2 対応)。
+      defaultProps: {
+        wrap: true,
+      },
+      // 既存の .docs-prose pre 角丸に揃える (CSS 側と整合、rounded-2xl = 1rem)。
+      styleOverrides: {
+        borderRadius: '1rem',
+        borderColor: 'rgb(15 23 42 / 0.1)',
+        codeFontSize: '0.8125rem', // tailwind text-[13px] 相当
+        codeLineHeight: '1.5rem', // tailwind leading-6 相当
+        frames: {
+          // frame (title / tabs / terminal) の shadow はサイト既存の shadow-lg
+          // (0 10px 15px -3px rgb(0 0 0 / 0.1)) に近付ける。
+          shadowColor: 'rgb(0 0 0 / 0.15)',
+        },
+      },
+      frames: {
+        // ``title="..."`` meta がある場合のみ frame を出したい。EC の default
+        // はファイル名推測 on だが、本サイトは title 明示が主流なので off。
+        extractFileNameFromCode: false,
+      },
+      // Shiki が認識しない言語タグを既存言語に alias する。本サイト content
+      // の非標準 lang を Shiki の unknown-lang warning 無しで build 通過
+      // させる方針 (content (EN 原文由来) は parity 契約で触らず、EC 側で
+      // 吸収する):
+      //   - ``curl`` (admin/api-access.md) → ``bash`` 文法で syntax highlight
+      //     (curl command は bash と互換性が高く、token 色分けが有効)
+      //   - ``Text`` (running-tests/...cli.md) → ``text`` として扱う (warning
+      //     を抑制しつつ plain text として描画、syntax highlight は無し。
+      //     現 content は ``--disable-timeout-retry`` 1 行のみで highlight
+      //     の必要性が低いため plain text で十分)
+      // HTML 出力の ``data-language`` 属性は原文の fence 名をそのまま維持する
+      // (EC の仕様)。Phase 7 での build warning ゼロ化対応 (PR #388 review)。
+      shiki: {
+        langAlias: {
+          curl: 'bash',
+          Text: 'text',
+        },
+      },
+      useThemedScrollbars: false, // 既存 overflow-x-auto の scroll UX に干渉しないよう off
+      // defaultLocale は未指定 → EC default (``en``) を使う。copy button は
+      // アイコンのみで visible text なし、tooltip / feedback は英語 ("Copy
+      // to clipboard" / "Copied!") で出力される (PR #388 review 指摘で JA
+      // ローカライズを revert)。
+    }),
     react(),
     ...(!isAuthEnabled
       ? [

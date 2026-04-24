@@ -192,12 +192,23 @@
   .docs-prose code:not(pre code) {
     @apply rounded-md bg-blue-50 px-1.5 py-0.5 text-sm font-medium text-blue-800;
   }
-  .docs-prose pre {
+  /* Phase 7: Expressive Code (``.expressive-code`` wrapper) が fenced code
+     block を handling するようになったため、旧 .docs-prose pre カスタム
+     スタイルは EC の内部 pre には適用したくない。direct HTML ``<pre>`` が
+     markdown 側で書かれた場合 (稀) の fallback として :not() で scope 限定
+     する。EC 側の角丸 / 背景 / 余白は astro.config.mjs の styleOverrides で
+     既存 look に合わせている。*/
+  .docs-prose pre:not(.expressive-code *) {
     @apply mt-8 overflow-x-auto rounded-2xl border border-slate-900/10 bg-slate-950 p-5 text-sm text-slate-100 shadow-lg;
     background-image: radial-gradient(circle at top left, rgba(37, 99, 235, 0.06), transparent);
   }
-  .docs-prose pre code {
+  .docs-prose pre:not(.expressive-code *) code {
     @apply bg-transparent p-0 text-[13px] leading-6 text-slate-100;
+  }
+  /* Expressive Code 全体の margin を揃える (EC は figure で pre を包むため
+     旧 .docs-prose pre の mt-8 が効かない)。*/
+  .docs-prose .expressive-code {
+    @apply mt-8;
   }
   .docs-prose hr {
     @apply my-12 border-slate-200;
@@ -429,14 +440,11 @@
     @apply text-sky-600;
   }
 
-  /* コードブロックにタイトルがある場合 */
-  .docs-prose pre[data-has-title='true'] {
-    @apply relative pt-12;
-  }
-  .docs-prose pre[data-has-title='true']::before {
-    content: attr(data-title);
-    @apply absolute left-0 right-0 top-0 rounded-t-2xl border-b border-slate-700/50 bg-slate-800/80 px-5 py-2 text-xs font-medium text-slate-300;
-  }
+  /* Phase 7: ``title="..."`` meta の title frame 表示は Expressive Code が
+     figure > figcaption で native 対応する。旧 ``data-has-title`` transformer
+     は astro.config.mjs から削除済み。ここの custom rule も不要になったため
+     削除した (EC の frame styling は astro.config.mjs の styleOverrides で
+     調整する契約に移行)。*/
 
   /* 見出しリンク */
   .heading-link {
