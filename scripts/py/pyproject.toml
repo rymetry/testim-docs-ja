@@ -51,10 +51,13 @@ markers = [
   "boundary: boundary stability (score >= 0.95)",
   "recall: mutation recall (9/9 = 100%)",
   "integration: full pipeline",
-  # 288-page matrix conformance (~4 min)。local dev feedback loop を速くする
-  # ため default で除外し、CI / pre-merge gate では ``-m ''`` で全件走らせる。
+  # 288-page matrix conformance (~4 min)。default で除外し、**CI も local も**
+  # ``addopts = "-m 'not slow and not cutover'"`` で skip する運用 (Phase 4b-5
+  # coexistence)。merge 前に shape drift を検証したい reviewer は local で
+  # ``uv run pytest -m slow`` を **明示 run** する。Phase 6 cutover で
+  # conformance が golden 化される段階で slow marker は自然退場する。
   # align_288_matrix はアルゴリズム計算が重いため pytest-xdist でも律速 (単一
-  # test がシリアル)、slow-marker で local opt-out が最善策。
+  # test がシリアル)、slow-marker で opt-in する設計が最善策。
   "slow: 288-page corpus conformance (align + segments_en 全ページ走査)",
   # Phase 6 atomic cutover の self-enforcing gate。Phase 5 で port 中に
   # 発覚した Python extractor / align drift を Phase 6 cutover PR で解消したかを

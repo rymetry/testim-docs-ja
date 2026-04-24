@@ -985,9 +985,11 @@ byte-level 差) は **Phase 6 atomic cutover の前に別 PR で解消する**:
 
 ### 削除 mjs test → Python 対応 mapping (PR #384 review P1-3 audit)
 
-Phase 5 で delete した 54 mjs test のうち、reviewer から explicit に確認を求められた 8 file
-の Python 側等価カバレッジを以下に pin する。全て Python unit + conformance で同等以上の
-guard を維持している:
+Phase 5 で delete した mjs test (52 file、当初 54 delete から codex review P1 対応で
+``sync_detection_issues.test.mjs`` + ``lint_docs_contract.test.mjs`` の 2 file を
+coexistence guard として restore / 新設した結果、純 delete は **52 file**) のうち、
+reviewer から explicit に確認を求められた 8 file の Python 側等価カバレッジを
+以下に pin する。全て Python unit + conformance で同等以上の guard を維持している:
 
 | 削除 mjs test file | mjs test 数 | Python unit test | Python conformance | 備考 |
 | --- | ---: | --- | --- | --- |
