@@ -13,19 +13,8 @@ import remarkCalloutDirectives from '@microflash/remark-callout-directives';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import expressiveCode from 'astro-expressive-code';
-import { pluginFramesTexts } from '@expressive-code/plugin-frames';
 import { buildRedirectMap } from './scripts/lib/redirects.mjs';
 import rehypeWrapTable from './src/lib/rehype-wrap-table.ts';
-
-// Phase 7: Expressive Code の default locale (en) は "Copy to clipboard" /
-// "Copied!" を英語で出すため、`ja` を追加し日本語 label に切り替える。
-// `addLocale` は full set を要求する (3 key: copyButtonTooltip /
-// copyButtonCopied / terminalWindowFallbackTitle) ので 3 件ともに提供。
-pluginFramesTexts.addLocale('ja', {
-  copyButtonTooltip: 'クリップボードにコピー',
-  copyButtonCopied: 'コピーしました',
-  terminalWindowFallbackTitle: 'ターミナル',
-});
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
@@ -117,14 +106,11 @@ export default defineConfig({
       rehypeWrapTable,
     ],
     // Phase 7: astro-expressive-code がすべての fenced code block を
-    // handling するため、旧 shikiConfig の ``code-title`` transformer は不要
-    // (Expressive Code の frame plugin が ``title="..."`` meta を native に
-    // 読み取って figure > figcaption に展開する)。shikiConfig 自体は EC が
-    // 内部で shiki を呼ぶ際の default として残しておく (wrap だけ維持)。
-    shikiConfig: {
-      theme: 'github-dark-dimmed',
-      wrap: true,
-    },
+    // 独自に rendering するため、Astro の ``markdown.shikiConfig`` は EC には
+    // **効かない**。theme / wrap は integrations 側の ``expressiveCode({...})``
+    // へ移した (``themes: ['github-dark-dimmed']`` / ``defaultProps.wrap``)。
+    // shikiConfig を残すと「設定が効いている」と誤解される + dead config が
+    // 残るだけなので削除した。EC を外す reversion 時のみ復活させる契約。
   },
 
   fonts: [
@@ -146,6 +132,14 @@ export default defineConfig({
       // 既存サイトの code block は github-dark-dimmed で慣熟しているため
       // 継続する。EC は Shiki を下位で呼ぶので theme 名は Shiki と同じ。
       themes: ['github-dark-dimmed'],
+      // 旧 ``shikiConfig.wrap: true`` の挙動 (長い code 行を折り返す、
+      // ``white-space: pre-wrap``) を EC に移植する。本設定が無いと EC の
+      // ``<pre>`` は default で ``white-space: pre`` になり、既存の長い
+      // curl コマンド等が横スクロール表示に変わって UX regression になる
+      // (PR #388 review P2 対応)。
+      defaultProps: {
+        wrap: true,
+      },
       // 既存の .docs-prose pre 角丸に揃える (CSS 側と整合、rounded-2xl = 1rem)。
       styleOverrides: {
         borderRadius: '1rem',
@@ -163,11 +157,24 @@ export default defineConfig({
         // はファイル名推測 on だが、本サイトは title 明示が主流なので off。
         extractFileNameFromCode: false,
       },
-      // JA ローカライズ。上で pluginFramesTexts.addLocale('ja', ...) を登録
-      // 済みなので、default locale を `ja` (two-letter code, EC 推奨) に
-      // 切り替えて copy button / tooltip / terminal fallback title を日本語化。
-      defaultLocale: 'ja',
+      // Shiki が認識しない言語タグを既存言語に alias する。copy button 文言
+      // と同じ方針 (EC の英語 default を尊重) で、本サイト content に現れる
+      // 非標準 lang を warning なく highlight する:
+      //   - ``curl`` (admin/api-access.md) → ``bash`` として highlight
+      //   - ``Text`` (running-tests/...cli.md) → ``text`` として扱う
+      // (PR #388 review の build warning 対応。content (EN 原文由来) は
+      // 触らず、EC 側で吸収する方針で parity system 無影響を維持)。
+      shiki: {
+        langAlias: {
+          curl: 'bash',
+          Text: 'text',
+        },
+      },
       useThemedScrollbars: false, // 既存 overflow-x-auto の scroll UX に干渉しないよう off
+      // defaultLocale は未指定 → EC default (``en``) を使う。copy button は
+      // アイコンのみで visible text なし、tooltip / feedback は英語 ("Copy
+      // to clipboard" / "Copied!") で出力される (PR #388 review 指摘で JA
+      // ローカライズを revert)。
     }),
     react(),
     ...(!isAuthEnabled
