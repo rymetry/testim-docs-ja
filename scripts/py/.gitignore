@@ -9,14 +9,16 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-# emit_corpus_oracle.mjs が書き出す一時 artifact。
-# Phase 5 ``python-corpus`` の .corpus_expected.jsonl と Phase 6a drift check
-# の .corpus_live.jsonl は CI run 毎に fresh な mjs 出力を得たいので追跡しない
+# emit_corpus_oracle.mjs / summarize_corpus_oracle.mjs が書き出す一時 artifact。
+# CI run / local drift check 毎に fresh な mjs 出力を得たいので追跡しない
 # (authoritative な committed golden は ``tests/conformance/__oracle__/`` に
-# 置く契約)。``.oracle_today.jsonl`` は nightly workflow が sha256 要約用に
-# 書き出す中間 artifact。
+# 置く契約)。全 entry は Phase 5 ``python-corpus`` / Phase 6a drift check /
+# nightly workflow / ``npm run test:py:corpus:drift`` のいずれかが書き出す
+# 中間 file で、commit 対象ではない。
 .corpus_expected.jsonl
 .corpus_live.jsonl
+.corpus_live.sha256.tsv
 .oracle_today.jsonl
 .oracle_sha256.tsv
+.oracle_committed_expected.tsv
 corpus-junit.xml
