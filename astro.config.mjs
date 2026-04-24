@@ -157,13 +157,18 @@ export default defineConfig({
         // はファイル名推測 on だが、本サイトは title 明示が主流なので off。
         extractFileNameFromCode: false,
       },
-      // Shiki が認識しない言語タグを既存言語に alias する。copy button 文言
-      // と同じ方針 (EC の英語 default を尊重) で、本サイト content に現れる
-      // 非標準 lang を warning なく highlight する:
-      //   - ``curl`` (admin/api-access.md) → ``bash`` として highlight
-      //   - ``Text`` (running-tests/...cli.md) → ``text`` として扱う
-      // (PR #388 review の build warning 対応。content (EN 原文由来) は
-      // 触らず、EC 側で吸収する方針で parity system 無影響を維持)。
+      // Shiki が認識しない言語タグを既存言語に alias する。本サイト content
+      // の非標準 lang を Shiki の unknown-lang warning 無しで build 通過
+      // させる方針 (content (EN 原文由来) は parity 契約で触らず、EC 側で
+      // 吸収する):
+      //   - ``curl`` (admin/api-access.md) → ``bash`` 文法で syntax highlight
+      //     (curl command は bash と互換性が高く、token 色分けが有効)
+      //   - ``Text`` (running-tests/...cli.md) → ``text`` として扱う (warning
+      //     を抑制しつつ plain text として描画、syntax highlight は無し。
+      //     現 content は ``--disable-timeout-retry`` 1 行のみで highlight
+      //     の必要性が低いため plain text で十分)
+      // HTML 出力の ``data-language`` 属性は原文の fence 名をそのまま維持する
+      // (EC の仕様)。Phase 7 での build warning ゼロ化対応 (PR #388 review)。
       shiki: {
         langAlias: {
           curl: 'bash',
