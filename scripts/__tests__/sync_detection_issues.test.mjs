@@ -1,3 +1,15 @@
+/**
+ * sync-detection-issues.cjs の回帰テスト (Phase 5 coexistence retained)。
+ *
+ * Phase 5 mjs→pytest 移植で一度 delete したが、対象 script
+ * ``.github/scripts/sync-detection-issues.cjs`` は ``scheduled-actionable.yml``
+ * で **production 実行中** (Phase 5 coexistence では retire 予定なし) のため、
+ * PR #384 codex review P1 対応で **restore** した。
+ *
+ * Phase 6 cutover で当該 .cjs を retire する際に、本 test も同 PR で削除する
+ * 契約 (docs/PYTHON_MIGRATION_PLAN.md Phase 6 「削除対象」節を参照)。
+ */
+
 import { afterEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

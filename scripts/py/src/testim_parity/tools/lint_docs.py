@@ -62,6 +62,13 @@ _CODE_BLOCK_RE = re.compile(r"```[\s\S]*?```")
 _INLINE_CODE_RE = re.compile(r"`[^`]*`")
 
 _CALLOUT_RE = re.compile(r"^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$", re.MULTILINE)
+# list item 内に nest された ``:::callout`` を検出するための regex。plan doc
+# Phase 2 でも明文化されている通り、JA parser は list context を追跡しないので
+# indented callout は ambiguous な flatten を招く。docs/WRITING_GUIDE.md で
+# 禁止を明記、ここで lint ガードを pin する契約。
+_LIST_NESTED_CALLOUT_RE = re.compile(
+    r"^[ \t]+:{3,}\s*[a-zA-Z][a-zA-Z-]*(?:\{[^}]*\})?\s*$", re.MULTILINE
+)
 _MARKDOWN_LINK_RE = re.compile(r"\]\(/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^)]+)?\)")
 _HTML_LINK_RE = re.compile(
     r"""<a\b[^>]*href=["']/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^\s"']*)?\s*["'][^>]*>""",
@@ -246,17 +253,42 @@ def check_code_blocks(body: str, body_start: int, reporter: _Reporter) -> None:
 
 
 def check_callouts(body: str, body_start: int, reporter: _Reporter) -> None:
+    # Code fence 内の ``:::callout`` 風 literal は meta-documentation (反例示)
+    # として lint しない。``check_images`` と同じ state machine で fence を
+    # 追跡し、fence 内の行を skip する。fence 閉じ後は通常の検出に戻る。
     sorted_types = ", ".join(sorted(_VALID_CALLOUT_TYPES))
-    for match in _CALLOUT_RE.finditer(body):
-        callout_type = match.group(1).lower()
-        if callout_type in _VALID_CALLOUT_TYPES:
+    in_code_block = False
+    for index, line in enumerate(body.split("\n")):
+        if _CODE_FENCE_RE.match(line.strip()):
+            in_code_block = not in_code_block
             continue
-        line = body[: match.start()].count("\n") + 1
-        reporter.err(
-            "callout-unknown-type",
-            f'Unknown callout type "{match.group(1)}". Valid types: {sorted_types}',
-            _to_absolute_line(line, body_start),
-        )
+        if in_code_block:
+            continue
+
+        line_number = _to_absolute_line(index + 1, body_start)
+
+        top_match = _CALLOUT_RE.match(line)
+        if top_match:
+            callout_type = top_match.group(1).lower()
+            if callout_type not in _VALID_CALLOUT_TYPES:
+                reporter.err(
+                    "callout-unknown-type",
+                    f'Unknown callout type "{top_match.group(1)}". Valid types: {sorted_types}',
+                    line_number,
+                )
+
+        # list item 内 nest された ``:::callout`` を検出。plan doc Phase 2 で JA
+        # parser は list context を追跡しないと明記されているため、indented
+        # callout は ambiguous な flatten を招く。top-level でない callout を
+        # 全て不許可にする (docs/WRITING_GUIDE.md 参照)。
+        if _LIST_NESTED_CALLOUT_RE.match(line):
+            reporter.err(
+                "callout-in-list-item",
+                "Callout directive nested inside a list item is unsupported "
+                "(JA extractor cannot flatten it deterministically). "
+                "Keep callouts at top level — see docs/WRITING_GUIDE.md.",
+                line_number,
+            )
 
 
 def check_images(body: str, body_start: int, reporter: _Reporter) -> None:

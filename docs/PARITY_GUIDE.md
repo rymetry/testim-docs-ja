@@ -284,11 +284,22 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
    | Codex (external model) | independent second-opinion review |
    | plan-fidelity | plan/spec 文言整合 / marker protocol 遵守 / 未登録 carve-out 検知 |
 
-4. **Test pins (must pass)**:
-   - `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` (sentinel slugs の totalIssues=0)
-   - `scripts/__tests__/en_source_patches.test.mjs` / `_integration.test.mjs` (patch-registry invariants)
-   - `scripts/__tests__/generate_parity_baseline.test.mjs` (pre-regen gate)
-   - 各 regression guard
+4. **Test pins (must pass)** (Phase 5 で pytest に移植済):
+   - `scripts/py/tests/test_clean_page_fixtures.py` (sentinel slug の totalIssues=0。意図的 drift は `_PY_XFAIL_SLUGS` で隔離、Phase 6 cutover 前に empty 化)
+   - `scripts/py/tests/test_en_source_patches.py` + `test_en_source_patches_integration.py` (patch-registry invariants + dual-source-of-truth drift)
+   - `scripts/py/tests/test_generate_parity_baseline.py` (pre-regen gate) + `tests/conformance/test_generate_parity_baseline_e2e.py` (mjs byte-parity)
+   - 各 regression guard (`test_recall.py` 9/9 mutation recall / `test_baseline_recall.py` / `test_segments_boundary.py`)
+   - **Phase 5 で新設された pin (PR #384)**:
+     - `scripts/py/tests/test_mutation_corpus.py` (9/9 mutation recall を slug × mutation-kind matrix で枝分岐検証、recall drift の早期検知)
+     - `scripts/py/tests/test_detection_reports.py` (parity-check-status.json schema / 5-counter accounting / baseline-ack 順序 / sink fan-out の representative contract。共有 factory `_empty_snapshot()` / `_empty_parity()` で cross-test mutation を防止)
+     - `scripts/py/tests/test_check_source_parity.py::test_mask_coverage_records_non_empty_masks_from_ja_body` (mask_coverage kwarg bug regression guard)
+     - `scripts/py/tests/test_cutover_gate.py` (`@pytest.mark.cutover` self-enforcing gate、`_PY_*_SLUGS` frozenset を Phase 6 で全 empty 化する契約。`test_exclusion_registry_matches_plan_doc` が plan doc table を parse して `(module, attribute)` tuple を cross-reference pin)
+     - `scripts/py/tests/test_lint_docs.py::TestCalloutDirective` (`callout-in-list-item` / `callout-unknown-type` lint rule + code fence skip 契約)
+     - `scripts/py/tests/test_summary.py` (`structureMismatch*` / `snapshotUnusable*` / `auditSignal*` counter routing を 8 test で pin、Phase 6 以降 mjs 無しで counter 分類 regression を検知)
+     - `scripts/py/tests/test_summary_format.py` (field 混同 regression guard: `structureMismatch*` が `snapshotUnusable*` に leak しない契約)
+   - **Phase 5 coexistence 限定 Node-side guard (PR #384)**:
+     - `scripts/__tests__/lint_docs_contract.test.mjs` — `lint:docs` が Phase 6 cutover まで Node 実装を使う間、`callout-*` rule を Node 側で最低限 pin する回帰テスト。Phase 6 cutover 時に lint:docs が Python 化し次第 **削除** する
+   - 残る 1 mjs test (Phase 6 以降も保持): `scripts/__tests__/lib_redirects.test.mjs` (Astro build graph 経由で `scripts/lib/redirects.mjs` を import するため、Phase 6 cutover 以降も保持する production-only test)
 
 5. **Baseline regen cycle**: PR merge 後の full `--regenerate` は必ず pre-regen fail-closed gate を pass。CI run log に `baseline-regen-gate: pass` を明示。
 

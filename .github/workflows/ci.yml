@@ -91,12 +91,17 @@ jobs:
         run: uv run mypy src
       - name: pytest
         # Phase 4b-5 の一時措置: ``slow`` marker (288-page matrix conformance) は
-        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。Phase 6
-        # atomic cutover で mjs 削除 + conformance test 退場に伴って自然解消する。
-        # ``pyproject.toml`` の ``addopts = "-m 'not slow'"`` が default で効く。
-        # Merge gate の shape drift 検出は local ``uv run pytest -m slow`` で
-        # reviewer が明示的に pre-merge 実行する運用に切替。
-        run: uv run pytest --cov=testim_parity --cov-report=term-missing
+        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。``cutover`` も
+        # Phase 6 cutover PR 専用なので skip。Phase 6 atomic cutover で mjs 削除 +
+        # conformance test 退場に伴って自然解消する。
+        #
+        # ``pyproject.toml`` の ``addopts = "-m 'not slow and not cutover'"`` が
+        # default で効くが、CI yaml でも **明示的** に ``-m`` を重ねて「slow を
+        # CI から外す契約」を yaml レベルで可視化する (PR #384 user request:
+        # 意図の pin、pyproject.toml 変更時の silent 無効化防止)。Merge gate の
+        # shape drift 検出は local ``uv run pytest -m slow`` で reviewer が
+        # 明示的に pre-merge 実行する運用。
+        run: uv run pytest -m 'not slow and not cutover' --cov=testim_parity --cov-report=term-missing
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

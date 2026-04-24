@@ -202,19 +202,49 @@ export function checkCodeBlocks(body, bodyStart, reporter) {
 }
 
 export function checkCallouts(body, bodyStart, reporter) {
-  const calloutRe = /^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$/gm;
-  let match;
-  while ((match = calloutRe.exec(body)) !== null) {
-    const type = match[1].toLowerCase();
-    if (VALID_CALLOUT_TYPES.has(type)) continue;
+  // code fence 内の ``:::callout`` 風 literal は meta-documentation (反例示)
+  // として lint しない。checkImages と同じ state machine で fence を追跡し、
+  // fence 内の行を skip する。fence 閉じ後は通常の検出に戻る。
+  const calloutRe = /^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$/;
+  const listNestedCalloutRe =
+    /^[ \t]+:{3,}\s*[a-zA-Z][a-zA-Z-]*(?:\{[^}]*\})?\s*$/;
 
-    const line = body.slice(0, match.index).split('\n').length;
-    reporter.err(
-      'callout-unknown-type',
-      `Unknown callout type "${match[1]}". Valid types: ${[...VALID_CALLOUT_TYPES].join(', ')}`,
-      toAbsoluteLine(line, bodyStart)
-    );
-  }
+  let inCodeBlock = false;
+  body.split('\n').forEach((line, index) => {
+    if (/^```/.test(line.trim())) {
+      inCodeBlock = !inCodeBlock;
+      return;
+    }
+    if (inCodeBlock) return;
+
+    const lineNumber = toAbsoluteLine(index + 1, bodyStart);
+
+    const topMatch = line.match(calloutRe);
+    if (topMatch) {
+      const type = topMatch[1].toLowerCase();
+      if (!VALID_CALLOUT_TYPES.has(type)) {
+        reporter.err(
+          'callout-unknown-type',
+          `Unknown callout type "${topMatch[1]}". Valid types: ${[...VALID_CALLOUT_TYPES].join(', ')}`,
+          lineNumber
+        );
+      }
+    }
+
+    // list item 内 nest された ``:::callout`` を禁止。plan doc Phase 2 で JA
+    // parser は line-based state machine のため list context を追跡しないと
+    // 明記されている → indented callout は ambiguous に flatten されるので
+    // lint 段階で error にする。docs/WRITING_GUIDE.md と対応。
+    if (listNestedCalloutRe.test(line)) {
+      reporter.err(
+        'callout-in-list-item',
+        'Callout directive nested inside a list item is unsupported ' +
+          '(JA extractor cannot flatten it deterministically). ' +
+          'Keep callouts at top level — see docs/WRITING_GUIDE.md.',
+        lineNumber
+      );
+    }
+  });
 }
 
 export function checkImages(body, bodyStart, reporter) {

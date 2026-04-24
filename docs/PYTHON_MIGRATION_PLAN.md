@@ -883,7 +883,7 @@ corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
 
 ## Phase 5: Tests (pytest 全書き直し)
 
-**Goal**: 57 test files → pytest
+**Goal**: 55 mjs test files → pytest
 
 ### 3-tier テスト戦略 (レビュー指摘を反映)
 
@@ -895,59 +895,307 @@ corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
 | **Structural conformance** | 意図しない regression 検出 | 全ページで `{sectionPath, kind, count}` を比較。intentional diff は allowlist |
 | **Aggregate counter gate** | 5-counter = 0 不変量 | Full parity run → `parity-check-status.json` の 5 counter が全て 0 |
 
-### Coexistence period (cutover 前)
+### Coexistence period (cutover 前) ✅ 完了
 
 ```json
 {
   "scripts": {
     "test": "node --test scripts/__tests__/*.mjs",
+    "test:mjs": "node --test scripts/__tests__/*.mjs",
     "test:py": "cd scripts/py && uv run pytest",
-    "test:all": "npm run test && npm run test:py"
+    "test:py:cov": "cd scripts/py && uv run pytest --cov=testim_parity --cov-report=term-missing",
+    "test:py:slow": "cd scripts/py && uv run pytest -m slow",
+    "test:all": "npm run test:mjs && npm run test:py"
   }
 }
 ```
 
-CI は `npm run test:all` を実行。mjs テストファイルが 1 つ移植される度に対応する mjs test を削除。
+CI の `test` job は `npm run test` (mjs only)、`python-test` job は pytest をそれぞれ独立実行。
+local では `npm run test:all` で両方を連続実行可能。mjs テストファイルは当初 54/55 を delete
+したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5 終了時点で
+**3 file** が残存している:
 
-### Coverage target: 90%+
+- `scripts/__tests__/lib_redirects.test.mjs` (6 test) — Astro build graph が `redirects.mjs`
+  を import するため恒久保持 (Phase 6 以降、Astro 依存解消時の post-Phase-6 cleanup で削除)
+- `scripts/__tests__/lint_docs_contract.test.mjs` (25 test) — `lint:docs` が Phase 6 cutover
+  まで `scripts/tools/lint_docs.mjs` (Node) を実行する契約のため、callout / frontmatter /
+  link / feature-name / image 各 rule を Node 側で pin する coexistence guard (PR #384
+  round 2 で新設、Phase 6 cutover で lint:docs が Python 化する際に削除)
+- `scripts/__tests__/sync_detection_issues.test.mjs` (13 test) — `.github/scripts/sync-detection-issues.cjs`
+  が `scheduled-actionable.yml` の production tooling として稼働中。PR #384 codex review P1
+  対応で復元。Phase 6 atomic cutover では touch せず、Phase 6.1 (post-cutover 別 PR) で
+  `.cjs` の port/retire 判断と同時に処理する
+
+各 file の削除 timing と rationale は下記「Phase 5 実績」表、および Phase 6 cutover gate 7 /
+Phase 6.1 section と cross-reference 済。
+
+### Coverage target: 90%+ ✅ 達成
+
+### Phase 5 実績 (2026-04-22 完了)
+
+| 指標 | 着手前 | 完了時 | 備考 |
+| --- | ---: | ---: | --- |
+| mjs test file 数 | 55 | **3** | 52 file delete (後日 2 file 復元: Phase 5 coexistence guard 用 `lint_docs_contract.test.mjs` と、PR #384 codex review 対応で復元した `sync_detection_issues.test.mjs`)。削除 timing: `lint_docs_contract` は Phase 6 cutover で lint:docs が Python 化する際に削除、`sync_detection_issues` は Phase 6.1 (post-cutover 別 PR) で `.cjs` の port/retire と同時に削除。`lib_redirects` は Astro 依存解消時の post-Phase-6 cleanup |
+| mjs test case 数 | 2040 | **44** | `lib_redirects.test.mjs` (6) + `lint_docs_contract.test.mjs` (25) + `sync_detection_issues.test.mjs` (13) |
+| pytest file 数 | 68 | **97** | 20+ 新規 + 既存 augment (conformance 39 + top-level 58、実測は `find scripts/py/tests -name 'test_*.py' -not -path '*__pycache__*' \| wc -l`) |
+| pytest case 数 | 931 | **2001** | +1070 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応追加分を含む: routing/factory/skip-guard/primary-pin/mask-coverage/lint-callout/cutover-gate auto-discovery) |
+| pytest coverage | 95.60% | **95.60%** | `slow` marker 込み local 実測 (`uv run pytest -m slow --cov=testim_parity`)。**CI 実効は ~65-70%** — `slow`/`cutover` 除外で 288-page matrix が coverage に計上されない trade-off。`pyproject.toml::[tool.coverage.report] fail_under = 65` が下限 gate として Phase 5 coexistence を regression guard。Phase 6 cutover 後 `fail_under=90` へ戻す |
+| 5-counter DoD | 0 | **0** | 変更なし |
+| mutation recall (9/9) | 100% | **100%** | `test_recall.py::test_diff_one_mutation_strict_recall_100_percent` gate |
+| 288-matrix slow test | pass | **pass** | turndown / segments_en / align 全 byte-identical |
+
+### Phase 5 実装メモ
+
+**並列実行**: 6 sub-agent で 44 mjs file を分担 port (CLI pipeline / tools / integration+fixtures /
+gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同じ pytest file
+を異なる agent が augment するケース (test_align.py / test_check_source_parity.py) は Edit tool
+の sequential append で競合回避した。
+
+**重要な port 戦略**:
+
+- **巨大 orchestration test** (`source_parity.test.mjs` 270 tests, `detection_reports.test.mjs`
+  157 tests) は 1:1 port ではなく、Python CLI が byte-identical 出力を生成する事実を
+  conformance harness で verify 済みなので、Python 側は **代表的な orchestration contract**
+  (exit code / status json schema / 5-counter invariant / slug filter / linkage state / fail-on
+  matrix / runScope propagation) に focus した unit test に凝縮
+- **fixture-driven test** は `scripts/py/tests/fixtures/source-parity-goldens/manifest.json` を
+  mjs 側から copy。共通 manifest を両 runtime が読む
+- **debug-only test** (`debug_artifact_independence.test.mjs` / `debug_mask_coverage.test.mjs`) は
+  mjs runtime 固有の invariant を assert するもので Python 側に等価な `.debug.*` namespace
+  emission path がないため outright delete (port 不要)
+- **`sync_detection_issues.test.mjs`** は当初 delete したが、PR #384 codex review P1 対応で
+  **復元** した (`.github/scripts/sync-detection-issues.cjs` が `scheduled-actionable.yml` の
+  production tooling として稼働中で、Phase 5 中の回帰検知が必要)。Phase 6 atomic cutover
+  PR の scope には含めず、**Phase 6.1 (post-cutover, 別 PR)** で `.cjs` 自体の port/retire
+  判断と同時に処理する (docs/PYTHON_MIGRATION_PLAN.md 下部「Phase 6.1」節参照)
+- **mask_coverage record() のキーワード引数バグ修正** — `check_source_parity.py:517-522` が
+  `segmentKind=` / `sectionPath=` (camelCase) で `create_mask_coverage.record()` を呼んでいたが
+  定義側は `segment_kind=` / `section_path=` (snake_case)。5-counter gate が常に 0 で済んで
+  いたため実 run では (mask が空のときに全 return するため) silent 回避されていた。Phase 5
+  整備中に pytest isolation test で確認され修正済み
+
+### 検証 register (Phase 5 完了時の gate log)
+
+- `npm run test:mjs` — 44 pass (lib_redirects 6 + lint_docs_contract 25 + sync_detection_issues 13、Phase 5 coexistence 回帰 guard)
+- `cd scripts/py && uv run pytest -q` — **2001 passed, 1 skipped, 6 deselected** (slow + cutover markers、PR #384 codex review 対応後の実測値、294s。cutover marker test を 3 から 1 に縮小 — registry/doc sync と auto-discovery は default CI で常時 run する契約に変更)
+- `cd scripts/py && uv run pytest -m slow` — 288-matrix byte-identical (segments_en / turndown / align)
+- `cd scripts/py && uv run ruff check src tests && uv run ruff format --check src tests` — clean
+- `cd scripts/py && uv run mypy src` — Success: no issues found in 60 source files
+- `npm run check:parity` — **5-counter = 0 維持**
+- `npm run build` — 290 pages pass
+
+### 既知の follow-up (Phase 6 着手前に検討)
+
+Phase 5 の並列 port 中に発見された Python 側 parity drift (mjs と Python extractor / align の
+byte-level 差) は **Phase 6 atomic cutover の前に別 PR で解消する**:
+
+- `scripts/py/tests/test_clean_page_fixtures.py::_PY_EXTRACTOR_DRIFT_SLUGS` — ~16 slug で
+  Python extractor が mjs と異なる structural diff を出す (e.g. `advanced-editing/loops` は JA
+  extractor が 1 `unordered-list-item` を欠落、`running-tests/running-tests-overview` は token-drop
+  mutation 未検出)
+- `test_orphan_integration.py` の E2E 化 — mask_coverage 修正後に enable 可能。現状は
+  `compute_orphan_baseline_entries` を unit test で verify
+- `test_recall.py` / `test_clean_page_fixtures.py` / `test_segments_boundary.py` の順序依存性
+  — 共有 module-level cache を fixture-scope でリセットする isolation 強化
+
+これらは Phase 6 cutover gate (conformance test を golden snapshot 化する段階) で解消。
+
+### 削除 mjs test → Python 対応 mapping (PR #384 review P1-3 audit)
+
+Phase 5 で delete した mjs test (52 file、当初 54 delete から codex review P1 対応で
+``sync_detection_issues.test.mjs`` + ``lint_docs_contract.test.mjs`` の 2 file を
+coexistence guard として restore / 新設した結果、純 delete は **52 file**) のうち、
+reviewer から explicit に確認を求められた 8 file の Python 側等価カバレッジを
+以下に pin する。全て Python unit + conformance で同等以上の guard を維持している:
+
+| 削除 mjs test file | mjs test 数 | Python unit test | Python conformance | 備考 |
+| --- | ---: | --- | --- | --- |
+| `source_parity_segments_en.test.mjs` | 48 | `test_segments_en.py` (28) | `test_segments_en_parity.py` + `test_extract_structure.py` | 288-matrix byte-identical conformance で全 corpus 検証 |
+| `source_parity_segments_ja.test.mjs` | 61 | `test_segments_ja.py` (47) | `test_segments_ja_parity.py` | conformance で全 JA doc の byte-identical 保証 |
+| `source_parity_segments_shared.test.mjs` | ~19 | `test_segments_shared.py` (26) | — | Python unit が mjs より多く、`create_segment` / `push_heading` を追加 pin |
+| `madcap_toc.test.mjs` | 24 | `test_madcap_toc.py` (20) | — | core 機能 (slug 抽出 / tree 展開 / promotion) を covered。unicode escape / multi-chunk merge は sidebar 実環境で暗黙検証 |
+| `parity_normalize.test.mjs` | 24 | `test_normalize.py` (26) | `test_normalize_parity.py` | Python unit が mjs を覆い、query/fragment/trailing-slash 全組合せを pin |
+| `parity_artifact_registry.test.mjs` | 6 | `test_artifact_registry.py` (7) | — | Python に `test_noop_coverage` が追加されており mjs より広い |
+| `source_parity_align_runtime.test.mjs` | 14 (4 skipped) | `test_align.py` + `test_summary.py` + `test_check_source_parity.py` | — | `parity_diffs_to_issues` / `summarize_parity_results` / primary-pin sanity guard を 3 file に分散。runtime integration 4 test は M2.5-C baseline=0 の仮定で skip 済み |
+| `turndown.test.mjs` | 70 | `test_turndown.py` (45) | `test_turndown_288_matrix.py` | 288-matrix slow conformance で全 page byte-identical、edge case は unit で pin |
+
+新規に追加した guard (PR #384 review 対応):
+
+- `test_align.py::test_primary_pin_slug_ja_file_yields_extractable_segments` — mjs の
+  "primary pin slug file has extractable segments" を Python に移植。`advanced-editing/parameters/hidden-parameters`
+  が ≥ 3 segment を emit する事実を pin、fixture drift guard として機能する
+- `test_check_source_parity.py::test_mask_coverage_records_non_empty_masks_from_ja_body` +
+  `test_mask_coverage_stays_empty_when_ja_body_has_no_glossary_terms` — mask_coverage kwarg bug
+  の regression guard
+
+**カバレッジ mapping の保守契約**: Phase 6 cutover 時に mjs を完全削除する際、上記 8 file
+の「Python 側対応」列を参照して削除済み guard が復活していないことを verify する。
 
 ---
 
 ## Phase 6: Cutover (atomic 切替)
 
-**Goal**: npm scripts を Python に接続、mjs 削除
+**Goal**: npm scripts を Python に接続、mjs 削除 (redirects.mjs を除く)
 
 ### Cutover gate criteria (全て true)
 
-1. `uv run pytest` — 全 pass、coverage >= 90%
+1. `uv run pytest` — 全 pass、coverage >= 90% (**同 PR 内で `pyproject.toml::[tool.coverage.report] fail_under` を 65 → 90 へ戻す**。Phase 5 coexistence の下限 gate 65 は、slow marker 除外で 288-matrix が exercise する path が計上されないための一時措置。Phase 6 で conformance test を golden 化し slow marker を廃止する段階で 90 へ復帰)
 2. `npm run check:parity` via Python — 5-counter = 0
 3. Mutation recall: 9/9 = 100%
 4. Boundary stability >= 0.95
 5. `npm run build` pass (Astro site 無影響)
-6. `npm run lint` pass
-7. `scripts/__tests__/*.mjs` が全て空 (全移植完了)
+6. `npm run lint` pass (**同 PR 内で lint:docs を `node scripts/tools/lint_docs.mjs` → `uv run python -m testim_parity.tools.lint_docs` に切り替え**、`scripts/__tests__/lint_docs_contract.test.mjs` を削除、`scripts/tools/lint_docs.mjs` を削除)
+7. `scripts/__tests__/` に以下 2 file のみ残存 (他全 mjs test は Phase 5 + Phase 6 で削除済):
+   - `lib_redirects.test.mjs` — `scripts/lib/redirects.mjs` が Astro build graph に残るため production regression gate として維持
+   - `sync_detection_issues.test.mjs` — `.github/scripts/sync-detection-issues.cjs` が GitHub Actions 側 production tooling で Phase 6 cutover の scope 外 (下記「Phase 6.1: GitHub Actions tooling port」で別途処理)。Phase 6 atomic cutover PR では touch しない
+8. **Cutover exclusion audit**: `uv run pytest -m cutover` が緑 — Phase 5 で導入された `_PY_XFAIL_SLUGS` / `_PY_EXTRACTOR_DRIFT_SLUGS` 等の temporary exclusion frozenset が全て empty であることを assert (下記「Self-enforcing cutover gate」節)
+9. **Golden fixture migration PR** が merge 済 (下記「Conformance test migration」節)
+10. **Lint rule audit**: `scripts/tools/lint_docs.mjs` の全 rule (frontmatter / link / feature-name / code-block / callout / image) が `scripts/py/src/testim_parity/tools/lint_docs.py` で 1:1 で等価実装済であることを、cutover PR の review 時に明示的に confirm する (mjs 側 rule 追加を Python に port し忘れた場合 `lint_docs_contract.test.mjs` は callout scope しか catch しない)
 
-### package.json 変更
+### Self-enforcing cutover gate (`pytest -m cutover`)
 
-```json
-{
-  "scripts": {
-    "test": "cd scripts/py && uv run pytest",
-    "check:parity": "cd scripts/py && uv run python -m testim_parity.detection.check_source_parity",
-    "check:snapshots:fetch": "cd scripts/py && uv run python -m testim_parity.detection.snapshot_update",
-    "check:snapshots:diff": "cd scripts/py && uv run python -m testim_parity.detection.snapshot_diff",
-    "lint:docs": "cd scripts/py && uv run python -m testim_parity.tools.lint_docs"
-  }
-}
-```
+Phase 5 で port 時に発覚した **Python extractor / align drift** を Phase 6 cutover PR
+で解消したかを自動 audit する gate。以下の temporary exclusion set が empty でない
+うちは `pytest -m cutover` が fail する契約:
+
+| File | Exclusion symbol | Phase 6 cutover までの処理 |
+| --- | --- | --- |
+| `tests/test_clean_page_fixtures.py` | `_PY_XFAIL_SLUGS` | Python extractor / align の ~16 slug drift を解消 (alignment 細部 / token-drop recall) |
+| `tests/test_structure_fixtures.py` | `_PY_XFAIL_SLUGS` | 同上 |
+| `tests/test_recall.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | `advanced-editing/loops` (JA extractor の unordered-list-item 欠落) / `running-tests/running-tests-overview` (token-drop 未検出) の修正 |
+| `tests/test_baseline_recall.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | 同上 (recall drift) |
+| `tests/test_segments_boundary.py` | `_PY_EXTRACTOR_DRIFT_SLUGS` | `advanced-editing/loops` boundary stability drift |
+
+**Gate 実装**: `scripts/py/tests/test_cutover_gate.py` に `@pytest.mark.cutover` で
+5 registry entry (2 attribute 名 × module) を enumerate し、
+`assert len(exclusions) == 0, f"Phase 6 cutover blocked by {exclusions}"` する test を置く。
+`pyproject.toml` の `addopts` は `cutover` marker を default skip し (Phase 5
+coexistence では ok)、Phase 6 cutover PR で `uv run pytest -m cutover` を明示的に run して緑を
+確認する契約。auto-discovery test (`test_exclusion_registry_covers_all_patterns`) が
+tests/ 配下の `_PY_*_SLUGS` 宣言を regex scan し、registry に未登録の pattern があれば
+fail させる safety net を兼ねている (hardcode 漏れの自動検出)。
+
+### package.json 変更 (全 script rewire table)
+
+Phase 6 cutover PR で全 Node backed script を Python CLI に切り替える。Astro build
+統合 script (dev/build/preview/check/astro) および MD lint (markdownlint) は Node
+のまま残す:
+
+| current (Node) | Phase 6 rewire 先 | Python 等価モジュール |
+| --- | --- | --- |
+| `test` | `npm run test:mjs && npm run test:py` | `cd scripts/py && uv run pytest` (+ mjs の lib_redirects 残置分) |
+| `test:mjs` | 維持 (lib_redirects のみ) | — |
+| `test:py` | 維持 | — |
+| `test:all` | 維持 | — |
+| `lint:docs` | Python | `testim_parity.tools.lint_docs` |
+| `check:untranslated` | Python | `testim_parity.detection.find_untranslated` |
+| `lint:glossary` | Python | `testim_parity.tools.check_glossary_duplicates` |
+| `docs:sync-sidebar` | Python | `testim_parity.pipeline.update_sidebar_urls_from_live` |
+| `docs:sync-frontmatter` | Python | `testim_parity.tools.sync_frontmatter_from_sidebar` |
+| `docs:sync-frontmatter:apply` | Python | `testim_parity.tools.sync_frontmatter_from_sidebar --apply` |
+| `docs:pipeline` | Python | `testim_parity.pipeline.pipeline` |
+| `docs:pipeline:full` | Python | `testim_parity.pipeline.pipeline --mode=full` |
+| `docs:pipeline:diff` | Python | `testim_parity.pipeline.pipeline --mode=diff` |
+| `docs:fetch` | Python | `testim_parity.pipeline.fetch_translate_images` |
+| `docs:fix-alt` | Python | `testim_parity.tools.fix_alt_all` |
+| `docs:normalize` | Python | `testim_parity.tools.normalize_docs` |
+| `docs:placeholders` | Python | `testim_parity.pipeline.generate_untranslated_placeholders` |
+| `docs:prepare-llm` | Python | `testim_parity.pipeline.prepare_llm_tasks` |
+| `docs:apply-llm` | Python | `testim_parity.pipeline.apply_llm_translations` |
+| `docs:report-categories` | Python | `testim_parity.tools.report_frontmatter_categories` |
+| `check:parity` | Python | `testim_parity.detection.check_source_parity` |
+| `check:patch-review` | Python | `testim_parity.detection.check_patch_review_cadence` |
+| `check:upstream-recovery` | Python | `testim_parity.detection.check_upstream_recovery` |
+| `check:summary` | Python | `testim_parity.detection.generate_detection_reports` |
+| `generate:parity-baseline` | Python | `testim_parity.detection.generate_parity_baseline` |
+| `check:snapshots:fetch` | Python | `testim_parity.detection.snapshot_update` |
+| `check:snapshots:diff` | Python | `testim_parity.detection.snapshot_diff` |
+| `check:snapshots` | Python | `snapshot_update && snapshot_diff` |
+| `check:snapshots:fetch:dry-run` | Python | `snapshot_update --dry-run` |
+| `regen:py-patches` | 削除 | (dual-source-of-truth drift 解消、`_en_source_patches_data.json` を Python dict に inline 化) |
+| `check:py-patches` | 削除 | 同上 |
+| `lint:md*` / `lint:fix` | 維持 (Node) | markdownlint-cli は Node のまま |
+| `dev` / `build` / `preview` / `astro` / `check` | 維持 (Node) | Astro build は Node native |
+| `format` / `format:check` | 維持 (Node) | prettier は Node のまま |
 
 ### 削除対象
 
-- `scripts/__tests__/` (57 mjs test files)
-- `scripts/lib/` (33 mjs files) **except `redirects.mjs`**
-- `scripts/detection/` (9 mjs files)
-- `scripts/pipeline/` (6 mjs files)
-- `scripts/tools/` (6 mjs tool files → py/ に移動済)
+- `scripts/__tests__/*.mjs` — Phase 5 で 52 file を delete 済。Phase 5 終了時点の残存は
+  3 file で、以下 timing でそれぞれ削除:
+  - `scripts/__tests__/lint_docs_contract.test.mjs` (25 test) — **Phase 6 atomic cutover PR**
+    で lint:docs が Python 実装 (`testim_parity.tools.lint_docs`) に切り替わる際、
+    `scripts/tools/lint_docs.mjs` 削除と同 commit で **削除** する (Python 側
+    `test_lint_docs.py::TestCalloutDirective` が単一 SoT になる契約)
+  - `scripts/__tests__/sync_detection_issues.test.mjs` (13 test) — **Phase 6.1 (post-cutover
+    別 PR)** で `.github/scripts/sync-detection-issues.cjs` の port/retire 判断と同時に処理
+    (Phase 6.1 section で Option A/B を選択時は delete、Option C 永久保持時は keep)
+  - `scripts/__tests__/lib_redirects.test.mjs` (6 test) — **post-Phase-6 cleanup** で
+    `redirects.mjs` が Astro 側から無参照化された日に `redirects.mjs` と同時削除
+- `scripts/lib/*.mjs` (33 file) **except `redirects.mjs`**
+- `scripts/detection/*.mjs` (9 file)
+- `scripts/pipeline/*.mjs` (6 file)
+- `scripts/tools/*.mjs` (6 file → Python に完全移動済)
+- `scripts/py/conformance/harness.mjs` と `tests/conformance/test_*_parity.py` (下記 golden 化)
+
+### CI workflow rewire (全 workflow 対象)
+
+Phase 5 終了時点 の CI は `test` (mjs only)、`python-test` (pytest only、node をダミー install して
+conformance harness を spawn) の 2 job が独立実行される構成 + scheduled workflow 2 本。
+Phase 6 cutover PR では以下を実施する:
+
+#### `.github/workflows/ci.yml` (PR gate)
+
+| 現行 job | Phase 6 rewire | 理由 |
+| --- | --- | --- |
+| `test` (`npm run test`) | **維持** (lib_redirects.test.mjs のみ、Node 固定) | Astro build graph が redirects.mjs を import する以上、mjs 側の retention test も CI で回す |
+| `python-test` (`uv run pytest --cov`) | **維持 → setup-node 依存削除** | conformance harness (mjs spawn) が golden 化されるので `node` 不要。job 内の `actions/setup-node` step と `npm ci` を削除 |
+| (新規) `python-cutover-gate` step | **`python-test` job に step 追加** (独立 job にしない) | `uv run pytest -o addopts= -m cutover` を cutover PR の 1 回限り実行。別 job 化すると atomic cutover PR の checks が増えるだけで get no value (gate は PR 単位で 1 回 run できれば十分)。``-o addopts=`` は pyproject.toml の ``not cutover`` default を override するため必須 |
+| `build` / `lint` | **維持** | Node のまま (Astro build / markdownlint) |
+
+#### `.github/workflows/scheduled-actionable.yml` (nightly parity audit)
+
+現行は `npm run docs:sync-sidebar` / `check:snapshots` / `check:parity` /
+`check:upstream-recovery` / `check:summary --strict` を順次 run。全 step が mjs CLI を
+呼び出しており、Phase 6 で Python CLI に rewire する。
+
+| step | 現行 command | Phase 6 置換先 |
+| --- | --- | --- |
+| sidebar 更新 | `npm run docs:sync-sidebar` | `uv run python -m testim_parity.pipeline.update_sidebar_urls_from_live` |
+| snapshot 更新 | `npm run check:snapshots` | `uv run python -m testim_parity.detection.snapshot_update && uv run python -m testim_parity.detection.snapshot_diff` |
+| parity 検査 | `npm run check:parity` | `uv run python -m testim_parity.detection.check_source_parity` |
+| upstream recovery | `npm run check:upstream-recovery` | `uv run python -m testim_parity.detection.check_upstream_recovery` |
+| summary 生成 | `npm run check:summary -- --strict` | `uv run python -m testim_parity.detection.generate_detection_reports --strict` |
+
+setup-node は削除、代わりに `actions/setup-python` + `pip install uv` を追加。Phase 6 cutover
+PR で atomic に書き換える。
+
+#### `.github/workflows/deep-audit.yml` (on-demand deep audit)
+
+`scheduled-actionable.yml` と同じ script を `--section` 付きで呼ぶ。rewire は上記 table の
+通りで、`--section="$SECTION_FILTER"` 引数は Python CLI 側でも同じ flag 名で受け取れる
+(`check_source_parity.py::parse_args` の `--section=X` が対応、既実装)。
+
+#### 残存 mjs assets (Phase 6 atomic cutover scope 外)
+
+以下 2 asset は Phase 6 cutover PR では touch せず、それぞれ別タイミングで処理する:
+
+| Asset | 理由 | 処理 phase |
+| --- | --- | --- |
+| `scripts/lib/redirects.mjs` + `scripts/__tests__/lib_redirects.test.mjs` | Astro build graph (`astro.config.mjs::buildRedirectMap`) が `redirects.mjs` を直接 import する。Node native code なので Python port ではなく Astro 側の dependency として扱う | **Phase 6 以降も恒久保持**。redirects.mjs が Astro 側から無参照化された日に `lib_redirects.test.mjs` + `redirects.mjs` を同時削除 (post-Phase-6 cleanup) |
+| `.github/scripts/sync-detection-issues.cjs` + `scripts/__tests__/sync_detection_issues.test.mjs` | GitHub Actions workflow (`scheduled-actionable.yml`) から呼ばれる issue 同期 script。307 行の non-trivial 実装で、Phase 6 atomic cutover scope に含めると merge risk が高すぎる | **Phase 6.1 (post-cutover, 別 PR)** で port/retire 判断 (下記「Phase 6.1」節参照) |
+
+**Phase 5 → Phase 6 の rewire 契約**:
+
+1. Phase 5 PR (#384) は CI yaml に **最小限の変更のみ** 入れる (pytest step に
+   ``-m 'not slow and not cutover'`` を明示、pyproject 変更時の silent 無効化を
+   防ぐ defense in depth)。job 構成 (test / python-test / build / lint / parity)
+   は変えない。
+2. Phase 6 cutover PR で CI yaml を 1 commit で atomic 更新:
+   - `python-test` の `setup-node` / `npm ci` step 削除 (conformance golden 化後)
+   - `python-test` の pytest step に `uv run pytest -o addopts= -m cutover` の step を追加
+     (1 回限りの cutover gate)
+   - `scheduled-actionable.yml` / `deep-audit.yml` 内の **docs pipeline / parity check 関連 mjs CLI** を Python CLI に置換 (`.github/scripts/sync-detection-issues.cjs` 呼び出し部分は **Phase 6.1 で扱うため touch しない**)
+3. rewire 後は `test` job の scope が Phase 6 残存 2 test (lib_redirects + sync_detection_issues) になる。sync_detection_issues は Phase 6.1 で処理、lib_redirects は Astro 依存解消時に処理する post-Phase-6 cleanup として扱う
 
 ### Conformance test migration (Phase 6 cutover 時、reviewer P7 対応)
 
@@ -962,20 +1210,39 @@ Phase 4b で導入された cross-runtime conformance test は mjs harness
 | **B. dual-source-of-truth drift** | `test_en_source_patches_parity.py` | patch の唯一ソースが mjs (`en_source_patches.mjs`) でなくなるため、mjs / JSON の drift 検出目的自体が消滅。cutover 時に test を削除し、patch data を `_en_source_patches_data.json` ではなく Python dict として `en_source_patches.py` に inline 化する |
 | **C. pure helper conformance** | `test_align_scoring_parity.py` / `test_normalize_parity.py` 等 pure-function byte parity | 同じく golden snapshot 化。harness dispatch を fixture-based に書き換える |
 
-**fixture 生成スクリプト** (cutover PR で追加予定、Phase 6 gate の一部):
+**Golden fixture 生成の実装契約** (Phase 6 cutover PR で **新規追加** する):
 
-```bash
-# 最後の mjs run で golden を出力して commit
-node scripts/py/conformance/harness.mjs --dump-golden > tests/fixtures/golden/turndown_288.jsonl
+現行 `scripts/py/conformance/harness.mjs` は `stdin → stdout` の batch JSON I/O
+のみで、golden dump mode は未実装。Phase 6 cutover PR で **新規 Python script**
+`scripts/py/tools/dump_conformance_goldens.py` を追加する。契約:
+
+```text
+Usage: uv run python -m testim_parity.tools.dump_conformance_goldens [--out tests/fixtures/golden/]
+
+Behavior:
+  1. 各 conformance test file (tests/conformance/test_*_parity.py 等) を import し、
+     test module が公開する ``_build_payload()`` (命名規約) を call して dispatch 要求
+     リスト ``[{function, args}]`` を取得
+  2. 取得した payload を 1 回の node scripts/py/conformance/harness.mjs subprocess に
+     stdin 経由で渡して authoritative な mjs 出力を取得
+  3. 出力を tests/fixtures/golden/<module>.jsonl に書き出す (1 行 = 1 sample)
+  4. 既存 conformance test は golden fixture を読むように書き換える同じ PR 内で
+     更新する (mjs harness import を削除)
 ```
 
-fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加する際の diff
-を review-friendly に保つ。conformance harness は cutover PR で retire する
-(node 呼び出し path が消えるため)。
+`harness.mjs` 自体の書き換えは不要 (本 tool が harness を subprocess として呼ぶ)。
+harness.mjs は Phase 6 cutover PR の最終 commit で **削除** する。
 
-**Phase 6 gate への影響**: `scripts/__tests__/*.mjs` と同じく、cutover 前に
-harness → golden fixture への書き換え PR を挟む。書き換え後の Python-only
-run が 288-matrix で pass することが Phase 6 gate の前提条件になる。
+`scripts/py/tools/dump_conformance_goldens.py` の詳細設計は Phase 6 cutover PR に
+委ねる (本 plan doc は tool の **入出力契約のみ** を pin)。
+
+fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加する際の diff
+を review-friendly に保つ。
+
+**Phase 6 gate への影響**: 全 Phase 6 cutover 作業は 1 PR に集約 (atomic cutover
+原則)。gate 9 (golden fixture migration) の成否は gate 2 (check:parity Python 版)
+と同 PR で検証される。書き換え後の Python-only run が 288-matrix で pass すること
+が Phase 6 merge の前提条件。
 
 ### dependency 変更 (cutover 時点で実行)
 
@@ -983,10 +1250,73 @@ run が 288-matrix で pass することが Phase 6 gate の前提条件にな�
 - Remove: `gray-matter` (Phase 0.1 で redirects.mjs 自己完結化済 + Phase 4 で全消費者 Python 移行完了後)
   - **注意**: gray-matter は coexistence 期間中は残す。`lint_docs.mjs`, `normalize_docs.mjs`, `report_frontmatter_categories.mjs`, `fetch_translate_images.mjs` が Phase 4 完了まで使用
 - Keep: `markdownlint-cli` (MD lint は Node のまま)
+- Keep: `remark-*` / `rehype-*` / `prettier*` / Astro 依存 (Astro build 統合)
 
 ### Rollback
 
 Single PR。失敗時 `git revert`。Python は `scripts/py/` に残存し mjs と干渉しない。
+
+---
+
+## Phase 6.1: GitHub Actions tooling port (post-cutover, 別 PR)
+
+**Goal**: Phase 6 atomic cutover の scope 外とした `.github/scripts/sync-detection-issues.cjs`
+(GitHub Actions issue 同期 script) の扱いを Phase 6 cutover **後** に別 PR で決定する。
+
+### Scope 分離の理由
+
+- `sync-detection-issues.cjs` は 307 行の non-trivial 実装で、family marker / dedup /
+  close-on-resolved / partial-run guard など独自の issue 管理 logic を持つ。Phase 6
+  atomic cutover PR に含めると merge risk が大幅に上がる。
+- GitHub Actions workflow (`scheduled-actionable.yml`) から呼ばれる **operational tooling**
+  であり、docs content pipeline の core (parity / snapshot / extractor / align) とは
+  独立した layer。Phase 6 cutover の atomic unit としては切り離すのが自然。
+- Phase 5 で一度 delete した test を codex review P1 対応で **復元** したため、
+  Phase 5 coexistence 期間中は `scripts/__tests__/sync_detection_issues.test.mjs`
+  (13 test) が production regression guard として機能する (retire するまで保持)。
+
+### Phase 6.1 で決定する選択肢
+
+Phase 6 cutover 完了後の別 PR で以下いずれかを実施:
+
+#### Option A: Python port
+
+- `scripts/py/src/testim_parity/github/sync_detection_issues.py` として port
+- `scripts/py/tests/test_sync_detection_issues.py` で contract 維持
+- `scheduled-actionable.yml` の呼び出しを `uv run python -m testim_parity.github.sync_detection_issues` に変更
+- mjs + .cjs + test を delete
+
+#### Option B: Retire in favor of `gh issue` CLI
+
+- `sync-detection-issues.cjs` の logic を workflow step 化
+  (`uv run python -m testim_parity.detection.generate_detection_reports` →
+  `docs-actionable-report.json` → `gh issue create/update/close` series)
+- family marker / dedup / partial-run guard を workflow YAML に inline 実装
+- mjs + .cjs + test を delete
+
+#### Option C: Keep as-is indefinitely
+
+- `.cjs` は GitHub Actions 固有の operational 資産として永久保持
+- `sync_detection_issues.test.mjs` も永久保持
+- `test` job を Node 維持 (lib_redirects.test.mjs と同じ扱い)
+
+### 判断タイミング
+
+Phase 6 atomic cutover PR が merge された後、別 PR で上記 3 択を選択する。選択時の
+trade-off は Phase 6 cutover 時点の operational 観点 (tooling volume / workflow
+maintenance cost / team familiarity) に依存するため、plan 側で事前決定しない。
+
+### Phase 6 cutover での scope 境界
+
+Phase 6 atomic cutover PR **では touch しない**:
+
+- `.github/scripts/sync-detection-issues.cjs` (削除しない、書き換えない)
+- `scripts/__tests__/sync_detection_issues.test.mjs` (削除しない、`test` job で走らせ続ける)
+- `scheduled-actionable.yml` の `sync-detection-issues.cjs` 呼び出し step (変更しない)
+
+これにより Phase 6 cutover の atomic unit は「docs content pipeline (parity / snapshot /
+extractor / align / pipeline / tools) の Python 化 + conformance の golden 化」に限定
+され、GitHub Actions operational tooling は別 cycle で扱える。
 
 ---
 

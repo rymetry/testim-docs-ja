@@ -307,3 +307,158 @@ class TestResolveSlugDeprecatedWarning:
         with caplog.at_level(logging.WARNING):
             assert resolve_slug("dup", tmp_path) is None
         assert any("Ambiguous" in m for m in caplog.messages)
+
+    def test_unique_basename_emits_deprecation(self, tmp_path, caplog):
+        """unique basename は deprecation 警告を出し、フル slug へ解決する。"""
+        import logging
+
+        reset_project_caches_for_test()
+        (tmp_path / "overview").mkdir()
+        (tmp_path / "overview" / "testim-overview.md").write_text("", encoding="utf-8")
+
+        with caplog.at_level(logging.WARNING):
+            resolved = resolve_slug("testim-overview", tmp_path)
+        assert resolved == "overview/testim-overview"
+        assert any("Deprecated" in m for m in caplog.messages)
+
+
+class TestSplitFrontmatterAdditional:
+    def test_strips_leading_newlines_from_body(self):
+        md = "---\ntitle: Test\n---\n\n\nBody"
+        assert split_frontmatter(md)["body"] == "Body"
+
+    def test_missing_opening_delimiter(self):
+        md = "title: Test\n---\nBody"
+        assert split_frontmatter(md) == {"fm": "", "body": md}
+
+
+class TestExtractSourceContentPathAdditional:
+    def test_two_level_nested(self):
+        url = (
+            "https://docs.tricentis.com/testim/content/integrations/"
+            "visual-validation/override-applitools-app-name.htm"
+        )
+        assert (
+            extract_source_content_path(url)
+            == "integrations/visual-validation/override-applitools-app-name"
+        )
+
+    def test_three_level_nested(self):
+        url = (
+            "https://docs.tricentis.com/testim/content/overview/"
+            "testim-overview/use-ai-in-with-testim/index.htm"
+        )
+        assert extract_source_content_path(url) == "overview/testim-overview/use-ai-in-with-testim"
+
+    def test_empty_string_returns_none(self):
+        assert extract_source_content_path("") is None
+
+
+class TestBuildDocsIndexAdditional:
+    def test_includes_local_folder(self, tmp_path):
+        from testim_parity.project import build_docs_index
+
+        (tmp_path / "folder-a").mkdir()
+        (tmp_path / "folder-b").mkdir()
+        fm = (
+            "---\ntitle: T\ncategory: C\nupdated: 2026-01-01\n"
+            "sourceUrl: https://docs.tricentis.com/testim/content/a/page.htm\n---\n"
+        )
+        (tmp_path / "folder-a" / "page.md").write_text(fm, encoding="utf-8")
+        (tmp_path / "folder-b" / "page.md").write_text(fm, encoding="utf-8")
+        index = build_docs_index(tmp_path)
+        assert index["folder-a/page"]["localFolder"] == "folder-a"
+        assert index["folder-b/page"]["localFolder"] == "folder-b"
+
+
+class TestFilePathToSlugEdgeCases:
+    def test_nested_path_preserves_folders(self, tmp_path):
+        (tmp_path / "a" / "b").mkdir(parents=True)
+        md = tmp_path / "a" / "b" / "c.md"
+        md.write_text("", encoding="utf-8")
+        assert file_path_to_slug(md, tmp_path) == "a/b/c"
+
+    def test_top_level_file(self, tmp_path):
+        md = tmp_path / "index.md"
+        md.write_text("", encoding="utf-8")
+        assert file_path_to_slug(md, tmp_path) == "index"
+
+
+class TestBuildBasenameToPathMapEdgeCases:
+    def test_empty_directory_returns_empty_map(self, tmp_path):
+        reset_project_caches_for_test()
+        assert build_basename_to_path_map(tmp_path) == {}
+
+
+class TestResolveToFullSlugCaching:
+    def test_cache_is_stale_until_reset(self, tmp_path):
+        """mv でファイルを動かしても reset 前は古い resolve を返す (mjs 同等)。"""
+        reset_project_caches_for_test()
+        (tmp_path / "old").mkdir()
+        old_md = tmp_path / "old" / "page.md"
+        old_md.write_text("", encoding="utf-8")
+
+        assert resolve_to_full_slug("page", tmp_path) == "old/page"
+
+        # move file
+        (tmp_path / "new").mkdir()
+        new_md = tmp_path / "new" / "page.md"
+        old_md.rename(new_md)
+
+        # cache はまだ古い解決を返す
+        assert resolve_to_full_slug("page", tmp_path) == "old/page"
+
+        reset_project_caches_for_test()
+        # reset 後は disk を再スキャンする
+        assert resolve_to_full_slug("page", tmp_path) == "new/page"
+
+
+class TestMatchesSectionFilterRealSidebar:
+    """実 sidebar (``docs/SIDEBAR_URLS.md``) を使う smoke assertions。"""
+
+    def test_real_section_overview_match(self):
+        from testim_parity.project import matches_section_filter
+
+        reset_project_caches_for_test()
+        rel = "src/content/docs/overview/testim-overview.md"
+        assert matches_section_filter(rel, {"category": "概要"}, "概要")
+
+    def test_real_section_english_name(self):
+        from testim_parity.project import matches_section_filter
+
+        reset_project_caches_for_test()
+        rel = "src/content/docs/overview/testim-overview.md"
+        assert matches_section_filter(rel, {"category": "概要"}, "Overview")
+
+    def test_real_section_alias_administration(self):
+        from testim_parity.project import matches_section_filter
+
+        reset_project_caches_for_test()
+        rel = "src/content/docs/administration/api-access.md"
+        assert matches_section_filter(rel, {"category": "管理者機能"}, "管理者機能")
+
+    def test_rejects_slug_outside_section(self):
+        from testim_parity.project import matches_section_filter
+
+        reset_project_caches_for_test()
+        rel = "src/content/docs/overview/testim-overview.md"
+        assert not matches_section_filter(rel, {"category": "概要"}, "結果")
+
+
+class TestResetProjectCachesFurther:
+    def test_basename_map_cache_is_invalidated_after_reset(self, tmp_path):
+        reset_project_caches_for_test()
+        (tmp_path / "a").mkdir()
+        (tmp_path / "a" / "page.md").write_text("", encoding="utf-8")
+        first = build_basename_to_path_map(tmp_path)
+        assert first["page"] == "a/page"
+
+        # 同じ basename を別 folder に追加してもキャッシュされた結果は stale。
+        (tmp_path / "b").mkdir()
+        (tmp_path / "b" / "page.md").write_text("", encoding="utf-8")
+        cached = build_basename_to_path_map(tmp_path)
+        assert cached["page"] == "a/page"  # stale
+
+        reset_project_caches_for_test()
+        fresh = build_basename_to_path_map(tmp_path)
+        assert fresh["page"] is None  # ambiguous

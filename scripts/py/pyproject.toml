@@ -51,21 +51,50 @@ markers = [
   "boundary: boundary stability (score >= 0.95)",
   "recall: mutation recall (9/9 = 100%)",
   "integration: full pipeline",
-  # 288-page matrix conformance (~4 min)。local dev feedback loop を速くする
-  # ため default で除外し、CI / pre-merge gate では ``-m ''`` で全件走らせる。
+  # 288-page matrix conformance (~4 min)。default で除外し、**CI も local も**
+  # ``addopts = "-m 'not slow and not cutover'"`` で skip する運用 (Phase 4b-5
+  # coexistence)。merge 前に shape drift を検証したい reviewer は local で
+  # ``uv run pytest -m slow`` を **明示 run** する。Phase 6 cutover で
+  # conformance が golden 化される段階で slow marker は自然退場する。
   # align_288_matrix はアルゴリズム計算が重いため pytest-xdist でも律速 (単一
-  # test がシリアル)、slow-marker で local opt-out が最善策。
+  # test がシリアル)、slow-marker で opt-in する設計が最善策。
   "slow: 288-page corpus conformance (align + segments_en 全ページ走査)",
+  # Phase 6 atomic cutover の self-enforcing gate。Phase 5 で port 中に
+  # 発覚した Python extractor / align drift を Phase 6 cutover PR で解消したかを
+  # auto audit する。``_PY_XFAIL_SLUGS`` / ``_PY_EXTRACTOR_DRIFT_SLUGS`` 等の
+  # temporary exclusion frozenset が empty でない限り fail する。Phase 5
+  # coexistence 期間は default skip (empty でない前提)、Phase 6 cutover PR で
+  # ``uv run pytest -m cutover`` を強制 run して緑確認する。
+  "cutover: Phase 6 cutover gate (all drift exclusions must be empty)",
 ]
-# local default は slow を除外。CI は ``-m ''`` (全件) で merge gate を維持する。
-addopts = "-m 'not slow'"
+# default addopts は slow / cutover を **local でも CI でも** 除外する。
+#
+# - ``slow`` (288-page matrix conformance) は ~4 min かかるため CI feedback loop
+#   を阻害する。Phase 6 cutover で conformance が golden 化される段階で自然退場。
+#   事前 run は reviewer が local で ``uv run pytest -m slow`` を明示実行する運用。
+# - ``cutover`` は Phase 6 cutover PR 内で ``uv run pytest -o addopts= -m cutover``
+#   を **1 回限り強制 run** する gate。coexistence 期間は skip のまま。
+#
+# CI yaml (``.github/workflows/ci.yml`` の ``python-test`` job) でも同等の
+# ``-m 'not slow and not cutover'`` を **明示的に重ねて指定** する (この file の
+# 変更による silent 無効化を防ぐ defense in depth)。
+addopts = "-m 'not slow and not cutover'"
 
 [tool.coverage.report]
-# Phase 4b-5 temporary: ``slow`` marker を CI default で skip した結果、
-# 288-page matrix が exercise していた segments_en / align 系 path が計上
-# されず、coverage が 68% 前後に下がる。Phase 6 atomic cutover で
-# conformance test 一式を退場させる際に 90 へ戻す。それまでは reviewer が
-# pre-merge に ``uv run pytest -m slow`` で補完する運用。
+# Phase 4b-5 temporary: ``slow`` marker (288-page matrix conformance) を CI
+# default で skip した結果、288-page matrix が exercise していた segments_en /
+# align / turndown 系 path が coverage に計上されず、CI 実効 coverage は ~65-70%
+# まで下がる (slow 込み local 実測は 95.60%、Phase 5 完了時点)。
+#
+# Phase 6 atomic cutover で conformance test 一式を golden snapshot に退場させ、
+# slow marker が不要になる段階で ``fail_under = 90`` へ戻す。それまでは
+# reviewer が pre-merge に ``uv run pytest -m slow`` で補完する運用契約
+# (docs/PYTHON_MIGRATION_PLAN.md Phase 5 実績表 / Phase 6 gate 1 を参照)。
+#
+# ``fail_under = 65`` は **Phase 5 coexistence 下限値**。CI で slow 除外後も
+# 少なくとも 65% は維持する regression guard として機能する (急激な coverage
+# 崩壊を検知する下限 gate)。Phase 5 期間中にこの値を変更する場合は plan doc
+# 側の coverage 記述も同時に update する契約。
 fail_under = 65
 
 [tool.ruff]

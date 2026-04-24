@@ -90,3 +90,77 @@ class TestGetSectionSlugSet:
 def test_extract_japanese_label():
     assert extract_japanese_label("Overview （概要）") == "概要"
     assert extract_japanese_label("プレーン") == "プレーン"
+
+
+class TestExtractJapaneseLabel:
+    """mjs ``extractJapaneseLabel`` と同一契約の追加カバレッジ。"""
+
+    def test_fullwidth_parentheses(self) -> None:
+        assert extract_japanese_label("Getting Started（はじめに）") == "はじめに"
+
+    def test_halfwidth_parentheses(self) -> None:
+        assert extract_japanese_label("Overview(概要)") == "概要"
+
+    def test_no_parens_returns_full_trimmed(self) -> None:
+        assert extract_japanese_label("概要") == "概要"
+
+    def test_trims_outer_whitespace(self) -> None:
+        assert extract_japanese_label("  Test（テスト）  ") == "テスト"
+
+    def test_plain_title_trimmed(self) -> None:
+        assert extract_japanese_label("  Plain Title  ") == "Plain Title"
+
+
+class TestParseSidebarSectionsAdditional:
+    """mjs ``parseSidebarSections`` が持つ追加の契約 — 旧ドメイン除外・underscore slug。"""
+
+    def test_ignores_old_help_testim_io_domain(self) -> None:
+        text = "## Overview（概要）\n\n- ✅ https://help.testim.io/docs/testim-overview\n"
+        sections = parse_sidebar_sections(text)
+        # old-domain URL は ITEM_RE が拾わないので items は空になる。
+        items = sections[0]["items"]  # type: ignore[index]
+        assert items == []
+
+    def test_underscored_slug_is_preserved(self) -> None:
+        text = (
+            "## Integrations（統合）\n\n"
+            "- ✅🔍 https://docs.tricentis.com/testim/content/integrations/"
+            "visual-validation/lambdatest_integration.htm\n"
+        )
+        sections = parse_sidebar_sections(text)
+        items = sections[0]["items"]  # type: ignore[index]
+        assert items[0]["slug"] == ("integrations/visual-validation/lambdatest_integration")
+
+    def test_skips_translation_status_meta_section(self) -> None:
+        text = (
+            "## 翻訳ステータス\n\n"
+            "- ✅ https://docs.tricentis.com/testim/content/overview/foo.htm\n\n"
+            "## Overview（概要）\n\n"
+            "- ✅ https://docs.tricentis.com/testim/content/overview/bar.htm\n"
+        )
+        sections = parse_sidebar_sections(text)
+        assert len(sections) == 1
+        assert sections[0]["english"] == "Overview"
+
+
+class TestFindSidebarSectionAliases:
+    """mjs ``findSidebarSection`` の legacy alias 解決を Python でも pin する。"""
+
+    _TEXT = (
+        "## Results（結果）\n\n"
+        "- ✅🔍 https://docs.tricentis.com/testim/content/results/results-overview.htm\n\n"
+        "## Administration（管理）\n\n"
+        "- ✅🔍 https://docs.tricentis.com/testim/content/administration/api-access.htm\n"
+    )
+
+    def test_alias_tesuto_kekka_to_kekka(self) -> None:
+        sections = parse_sidebar_sections(self._TEXT)
+        hit = find_sidebar_section(sections, "テスト結果")
+        assert hit is not None
+        assert hit["english"] == "Results"
+
+    def test_alias_kanrisha_kinou_to_kanri(self) -> None:
+        sections = parse_sidebar_sections(self._TEXT)
+        hit = find_sidebar_section(sections, "管理者機能")
+        assert hit is not None
+        assert hit["english"] == "Administration"

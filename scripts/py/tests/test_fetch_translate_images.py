@@ -311,6 +311,169 @@ def test_rewrite_doc_links_leaves_external_urls_alone() -> None:
     assert result == md
 
 
+# --- rewrite_doc_links: Stage 1 (markdown doc:) ---
+
+
+def test_rewrite_doc_links_md_doc_link_fragment_preserved() -> None:
+    reset_project_caches_for_test()
+    result = fti.rewrite_doc_links("[link](doc:unknown-page#section)")
+    assert result == "[link](/docs/unknown-page#section)"
+
+
+def test_rewrite_doc_links_md_already_rewritten_unchanged() -> None:
+    reset_project_caches_for_test()
+    md = "[link](/docs/overview/testim-overview)"
+    assert fti.rewrite_doc_links(md) == md
+
+
+# --- rewrite_doc_links: Stage 2 (markdown relative .htm) ---
+
+
+def test_rewrite_doc_links_md_htm_dot_slash_prefix() -> None:
+    reset_project_caches_for_test()
+    result = fti.rewrite_doc_links("[link](./some-page.htm)")
+    # resolve 失敗時も basename fallback が起動し /docs/ prefix が付く (mjs と同じ)
+    assert "(/docs/some-page" in result or "(./some-page.htm" in result
+
+
+def test_rewrite_doc_links_md_spa_hash_route_stripped() -> None:
+    reset_project_caches_for_test()
+    md = "[link](../salesforce-testing/salesforce-testing-overview.htm/#/)"
+    result = fti.rewrite_doc_links(md)
+    assert "/#/" not in result
+    assert ".htm" not in result
+
+
+def test_rewrite_doc_links_md_external_https_htm_untouched() -> None:
+    reset_project_caches_for_test()
+    md = "[link](https://example.com/page.htm)"
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_md_protocol_relative_htm_untouched() -> None:
+    reset_project_caches_for_test()
+    md = "[link](//example.com/page.htm)"
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_md_bare_index_htm_unchanged() -> None:
+    """ページコンテキストが無い bare ``index.htm`` は resolve 不能 → 不変。"""
+    reset_project_caches_for_test()
+    md = "[link](index.htm#section)"
+    assert fti.rewrite_doc_links(md) == md
+
+
+# --- rewrite_doc_links: Stage 3 (HTML href="doc:...") ---
+
+
+def test_rewrite_doc_links_html_doc_link_basic() -> None:
+    reset_project_caches_for_test()
+    result = fti.rewrite_doc_links('<a href="doc:unknown-page">x</a>')
+    assert result == '<a href="/docs/unknown-page">x</a>'
+
+
+def test_rewrite_doc_links_html_doc_link_with_fragment() -> None:
+    reset_project_caches_for_test()
+    result = fti.rewrite_doc_links('<a href="doc:unknown-page#anchor">x</a>')
+    assert 'href="/docs/unknown-page#anchor"' in result
+
+
+def test_rewrite_doc_links_html_doc_prefix_with_url_is_untouched() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="doc:https://help.testim.io/docs/exports-parameters">link</a>'
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_html_doc_link_preserves_sibling_attrs() -> None:
+    reset_project_caches_for_test()
+    result = fti.rewrite_doc_links('<a class="foo" href="doc:unknown-page">x</a>')
+    assert 'class="foo"' in result
+    assert 'href="/docs/unknown-page"' in result
+
+
+# --- rewrite_doc_links: Stage 4 (HTML relative .htm) ---
+
+
+def test_rewrite_doc_links_html_external_htm_untouched() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="https://example.com/page.htm">x</a>'
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_html_protocol_relative_htm_untouched() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="//example.com/page.htm">x</a>'
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_html_ftp_htm_untouched() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="ftp://example.com/file.htm">link</a>'
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_html_already_rewritten_unchanged() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="/docs/overview/testim-overview">x</a>'
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_html_bare_index_unchanged() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="index.htm#anchor">link</a>'
+    assert fti.rewrite_doc_links(md) == md
+
+
+def test_rewrite_doc_links_multiple_anchors_on_same_line() -> None:
+    reset_project_caches_for_test()
+    md = '<a href="doc:a">A</a> and <a href="doc:b">B</a>'
+    result = fti.rewrite_doc_links(md)
+    assert 'href="/docs/a">A</a>' in result
+    assert 'href="/docs/b">B</a>' in result
+
+
+# ---------------------------------------------------------------------------
+# get_all_pages_list — filter / order / category parsing
+# ---------------------------------------------------------------------------
+
+
+def test_get_all_pages_list_includes_completed_review_and_pending_rows() -> None:
+    sidebar = (
+        "## Overview（概要）\n"
+        "- ✅ https://docs.tricentis.com/testim/content/overview/a.htm\n"
+        "- ✅🔍 https://docs.tricentis.com/testim/content/overview/b.htm\n"
+        "- ⏳ https://docs.tricentis.com/testim/content/overview/c.htm\n"
+    )
+    rows = fti.get_all_pages_list(sidebar)
+    slugs = [r["slug"] for r in rows]
+    assert slugs == ["overview/a", "overview/b", "overview/c"]
+    # order starts at 1 and increments
+    assert [r["order"] for r in rows] == [1, 2, 3]
+
+
+def test_get_all_pages_list_empty_when_no_urls() -> None:
+    assert fti.get_all_pages_list("## Heading only\n\n") == []
+
+
+def test_get_untranslated_list_returns_empty_when_all_translated() -> None:
+    sidebar = "## Overview（概要）\n- ✅ https://docs.tricentis.com/testim/content/overview/a.htm\n"
+    assert fti.get_untranslated_list(sidebar) == []
+
+
+# ---------------------------------------------------------------------------
+# parse_mode — explicit defaults + unknown arg
+# ---------------------------------------------------------------------------
+
+
+def test_parse_mode_empty_args_is_none() -> None:
+    assert fti.parse_mode([]) is None
+
+
+def test_parse_mode_multiple_args_first_wins() -> None:
+    # mjs: find() returns the first --mode= match
+    assert fti.parse_mode(["--mode=full", "--mode=diff"]) == "full"
+
+
 # ---------------------------------------------------------------------------
 # extract_title
 # ---------------------------------------------------------------------------
