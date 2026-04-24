@@ -85,6 +85,17 @@ jobs:
           path: |
             scripts/py/.oracle_today.jsonl
             scripts/py/.oracle_sha256.tsv
+          # ``.oracle_today.jsonl`` / ``.oracle_sha256.tsv`` は dot-prefixed の
+          # hidden file (``.gitignore`` 側で wildcard 無視されるための契約)。
+          # upload-artifact@v4 は default で hidden file を skip するため、
+          # 本 flag が無いと artifact が空で success になってしまう (python-fast
+          # ``.coverage`` と同じ根本原因、PR #386 round 5 で指摘)。
+          include-hidden-files: true
+          # 本 job の第一目的は nightly oracle archive なので、artifact が空の
+          # ままの silent success は契約違反。``error`` で fail させて気付ける
+          # ようにする (上の emit / summarize step が何らかの原因で空 file を
+          # 出力した場合も本 gate で拾う).
+          if-no-files-found: error
           retention-days: 14
 
   parity-smoke:
