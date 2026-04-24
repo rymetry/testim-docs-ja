@@ -107,24 +107,24 @@ class TestClassifySegment:
 class TestCoverageAggregator:
     def test_record_and_aggregate(self):
         cov = create_mask_coverage()
-        cov["record"](
+        cov.record(
             slug="x",
             segment_kind="paragraph",
             section_path="A",
             masks=[{"source": "glossary", "entry": "Testim", "span": {"start": 0, "end": 6}}],
         )
-        snap = cov["toJSON"]()
+        snap = cov.to_json()
         assert snap["summary"]["segmentsMasked"] == 1
         assert snap["summary"]["byGlossaryEntry"] == {"Testim": 1}
 
     def test_skip_on_empty_masks(self):
         cov = create_mask_coverage()
-        cov["record"](slug="x", segment_kind="paragraph", section_path="A", masks=[])
-        assert cov["toJSON"]()["summary"]["segmentsMasked"] == 0
+        cov.record(slug="x", segment_kind="paragraph", section_path="A", masks=[])
+        assert cov.to_json()["summary"]["segmentsMasked"] == 0
 
     def test_records_invariant_pattern_counter(self):
         cov = create_mask_coverage()
-        cov["record"](
+        cov.record(
             slug="test/slug",
             segment_kind="paragraph",
             section_path="Overview",
@@ -137,11 +137,27 @@ class TestCoverageAggregator:
                 },
             ],
         )
-        json = cov["toJSON"]()
+        json = cov.to_json()
         assert json["summary"]["segmentsMasked"] == 1
         assert json["summary"]["byGlossaryEntry"] == {"Visual Editor": 1}
         assert json["summary"]["byInvariantPattern"] == {"cli-flag": 1}
         assert len(json["maskedSegments"]) == 1
+
+    def test_mask_coverage_object_is_typed_and_has_methods(self):
+        """``create_mask_coverage()`` returns a ``MaskCoverage`` instance exposing
+        ``record`` / ``to_json`` as methods (not a dict with callable values).
+
+        Regression guard for the PR A refactor: the old dict-returning API
+        (``cov["record"](...)``) silently tolerated camelCase kwargs when mask
+        lists were empty, masking kwarg drift bugs (PR #384 round1). The typed
+        class makes static analyzers catch that class of failure.
+        """
+        from testim_parity.glossary_mask import MaskCoverage
+
+        cov = create_mask_coverage()
+        assert isinstance(cov, MaskCoverage)
+        assert callable(cov.record)
+        assert callable(cov.to_json)
 
 
 # ---------------------------------------------------------------------------

@@ -91,17 +91,36 @@ jobs:
         run: uv run mypy src
       - name: pytest
         # Phase 4b-5 の一時措置: ``slow`` marker (288-page matrix conformance) は
-        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。``cutover`` も
-        # Phase 6 cutover PR 専用なので skip。Phase 6 atomic cutover で mjs 削除 +
-        # conformance test 退場に伴って自然解消する。
+        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。``cutover`` は
+        # Phase 6 cutover PR 専用、``parity_smoke`` は PR A の full-repo smoke で
+        # ~5 分かかるため別 step に分離 (下記 ``check_source_parity smoke`` 参照)。
+        # Phase 6 atomic cutover で mjs 削除 + conformance test 退場に伴って
+        # ``slow`` は自然解消し、``parity_smoke`` は ``python-parity-smoke`` job
+        # に格上げされる。
         #
-        # ``pyproject.toml`` の ``addopts = "-m 'not slow and not cutover'"`` が
-        # default で効くが、CI yaml でも **明示的** に ``-m`` を重ねて「slow を
-        # CI から外す契約」を yaml レベルで可視化する (PR #384 user request:
-        # 意図の pin、pyproject.toml 変更時の silent 無効化防止)。Merge gate の
-        # shape drift 検出は local ``uv run pytest -m slow`` で reviewer が
-        # 明示的に pre-merge 実行する運用。
-        run: uv run pytest -m 'not slow and not cutover' --cov=testim_parity --cov-report=term-missing
+        # ``pyproject.toml`` の ``addopts`` が default で効くが、CI yaml でも
+        # **明示的** に ``-m`` を重ねて「この 3 marker を CI default から外す契約」
+        # を yaml レベルで可視化する (PR #384 user request: 意図の pin、
+        # pyproject.toml 変更時の silent 無効化防止)。この ``run:`` は静的な
+        # pytest command のみで untrusted input を含まないため command injection
+        # リスクは無い。
+        run: uv run pytest -m 'not slow and not cutover and not parity_smoke' --cov=testim_parity --cov-report=term-missing
+      - name: check_source_parity smoke
+        # PR A (``MaskCoverage`` blocker 修正) の acceptance gate。実 ROOT_DIR に
+        # 対して Python ``check_source_parity`` CLI を走らせ、CLI 完走 /
+        # payload schema / ``debug.maskCoverage`` shape を pin する。~5 分かかる
+        # ため上の pytest step とは分離 (job 内だが別 step)。Phase 6b atomic
+        # cutover で ``python-parity-smoke`` job に昇格予定 (PR B で分離する)。
+        # このレベルの分離でも「PR A の refactor が production 経路を壊していない」
+        # 保証は CI run で毎回確認される。
+        #
+        # ``-m 'parity_smoke and not cutover'``: parity_smoke marker の test の
+        # うち、5-counter 0 を要求する cutover-only test (Phase 5 coexistence 中は
+        # Python extractor drift により fail する) を除外する。Phase 6b で
+        # cutover exclude を外す (``uv run pytest -m parity_smoke`` 単純化)。
+        # run: 内は静的 pytest command のみで untrusted input を含まないため
+        # command injection リスクは無い。
+        run: uv run pytest -m 'parity_smoke and not cutover' --tb=short
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

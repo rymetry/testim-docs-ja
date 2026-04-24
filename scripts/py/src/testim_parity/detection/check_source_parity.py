@@ -518,14 +518,14 @@ def check_source_parity(
                     # extract 段階の型 drift に対する defense in depth。
                     text = seg.get("textNorm") or seg.get("rawText") or ""
                     mask_info = mask_segment_text(text)
-                    # kwargs は snake_case (``create_mask_coverage.record`` の
+                    # kwargs は snake_case (``MaskCoverage.record`` の
                     # signature と一致)。camelCase だと silent に TypeError を
                     # 投げるが mask が空だと早期 return で観測困難 → Phase 5 の
                     # kwarg bug の原因になった経緯あり (PR #384 round1 対応)。
                     # ``or ""`` / ``or []`` は segmentKind / sectionPath / masks が
                     # 何らかの理由で None / 欠落した場合の fallback (contract
                     # 上は常に populated だが extract 側バグ耐性)。
-                    mask_coverage["record"](
+                    mask_coverage.record(
                         slug=file_slug,
                         segment_kind=seg.get("segmentKind") or "",
                         section_path=seg.get("sectionPath") or "",
@@ -767,7 +767,7 @@ def check_source_parity(
         "advisoryQueue": advisory_queue,
         "debug": {
             "baselineSchemaVersion": baseline_data["schemaVersion"],
-            "maskCoverage": mask_coverage["toJSON"](),
+            "maskCoverage": mask_coverage.to_json(),
             "artifactCoverage": artifact_coverage["snapshot"](),
             "patchCoverage": patch_coverage["snapshot"](),
         },

@@ -160,11 +160,11 @@ def test_invariant_patterns_match_shape(mjs_invariant_patterns):
 def test_coverage_roundtrip_matches(mjs_coverage_snapshot):
     cov = create_mask_coverage()
     for record in COVERAGE_SAMPLE:
-        cov["record"](
+        cov.record(
             slug=record["slug"],
             segment_kind=record["segmentKind"],
             section_path=record["sectionPath"],
             masks=record["masks"],
         )
-    py_snap = cov["toJSON"]()
+    py_snap = cov.to_json()
     assert py_snap == mjs_coverage_snapshot
