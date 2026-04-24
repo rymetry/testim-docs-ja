@@ -561,11 +561,17 @@ def insert_en_residual(md: str, nth: int = 0) -> dict[str, Any] | None:
 
 
 # invariant token 検出用のパターン群 (mjs 等価、iteration 順を保持)。
+#
+# ``re.ASCII`` を付けて ``\w`` を ``[A-Za-z0-9_]`` に限定する (JS の ``\w``
+# default と同じ)。Python default の Unicode ``\w`` だと URL 断片 ``#slug-web--モバイル``
+# の ``モバイル`` (kana) が ``--[\w-]+`` に match して false-positive token-drop
+# candidate になり、mjs 側では match しないため recall drift の原因になる
+# (running-tests/running-tests-overview)。
 _TOKEN_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"`--[\w-]+`"),
-    re.compile(r"`[A-Z_]{2,}`"),
+    re.compile(r"`--[\w-]+`", re.ASCII),
+    re.compile(r"`[A-Z_]{2,}`", re.ASCII),
     re.compile(r"https?://[^\s)]+"),
-    re.compile(r"--[\w-]+"),
+    re.compile(r"--[\w-]+", re.ASCII),
 )
 
 _DROP_SKIP_KINDS: frozenset[str] = frozenset(

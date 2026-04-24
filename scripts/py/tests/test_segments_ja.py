@@ -1,8 +1,8 @@
 """``testim_parity.segments_ja`` のユニットテスト。
 
 cross-runtime byte parity は ``tests/conformance/test_segments_ja_parity.py``
-が担保する。こちらは node 不在環境でも動く素早い iteration 用と、Issue #368
-fix (nested list flattening) の explicit regression guard。
+が担保する。こちらは node 不在環境でも動く素早い iteration 用と、mjs
+line-based 挙動の regression guard。
 """
 
 from __future__ import annotations
@@ -41,47 +41,68 @@ class TestBasicClassification:
         assert segs[0]["textNorm"] == "section title"
 
 
-class TestIssue368NestedListFlattening:
-    """Issue #368 の核心: nested list を top-level item 1 segment に flatten。"""
+class TestListEmit:
+    """List handling — mjs line-based emit (Phase 6b cutover 契約)。
 
-    def test_unordered_nested_flattens(self):
+    Phase 2 の markdown-it-py flatten は 131 ページの parity drift を生むため
+    撤回。mjs と同じ 1 行 1 segment emit に戻した (288 corpus に ``<li>`` nested は
+    0 件のため flatten は不要、将来発生したら別 Issue で対応)。
+    """
+
+    def test_unordered_nested_emits_each_marker(self):
         md = "- Outer\n  - Nested A\n  - Nested B\n- Sibling\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # 2 top-level items; nested 2 items are absorbed
-        assert kinds == ["unordered-list-item", "unordered-list-item"]
-        assert "outer" in segs[0]["textNorm"]
-        assert "nested a" in segs[0]["textNorm"]
-        assert "nested b" in segs[0]["textNorm"]
-        assert segs[1]["textNorm"] == "sibling"
+        # mjs-style: 4 separate segments (nested markers emit individually)
+        assert kinds == ["unordered-list-item"] * 4
+        assert segs[0]["textNorm"] == "outer"
+        assert segs[1]["textNorm"] == "nested a"
+        assert segs[2]["textNorm"] == "nested b"
+        assert segs[3]["textNorm"] == "sibling"
 
-    def test_ordered_with_nested_unordered_flattens(self):
+    def test_ordered_with_nested_unordered_emits_separately(self):
         md = "1. Outer step\n   - sub A\n   - sub B\n2. Next step\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["ordered-list-item", "ordered-list-item"]
-        assert "outer step" in segs[0]["textNorm"]
-        assert "sub a" in segs[0]["textNorm"]
-        assert "sub b" in segs[0]["textNorm"]
-        assert segs[1]["textNorm"] == "next step"
+        # ordered / unordered が混在しても kind は line-based で判定
+        assert kinds == [
+            "ordered-list-item",
+            "unordered-list-item",
+            "unordered-list-item",
+            "ordered-list-item",
+        ]
+        assert segs[0]["textNorm"] == "outer step"
+        assert segs[1]["textNorm"] == "sub a"
+        assert segs[2]["textNorm"] == "sub b"
+        assert segs[3]["textNorm"] == "next step"
 
-    def test_loose_list_multi_paragraph_merged(self):
-        """loose list (blank line + indented paragraph) も 1 item に merge。
+    def test_loose_list_continuation_emits_as_paragraph(self):
+        """blank line + indented paragraph は mjs では独立 paragraph segment。
 
-        これは ``administration/project-user-management.md`` 等 50+ ページで見られる
-        パターン。mjs line-based 実装は continuation paragraph を別 segment として
-        emit するため segment count が inflate する。
+        Python 側も paragraph fall-through で ``paragraph`` kind を emit する
+        (Phase 6b: CommonMark flatten を撤回して mjs 挙動に合わせた)。
         """
         md = "1. First step.\n\n   Continuation paragraph.\n\n2. Second step.\n"
         segs = extract_segments_from_markdown(md)
-        list_items = [s for s in segs if "list-item" in s["segmentKind"]]
-        assert len(list_items) == 2
-        assert "first step" in list_items[0]["textNorm"]
-        assert "continuation paragraph" in list_items[0]["textNorm"]
-        assert "second step" in list_items[1]["textNorm"]
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["ordered-list-item", "paragraph", "ordered-list-item"]
+        assert segs[0]["textNorm"] == "first step."
+        assert segs[1]["textNorm"] == "continuation paragraph."
+        assert segs[2]["textNorm"] == "second step."
+
+    def test_hard_break_continuation_emits_as_paragraph(self):
+        """hard-break (``\\`` end + indented next line) も独立 paragraph。
+
+        ``results/test-runs.md`` 等で使われる `-  bullet\\` + 2-space indent の
+        pattern。Phase 2 の markdown-it-py は 1 item に merge していたが、
+        mjs は 2 segment。Phase 6b で mjs 挙動に揃えた。
+        """
+        md = "- 緑のバー - 合格\n- 赤のバー - 不合格\\\n  バーにカーソルを合わせると、その詳細が表示されます。\n\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "unordered-list-item", "paragraph"]
 
     def test_flat_list_unchanged(self):
-        """nest なしの list は従来通り 1 item = 1 segment。"""
         md = "- alpha\n- beta\n- gamma\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
@@ -89,7 +110,6 @@ class TestIssue368NestedListFlattening:
         assert [s["textNorm"] for s in segs] == ["alpha", "beta", "gamma"]
 
     def test_list_segment_index_counter(self):
-        """flatten 後も ``(sectionPath, kind)`` 毎の segmentIndex は連番。"""
         md = "## S\n\n- a\n- b\n- c\n"
         segs = extract_segments_from_markdown(md)
         list_items = [s for s in segs if "list-item" in s["segmentKind"]]
@@ -269,13 +289,13 @@ class TestListRegionEdgeCases:
         # horizontal rule 自体は emit されず、後続 paragraph だけ emit
         assert kinds == ["unordered-list-item", "paragraph"]
 
-    def test_indented_fence_inside_list_absorbed(self):
-        """indented code fence は list item に吸収 (codex review P2 #1)。
+    def test_indented_fence_inside_list_separate_segments(self):
+        """indented code fence は mjs では paragraph / code-block emit。
 
-        CommonMark では indent された code fence が list item continuation に
-        なる。EN HTML walker は ``<li>`` 内の ``<pre>`` を parent list-item
-        の textNorm に連結する。Python JA も同じ挙動で揃える。mjs line-based
-        実装は fence を独立 code-block として emit するため意図的 divergence。
+        Phase 2 では CommonMark flatten で list item に吸収していたが、Phase 6b で
+        mjs line-based に合わせた。indented ``\\`\\`\\`js`` は top-level fence
+        regex に match しないので paragraph 扱いになる。2-space indent の
+        continuation text も paragraph。mjs と同じ 1 行 1 segment emit。
         """
         md = (
             "1. step one\n\n"
@@ -287,13 +307,15 @@ class TestListRegionEdgeCases:
         )
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # 2 list-items のみ。code fence も continuation も item 1 に吸収。
-        assert kinds == ["ordered-list-item", "ordered-list-item"]
-        # item 1 の textNorm に fence body と continuation が含まれる
-        assert "step one" in segs[0]["textNorm"]
-        assert "var x" in segs[0]["textNorm"]
-        assert "continuation paragraph" in segs[0]["textNorm"]
-        assert segs[1]["textNorm"] == "step two"
+        # mjs: step one (bullet) → paragraph ('```js var x = 1; ```' のテキスト) →
+        # paragraph (continuation) → step two (bullet)
+        assert "ordered-list-item" in kinds
+        assert "paragraph" in kinds
+        # step one と step two が独立 segment
+        bullets = [s for s in segs if s["segmentKind"] == "ordered-list-item"]
+        assert len(bullets) == 2
+        assert bullets[0]["textNorm"] == "step one"
+        assert bullets[1]["textNorm"] == "step two"
 
     def test_one_space_indent_after_list_emits_paragraph(self):
         """blank 行 + 1-space indent の行は list continuation にならない。
@@ -377,21 +399,19 @@ class TestListRegionEdgeCases:
         assert kinds == ["unordered-list-item"] * 3
         assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
 
-    def test_hard_break_in_list_item_stripped(self):
-        """Markdown hard-break ``\\`` + newline は空白化して textNorm から除去。
+    def test_hard_break_splits_list_item_and_paragraph(self):
+        """``1. step\\`` + indented next line は mjs で 2 segment (bullet + paragraph)。
 
-        codex review P2 follow-up #3: ``1. step\\\\\\n   next`` のように list
-        item が hardbreak を使うと、markdown-it-py の ``inline.content`` に
-        raw ``\\\\\\n`` が残る。EN walker は ``<br>`` を単なる word-boundary として
-        扱うため、Python 側も hardbreak を空白化して EN と textNorm を揃える。
+        Phase 2 の markdown-it-py は ``\\\\\\n`` を hardbreak として同じ item に
+        merge していたが、mjs line-based では 2 行が独立 segment。Phase 6b で
+        mjs 挙動に合わせる。
         """
         md = "1. Step one\\\n   Next sentence.\n"
         segs = extract_segments_from_markdown(md)
-        assert len(segs) == 1
-        assert segs[0]["segmentKind"] == "ordered-list-item"
-        # textNorm に backslash が残らない
-        assert "\\" not in segs[0]["textNorm"]
-        assert segs[0]["textNorm"] == "step one next sentence."
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["ordered-list-item", "paragraph"]
+        assert segs[0]["textNorm"] == "step one\\"
+        assert segs[1]["textNorm"] == "next sentence."
 
     def test_top_level_fence_still_terminates_list_region(self):
         """top-level (non-indented) fence は list region を終了させる。
@@ -410,41 +430,38 @@ class TestListRegionEdgeCases:
             "unordered-list-item",
         ]
 
-    def test_indented_table_inside_list_absorbed_by_commonmark(self):
-        """indent された markdown table は list item continuation として吸収。
+    def test_indented_table_inside_list_mjs_behavior(self):
+        """indent された markdown table は mjs line-based で table-cell emit される。
 
-        architect review H1: ``_LIST_REGION_TERMINATOR_RES`` は table row を
-        含まないため、list 内の indented ``| a | b |`` 行は region に取り込まれ
-        ``MarkdownIt("commonmark")`` で parse される。CommonMark は table 未対応
-        (拡張なし) のため、table 文字列は list item の inline text として 1
-        segment に集約される。これは CommonMark semantics の正しい挙動 (blank
-        line 無しで list item に連続する indented 内容は item content)。mjs
-        line-based 実装は各 table row を ``table-cell`` として emit する意図
-        的 divergence。
+        mjs TABLE_ROW_RE は leading whitespace を許容せず ``^\\|`` で match する
+        が、trimmed 行で match するため ``  | h1 | h2 |`` は match する。結果
+        table-cell として emit される (separator row skip、header row は次行が
+        separator のため skip)。Phase 2 では list item に吸収していたが Phase 6b
+        で mjs に揃えた。
         """
         md = "## X\n\n- item with table\n\n  | h1 | h2 |\n  | - | - |\n  | a | b |\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # heading + 1 list item (table rows absorbed, no table-cell emit)
-        assert kinds == ["heading", "unordered-list-item"]
-        assert "table-cell" not in kinds
+        # heading + list item + 2 table-cell (data row のみ; header / separator は skip)
+        assert kinds[0] == "heading"
+        assert "unordered-list-item" in kinds
+        assert kinds.count("table-cell") == 2
 
-    def test_list_with_blank_and_indented_code_block_continuation(self):
-        """4-space indent の "code-looking" 行が list item の continuation に
-        なるケース (CommonMark では list item 内の indented code block)。
+    def test_list_with_blank_and_indented_content_line(self):
+        """4-space indent の "code-looking" 行は mjs で paragraph 扱い。
 
-        list region が正しく吸収して 1 item として emit する (nested list と
-        同じ flatten 挙動)。region の後に来る非 indent paragraph は別 segment。
+        mjs FENCE_RE は leading whitespace 非許容 + trimmed 使用のため、
+        ``    indented-content-line`` は regex 非 match で paragraph_buf へ入り、
+        blank 行で flush。Phase 2 の CommonMark 吸収を撤回して mjs に揃える。
         """
         md = "- item\n\n    indented-content-line\n\nAfter paragraph.\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # CommonMark が indented content を list item に吸収するため、list-item
-        # + paragraph で 2 segment。list-item の textNorm に "indented-content-line"
-        # が含まれることも確認する。
-        assert kinds == ["unordered-list-item", "paragraph"]
-        assert "indented-content-line" in segs[0]["textNorm"]
-        assert segs[1]["textNorm"] == "after paragraph."
+        # mjs: list-item + paragraph (indented-content-line) + paragraph (After paragraph)
+        assert kinds == ["unordered-list-item", "paragraph", "paragraph"]
+        assert segs[0]["textNorm"] == "item"
+        assert segs[1]["textNorm"] == "indented-content-line"
+        assert segs[2]["textNorm"] == "after paragraph."
 
 
 class TestLooseSummaryENDelegation:

@@ -53,18 +53,11 @@ MAX_BASELINE_DIFFS_PER_PAGE: int = 60
 # multi-segment mutations (cascade 例外)。section-body-swap は section 全体を動かす。
 MULTI_SEGMENT_MUTATION_TYPES: frozenset[str] = frozenset({"section-body-swap"})
 
-# Phase 5 port 時点の Python extractor drift slug (mjs では green)。
-# - ``advanced-editing/loops``: JA extractor が unordered-list-item を 1 件欠落
-# - ``running-tests/running-tests-overview``: token-drop mutation を Python 側で
-#   検知できない (mjs は 0→1 diff で検知)。extractor / align の micro-drift。
-# これらの解消は別 PR (Python parity fine-tune)。本 Phase 5 port では recall
-# gate から除外する。
-_PY_EXTRACTOR_DRIFT_SLUGS: frozenset[str] = frozenset(
-    {
-        "advanced-editing/loops",
-        "running-tests/running-tests-overview",
-    }
-)
+# Phase 6b cutover で解消済: segments_ja.py を mjs line-based に戻したことで
+# extractor drift が消え、test_clean_page_fixtures.py / test_structure_fixtures.py
+# の XFAIL と同時に本 frozenset も empty 化。cutover gate が本 frozenset 空を
+# assert するため、新規 drift は別 Issue で parser / content 側を修正する規律。
+_PY_EXTRACTOR_DRIFT_SLUGS: frozenset[str] = frozenset()
 
 EXPECTED_DIFF_SIGNATURES: dict[str, list[dict]] = {
     "paragraph-delete": [{"type": "segment-missing", "kind": "paragraph"}],

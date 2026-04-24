@@ -1,27 +1,26 @@
 """conformance suite 共通 fixtures (288-matrix corpus oracle loader)。
 
 288-page corpus conformance test (``test_segments_en_288_matrix.py`` /
-``test_turndown_288_matrix.py``) で共有する oracle JSONL loader を提供する。
+``test_turndown_288_matrix.py`` / ``test_align_288_matrix.py``) で共有する
+oracle JSONL loader を提供する。
 
-## Oracle JSONL 契約 (emit_corpus_oracle.mjs と対)
+## Oracle JSONL 契約
 
 1 row = ``{schemaVersion:1, suite, slug, sha256, expected}``。詳細は
-``scripts/py/tools/emit_corpus_oracle.mjs`` の module docstring 参照。
+``testim_parity.tools.emit_corpus_oracle`` の module docstring 参照。
 
-## Loader の優先順位 (Phase 6a 以降)
+## Loader の優先順位 (Phase 6b cutover 後)
 
 1. ``TESTIM_CORPUS_EXPECTED_JSONL`` env var が set されていれば、**絶対パス**
    として扱って JSONL を読む。nightly oracle drift workflow / local debug で
    live oracle snapshot を注入する escape hatch。
 2. committed golden (``tests/conformance/__oracle__/corpus_golden.jsonl``) が
-   存在すれば、それを authoritative oracle として使う。Phase 6a 以降の
-   default。node subprocess 不要で xdist worker でも stable。
-3. committed golden が無く、かつ **xdist worker** 内なら ``pytest.UsageError``
-   を raise して fail する (silent な N-way harness 呼び出し / 誤 green を
-   防ぐ)。
-4. committed golden が無く、**単一 process** で走っている local 実行なら
-   session 内で 1 回だけ ``emit_corpus_oracle.mjs`` を spawn して JSONL を
-   生成する (Phase 6a 以前の fallback、golden 消失時の safety net)。
+   存在すれば、それを authoritative oracle として使う。Phase 6b 以降の
+   default。subprocess 不要で xdist worker でも stable。
+3. committed golden が無い場合は ``pytest.UsageError`` で fail させる。
+   Phase 6b で mjs 削除後は live oracle regen ができないため (mjs harness
+   無し)、golden 消失は必ず CI-visible な error として扱う。``npm run
+   test:py:corpus:regen`` が Python 実装で golden を regenerate する。
 
 ## xdist 下での session 共有
 
@@ -36,7 +35,6 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -80,7 +78,7 @@ def _validate_row(row: dict, line_no: int) -> None:
     if missing:
         raise ValueError(
             f"oracle JSONL row {line_no} missing required keys: {sorted(missing)}. "
-            f"Regenerate via `node scripts/py/tools/emit_corpus_oracle.mjs`."
+            "Regenerate via `npm run test:py:corpus:regen`."
         )
     schema_version = row["schemaVersion"]
     if schema_version not in _SUPPORTED_SCHEMA_VERSIONS:
@@ -92,14 +90,12 @@ def _validate_row(row: dict, line_no: int) -> None:
 
 
 @pytest.fixture(scope="session")
-def corpus_oracle(
-    repo_root: Path, node_available: bool, tmp_path_factory: pytest.TempPathFactory
-) -> dict[tuple[str, str], dict]:
+def corpus_oracle(repo_root: Path) -> dict[tuple[str, str], dict]:
     """288-matrix corpus oracle を ``(suite, slug) -> row`` dict でロードする。
 
-    env var 経由 or fallback 生成で JSONL を取得し、session 内で 1 回だけ
-    dict にパースする。返り値は immutable view ではなく plain dict だが、
-    tests は lookup のみを行う契約。
+    Phase 6b cutover で mjs harness 削除後は committed golden が唯一の
+    authoritative oracle。env var で上書きも可能 (nightly drift workflow の
+    escape hatch)。session 内で 1 回だけ dict にパースする。
     """
     env_path = os.environ.get("TESTIM_CORPUS_EXPECTED_JSONL")
     if env_path:
@@ -113,11 +109,8 @@ def corpus_oracle(
                 f"Got: {env_path!r}"
             )
     else:
-        # Priority 2: committed golden (Phase 6a 以降の default)。
-        # ``scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl`` が
-        # main branch に存在するなら authoritative oracle として読む。node
-        # subprocess 不要なので xdist worker でも stable。
-        committed_golden = (
+        # Priority 2: committed golden (Phase 6b cutover 後の sole authority)。
+        jsonl_path = (
             repo_root
             / "scripts"
             / "py"
@@ -126,44 +119,12 @@ def corpus_oracle(
             / "__oracle__"
             / "corpus_golden.jsonl"
         )
-        if committed_golden.exists():
-            jsonl_path = committed_golden
-        elif _is_xdist_worker():
-            # Priority 3: committed golden も無く、env var も無い状態で
-            # xdist worker 下は **契約違反**。``pytest.skip`` は silent に
-            # 「テストが走らなかった」ことを受け入れて green になってしまうので
-            # ``pytest.UsageError`` で fail させる。
+        if not jsonl_path.exists():
+            # Phase 6b 以降は mjs が無いので live regen は Python tool でしか
+            # 行えない。silent skip させず ``pytest.UsageError`` で fail させる。
             raise pytest.UsageError(
-                "corpus oracle not available. Either commit "
-                "scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl "
-                "(Phase 6a) or set TESTIM_CORPUS_EXPECTED_JSONL. Run:\n"
-                "  node scripts/py/tools/emit_corpus_oracle.mjs "
-                "--out scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl "
-                "--suite segments_en,turndown"
-            )
-        else:
-            # Priority 4: single-process fallback (committed golden 消失時 / 開発
-            # 中の tools 検証用)。session 内で 1 回だけ live oracle を spawn。
-            if not node_available:
-                pytest.skip("node not available; cannot generate oracle JSONL in fallback")
-            tmp_dir = tmp_path_factory.mktemp("corpus_oracle")
-            jsonl_path = (tmp_dir / "oracle.jsonl").resolve()
-            emit_script = repo_root / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs"
-            # ``--suite segments_en,turndown`` で PR B の ``corpus`` marker scope
-            # と committed golden の suite scope に揃える (align は Phase 6b の
-            # golden 化まで別管理)。
-            subprocess.run(
-                [
-                    "node",
-                    str(emit_script),
-                    "--out",
-                    str(jsonl_path),
-                    "--suite",
-                    "segments_en,turndown",
-                ],
-                check=True,
-                timeout=600,
-                cwd=repo_root,
+                "corpus oracle not available. Regenerate via:\n"
+                "  npm run test:py:corpus:regen"
             )
 
     if not jsonl_path.exists():

@@ -30,9 +30,8 @@ MANIFEST_PATH: Path = Path(__file__).parent / "fixtures" / "source-parity-golden
 # mjs 版は KNOWN_ORDERED_DRIFTS が空。Python 側も同じ空 dict。
 KNOWN_ORDERED_DRIFTS: dict[str, dict] = {}
 
-# Phase 5 port 時点で mjs runtime では一致するが Python JA extractor が micro-drift を
-# 出す slug — 別 PR で解消予定。boundary benchmark からは一時的に除外する。
-_PY_EXTRACTOR_DRIFT_SLUGS: frozenset[str] = frozenset({"advanced-editing/loops"})
+# Phase 6b cutover で解消済 (test_recall.py の note 参照)。
+_PY_EXTRACTOR_DRIFT_SLUGS: frozenset[str] = frozenset()
 
 
 def _load_manifest() -> list[dict]:

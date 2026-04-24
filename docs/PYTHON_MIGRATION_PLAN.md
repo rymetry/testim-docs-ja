@@ -1183,9 +1183,25 @@ Phase 6b atomic cutover の **prerequisite** として別 PR (本 Phase 6a PR) �
 
 Phase 6a PR 自体は small scope (fixture commit + conftest / 2 段 CI drift check + npm script 整備 + CLI default 絞り)。align 288-matrix の golden 化は Phase 6b で別途対応する (下記 Phase 6b「align 288-matrix golden 化」節参照、Codex review #2)。
 
-### Phase 6b: Atomic cutover PR
+### Phase 6b: Atomic cutover PR ✅ 完了 (2026-04-24)
 
 **Goal**: npm scripts を Python に接続、mjs 削除 (redirects.mjs を除く)、`cutover` marker gate を 1 回限り強制 run して緑を確認。
+
+### Phase 6b 実績 (2026-04-24 完了)
+
+- **JA parser drift 解消**: `segments_ja.py` の Phase 2 HYBRID (markdown-it-py flatten) を撤回し mjs line-based emit に統一。288 corpus に `<li>` nested が 0 件と確認された上で、content は mjs line-based 前提で書かれていた実態に合わせた。Python parity check で `check_source_parity` が 131 ファイル → 0 ファイル (5-counter 全 0) に収束
+- **Newline normalization fix**: `check_source_parity.py` で `read_text` → `read_bytes().decode("utf-8")` に切替え、`\r\n` 保持で `en_source_patches` の find/replace が一致する状態に統一
+- **Token pattern ASCII flag**: `mutation_corpus.py` の `_TOKEN_PATTERNS` に `re.ASCII` 付与。`\w` が JS default (`[A-Za-z0-9_]`) と一致し、URL fragment 中の kana を CLI flag に誤 match しない (token-drop recall 100% 回復)
+- **Drift frozensets 空化**: `_PY_XFAIL_SLUGS` (19 slug) / `_PY_EXTRACTOR_DRIFT_SLUGS` (2 slug) を全て empty に。`pytest -m cutover` が green 維持される self-enforcing gate を pin
+- **align 288-matrix golden 化**: `emit_corpus_oracle` / `summarize_corpus_oracle` を Python 実装に port (byte-identical 出力で committed golden と一致)。`test_align_288_matrix.py` を mjs harness spawn → committed golden 比較に書換、`slow` marker を撤廃し `corpus` marker に合流 (288 test が xdist worker で並列分散)
+- **Conformance test migration**: `scripts/py/tests/conformance/test_*_parity.py` / `test_*_e2e.py` (計 34 file) と `_harness.py` を削除。byte-parity guard は `*_288_matrix.py` 3 file + 各モジュール単体テスト + `cutover` marker の drift detection に集約
+- **mjs 大量削除**: `scripts/lib/*.mjs` (32 file、`redirects.mjs` のみ保持)、`scripts/detection/*.mjs` (9 file)、`scripts/pipeline/*.mjs` (6 file)、`scripts/tools/*.mjs` (5 file)、`scripts/py/tools/*.mjs` (3 file)、`scripts/py/conformance/harness.mjs`、`scripts/__tests__/lint_docs_contract.test.mjs` を削除
+- **package.json rewire**: 30+ script を `uv run python -m testim_parity.*` に切替 (lint:docs / check:untranslated / lint:glossary / docs:* / check:* / generate:parity-baseline 等)。`regen:py-patches` / `check:py-patches` を retire (mjs 削除で dual-source-of-truth が消滅)
+- **CI workflow rewire**: `ci.yml` は `lint` (Node + Python)、`test` (`test:mjs` のみ — lib_redirects + sync_detection_issues)、`build`、`python-fast` (ruff / format / mypy / pytest + cutover gate + mjs consumer audit)、`python-corpus` (Python summarize TSV drift + pytest corpus)、`parity` (Python `check:parity` + upstream recovery sticky comment)。`scheduled-actionable.yml` / `deep-audit.yml` に `actions/setup-python` + `setup-uv` を追加。`nightly-python-oracle.yml` の oracle-snapshot を Python `emit_corpus_oracle` ベースに書換 (mjs authority 削除後は Python live vs committed の safety-net drift gate として機能)
+- **mjs consumer audit**: `.github/scripts/audit-mjs-consumers.sh` を新設し CI required step として `python-fast` job 内で run。許可 4 asset (`redirects.mjs` / `lib_redirects.test.mjs` / `sync-detection-issues.cjs` / `sync_detection_issues.test.mjs`) 以外の mjs / cjs / `node scripts/` 参照が復活したら block
+- **turndown / gray-matter 削除**: package.json から `turndown` / `gray-matter` を削除。Python `markdownify` ベース subclass が HTML→MD 変換を担い、frontmatter も Python 側で直接 parse する
+- **coverage**: `fail_under = 85` に設定 (実測 87.37%)。`tools/*.py` (fix_alt_all / normalize_docs / report_frontmatter_categories / sync_frontmatter_from_sidebar / check_glossary_duplicates) の CLI smoke tests を追加して `tools/` 系の 0%-coverage gap を埋めた。90% への残差は pipeline deep-branch coverage の follow-up (cutover critical path は既に 90%+ 維持)
+- **test 実績**: `uv run pytest` (default addopts) 1749 pass、`pytest -m 'not cutover' -n auto --dist load` 2740 pass、`pytest -o addopts= -m cutover` 2 pass、`npm run test:mjs` 19 pass、`npm run build` 290 page、`npm run lint` 0 error、`npm run check:parity` 5-counter = 0
 
 ### Cutover gate criteria (Phase 6b PR 内で全て true)
 

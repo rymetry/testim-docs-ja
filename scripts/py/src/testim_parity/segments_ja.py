@@ -4,32 +4,17 @@ JA markdown body を走査し、exact-diff engine 用の flat な segment 列を
 Kind を判定できない構造は skip することで gate-eligible segment を clean に保つ
 保守的な設計 (mjs と同一)。
 
-## Phase 2 の核: Issue #368 nested list flattening
+## 挙動は mjs と byte-identical (Phase 6b cutover 後の契約)
 
-mjs 実装は line-based regex で、ネストされた ``<li>`` (indented list item) を
-各行 1 segment として emit する。一方 EN parser (HTML tree walker) は top-level
-``<li>`` を 1 segment にフラット化する。結果、**同一意味の EN/JA ページが parity
-check で 128 files / 823 issues を出す** のが Issue #368 の症状。
+Phase 2 では Issue #368 対策に ``markdown-it-py`` ベースの nested-list flattening
+を入れていたが、288 corpus には ``<li>`` 内 nested / 複数 ``<p>`` が 0 件と判明
+(Issue #368 本文 §1 参照)。JA content は mjs の line-based parser 前提で書かれて
+いるため flatten すると 131 ページ / 843 issue の parity drift が発生し、Phase 6b
+cutover gate を通らない。そこで Phase 6b で mjs と同じ line-based regex emit に
+統一し、``<li>`` nested / multi-paragraph が corpus に入ったときは別 Issue で扱う
+契約にした (pull-requests unfreeze 等で初登場したら対処)。
 
-Python 側は以下の HYBRID アプローチで fix する:
-
-1. **非リスト content**: mjs の line-based state machine を verbatim port。
-   heading / callout / details / summary / code fence / HTML table / markdown
-   table / image / horizontal rule / paragraph を 1:1 で処理する。
-   conformance harness で mjs と byte 一致を guard する。
-2. **リスト region**: line-based regex で region の範囲を特定したら、その
-   range を ``markdown-it-py`` に渡して CommonMark AST を取得し、**top-level
-   ``list_item`` だけ** を emit する。ネストされた ``list_item`` の inline
-   content は親 item の textNorm にフラット化して混ぜ込む。これにより EN
-   walker と同じ粒度で segment が揃い、Issue #368 が解消される。
-
-mjs 側は当面 Phase 4 cutover まで既存の line-based 実装を保持するため、**nested
-list を含むページは mjs と Python で意図的に divergent** (segment count が
-Python < mjs)。conformance harness dispatch (``segments_ja_extract``) は
-nest-free な sample だけで byte 一致を要求し、Issue #368 の fix 挙動は
-dedicated Python unit test で記録する。
-
-## 保存されている mjs 挙動 (byte-identical 想定)
+## 保存されている mjs 挙動 (byte-identical)
 
 - frontmatter 剥がし (``--- ... ---`` の 1 回目 skip)
 - H1 を page title 扱い (emit しない, heading stack に push しない)
@@ -46,25 +31,16 @@ dedicated Python unit test で記録する。
 - code fence — backtick / tilde 両方、開閉 fence 間の body を ``code-block`` emit
 - standalone image line (``![...](...)`` / ``<Image>`` / ``<img>``) → ``image``
 - horizontal rule (``---`` / ``***`` / ``___``) は segment を emit しない
-
-## 意図的な divergence (Issue #368 fix)
-
-- ネストされた list item は top-level に flatten される (mjs は各行 1 segment)。
-  具体的には ``markdown_it.MarkdownIt().parse(region)`` の token stream を walk
-  し、``list_item_open`` で depth を +1、``list_item_close`` で -1 する。depth
-  が 1 のときの ``inline.content`` を rawText として集め、``list_item_close``
-  で depth が 1 → 0 に落ちる瞬間に flush する
-- list region 境界は line-based で検出: list 行 / blank 行 / 先頭 whitespace 行
-  を region に取り込み、heading / callout / details / code fence / HTML table /
-  horizontal rule / image-only / non-indented non-list 行で terminate する
+- ordered list / unordered list — 1 行 1 segment emit。``(\\s*)[-*+]`` /
+  ``(\\s*)\\d+\\.`` が leading whitespace を許容するため nested marker も
+  独立 segment になる。indented continuation は paragraph fall-through で
+  別 ``paragraph`` segment として emit される
 """
 
 from __future__ import annotations
 
 import re
 from typing import Any
-
-from markdown_it import MarkdownIt
 
 from .segments_en import extract_segments_from_html
 from .segments_ja_html import (
@@ -94,21 +70,6 @@ _HTML_TABLE_CLOSE_RE = re.compile(r"<\/table>", re.IGNORECASE)
 _HORIZONTAL_RULE_RE = re.compile(r"^(-{3,}|\*{3,}|_{3,})$")
 _ANCHOR_SUFFIX_RE = re.compile(r"\s*\{#[^}]*\}\s*$")
 
-# list-region terminator: "このパターンに該当する行が現れたら list region を
-# 閉じる" 契約の明示リスト (heading / callout / details token / code fence /
-# HTML table / horizontal rule / image-only)。
-_LIST_REGION_TERMINATOR_RES: tuple[re.Pattern[str], ...] = (
-    _HEADING_RE,
-    _CALLOUT_OPEN_RE,
-    _CALLOUT_CLOSE_RE,
-    _FENCE_RE,
-    _HTML_TABLE_OPEN_RE,
-    _HORIZONTAL_RULE_RE,
-)
-
-# details/summary token は別途検出する (行内に出現するため regex match ではなく
-# substring test で拾う)
-_DETAILS_TERMINATOR_RE = _DETAILS_TOKEN_RE
 
 
 class _Emitter:
@@ -144,231 +105,18 @@ class _Emitter:
 
 
 # ---------------------------------------------------------------------------
-# List region flattening (Issue #368 fix)
+# List handling — Phase 6b cutover に際して mjs line-based emit に統一
 # ---------------------------------------------------------------------------
-
-# markdown-it-py のデフォルト設定。list parsing 以外の feature (table, strikethrough)
-# は使わないが、instance 生成コストを削るため module-level で 1 度だけ作る。
 #
-# Thread-safety: ``MarkdownIt.parse`` は現状 stateless だが、plugin を enable
-# すると plugin 側で mutable state を持つ可能性がある (例: markdown-it-py の
-# ``mdit_py_plugins.footnote`` は parser instance に counter を持つ)。
-# ``extract_segments_from_markdown`` は本 parser instance を直接使うため、
-# plugin を追加する場合は thread-local / per-call instance に切替える必要が
-# ある。現行 pipeline は single-threaded (``check:parity`` が逐次実行) なので
-# 問題ないが、architect review L1 として記録 (Phase 3 以降で並列実行を検討
-# する際の確認事項)。
-_MD_PARSER = MarkdownIt("commonmark")
-
-
-def _is_list_region_terminator(line: str) -> bool:
-    """list region を終了させるべき行なら True。
-
-    **先頭に whitespace がある行は常に list continuation** として扱う
-    (CommonMark lazy continuation rule)。これにより indent された code fence /
-    heading-looking 行 / image などは parent list item に吸収され、EN HTML
-    walker と同じ粒度で segment が揃う (codex review P2 #1 の対応)。
-
-    top-level (indent 0) 行のみ terminator 判定対象:
-      - heading / callout / code fence / HTML table / horizontal rule
-      - ``<details>`` / ``<summary>`` / ``</details>`` token
-      - standalone image (markdown ``![...](...)``/``<img>``/``<Image>``)
-
-    blank 行は ``_collect_list_region`` 側の lookahead で判定するため、本関数
-    では常に ``False`` を返す。
-    """
-    stripped = line.strip()
-    if stripped == "":
-        return False
-    # Indented line is list item content (lazy continuation); never a terminator.
-    if line and line[0] in (" ", "\t"):
-        return False
-    for pattern in _LIST_REGION_TERMINATOR_RES:
-        if pattern.match(stripped):
-            return True
-    if _DETAILS_TERMINATOR_RE.search(line):
-        return True
-    # standalone image at indent 0
-    return _IMAGE_RE.match(stripped) is not None
-
-
-def _collect_list_region(lines: list[str], start: int) -> int:
-    """``start`` を list region の先頭として、region の末尾 index (inclusive) を返す。
-
-    region に含める行:
-      - list marker を持つ行 (indent 不問)
-      - blank 行
-      - 先頭 whitespace を持つ行 (lazy continuation / nested block)
-
-    stop 条件:
-      - indent 0 かつ list marker を持たない非 blank 行
-      - heading / callout / code fence / HTML table / horizontal rule / details
-        token / standalone image
-
-    返り値は **最後に region に含めた行の index**。trailing blank 行は region
-    末尾に含めない。
-    """
-    n = len(lines)
-    last_list_line = start
-    i = start
-    while i < n:
-        line = lines[i]
-        stripped = line.strip()
-        if _is_list_region_terminator(line):
-            break
-        if stripped == "":
-            # 先見: 次の非 blank 行が list-continuation かを確認
-            j = i + 1
-            while j < n and lines[j].strip() == "":
-                j += 1
-            if j >= n:
-                break
-            next_line = lines[j]
-            if _is_list_region_terminator(next_line):
-                break
-            if (
-                _ORDERED_RE.match(next_line)
-                or _UNORDERED_RE.match(next_line)
-                or next_line.startswith(" ")
-                or next_line.startswith("\t")
-            ):
-                i = j
-                continue
-            break
-        if _ORDERED_RE.match(line) or _UNORDERED_RE.match(line):
-            last_list_line = i
-            i += 1
-            continue
-        if line.startswith(" ") or line.startswith("\t"):
-            last_list_line = i
-            i += 1
-            continue
-        break
-    return last_list_line
-
-
-def _flatten_list_region(
-    region: str,
-) -> tuple[list[tuple[str, str, int | None]], int | None, int | None]:
-    """list region 文字列を markdown-it-py で parse して flatten 結果を返す。
-
-    戻り値 ``(items, list_start_line, list_end_line)``:
-
-    - ``items``: ``(kind, raw_text, line_offset)`` の list。``kind`` は
-      ``"ordered-list-item"`` / ``"unordered-list-item"``、``line_offset`` は
-      region 内の 0-based 行番号 (top-level item の開始行)。
-    - ``list_start_line``: region 内で **最初の top-level list が始まる行** の
-      0-based index (inclusive)。prefix (例: 4-space indented fallback
-      marker) が先行していれば ``> 0`` になる。codex review P2 follow-up
-      で prefix を mjs fallback で emit する必要があるため、正確な list
-      境界を伝える。list が 1 つも無ければ ``None``。
-    - ``list_end_line``: region 内で **最後の top-level list が閉じた行** の
-      0-based index (exclusive)。region にこれ以降の content があれば main
-      loop に戻して非 list content として再処理する。list が 1 つも見つから
-      なければ ``None``。
-
-    **top-level ``list_item`` の内容 (inline content + 内部 fence の body) を
-    すべて親 item の ``raw_text`` にスペース区切りで連結する**。ネストされた
-    ``list_item`` / indented code fence / image-only paragraph / 任意の block
-    要素が item 内にあっても、全て同じ segment に flatten される (EN HTML
-    walker の ``collectInlineText`` 挙動と等価)。
-
-    ``fence`` token の ``content`` も拾う理由 (codex review P2 #1): indent
-    された code fence は CommonMark で list item continuation に当たるため、
-    EN 側でも ``<pre>`` の text が親 ``<li>`` の textNorm に連結される。mjs
-    line-based 実装は fence を top-level code-block として別 emit するが、
-    Python 側は EN walker と揃える。
-    """
-    tokens = _MD_PARSER.parse(region)
-    results: list[tuple[str, str, int | None]] = []
-    list_depth = 0
-    item_depth = 0
-    current_parts: list[str] = []
-    current_kind: str | None = None
-    current_line: int | None = None
-    list_start_line: int | None = None
-    list_end_line: int | None = None
-
-    for tok in tokens:
-        if tok.type in ("bullet_list_open", "ordered_list_open"):
-            list_depth += 1
-            # top-level list_open の map は list 全体 [start, end_exclusive] を示す。
-            # nested list の map は subset なので、top-level のみ追跡する。
-            # 連続する top-level lists (例: nested 無し複数 list) の場合は
-            # 最初の start と最後の end を採用する。
-            if list_depth == 1 and tok.map is not None:
-                if list_start_line is None:
-                    list_start_line = tok.map[0]
-                list_end_line = tok.map[1]
-            continue
-        if tok.type in ("bullet_list_close", "ordered_list_close"):
-            list_depth -= 1
-            continue
-        if tok.type == "list_item_open":
-            item_depth += 1
-            if item_depth == 1:
-                current_parts = []
-                # markup は '-' / '*' / '+' (unordered) or '.' (ordered) を含む
-                markup = tok.markup or ""
-                current_kind = (
-                    "ordered-list-item" if markup.endswith(".") else "unordered-list-item"
-                )
-                current_line = tok.map[0] if tok.map else None
-            continue
-        if tok.type == "list_item_close":
-            if item_depth == 1 and current_kind is not None:
-                text = " ".join(p for p in current_parts if p).strip()
-                if text:
-                    results.append((current_kind, text, current_line))
-                current_parts = []
-                current_kind = None
-                current_line = None
-            item_depth -= 1
-            continue
-        if tok.type == "fence" and item_depth >= 1:
-            content = tok.content or ""
-            if content.strip():
-                current_parts.append(content.rstrip("\n"))
-            continue
-        if tok.type == "inline" and item_depth >= 1:
-            content = tok.content or ""
-            if content:
-                # Markdown hard break (``\`` at end of line) は EN の ``<br>``
-                # に相当し textNorm では単なる word-boundary。raw content に
-                # 残る ``\\\n`` を空白化しないと ``step\\ next`` のように
-                # backslash が textNorm に混入して EN walker と drift する
-                # (codex review P2 follow-up #3)。
-                current_parts.append(content.replace("\\\n", " "))
-    return (results, list_start_line, list_end_line)
-
-
-def _emit_single_fallback_list_item(
-    line: str,
-    emit: Any,
-    section_path: str,
-    line_no: int,
-) -> None:
-    """単一行を mjs line-based 実装と同じ挙動で list-item として emit する。
-
-    ``_flatten_list_region`` が CommonMark 的に list を認識しなかったときの
-    fallback (例: ``    - codeish`` のように 4-space indent された list marker
-    は CommonMark では indented code block 扱い)。mjs は ``_UNORDERED_RE`` /
-    ``_ORDERED_RE`` の match で list-item を emit するため、silent に content
-    を drop しないよう mjs 側と揃える (codex review P2 #2)。
-
-    **呼び出し元の契約**: 本関数は 1 行だけ処理する。main loop は ``i`` を 1
-    だけ進めて、次行以降は通常の dispatch に戻す。これにより region に含まれる
-    blank 行 / 非 list paragraph も main loop が正しく扱える (codex follow-up
-    P2 #2: fallback prefix 後の trailing content を dropping しない)。
-    """
-    ordered_match = _ORDERED_RE.match(line)
-    unordered_match = _UNORDERED_RE.match(line)
-    if ordered_match is None and unordered_match is None:
-        return
-    match = ordered_match if ordered_match is not None else unordered_match
-    assert match is not None  # for mypy
-    kind = "ordered-list-item" if ordered_match is not None else "unordered-list-item"
-    emit(section_path, kind, match.group(2), line_no)
+# Phase 2 では ``<li>`` 内 nested list / 複数 paragraph を CommonMark (markdown-it-py)
+# で flatten する HYBRID 設計だったが、Issue #368 の survey で 288 corpus に
+# ``<li>`` nested は 0 件と判明。JA content は mjs line-based parser 前提で
+# 書かれているため、flatten すると 131 ページ / 843 issue の parity drift に
+# なった (Phase 6b cutover gate blocker)。Phase 6b ではリスト行を mjs と同じ
+# line-based regex で 1 行 1 segment emit する (``extract_segments_from_markdown``
+# の main loop 内で直接 match)。nested marker は ``(\s*)[-*+]`` / ``(\s*)\d+\.``
+# がそのまま拾う (mjs と同じ挙動)。continuation paragraph は paragraph
+# fall-through で別 segment として emit される。
 
 
 # ---------------------------------------------------------------------------
@@ -633,45 +381,33 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
-        # Ordered / unordered list — Issue #368 fix:
-        # 単行 match ではなく **list region 全体** を収集して markdown-it-py に
-        # 渡し、top-level item だけ 1 segment で emit する。prefix / suffix の
-        # 非 list 行は main loop に戻して再処理する (codex review P2 follow-up)。
-        if _ORDERED_RE.match(line) or _UNORDERED_RE.match(line):
+        # Ordered / unordered list — mjs line-based emit (Phase 6b cutover).
+        #
+        # Phase 2 では ``_collect_list_region`` + ``_flatten_list_region``
+        # (markdown-it-py) で top-level item のみ emit し continuation を
+        # flatten する設計だったが、288 corpus には ``<li>`` 内に nested
+        # list / 複数 paragraph を持つ EN ページは 0 件 (Issue #368 調査結果)。
+        # 一方 JA content は mjs line-based parser 前提で書かれており、
+        # hard-break continuation / nested list marker を独立 segment と
+        # して emit することを期待する。Python が flatten すると 131 ページ /
+        # 843 issue の parity drift になる (Phase 6b cutover gate blocker)。
+        #
+        # mjs ``UNORDERED_RE = /^(\s*)[-*+]\s+(.+)$/`` は leading whitespace を
+        # 許容するため、``  - nested`` も独立 segment になる。
+        # continuation paragraph は default (paragraph) fall-through で拾われる。
+        ordered_match = _ORDERED_RE.match(line)
+        if ordered_match:
             flush_paragraph()
-            end_idx = _collect_list_region(lines, i)
-            region_lines = lines[i : end_idx + 1]
-            region = "\n".join(region_lines)
-            flattened, list_start_line, list_end_line = _flatten_list_region(region)
             path = build_section_path(heading_stack)
-            if flattened and list_end_line is not None:
-                # codex review P2 follow-up: list_start > 0 の場合、prefix には
-                # CommonMark が list と認識しなかった list-regex 行 (例: 4-space
-                # indented fallback marker) が含まれる。それらを mjs-style で
-                # 単行 emit してから、本 list を flatten 結果で emit する。
-                prefix_end = list_start_line if list_start_line is not None else 0
-                for prefix_offset in range(prefix_end):
-                    _emit_single_fallback_list_item(
-                        region_lines[prefix_offset],
-                        emitter.emit,
-                        path,
-                        line_no + prefix_offset,
-                    )
-                for kind, raw_text, row_offset in flattened:
-                    resolved_line = line_no + (row_offset or 0)
-                    emitter.emit(path, kind, raw_text, resolved_line)
-                # list_end_line までを consume し、残り lines は main loop に戻す。
-                # これで 1-space indented paragraph や non-indented trailing
-                # content を silent に drop しない (codex review P2 #1)。
-                i += list_end_line
-            else:
-                # CommonMark が list を認識しなかったケース (例: ``    - codeish``
-                # のみ、続く行が paragraph 等)。現在行だけ mjs-style で emit し、
-                # ``i`` を 1 だけ進めて次行以降は main loop が通常 dispatch で
-                # 処理する。これで trailing non-list content を main loop が拾え
-                # silent drop しない (codex review P2 #2 follow-up)。
-                _emit_single_fallback_list_item(line, emitter.emit, path, line_no)
-                i += 1
+            emitter.emit(path, "ordered-list-item", ordered_match.group(2), line_no)
+            i += 1
+            continue
+        unordered_match = _UNORDERED_RE.match(line)
+        if unordered_match:
+            flush_paragraph()
+            path = build_section_path(heading_stack)
+            emitter.emit(path, "unordered-list-item", unordered_match.group(2), line_no)
+            i += 1
             continue
 
         if _HORIZONTAL_RULE_RE.match(trimmed):
