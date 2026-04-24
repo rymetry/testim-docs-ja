@@ -6,9 +6,15 @@
  * と同じ contract を mjs 側でも pin し、coexistence 期間中に lint_docs.mjs が
  * silent に regress しないことを保証する。
  *
- * **Scope**: `callout-in-list-item` / `callout-unknown-type` + code fence skip の
- * minimum contract のみ (他の rule は lint の本番 corpus run で暗黙検証)。
- * Phase 6 cutover 時に Python に切り替わり次第、本 file も削除する。
+ * **Scope**: callout / frontmatter / link / feature-name / image 各 rule の
+ * 最小 regression。`lint:docs` 全 rule (Python 側 `test_lint_docs.py` の 78 test)
+ * を 1:1 port するわけではなく、**代表的な regression pattern** を 1-2 個ずつ
+ * 押さえる coexistence guard。本番 corpus の full lint ``npm run lint:docs`` で
+ * detect される rule は、corpus clean 維持と `lint_docs.mjs` 改変が混在する PR
+ * では silent regression が検出できないため、unit レベルで pin する必要がある。
+ *
+ * Phase 6 cutover 時に lint:docs が Python 実装に切り替わり次第、本 file を
+ * 削除する契約 (docs/PYTHON_MIGRATION_PLAN.md Phase 6 「削除対象」参照)。
  */
 
 import { describe, it } from 'node:test';
@@ -16,6 +22,10 @@ import assert from 'node:assert/strict';
 
 import {
   checkCallouts,
+  checkFeatureNames,
+  checkFrontmatter,
+  checkImages,
+  checkLinks,
   lintContent,
 } from '../tools/lint_docs.mjs';
 
@@ -190,5 +200,157 @@ describe('lintContent integration (coexistence guard)', () => {
     const issues = lintContent(makeDoc(body), 'src/content/docs/test.md');
     const errors = issues.filter((i) => i.level === 'error');
     assert.equal(errors.length, 0, `unexpected errors: ${JSON.stringify(errors)}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 他 rule の代表的 regression pattern (PR #384 codex review P2-2):
+//   callout 以外の rule (frontmatter / link / feature-name / image) も coexistence
+//   期間中に Node 側で silent regression を起こしうるため、最小 pattern を pin する。
+//   Python 側 test_lint_docs.py と同等の intent を 1-2 test ずつ確認。
+// ---------------------------------------------------------------------------
+
+function collectIssues(fn, body, extra) {
+  const issues = [];
+  const reporter = {
+    err: (rule, message, line = null) => {
+      issues.push({ rule, message, line, level: 'error' });
+    },
+    warn: (rule, message, line = null) => {
+      issues.push({ rule, message, line, level: 'warning' });
+    },
+  };
+  fn(body, 1, reporter, extra);
+  return issues;
+}
+
+describe('checkFrontmatter (coexistence guard)', () => {
+  it('errors on missing sourceUrl', () => {
+    const issues = [];
+    const reporter = {
+      err: (rule, message, line = null) => {
+        issues.push({ rule, message, line, level: 'error' });
+      },
+      warn: () => {},
+    };
+    // sourceUrl を落とす
+    checkFrontmatter({ title: 'T', category: 'C', updated: '2026-01-01' }, reporter);
+    assert.ok(issues.find((i) => i.rule === 'sourceUrl-required'));
+  });
+
+  it('errors on sourceUrl domain mismatch', () => {
+    const issues = [];
+    const reporter = {
+      err: (rule, message, line = null) => {
+        issues.push({ rule, message, line, level: 'error' });
+      },
+      warn: () => {},
+    };
+    checkFrontmatter(
+      {
+        title: 'T',
+        category: 'C',
+        updated: '2026-01-01',
+        sourceUrl: 'https://example.com/docs/foo',
+      },
+      reporter,
+    );
+    assert.ok(issues.find((i) => i.rule === 'sourceUrl-format'));
+  });
+
+  it('errors on description placeholder (原文:)', () => {
+    const issues = [];
+    const reporter = {
+      err: (rule, message, line = null) => {
+        issues.push({ rule, message, line, level: 'error' });
+      },
+      warn: () => {},
+    };
+    checkFrontmatter(
+      {
+        title: 'T',
+        category: 'C',
+        updated: '2026-01-01',
+        sourceUrl: 'https://docs.tricentis.com/testim/content/overview/testim-overview/index.htm',
+        description: '原文: https://docs.tricentis.com/testim/content/overview/foo.htm',
+      },
+      reporter,
+    );
+    assert.ok(issues.find((i) => i.rule === 'description-placeholder'));
+  });
+});
+
+describe('checkLinks (coexistence guard)', () => {
+  const allSlugs = new Set(['overview/testim-overview', 'getting-started/getting-started']);
+
+  it('errors on internal link to non-existent slug', () => {
+    const body = 'See [page](/docs/nonexistent-page).\n';
+    const issues = collectIssues(checkLinks, body, { allSlugs });
+    assert.ok(issues.find((i) => i.rule === 'link-target-missing'));
+  });
+
+  it('stays clean on valid internal link', () => {
+    const body = 'See [overview](/docs/overview/testim-overview).\n';
+    const issues = collectIssues(checkLinks, body, { allSlugs });
+    assert.equal(
+      issues.filter((i) => i.rule === 'link-target-missing').length,
+      0,
+    );
+  });
+
+  it('skips links inside code block', () => {
+    const body = '```\nSee [page](/docs/nonexistent-page).\n```\n';
+    const issues = collectIssues(checkLinks, body, { allSlugs });
+    assert.equal(
+      issues.filter((i) => i.rule === 'link-target-missing').length,
+      0,
+      'code block content must not trigger link check',
+    );
+  });
+});
+
+describe('checkFeatureNames (coexistence guard)', () => {
+  it('errors on Japanese feature name "Testim拡張機能"', () => {
+    const body = 'Testim拡張機能を使ってテストを記録します。\n';
+    const issues = collectIssues(checkFeatureNames, body);
+    const hit = issues.find((i) => i.rule === 'feature-name-japanese');
+    assert.ok(hit, 'expected feature-name-japanese error');
+    assert.equal(hit.level, 'error');
+  });
+
+  it('errors on legacy :fa-*: icon syntax', () => {
+    const body = ':fa-arrow-right: **テスト作成**\n';
+    const issues = collectIssues(checkFeatureNames, body);
+    assert.ok(issues.find((i) => i.rule === 'legacy-fa-icon'));
+  });
+
+  it('skips Japanese feature name inside code fence', () => {
+    const body = '```\nTestim拡張機能\n```\n';
+    const issues = collectIssues(checkFeatureNames, body);
+    assert.equal(
+      issues.filter((i) => i.rule === 'feature-name-japanese').length,
+      0,
+    );
+  });
+});
+
+describe('checkImages (coexistence guard)', () => {
+  it('errors on referenced image that does not exist', () => {
+    const body = '![alt](/images/nonexistent-image.png)\n';
+    const issues = collectIssues(checkImages, body);
+    assert.ok(
+      issues.find((i) => i.rule === 'image-missing'),
+      'expected image-missing error',
+    );
+  });
+
+  it('skips image reference inside code fence', () => {
+    const body = '```\n![alt](/images/nonexistent-image.png)\n```\n';
+    const issues = collectIssues(checkImages, body);
+    assert.equal(
+      issues.filter((i) => i.rule === 'image-missing').length,
+      0,
+      'code fence content must not trigger image-missing',
+    );
   });
 });

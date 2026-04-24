@@ -64,9 +64,17 @@ markers = [
   # ``uv run pytest -m cutover`` を強制 run して緑確認する。
   "cutover: Phase 6 cutover gate (all drift exclusions must be empty)",
 ]
-# local default は slow / cutover を除外。``slow`` は CI default (``-m ''``) で
-# 全件 run される。``cutover`` は Phase 6 cutover PR で明示的に ``-m cutover``
-# を実行するため、coexistence 期間中は CI / local 両方で skip される契約。
+# default addopts は slow / cutover を **local でも CI でも** 除外する。
+#
+# - ``slow`` (288-page matrix conformance) は ~4 min かかるため CI feedback loop
+#   を阻害する。Phase 6 cutover で conformance が golden 化される段階で自然退場。
+#   事前 run は reviewer が local で ``uv run pytest -m slow`` を明示実行する運用。
+# - ``cutover`` は Phase 6 cutover PR 内で ``uv run pytest -o addopts= -m cutover``
+#   を **1 回限り強制 run** する gate。coexistence 期間は skip のまま。
+#
+# CI yaml (``.github/workflows/ci.yml`` の ``python-test`` job) でも同等の
+# ``-m 'not slow and not cutover'`` を **明示的に重ねて指定** する (この file の
+# 変更による silent 無効化を防ぐ defense in depth)。
 addopts = "-m 'not slow and not cutover'"
 
 [tool.coverage.report]

@@ -1107,10 +1107,13 @@ Phase 6 cutover PR で全 Node backed script を Python CLI に切り替える�
 - `scripts/tools/*.mjs` (6 file → Python に完全移動済)
 - `scripts/py/conformance/harness.mjs` と `tests/conformance/test_*_parity.py` (下記 golden 化)
 
-### CI workflow rewire (`.github/workflows/ci.yml`)
+### CI workflow rewire (全 workflow 対象)
 
 Phase 5 終了時点 の CI は `test` (mjs only)、`python-test` (pytest only、node をダミー install して
-conformance harness を spawn) の 2 job が独立実行される構成。Phase 6 cutover PR では以下を実施する:
+conformance harness を spawn) の 2 job が独立実行される構成 + scheduled workflow 2 本。
+Phase 6 cutover PR では以下を実施する:
+
+#### `.github/workflows/ci.yml` (PR gate)
 
 | 現行 job | Phase 6 rewire | 理由 |
 | --- | --- | --- |
@@ -1119,12 +1122,46 @@ conformance harness を spawn) の 2 job が独立実行される構成。Phase 
 | (新規) `python-cutover-gate` step | **`python-test` job に step 追加** (独立 job にしない) | `uv run pytest -o addopts= -m cutover` を cutover PR の 1 回限り実行。別 job 化すると atomic cutover PR の checks が増えるだけで get no value (gate は PR 単位で 1 回 run できれば十分)。``-o addopts=`` は pyproject.toml の ``not cutover`` default を override するため必須 |
 | `build` / `lint` | **維持** | Node のまま (Astro build / markdownlint) |
 
+#### `.github/workflows/scheduled-actionable.yml` (nightly parity audit)
+
+現行は `npm run docs:sync-sidebar` / `check:snapshots` / `check:parity` /
+`check:upstream-recovery` / `check:summary --strict` を順次 run。全 step が mjs CLI を
+呼び出しており、Phase 6 で Python CLI に rewire する。
+
+| step | 現行 command | Phase 6 置換先 |
+| --- | --- | --- |
+| sidebar 更新 | `npm run docs:sync-sidebar` | `uv run python -m testim_parity.pipeline.update_sidebar_urls_from_live` |
+| snapshot 更新 | `npm run check:snapshots` | `uv run python -m testim_parity.detection.snapshot_update && uv run python -m testim_parity.detection.snapshot_diff` |
+| parity 検査 | `npm run check:parity` | `uv run python -m testim_parity.detection.check_source_parity` |
+| upstream recovery | `npm run check:upstream-recovery` | `uv run python -m testim_parity.detection.check_upstream_recovery` |
+| summary 生成 | `npm run check:summary -- --strict` | `uv run python -m testim_parity.detection.generate_detection_reports --strict` |
+
+setup-node は削除、代わりに `actions/setup-python` + `pip install uv` を追加。Phase 6 cutover
+PR で atomic に書き換える。
+
+#### `.github/workflows/deep-audit.yml` (on-demand deep audit)
+
+`scheduled-actionable.yml` と同じ script を `--section` 付きで呼ぶ。rewire は上記 table の
+通りで、`--section="$SECTION_FILTER"` 引数は Python CLI 側でも同じ flag 名で受け取れる
+(`check_source_parity.py::parse_args` の `--section=X` が対応、既実装)。
+
+#### 残存 mjs workflow (Phase 6 以降も保持)
+
+- `.github/scripts/sync-detection-issues.cjs` (GitHub Actions issue sync): **Phase 6 で Python
+  port か retire するかを別途判断**。Phase 5 coexistence では `sync_detection_issues.test.mjs`
+  が production regression guard。
+
 **Phase 5 → Phase 6 の rewire 契約**:
 
-1. Phase 5 PR (#384) は CI yaml を触らない (既存 2 job のまま coexistence)
+1. Phase 5 PR (#384) は CI yaml に **最小限の変更のみ** 入れる (pytest step に
+   ``-m 'not slow and not cutover'`` を明示、pyproject 変更時の silent 無効化を
+   防ぐ defense in depth)。job 構成 (test / python-test / build / lint / parity)
+   は変えない。
 2. Phase 6 cutover PR で CI yaml を 1 commit で atomic 更新:
    - `python-test` の `setup-node` / `npm ci` step 削除 (conformance golden 化後)
-   - 必要に応じて `python-cutover-gate` job を追加 (`pytest -m cutover` 専用)
+   - `python-test` の pytest step に `uv run pytest -o addopts= -m cutover` の step を追加
+     (1 回限りの cutover gate)
+   - `scheduled-actionable.yml` / `deep-audit.yml` 内の全 mjs CLI を Python CLI に置換
 3. rewire 後は `test` job の scope が lib_redirects 残置 mjs test のみになる。future で redirects.mjs
    が Astro 側から無参照化された日に `test` job も削除する (post-Phase-6 cleanup)
 

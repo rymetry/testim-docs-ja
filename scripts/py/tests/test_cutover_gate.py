@@ -166,7 +166,6 @@ def _parse_plan_doc_exclusion_rows() -> set[tuple[str, str]]:
     return rows
 
 
-@pytest.mark.cutover
 def test_exclusion_registry_matches_plan_doc() -> None:
     """registry と plan doc table の ``(module, attribute)`` tuple が完全一致する。
 
@@ -174,6 +173,10 @@ def test_exclusion_registry_matches_plan_doc() -> None:
     の表内容が drift (file path typo / attribute 名変更 / 新規 row 追加など) した
     ら fail する契約。行数チェックだけでは「5 行残ったまま中身が入れ替わる」
     attack vector を検出できないため、set 比較に強化 (PR #384 code-comment P3)。
+
+    **cutover marker 無し** — Phase 5 coexistence 期間中も default CI で常時 run
+    する。registry / plan doc の同期は cutover より前から維持すべき契約のため、
+    drift を Phase 5 中に検知できるようにする (PR #384 codex review P2-1 対応)。
     """
     registry: set[tuple[str, str]] = {
         (entry.module, entry.attribute) for entry in _EXCLUSION_REGISTRY
@@ -241,7 +244,6 @@ def _discover_drift_patterns_in_tests() -> dict[str, set[str]]:
     return discovered
 
 
-@pytest.mark.cutover
 def test_exclusion_registry_covers_all_patterns() -> None:
     """auto-discovery: tests/ 配下で宣言されている全 ``_PY_*_SLUGS`` pattern が
     ``_EXCLUSION_REGISTRY`` に登録されていることを assert する。
@@ -249,6 +251,11 @@ def test_exclusion_registry_covers_all_patterns() -> None:
     新規に temporary exclusion を足した PR が registry update を忘れても、この
     test が fail して漏れを検出する。単なる hard-code 漏れを防ぐ safety net。
     既存 entry の empty-check は ``test_all_drift_exclusions_are_empty`` が担当。
+
+    **cutover marker 無し** — Phase 5 coexistence 期間中も default CI で常時 run
+    する。新規 exclusion pattern が registry に未登録のまま merge されると、
+    Phase 6 cutover まで silent に sink するので、Phase 5 中に catch する必要
+    あり (PR #384 codex review P2-1 対応)。
     """
     registered: set[tuple[str, str]] = {
         (entry.module, entry.attribute) for entry in _EXCLUSION_REGISTRY
