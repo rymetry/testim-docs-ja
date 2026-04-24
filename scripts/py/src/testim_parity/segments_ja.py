@@ -1,20 +1,45 @@
-"""JA markdown canonical segment extractor — ``source_parity_segments_ja.mjs`` の port。
+"""JA markdown canonical segment extractor — EN ``collectInlineText`` の対称実装。
 
 JA markdown body を走査し、exact-diff engine 用の flat な segment 列を emit する。
 Kind を判定できない構造は skip することで gate-eligible segment を clean に保つ
-保守的な設計 (mjs と同一)。
+保守的な設計。
 
-## 挙動は mjs と byte-identical (Phase 6b cutover 後の契約)
+## Issue #368 対応 — list-item flatten
 
-Phase 2 では Issue #368 対策に ``markdown-it-py`` ベースの nested-list flattening
-を入れていたが、288 corpus には ``<li>`` 内 nested / 複数 ``<p>`` が 0 件と判明
-(Issue #368 本文 §1 参照)。JA content は mjs の line-based parser 前提で書かれて
-いるため flatten すると 131 ページ / 843 issue の parity drift が発生し、Phase 6b
-cutover gate を通らない。そこで Phase 6b で mjs と同じ line-based regex emit に
-統一し、``<li>`` nested / multi-paragraph が corpus に入ったときは別 Issue で扱う
-契約にした (pull-requests unfreeze 等で初登場したら対処)。
+EN walker の ``collectInlineText`` は ``<li>`` 内の nested ``<ul>`` / 複数 ``<p>`` /
+``<img>`` を 1 segment に flatten する。JA parser も対称化するため、activeListItem
+state machine で以下を吸収する:
 
-## 保存されている mjs 挙動 (byte-identical)
+1. **Nested list marker** (``^(\\s*)[-*+]`` / ``^(\\s*)\\d+\\.`` で
+   ``markerIndent > activeItem.bodyIndent``) → marker 剥がして text 部分のみ append
+2. **Continuation paragraph** (任意テキスト行で ``leadingWs > activeItem.bodyIndent``) →
+   行全体を append (whitespace-collapse で空白整形)
+3. **Indented image** (``leadingWs > activeItem.bodyIndent`` の ``![...](...)`` /
+   ``<Image>`` / ``<img>``) → 空白 1 個として append (EN ``<img>`` → space 処理と対称)
+4. **Indented code fence** (``leadingWs > activeItem.bodyIndent`` の
+   ``\\`\\`\\`...`` / ``~~~...``) → 開閉 fence 間の inner text のみ append
+
+## Strict-``>`` rule の理由
+
+EN walker との完全対称なら ``markerIndent >= activeItem.bodyIndent`` で nested
+扱いすべきだが、288 corpus には JA author が EN sibling ``<ul>`` (walkBlock 経由で
+非 ``<li>`` 直下の list を sibling として emit する MadCap fragment) の視覚的
+ネスト再現のために ``1. outer\\n   - nested`` (``markerIndent == bodyIndent``)
+pattern を使う 47 file / 263 line が存在する。これらは EN 側が sibling emit する
+ため line-based emit で parity が通る。
+
+そこで ``markerIndent > bodyIndent`` (strictly greater) のみ nested 扱いする:
+
+- Tight sibling (``markerIndent == bodyIndent``): 独立 segment emit (line-based 互換)
+- True nested (``markerIndent > bodyIndent``, +1 以上深い indent): flatten (EN 対称)
+
+288 corpus の nested 行は全て ``markerIndent == bodyIndent`` (残りの strict-``>``
+候補 8 行は ``` ``` ``` code fence 内で既に code-block として処理) のため parity は
+byte-identical に維持される。将来 pull-requests unfreeze 等で EN ``<li>`` 直下 nested
+``<ul>`` が入ったとき、JA 作成時に +1 indent で記述することで flatten が走る
+(WRITING_GUIDE に author-facing rule を追記した)。
+
+## mjs と byte-identical に維持される挙動
 
 - frontmatter 剥がし (``--- ... ---`` の 1 回目 skip)
 - H1 を page title 扱い (emit しない, heading stack に push しない)
@@ -31,15 +56,13 @@ cutover gate を通らない。そこで Phase 6b で mjs と同じ line-based r
 - code fence — backtick / tilde 両方、開閉 fence 間の body を ``code-block`` emit
 - standalone image line (``![...](...)`` / ``<Image>`` / ``<img>``) → ``image``
 - horizontal rule (``---`` / ``***`` / ``___``) は segment を emit しない
-- ordered list / unordered list — 1 行 1 segment emit。``(\\s*)[-*+]`` /
-  ``(\\s*)\\d+\\.`` が leading whitespace を許容するため nested marker も
-  独立 segment になる。indented continuation は paragraph fall-through で
-  別 ``paragraph`` segment として emit される
+- tight sibling list (``markerIndent <= bodyIndent``) → 各行 1 segment emit
 """
 
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass, field
 from typing import Any
 
 from .segments_en import extract_segments_from_html
@@ -69,6 +92,22 @@ _HTML_TABLE_OPEN_RE = re.compile(r"^<table\b", re.IGNORECASE)
 _HTML_TABLE_CLOSE_RE = re.compile(r"<\/table>", re.IGNORECASE)
 _HORIZONTAL_RULE_RE = re.compile(r"^(-{3,}|\*{3,}|_{3,})$")
 _ANCHOR_SUFFIX_RE = re.compile(r"\s*\{#[^}]*\}\s*$")
+_WHITESPACE_COLLAPSE_RE = re.compile(r"\s+")
+
+
+@dataclass
+class _ActiveListItem:
+    """Issue #368 flatten state — 活性 list item と、その ``bodyIndent`` に依存する
+    deeper-indent content の吸収を担う。
+
+    ``bodyIndent`` はリスト行中の ``(.+)`` capture 開始列 (``match.start(content_group)``)。
+    これ以上深い ``leadingWs`` の content は current item に flatten される。
+    """
+
+    kind: str  # "ordered-list-item" | "unordered-list-item"
+    body_indent: int
+    text_parts: list[str] = field(default_factory=list)
+    start_line: int = 0
 
 
 class _Emitter:
@@ -76,10 +115,9 @@ class _Emitter:
 
     counter key は ``(section_path, kind)`` の tuple を使う。mjs 側は
     ``section_path\x00kind`` の文字列結合だが、Python では tuple の方が
-    idiomatic で ``section_path`` が仮に ``\x00`` を含んでも collision しない
-    (python-reviewer MEDIUM #3)。両 runtime とも counter は内部状態で、
-    emit 結果 (``segmentIndex``) の方が conformance 対象のため tuple 化しても
-    byte parity は維持される。
+    idiomatic で ``section_path`` が仮に ``\x00`` を含んでも collision しない。
+    両 runtime とも counter は内部状態で、emit 結果 (``segmentIndex``) の方が
+    conformance 対象のため tuple 化しても byte parity は維持される。
     """
 
     def __init__(self) -> None:
@@ -104,21 +142,6 @@ class _Emitter:
 
 
 # ---------------------------------------------------------------------------
-# List handling — Phase 6b cutover に際して mjs line-based emit に統一
-# ---------------------------------------------------------------------------
-#
-# Phase 2 では ``<li>`` 内 nested list / 複数 paragraph を CommonMark (markdown-it-py)
-# で flatten する HYBRID 設計だったが、Issue #368 の survey で 288 corpus に
-# ``<li>`` nested は 0 件と判明。JA content は mjs line-based parser 前提で
-# 書かれているため、flatten すると 131 ページ / 843 issue の parity drift に
-# なった (Phase 6b cutover gate blocker)。Phase 6b ではリスト行を mjs と同じ
-# line-based regex で 1 行 1 segment emit する (``extract_segments_from_markdown``
-# の main loop 内で直接 match)。nested marker は ``(\s*)[-*+]`` / ``(\s*)\d+\.``
-# がそのまま拾う (mjs と同じ挙動)。continuation paragraph は paragraph
-# fall-through で別 segment として emit される。
-
-
-# ---------------------------------------------------------------------------
 # Main extractor
 # ---------------------------------------------------------------------------
 
@@ -139,7 +162,7 @@ def _strip_frontmatter(lines: list[str]) -> list[str]:
 def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
     """JA markdown document body から canonical segment 列を抽出する。
 
-    mjs ``extractSegmentsFromMarkdown`` と同じ API 契約:
+    EN ``extractSegmentsFromMarkdown`` と同等の contract:
 
     - input が string でなければ ``[]``
     - frontmatter は内部で strip
@@ -148,9 +171,9 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
       callout block 内だけ ``callout-body`` になり、list item / image / table
       は通常の classification path を通るため ``callout-body`` 以外の kind で emit
       される (EN ``walkCalloutBody`` と同じ挙動)
-    - ``<details>`` 内の text block は ``paragraph`` で emit (EN walker と同等)。
-      ``<details>`` 出入りで ``paragraphKind`` を save/restore するため、
-      ``:::note`` 内の ``<details>`` でも内側の paragraph は ``paragraph`` kind
+    - ``<details>`` 内の text block は ``paragraph`` で emit (EN walker と同等)
+    - Issue #368 flatten: ``activeListItem`` で ``markerIndent > bodyIndent`` /
+      ``leadingWs > bodyIndent`` の nested content を text に吸収
     """
     if not isinstance(body, str):
         return []
@@ -181,6 +204,8 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
     code_fence_start_line = 0
     code_fence_buf: list[str] = []
 
+    active_list: _ActiveListItem | None = None
+
     def flush_paragraph() -> None:
         nonlocal paragraph_buf
         if not paragraph_buf:
@@ -188,6 +213,46 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
         path = build_section_path(heading_stack)
         emitter.emit(path, paragraph_kind, " ".join(paragraph_buf), paragraph_start_line)
         paragraph_buf = []
+
+    def emit_active_list() -> None:
+        """Issue #368: activeListItem を collapse して 1 segment として emit する。
+
+        ``text_parts`` を single space で join し、連続空白を 1 個に collapse、
+        前後 strip。EN ``collectInlineText`` の ``buffer.join('').replace(/\\s+/g, ' ').trim()``
+        と等価 (``buffer`` は string list、``replace`` で whitespace collapse)。
+        """
+        nonlocal active_list
+        if active_list is None:
+            return
+        raw = " ".join(active_list.text_parts)
+        raw = _WHITESPACE_COLLAPSE_RE.sub(" ", raw).strip()
+        if raw:
+            path = build_section_path(heading_stack)
+            emitter.emit(path, active_list.kind, raw, active_list.start_line)
+        active_list = None
+
+    def scan_indented_fence(start_idx: int, open_fence: str) -> tuple[int, str]:
+        """``start_idx + 1`` から matching close fence を探して content を返す。
+
+        Returns ``(next_idx, content_text)``。close fence が見つからなければ EOF
+        まで全て content として返す (defensive)。mjs EN walker が ``<pre>`` 内を
+        ``collectInlineText`` で flatten する挙動に対応。
+        """
+        j = start_idx + 1
+        content: list[str] = []
+        while j < n:
+            jstripped = lines[j].strip()
+            jmatch = _FENCE_RE.match(jstripped)
+            # 同種 (backtick or tilde) かつ同等以上長さの fence が close
+            if (
+                jmatch
+                and jmatch.group(1)[0] == open_fence[0]
+                and len(jmatch.group(1)) >= len(open_fence)
+            ):
+                return j + 1, " ".join(content)
+            content.append(jstripped)
+            j += 1
+        return j, " ".join(content)
 
     def emit_loose_summary_inner(inner_html: str, start_line_no: int) -> None:
         """loose ``<summary>`` の inner fragment を EN walker に委譲して再 emit。
@@ -205,12 +270,6 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
         nonlocal in_multiline_summary, multiline_summary_buf
         nonlocal multiline_summary_start_line, multiline_summary_depth
         joined = " ".join(multiline_summary_buf)
-        # multiline_summary_start_line の初期値は 0。entry 時に ``line_no`` を
-        # 書き込むが、frontmatter 無しの 1 行目から multi-line summary が始まる
-        # 場合の正当な値は ``1 + line_offset``  (最小 1) なので ``or`` で fall-
-        # through するケースは 現行 corpus では発生しない。ただし将来的に
-        # 0-based line を持ち込むと footgun (python-reviewer Phase 3 risk) に
-        # なるため、``if ... else`` で explicit に書く。
         start_line = (
             multiline_summary_start_line if multiline_summary_start_line > 0 else closing_line_no
         )
@@ -232,9 +291,23 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
         line = lines[i]
         trimmed = line.strip()
         line_no = i + 1 + line_offset
+        leading_ws = len(line) - len(line.lstrip())
 
+        # ----- code fence (top-level or indented-inside-list) -----
         if _FENCE_RE.match(trimmed):
             if not in_code_fence:
+                # Indented fence inside activeListItem → Issue #368 §3.2 #5:
+                # fence 内 content を text として list item に吸収 (EN ``<li><pre>``
+                # → ``collectInlineText`` 透過と対称)。
+                if active_list is not None and leading_ws > active_list.body_indent:
+                    fence_match = _FENCE_RE.match(trimmed)
+                    assert fence_match is not None  # matched above
+                    next_idx, content = scan_indented_fence(i, fence_match.group(1))
+                    active_list.text_parts.append(content)
+                    i = next_idx
+                    continue
+                # Top-level fence → flush active_list & enter fence mode
+                emit_active_list()
                 flush_paragraph()
                 in_code_fence = True
                 code_fence_start_line = line_no
@@ -270,6 +343,55 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
+        # ----- Blank line (with active_list peek-ahead for continuation) -----
+        if trimmed == "":
+            if active_list is not None:
+                j = i + 1
+                while j < n and lines[j].strip() == "":
+                    j += 1
+                if j < n:
+                    next_ws = len(lines[j]) - len(lines[j].lstrip())
+                    if next_ws > active_list.body_indent:
+                        # blank 行 + deeper indent 継続 → active に留まる
+                        i = j
+                        continue
+                emit_active_list()
+            flush_paragraph()
+            i += 1
+            continue
+
+        # ----- Indented absorption by active_list (Issue #368 flatten) -----
+        if active_list is not None and leading_ws > active_list.body_indent:
+            stripped = line.lstrip()
+            # Image → space 1 個 (EN ``<img>`` と対称)
+            if _IMAGE_RE.match(stripped):
+                active_list.text_parts.append(" ")
+                i += 1
+                continue
+            # Nested list marker → marker 剥がしで content のみ append
+            nested_o = _ORDERED_RE.match(stripped)
+            if nested_o:
+                active_list.text_parts.append(nested_o.group(2))
+                i += 1
+                continue
+            nested_u = _UNORDERED_RE.match(stripped)
+            if nested_u:
+                active_list.text_parts.append(nested_u.group(2))
+                i += 1
+                continue
+            # Generic text → そのまま append
+            active_list.text_parts.append(stripped)
+            i += 1
+            continue
+
+        # ----- Less/equal indent → active_list 境界 -----
+        # active_list は tight sibling pattern では line-based emit と同じ振る舞い
+        # (次の top-level marker で flush)。ここで flush して以降の handler で
+        # 通常処理する。
+        if active_list is not None:
+            emit_active_list()
+
+        # ----- HTML table block -----
         if _HTML_TABLE_OPEN_RE.match(trimmed):
             flush_paragraph()
             end_idx = -1
@@ -287,6 +409,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                 continue
             # unterminated — fall through
 
+        # ----- <details> / <summary> tokens -----
         if _DETAILS_TOKEN_RE.search(line):
             flush_paragraph()
             events = tokenize_details_line(line)
@@ -329,6 +452,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
+        # ----- Callout :::note / :::warning / ... -----
         if not in_callout and _CALLOUT_OPEN_RE.match(trimmed):
             flush_paragraph()
             in_callout = True
@@ -342,6 +466,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
+        # ----- Heading -----
         heading_match = _HEADING_RE.match(line)
         if heading_match:
             flush_paragraph()
@@ -357,6 +482,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
+        # ----- Standalone image (top-level or within active_list boundary) -----
         if _IMAGE_RE.match(trimmed):
             flush_paragraph()
             path = build_section_path(heading_stack)
@@ -364,6 +490,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
+        # ----- Markdown pipe table -----
         if _TABLE_ROW_RE.match(trimmed):
             flush_paragraph()
             if _TABLE_SEPARATOR_RE.match(trimmed):
@@ -380,45 +507,39 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
-        # Ordered / unordered list — mjs line-based emit (Phase 6b cutover).
-        #
-        # Phase 2 では ``_collect_list_region`` + ``_flatten_list_region``
-        # (markdown-it-py) で top-level item のみ emit し continuation を
-        # flatten する設計だったが、288 corpus には ``<li>`` 内に nested
-        # list / 複数 paragraph を持つ EN ページは 0 件 (Issue #368 調査結果)。
-        # 一方 JA content は mjs line-based parser 前提で書かれており、
-        # hard-break continuation / nested list marker を独立 segment と
-        # して emit することを期待する。Python が flatten すると 131 ページ /
-        # 843 issue の parity drift になる (Phase 6b cutover gate blocker)。
-        #
-        # mjs ``UNORDERED_RE = /^(\s*)[-*+]\s+(.+)$/`` は leading whitespace を
-        # 許容するため、``  - nested`` も独立 segment になる。
-        # continuation paragraph は default (paragraph) fall-through で拾われる。
+        # ----- List markers (top-level = not absorbed by prior active_list) -----
         ordered_match = _ORDERED_RE.match(line)
         if ordered_match:
             flush_paragraph()
-            path = build_section_path(heading_stack)
-            emitter.emit(path, "ordered-list-item", ordered_match.group(2), line_no)
+            content_start = ordered_match.start(2)
+            active_list = _ActiveListItem(
+                kind="ordered-list-item",
+                body_indent=content_start,
+                text_parts=[ordered_match.group(2)],
+                start_line=line_no,
+            )
             i += 1
             continue
         unordered_match = _UNORDERED_RE.match(line)
         if unordered_match:
             flush_paragraph()
-            path = build_section_path(heading_stack)
-            emitter.emit(path, "unordered-list-item", unordered_match.group(2), line_no)
+            content_start = unordered_match.start(2)
+            active_list = _ActiveListItem(
+                kind="unordered-list-item",
+                body_indent=content_start,
+                text_parts=[unordered_match.group(2)],
+                start_line=line_no,
+            )
             i += 1
             continue
 
+        # ----- Horizontal rule -----
         if _HORIZONTAL_RULE_RE.match(trimmed):
             flush_paragraph()
             i += 1
             continue
 
-        if trimmed == "":
-            flush_paragraph()
-            i += 1
-            continue
-
+        # ----- Paragraph fall-through -----
         if not paragraph_buf:
             paragraph_start_line = line_no
         paragraph_buf.append(trimmed)
@@ -427,6 +548,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
     # Trailing state flush
     if in_multiline_summary:
         flush_multiline_summary(n + line_offset)
+    emit_active_list()
     if in_callout:
         flush_paragraph()
         paragraph_kind = "paragraph"

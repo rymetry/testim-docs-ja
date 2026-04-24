@@ -9,6 +9,15 @@ Phase 6b cutover で mjs ``emit_corpus_oracle.mjs`` を Python 実装に port �
 
 を pin する。byte-identical check (Python live == committed golden) は
 ``test_*_288_matrix.py`` + CI drift check で行うので本 test ではスコープ外。
+
+## Fast gate 対応 (PR #389 レビュー P2 対応)
+
+2026-04-24 レビューで「fast gate で 288-page oracle 生成が 28s 掛かる」指摘を
+受け、重い real-repo 生成は ``@pytest.mark.corpus`` に隔離し、fast gate では
+``monkeypatch`` で 2-page mini corpus (snapshots + JA md を tmp に mock) を
+差し込むようにした。現在は 1 scenario につき 2 slug を処理するだけなので
+数百 ms で完走する。real corpus 生成の動作確認は nightly corpus 側 (288-page
+byte-identical test) で担保する。
 """
 
 from __future__ import annotations
@@ -20,26 +29,120 @@ import pytest
 
 from testim_parity.tools import emit_corpus_oracle, summarize_corpus_oracle
 
+_MINI_HTML = """<html><body>
+<h1>Page {slug}</h1>
+<h2>Section A</h2>
+<p>Para {slug} alpha.</p>
+<ul><li>Bullet {slug} one</li><li>Bullet {slug} two</li></ul>
+</body></html>
+"""
 
-class TestEmitCorpusOracle:
-    def test_runs_segments_en_suite_only(self, tmp_path: Path) -> None:
+_MINI_JA = """---
+title: Page {slug}
+category: overview
+slug: {slug}
+lastUpdated: 2026-01-01T00:00:00.000Z
+---
+
+# Page {slug}
+
+## Section A
+
+Para {slug} alpha。
+
+- Bullet {slug} one
+- Bullet {slug} two
+"""
+
+
+def _mini_corpus(tmp_path: Path, slugs: list[str]) -> tuple[Path, Path]:
+    """2-slug mini corpus を tmp に作り、``(en_snapshot_root, ja_docs_root)`` を返す。
+
+    ``emit_corpus_oracle`` module global の ``_EN_SNAPSHOT_ROOT`` / ``_JA_DOCS_ROOT``
+    を monkeypatch でこのファクトリの戻り値に差し替えて使う。
+    """
+    en_root = tmp_path / "snapshots" / "en" / "content"
+    ja_root = tmp_path / "src" / "content" / "docs"
+    for slug in slugs:
+        en_path = en_root / f"{slug}.html"
+        en_path.parent.mkdir(parents=True, exist_ok=True)
+        en_path.write_text(_MINI_HTML.format(slug=slug), encoding="utf-8")
+        ja_path = ja_root / f"{slug}.md"
+        ja_path.parent.mkdir(parents=True, exist_ok=True)
+        ja_path.write_text(_MINI_JA.format(slug=slug), encoding="utf-8")
+    return en_root, ja_root
+
+
+@pytest.fixture
+def mini_corpus(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path, list[str]]:
+    """2-page mini corpus + monkeypatch で ``emit_corpus_oracle`` module root を差し替え。"""
+    slugs = ["mini/page-one", "mini/page-two"]
+    en_root, ja_root = _mini_corpus(tmp_path, slugs)
+    monkeypatch.setattr(emit_corpus_oracle, "_EN_SNAPSHOT_ROOT", en_root)
+    monkeypatch.setattr(emit_corpus_oracle, "_JA_DOCS_ROOT", ja_root)
+    return en_root, ja_root, slugs
+
+
+class TestEmitCorpusOracleFast:
+    """2-page mini corpus を使った fast gate 用 smoke。各 test 数百 ms 以内に完走する。"""
+
+    def test_segments_en_suite_only(
+        self, tmp_path: Path, mini_corpus: tuple[Path, Path, list[str]]
+    ) -> None:
+        _, _, slugs = mini_corpus
         out = tmp_path / "oracle.jsonl"
         rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "segments_en"])
         assert rc == 0
         rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
-        assert len(rows) > 0
+        assert len(rows) == len(slugs)
         assert all(r["suite"] == "segments_en" for r in rows)
-        # canonical schema fields
         for r in rows:
             assert {"schemaVersion", "suite", "slug", "sha256", "expected"} <= r.keys()
 
-    def test_default_all_suites_emits_three_suites(self, tmp_path: Path) -> None:
+    def test_all_suites(self, tmp_path: Path, mini_corpus: tuple[Path, Path, list[str]]) -> None:
+        """``--suite all`` で 3 suite × 2 slug = 6 rows が出る (align は JA md 有)。"""
+        _, _, slugs = mini_corpus
         out = tmp_path / "oracle.jsonl"
         rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "all"])
         assert rc == 0
         rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
         suites = {r["suite"] for r in rows}
         assert suites == {"segments_en", "turndown", "align"}
+        # 3 suite × 2 slug = 6 rows (各 suite で slug カバレッジが同じ)
+        assert len(rows) == 3 * len(slugs)
+
+    def test_turndown_suite_produces_string_expected(
+        self, tmp_path: Path, mini_corpus: tuple[Path, Path, list[str]]
+    ) -> None:
+        """turndown suite の ``expected`` は string (MD text)。"""
+        out = tmp_path / "oracle.jsonl"
+        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "turndown"])
+        assert rc == 0
+        rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
+        for r in rows:
+            assert isinstance(r["expected"], str)
+
+    def test_align_suite_skipped_when_ja_missing(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """JA md が無い slug は align row を emit しない (optional suite 扱い)。"""
+        en_root = tmp_path / "snapshots" / "en" / "content"
+        ja_root = tmp_path / "src" / "content" / "docs"
+        # EN only (JA は作らない)
+        en_path = en_root / "no-ja.html"
+        en_path.parent.mkdir(parents=True, exist_ok=True)
+        en_path.write_text(_MINI_HTML.format(slug="no-ja"), encoding="utf-8")
+        ja_root.mkdir(parents=True, exist_ok=True)
+
+        monkeypatch.setattr(emit_corpus_oracle, "_EN_SNAPSHOT_ROOT", en_root)
+        monkeypatch.setattr(emit_corpus_oracle, "_JA_DOCS_ROOT", ja_root)
+
+        out = tmp_path / "oracle.jsonl"
+        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "align"])
+        assert rc == 0
+        # align rows は 0 件 (JA 欠落時は skip される)
+        rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
+        assert rows == []
 
     def test_invalid_suite_rejected(self, tmp_path: Path) -> None:
         out = tmp_path / "oracle.jsonl"
@@ -52,8 +155,23 @@ class TestEmitCorpusOracle:
             emit_corpus_oracle.main(["--suite", "segments_en"])
         assert exc.value.code == 2
 
+    def test_empty_snapshot_root_returns_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """EN snapshot 無しなら exit 3 (``check:snapshots:fetch`` を走らせろ)。"""
+        monkeypatch.setattr(emit_corpus_oracle, "_EN_SNAPSHOT_ROOT", tmp_path / "empty")
+        out = tmp_path / "oracle.jsonl"
+        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "all"])
+        assert rc == 3
+
+
+class TestCanonicalization:
     def test_canonical_sha256_matches_committed_golden_row(self) -> None:
-        """実 corpus の 1 slug で canonical SHA-256 が committed golden と一致する。"""
+        """実 corpus の 1 slug で canonical SHA-256 が committed golden と一致する。
+
+        Real golden 1 行分の sha256 と ``_canonical_sha256(row["expected"])``
+        が一致するか確認。実行時間は 1-2ms (golden 1 行パースするだけ)。
+        """
         golden_path = (
             Path(__file__).resolve().parents[1]
             / "tests"
@@ -69,7 +187,13 @@ class TestEmitCorpusOracle:
                 continue
             row = json.loads(raw)
             assert emit_corpus_oracle._canonical_sha256(row["expected"]) == row["sha256"]
-            break  # 1 row で十分
+            break
+
+    def test_canonical_json_compact_serialization(self) -> None:
+        from testim_parity.tools.emit_corpus_oracle import _canonical_json
+
+        # mjs と同じ compact form (space 無し + sort_keys)
+        assert _canonical_json({"b": 2, "a": 1}) == '{"a":1,"b":2}'
 
 
 class TestSummarizeCorpusOracle:
@@ -134,8 +258,22 @@ class TestSummarizeCorpusOracle:
             summarize_corpus_oracle.main(["--out", str(out)])
         assert exc.value.code == 2
 
-    def test_canonical_json_compact_serialization(self) -> None:
-        from testim_parity.tools.emit_corpus_oracle import _canonical_json
 
-        # mjs と同じ compact form (space 無し + sort_keys)
-        assert _canonical_json({"b": 2, "a": 1}) == '{"a":1,"b":2}'
+@pytest.mark.corpus
+class TestEmitCorpusOracleFullCorpus:
+    """288-page real-corpus generation — ``@pytest.mark.corpus`` 隔離で nightly 用。
+
+    fast gate は上 ``TestEmitCorpusOracleFast`` の 2-slug mini corpus で smoke
+    確認するので、こちらは full 288-page × 3 suite の production 生成が 1 run 走る
+    ことだけ pin する (drift detection は別 test ``test_drift_against_golden``)。
+    """
+
+    def test_real_corpus_produces_864_rows(self, tmp_path: Path) -> None:
+        out = tmp_path / "real.jsonl"
+        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "all"])
+        assert rc == 0
+        rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
+        # 288 slug × 3 suite = 864 row (JA md が全 slug で存在することを前提)
+        assert len(rows) == 864
+        suites = {r["suite"] for r in rows}
+        assert suites == {"segments_en", "turndown", "align"}

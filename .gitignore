@@ -38,6 +38,9 @@ docs-audit-manifest.json
 scripts/.checkpoint
 scripts/.cache/
 
+# LLM translation pipeline artifacts (prepare_llm_tasks / apply_llm_translations)
+llm/
+
 # Takt-specific ignores
 .takt/
 

@@ -41,19 +41,24 @@ class TestBasicClassification:
         assert segs[0]["textNorm"] == "section title"
 
 
-class TestListEmit:
-    """List handling — mjs line-based emit (Phase 6b cutover 契約)。
+class TestListEmitTightSibling:
+    """Tight sibling pattern (``markerIndent == bodyIndent``) — line-based emit。
 
-    Phase 2 の markdown-it-py flatten は 131 ページの parity drift を生むため
-    撤回。mjs と同じ 1 行 1 segment emit に戻した (288 corpus に ``<li>`` nested は
-    0 件のため flatten は不要、将来発生したら別 Issue で対応)。
+    288 corpus には EN 側が MadCap fragment で ``<ol>`` の直下に兄弟 ``<ul>`` を
+    置いた "sibling list" が 47 file / 263 line 存在する。これらを JA 作成時に
+    ``1. outer\\n   - nested`` のように再現する (``markerIndent == bodyIndent==3``)。
+    EN walker は ``walkBlock`` で sibling を別の list として emit するため、JA も
+    1 行 1 segment emit で parity を成立させる。
+
+    Strict ``>`` rule: ``markerIndent > bodyIndent`` (deeper indent) の場合のみ
+    nested 扱い (次 class ``TestListEmitTrueNested`` で pin)。
     """
 
     def test_unordered_nested_emits_each_marker(self):
         md = "- Outer\n  - Nested A\n  - Nested B\n- Sibling\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # mjs-style: 4 separate segments (nested markers emit individually)
+        # ``  -`` の leading_ws=2 == body_indent=2 → tight sibling emit
         assert kinds == ["unordered-list-item"] * 4
         assert segs[0]["textNorm"] == "outer"
         assert segs[1]["textNorm"] == "nested a"
@@ -64,7 +69,7 @@ class TestListEmit:
         md = "1. Outer step\n   - sub A\n   - sub B\n2. Next step\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # ordered / unordered が混在しても kind は line-based で判定
+        # ``1.`` の body_indent=3、``   -`` の leading_ws=3 → tight sibling
         assert kinds == [
             "ordered-list-item",
             "unordered-list-item",
@@ -75,36 +80,6 @@ class TestListEmit:
         assert segs[1]["textNorm"] == "sub a"
         assert segs[2]["textNorm"] == "sub b"
         assert segs[3]["textNorm"] == "next step"
-
-    def test_loose_list_continuation_emits_as_paragraph(self):
-        """blank line + indented paragraph は mjs では独立 paragraph segment。
-
-        Python 側も paragraph fall-through で ``paragraph`` kind を emit する
-        (Phase 6b: CommonMark flatten を撤回して mjs 挙動に合わせた)。
-        """
-        md = "1. First step.\n\n   Continuation paragraph.\n\n2. Second step.\n"
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["ordered-list-item", "paragraph", "ordered-list-item"]
-        assert segs[0]["textNorm"] == "first step."
-        assert segs[1]["textNorm"] == "continuation paragraph."
-        assert segs[2]["textNorm"] == "second step."
-
-    def test_hard_break_continuation_emits_as_paragraph(self):
-        """hard-break (``\\`` end + indented next line) も独立 paragraph。
-
-        ``results/test-runs.md`` 等で使われる `-  bullet\\` + 2-space indent の
-        pattern。Phase 2 の markdown-it-py は 1 item に merge していたが、
-        mjs は 2 segment。Phase 6b で mjs 挙動に揃えた。
-        """
-        md = (
-            "- 緑のバー - 合格\n"
-            "- 赤のバー - 不合格\\\n"
-            "  バーにカーソルを合わせると、その詳細が表示されます。\n\n"
-        )
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item", "unordered-list-item", "paragraph"]
 
     def test_flat_list_unchanged(self):
         md = "- alpha\n- beta\n- gamma\n"
@@ -118,6 +93,119 @@ class TestListEmit:
         segs = extract_segments_from_markdown(md)
         list_items = [s for s in segs if "list-item" in s["segmentKind"]]
         assert [s["segmentIndex"] for s in list_items] == [0, 1, 2]
+
+
+class TestListEmitTrueNested:
+    """True nested pattern (``markerIndent > bodyIndent``) — Issue #368 flatten。
+
+    EN walker の ``collectInlineText`` は ``<li>`` 直下の nested ``<ul>`` / 複数
+    ``<p>`` / ``<img>`` を 1 segment に flatten する。JA parser もこれを対称化
+    するため、active list item に対して deeper indent content を吸収する。
+
+    契約: ``markerIndent > bodyIndent`` (strictly greater) のとき nested 扱い。
+    tight sibling (``==``) と区別するための strict-``>`` rule。
+    """
+
+    def test_nested_unordered_flatten_into_outer(self):
+        """``- outer\\n    - nested`` (4 spaces) は 1 item "outer nested" に flatten。"""
+        md = "- outer\n    - nested\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "unordered-list-item"
+        assert segs[0]["textNorm"] == "outer nested"
+
+    def test_nested_ordered_flatten_into_outer(self):
+        """``1. outer\\n    1. nested`` は 1 ordered item に flatten。
+
+        ordered-inside-ordered でも同じく flatten される (EN ``<li><ol><li>``
+        pattern に対応)。
+        """
+        md = "1. outer\n    1. nested A\n    2. nested B\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "ordered-list-item"
+        assert segs[0]["textNorm"] == "outer nested a nested b"
+
+    def test_multi_level_nested_flatten(self):
+        """3 段 nested (``- a\\n    - b\\n        - c``) は "a b c" に flatten。
+
+        EN ``collectInlineText`` は任意段 nested を再帰で flatten するため、
+        JA 側も多段を 1 item に compact する。
+        """
+        md = "- a\n    - b\n        - c\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["textNorm"] == "a b c"
+
+    def test_continuation_paragraph_flatten(self):
+        """``1. step\\n\\n    continuation`` は 1 item に flatten (blank 行越し)。
+
+        EN ``<li><p>step</p><p>continuation</p></li>`` → ``collectInlineText`` で
+        "step continuation" に flatten される挙動に対応 (Issue #368 §3.1 #1)。
+        """
+        md = "1. First step.\n\n    Continuation paragraph.\n\n2. Second step.\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["ordered-list-item", "ordered-list-item"]
+        assert segs[0]["textNorm"] == "first step. continuation paragraph."
+        assert segs[1]["textNorm"] == "second step."
+
+    def test_indented_image_absorbed_as_space(self):
+        """``- item\\n    ![alt](img)`` で image は absorb される。
+
+        EN ``renderInlineText`` は ``<img>`` → space 1 個に縮退するため、JA の
+        deeper-indented image も list item の text に空白として吸収される
+        (Issue #368 §3.1 #3)。
+        """
+        md = "- Item with image\n    ![alt](/x.png)\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "unordered-list-item"
+        assert segs[0]["textNorm"] == "item with image"
+
+    def test_indented_code_fence_absorbed_as_text(self):
+        """list 内 indented code fence は inner text だけ absorb される。
+
+        EN ``<li><pre>code</pre></li>`` → ``collectInlineText`` で ``<pre>`` 透過
+        して code の text を flatten するため、JA も fence marker を除いた inner
+        を list item text に append する (Issue #368 §3.2 #5)。
+        """
+        md = "- step\n\n    ```js\n    var x = 1;\n    ```\n\n- after\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "unordered-list-item"]
+        # "step" + fence inner "var x = 1;" が concat される
+        assert "var x = 1;" in segs[0]["textNorm"]
+        assert segs[1]["textNorm"] == "after"
+
+    def test_tight_sibling_not_flattened_across_top_level_marker(self):
+        """``- a\\n    - nested\\n- sibling`` は [flatten, sibling] の 2 items。
+
+        ``- sibling`` の leading_ws=0 < body_indent=2 → 新 top-level を開き、
+        flatten 中の active_list を flush する。
+        """
+        md = "- outer\n    - nested\n- sibling\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "unordered-list-item"]
+        assert segs[0]["textNorm"] == "outer nested"
+        assert segs[1]["textNorm"] == "sibling"
+
+    def test_hard_break_continuation_remains_separate(self):
+        """``-  bullet\\\\\\n  indent`` (leading_ws=2 == body_indent=2) は tight
+        sibling扱いで 2 segment emit のまま。
+
+        ``results/test-runs.md`` 等で使われる mjs 互換 pattern。flatten は
+        ``leading_ws > body_indent`` の場合のみなので、ここでは発動しない。
+        """
+        md = (
+            "- 緑のバー - 合格\n"
+            "- 赤のバー - 不合格\\\n"
+            "  バーにカーソルを合わせると、その詳細が表示されます。\n\n"
+        )
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["unordered-list-item", "unordered-list-item", "paragraph"]
 
 
 class TestCallout:
@@ -452,20 +540,20 @@ class TestListRegionEdgeCases:
         assert kinds.count("table-cell") == 2
 
     def test_list_with_blank_and_indented_content_line(self):
-        """4-space indent の "code-looking" 行は mjs で paragraph 扱い。
+        """blank 行 + 4-space indent 行 は Issue #368 flatten で吸収される。
 
-        mjs FENCE_RE は leading whitespace 非許容 + trimmed 使用のため、
-        ``    indented-content-line`` は regex 非 match で paragraph_buf へ入り、
-        blank 行で flush。Phase 2 の CommonMark 吸収を撤回して mjs に揃える。
+        ``- item`` の body_indent=2、``    indented-content-line`` の leading_ws=4
+        は strictly > 2 → active list item に flatten される (EN
+        ``<li><p>item</p><p>indented-content-line</p></li>`` と対称)。
+        blank 行は peek-ahead で continuation と判定されて skip。
         """
         md = "- item\n\n    indented-content-line\n\nAfter paragraph.\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # mjs: list-item + paragraph (indented-content-line) + paragraph (After paragraph)
-        assert kinds == ["unordered-list-item", "paragraph", "paragraph"]
-        assert segs[0]["textNorm"] == "item"
-        assert segs[1]["textNorm"] == "indented-content-line"
-        assert segs[2]["textNorm"] == "after paragraph."
+        # list-item (flattened "item indented-content-line") + paragraph
+        assert kinds == ["unordered-list-item", "paragraph"]
+        assert segs[0]["textNorm"] == "item indented-content-line"
+        assert segs[1]["textNorm"] == "after paragraph."
 
 
 class TestLooseSummaryENDelegation:

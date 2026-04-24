@@ -761,76 +761,82 @@ sync される。partial run / 壊れた artifact は `sync-detection-issues.cjs
 
 ## テスト
 
+Phase 6b atomic cutover (2026-04-24/25) で detection / pipeline / lib / tools の
+実装を Python に統合済み。mjs テストは Astro build graph に残る `redirects.mjs` と
+GitHub Actions 側 `sync-detection-issues.cjs` の 2 本だけ。
+
 ```bash
-npm test    # node --test scripts/__tests__/*.mjs
+npm run test:mjs                                      # 残存 2 mjs tests
+npm run test:py                                       # Python 全 test (default addopts)
+npm run test:py:quick                                 # fast gate only
+(cd scripts/py && uv run pytest -m corpus -n auto)    # 864 corpus matrix (20s)
+(cd scripts/py && uv run pytest -m 'recall or boundary or real_repo' -o addopts=)
 ```
 
-| テストファイル                                       | 対象スクリプト                          |
-| ---------------------------------------------------- | --------------------------------------- |
-| `__tests__/check_source_parity.test.mjs`             | check_source_parity.mjs                 |
-| `__tests__/lint_docs.test.mjs`                       | lint_docs.mjs                           |
-| `__tests__/fetch_translate_images.test.mjs`          | fetch_translate_images.mjs              |
-| `__tests__/update_sidebar_urls.test.mjs`             | update_sidebar_urls_from_live.mjs       |
-| `__tests__/pipeline.test.mjs`                        | pipeline.mjs                            |
-| `__tests__/snapshot_diff.test.mjs`                   | snapshot_diff.mjs                       |
-| `__tests__/source_parity.test.mjs`                   | lib/source_parity.mjs                   |
-| `__tests__/detection_reports.test.mjs`               | lib/detection_reports.mjs               |
-| `__tests__/lib_project.test.mjs`                     | lib/project.mjs                         |
-| `__tests__/apply_llm_translations.test.mjs`          | apply_llm_translations.mjs              |
-| `__tests__/lib_markdown_utils.test.mjs`              | lib/markdown_utils.mjs                  |
-| `__tests__/lib_sidebar_label.test.mjs`               | lib/sidebar.mjs                         |
-| `__tests__/turndown.test.mjs`                        | lib/turndown.mjs                        |
-| `__tests__/snapshot_update.test.mjs`                 | snapshot_update.mjs                     |
-| `__tests__/madcap_toc.test.mjs`                      | lib/madcap_toc.mjs                      |
-| `__tests__/mutation_corpus.test.mjs`                 | lib/mutation_corpus.mjs                 |
-| `__tests__/source_parity_acknowledgements.test.mjs`  | lib/source_parity_acknowledgements.mjs  |
-| `__tests__/source_parity_page_coverage.test.mjs`     | lib/source_parity_page_coverage.mjs     |
-| `__tests__/source_sync_health.test.mjs`              | lib/source_sync_health.mjs              |
-| `__tests__/source_sync_exclusions.test.mjs`          | lib/source_sync_exclusions.mjs          |
-| `__tests__/source_parity_source_side_debt.test.mjs`  | source-side debt 契約統合               |
-| `__tests__/source_parity_segments_shared.test.mjs`   | lib/source_parity_segments_shared.mjs   |
-| `__tests__/source_parity_segments_en.test.mjs`       | lib/source_parity_segments_en.mjs       |
-| `__tests__/source_parity_segments_ja.test.mjs`       | lib/source_parity_segments_ja.mjs       |
-| `__tests__/source_parity_segments_boundary.test.mjs` | canonical segment 境界安定性ベンチマーク|
-| `__tests__/source_parity_align.test.mjs`             | lib/source_parity_align.mjs             |
-| `__tests__/source_parity_recall.test.mjs`            | diff=1 mutation recall ベンチマーク     |
-| `__tests__/source_parity_align_runtime.test.mjs`     | exact diff engine runtime integration   |
-| `__tests__/source_parity_advisory_queue.test.mjs`    | tokenless-near-tie review queue helper  |
-| `__tests__/sync_detection_issues.test.mjs`           | 4-family issue sync (family-key match)  |
-| `__tests__/source_parity_issue_state.test.mjs`       | 共有 issue-state predicates             |
+### Python テスト構成 (`scripts/py/tests/`)
+
+| ファイル | 対象 |
+| --- | --- |
+| `conformance/test_segments_en_288_matrix.py` | segments_en vs committed golden |
+| `conformance/test_turndown_288_matrix.py` | turndown vs committed golden |
+| `conformance/test_align_288_matrix.py` | align vs committed golden |
+| `test_segments_en.py` / `test_segments_ja.py` | segment extractor unit |
+| `test_align.py` / `test_align_scoring.py` | align weighted LCS |
+| `test_checks.py` | coarse audit (section / callout / image order) |
+| `test_check_source_parity.py` / `test_check_source_parity_smoke.py` | parity gate |
+| `test_snapshot_diff.py` / `test_snapshot_update.py` | snapshot pipeline |
+| `test_pipeline.py` / `test_pipeline_cli_smoke.py` / `test_apply_llm_translations.py` | translation pipeline |
+| `test_lint_docs.py` / `test_lint_docs_main_smoke.py` | lint rules + CLI |
+| `test_tools_cli_smoke.py` | tools CLI smoke |
+| `test_emit_corpus_oracle.py` | corpus oracle emitter |
+| `test_validate_en_source_patches.py` | JSON patch registry schema |
+| `test_recall.py` / `test_baseline_recall.py` / `test_segments_boundary.py` | quality regression |
+
+### 残存 mjs テスト (`scripts/__tests__/`)
+
+| ファイル | 対象 | 維持理由 |
+| --- | --- | --- |
+| `lib_redirects.test.mjs` | `scripts/lib/redirects.mjs` | Astro build graph が直接 import |
+| `sync_detection_issues.test.mjs` | `.github/scripts/sync-detection-issues.cjs` | GitHub Actions 側 tooling (Phase 6.1 で扱う) |
 
 ---
 
-## npm スクリプト対応表
+## npm スクリプト対応表 (Phase 6b 以降)
 
-| npm コマンド                    | スクリプト                                | 用途                               |
-| ------------------------------- | ----------------------------------------- | ---------------------------------- |
-| `lint`                          | lint:md && lint:docs                      | 全 lint 実行                       |
-| `lint:md`                       | lint:md:content && lint:md:repo           | markdownlint 実行                  |
-| `lint:md:content`               | markdownlint (docs content)               | コンテンツ MD lint（MD001 無効）   |
-| `lint:md:repo`                  | markdownlint (repo docs, .github)         | リポジトリ MD lint                 |
-| `lint:docs`                     | lint_docs.mjs                             | 構文・frontmatter 検証             |
-| `check:snapshots`               | snapshot_update.mjs && snapshot_diff.mjs  | スナップショット取得→比較          |
-| `check:snapshots:fetch`         | snapshot_update.mjs                       | スナップショット取得               |
-| `check:snapshots:fetch:dry-run` | snapshot_update.mjs --dry-run             | スナップショット取得（ドライラン） |
-| `check:snapshots:diff`          | snapshot_diff.mjs                         | スナップショット差分比較           |
-| `check:parity`                  | check_source_parity.mjs                   | 翻訳品質チェック（ローカル）       |
-| `check:summary`                 | generate_detection_reports.mjs            | summary / audit manifest 生成      |
-| `docs:sync-sidebar`             | update_sidebar_urls_from_live.mjs         | サイドバー URL 同期                |
-| `docs:sync-frontmatter`         | sync_frontmatter_from_sidebar.mjs         | frontmatter 同期（ドライラン）     |
-| `docs:sync-frontmatter:apply`   | sync_frontmatter_from_sidebar.mjs --apply | frontmatter 同期（実行）           |
-| `docs:pipeline`                 | pipeline.mjs                              | パイプライン（デフォルト）         |
-| `docs:pipeline:diff`            | pipeline.mjs --mode=diff                  | パイプライン（diff）               |
-| `docs:pipeline:full`            | pipeline.mjs --mode=full                  | パイプライン（full）               |
-| `docs:fetch`                    | fetch_translate_images.mjs                | 英語原文・画像取得                 |
-| `docs:normalize`                | normalize_docs.mjs                        | ドキュメント正規化                 |
-| `docs:fix-alt`                  | fix_alt_all.mjs                           | alt テキスト一括挿入               |
-| `docs:placeholders`             | generate_untranslated_placeholders.mjs    | プレースホルダー作成               |
-| `docs:prepare-llm`              | prepare_llm_tasks.mjs                     | LLM タスク準備                     |
-| `docs:apply-llm`                | apply_llm_translations.mjs                | LLM 翻訳適用                       |
-| `docs:report-categories`        | report_frontmatter_categories.mjs         | カテゴリ集計                       |
-| `format`                        | prettier --write                          | コードフォーマット                 |
-| `format:check`                  | prettier --check                          | フォーマットチェック（CI 用）      |
+| npm コマンド                    | 実体                                                                  | 用途                                   |
+| ------------------------------- | --------------------------------------------------------------------- | -------------------------------------- |
+| `lint`                          | `lint:md && lint:docs`                                                | 全 lint 実行                           |
+| `lint:md`                       | `lint:md:content && lint:md:repo`                                     | markdownlint 実行                      |
+| `lint:md:content`               | markdownlint (docs content)                                           | コンテンツ MD lint (MD001 無効)        |
+| `lint:md:repo`                  | markdownlint (repo docs, .github)                                     | リポジトリ MD lint                     |
+| `lint:docs`                     | `uv run python -m testim_parity.tools.lint_docs`                      | 構文・frontmatter 検証                 |
+| `lint:glossary`                 | `uv run python -m testim_parity.tools.check_glossary_duplicates`      | glossary 重複検知                      |
+| `check:snapshots`               | snapshot fetch + diff (Python)                                        | スナップショット取得→比較              |
+| `check:snapshots:fetch`         | `uv run python -m testim_parity.detection.snapshot_update`            | スナップショット取得                   |
+| `check:snapshots:diff`          | `uv run python -m testim_parity.detection.snapshot_diff`              | スナップショット差分比較               |
+| `check:parity`                  | `uv run python -m testim_parity.detection.check_source_parity`        | 翻訳品質チェック (local)               |
+| `check:summary`                 | `uv run python -m testim_parity.detection.generate_detection_reports` | summary / audit manifest               |
+| `check:untranslated`            | `uv run python -m testim_parity.detection.find_untranslated`          | 未翻訳 page 検出                       |
+| `docs:sync-sidebar`             | `python -m testim_parity.pipeline.update_sidebar_urls_from_live`      | サイドバー URL 同期                    |
+| `docs:sync-frontmatter`         | `python -m testim_parity.tools.sync_frontmatter_from_sidebar`         | frontmatter 同期 (dry-run)             |
+| `docs:sync-frontmatter:apply`   | `... --apply`                                                         | frontmatter 同期 (実行)                |
+| `docs:pipeline`                 | `python -m testim_parity.pipeline.pipeline`                           | パイプライン (diff default)            |
+| `docs:pipeline:full`            | `python -m testim_parity.pipeline.pipeline --mode=full`               | パイプライン (full)                    |
+| `docs:fetch`                    | `python -m testim_parity.pipeline.fetch_translate_images`             | 英語原文・画像取得                     |
+| `docs:normalize`                | `python -m testim_parity.tools.normalize_docs`                        | ドキュメント正規化                     |
+| `docs:fix-alt`                  | `python -m testim_parity.tools.fix_alt_all`                           | alt テキスト一括挿入                   |
+| `docs:placeholders`             | `python -m testim_parity.pipeline.generate_untranslated_placeholders` | プレースホルダー作成                   |
+| `docs:prepare-llm`              | `python -m testim_parity.pipeline.prepare_llm_tasks`                  | LLM タスク準備                         |
+| `docs:apply-llm`                | `python -m testim_parity.pipeline.apply_llm_translations`             | LLM 翻訳適用                           |
+| `docs:report-categories`        | `python -m testim_parity.tools.report_frontmatter_categories`         | カテゴリ集計                           |
+| `test:py`                       | `cd scripts/py && uv run pytest`                                      | Python 全 test (default addopts)       |
+| `test:py:quick`                 | marker filter 付き fast gate                                          | CI fast 相当                           |
+| `test:py:corpus`                | `pytest -m corpus -n auto --dist load`                                | 288×3 matrix 並列                      |
+| `test:py:corpus:regen`          | `uv run python -m testim_parity.tools.emit_corpus_oracle`             | committed golden 再生成                |
+| `test:py:corpus:drift`          | drift check (committed vs live Python)                                | 暫定 drift gate                        |
+| `test:mjs`                      | `node --test lib_redirects.test.mjs sync_detection_issues.test.mjs`   | 残存 mjs tests (2 本)                  |
+| `format`                        | `prettier --write`                                                    | コードフォーマット                     |
+| `format:check`                  | `prettier --check`                                                    | フォーマットチェック (CI 用)           |
 
 ---
 

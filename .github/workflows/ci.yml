@@ -108,6 +108,21 @@ jobs:
         # ``-o addopts=`` で default addopts を override しないと ``cutover`` marker
         # が skip される (Codex review #4 対応)。
         run: uv run pytest -o addopts= -m cutover
+      - name: pytest (recall / boundary / real_repo — required)
+        # Phase 6b cutover round-2 review P2 対応: recall (mutation corpus),
+        # boundary (segment count regressions), real_repo (slug-level parity
+        # smoke) の 3 marker は local で 15-20s で完走する軽量な品質 gate。
+        # pyproject.toml docstring が「Phase 6b で required 昇格」と謳っていた
+        # が CI YAML に step が無く nightly のみだったため、PR 毎に block
+        # できるよう required step として昇格させる。``-o addopts=`` で
+        # default exclusion を override して marker を解禁する。
+        run: uv run pytest -o addopts= -m 'recall or boundary or real_repo' --tb=short --durations=30
+      - name: en_source_patches schema validation
+        # Phase 6b cutover round-2 review P2 対応: _en_source_patches_data.json
+        # は mjs source 削除後 Python の sole source-of-truth なので、patch 編集時の
+        # schema 違反 (defectClass allowlist / ISO date / id uniqueness 等) を
+        # CI で catch する。production JSON 34 patches の validation が 0.1s 弱。
+        run: uv run python -m testim_parity.tools.validate_en_source_patches
       - name: mjs consumer audit
         # Phase 6b cutover required step: 許可 4 asset 以外の mjs / cjs 参照が
         # package.json / .github / scripts 配下に残っていないことを assert する
