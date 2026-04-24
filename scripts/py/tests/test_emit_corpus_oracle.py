@@ -14,7 +14,6 @@ Phase 6b cutover で mjs ``emit_corpus_oracle.mjs`` を Python 実装に port �
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest

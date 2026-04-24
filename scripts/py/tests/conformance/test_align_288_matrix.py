@@ -35,9 +35,7 @@ from testim_parity.segments_ja import extract_segments_from_markdown
 
 pytestmark = pytest.mark.corpus
 
-_GOLDEN_PATH = (
-    Path(__file__).parent / "__oracle__" / "corpus_golden.jsonl"
-).resolve()
+_GOLDEN_PATH = (Path(__file__).parent / "__oracle__" / "corpus_golden.jsonl").resolve()
 
 
 def _canonical_sha256(value: Any) -> str:
@@ -87,8 +85,8 @@ def test_align_byte_identical_with_committed_golden(slug: str) -> None:
     golden = _load_align_golden()
     expected_row = golden[slug]
 
-    en_snapshot = (ROOT_DIR / "snapshots" / "en" / "content" / f"{slug}.html").read_bytes().decode(
-        "utf-8"
+    en_snapshot = (
+        (ROOT_DIR / "snapshots" / "en" / "content" / f"{slug}.html").read_bytes().decode("utf-8")
     )
     ja_md_path = ROOT_DIR / "src" / "content" / "docs" / f"{slug}.md"
     if not ja_md_path.exists():

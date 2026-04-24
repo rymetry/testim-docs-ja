@@ -227,7 +227,8 @@ def main(argv: list[str] | None = None) -> int:
     tmp.write_text(body, encoding="utf-8")
     tmp.replace(out_resolved)
 
-    rel = out_resolved.relative_to(Path.cwd()) if out_resolved.is_relative_to(Path.cwd()) else out_resolved
+    cwd = Path.cwd()
+    rel = out_resolved.relative_to(cwd) if out_resolved.is_relative_to(cwd) else out_resolved
     print(
         f"emit_corpus_oracle: wrote {len(rows)} rows across {len(suites)} suite(s) → {rel}",
         file=sys.stderr,

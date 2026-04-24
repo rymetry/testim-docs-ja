@@ -71,7 +71,6 @@ _HORIZONTAL_RULE_RE = re.compile(r"^(-{3,}|\*{3,}|_{3,})$")
 _ANCHOR_SUFFIX_RE = re.compile(r"\s*\{#[^}]*\}\s*$")
 
 
-
 class _Emitter:
     """``(sectionPath, kind)`` 毎に segment index をカウントしつつ segments を集める。
 

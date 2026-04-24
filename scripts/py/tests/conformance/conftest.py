@@ -123,8 +123,7 @@ def corpus_oracle(repo_root: Path) -> dict[tuple[str, str], dict]:
             # Phase 6b 以降は mjs が無いので live regen は Python tool でしか
             # 行えない。silent skip させず ``pytest.UsageError`` で fail させる。
             raise pytest.UsageError(
-                "corpus oracle not available. Regenerate via:\n"
-                "  npm run test:py:corpus:regen"
+                "corpus oracle not available. Regenerate via:\n  npm run test:py:corpus:regen"
             )
 
     if not jsonl_path.exists():

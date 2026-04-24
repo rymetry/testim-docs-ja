@@ -13,13 +13,10 @@ Rationale: ``fail_under = 90`` を復帰させる前提 (cutover gate #1) とし
 
 from __future__ import annotations
 
-import json
-import sys
 from pathlib import Path
 
 import pytest
 
-from testim_parity.project import ROOT_DIR
 from testim_parity.tools import (
     check_glossary_duplicates,
     fix_alt_all,
@@ -181,16 +178,13 @@ class TestSyncFrontmatterFromSidebar:
     def test_missing_sidebar_returns_one(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setattr(
-            sync_frontmatter_from_sidebar, "SIDEBAR_PATH", tmp_path / "missing.md"
-        )
+        monkeypatch.setattr(sync_frontmatter_from_sidebar, "SIDEBAR_PATH", tmp_path / "missing.md")
         rc = sync_frontmatter_from_sidebar.main([])
         assert rc == 1
 
     def test_parse_sidebar_ordering_non_section_header_skipped(self) -> None:
         sidebar_md = (
-            "## 翻訳ステータス\n\n"
-            "- ✅ https://docs.tricentis.com/testim/content/overview.htm\n"
+            "## 翻訳ステータス\n\n- ✅ https://docs.tricentis.com/testim/content/overview.htm\n"
         )
         parsed = sync_frontmatter_from_sidebar.parse_sidebar_ordering(sidebar_md)
         # 翻訳ステータス は non-section header なので skip される → slug 採取されない

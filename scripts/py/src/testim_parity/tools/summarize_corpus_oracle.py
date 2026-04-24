@@ -23,9 +23,7 @@ __all__ = ["main"]
 
 
 def _parse_args(argv: list[str] | None) -> tuple[Path, Path]:
-    parser = argparse.ArgumentParser(
-        description="Summarize oracle JSONL into SHA-256 TSV manifest"
-    )
+    parser = argparse.ArgumentParser(description="Summarize oracle JSONL into SHA-256 TSV manifest")
     parser.add_argument("--in", dest="input_path", required=True, help="input JSONL path")
     parser.add_argument("--out", required=True, help="output TSV path")
     args = parser.parse_args(argv)

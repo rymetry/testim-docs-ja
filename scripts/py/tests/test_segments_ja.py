@@ -97,7 +97,11 @@ class TestListEmit:
         pattern。Phase 2 の markdown-it-py は 1 item に merge していたが、
         mjs は 2 segment。Phase 6b で mjs 挙動に揃えた。
         """
-        md = "- 緑のバー - 合格\n- 赤のバー - 不合格\\\n  バーにカーソルを合わせると、その詳細が表示されます。\n\n"
+        md = (
+            "- 緑のバー - 合格\n"
+            "- 赤のバー - 不合格\\\n"
+            "  バーにカーソルを合わせると、その詳細が表示されます。\n\n"
+        )
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
         assert kinds == ["unordered-list-item", "unordered-list-item", "paragraph"]
