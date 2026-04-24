@@ -121,48 +121,45 @@ def _result(*issues: dict[str, Any]) -> dict[str, Any]:
     return {"file": "x.md", "sourceUrl": "", "category": "", "issues": list(issues)}
 
 
-def test_structure_mismatch_does_not_flow_into_audit_signal() -> None:
-    """``section-structure-mismatch`` は ``structureMismatch*`` に流れるが
-    ``auditSignal*`` には流れない (COARSE_SIGNAL_TYPES と STRUCTURE_MISMATCH_TYPES
-    が別 frozenset である契約)。Phase 6 以降で mjs 無しに Python 側で分類ロジックが
-    変更された際に silent merge を起こさないための pin。"""
+def test_structure_mismatch_flows_only_into_structure_channel() -> None:
+    """``section-structure-mismatch`` は ``structureMismatch*`` にのみ流れ、
+    ``auditSignal*`` / ``snapshotUnusable*`` には流れない (3 channel cross-check、
+    COARSE_SIGNAL_TYPES / STRUCTURE_MISMATCH_TYPES / SOURCE_UNUSABLE_TYPES が
+    disjoint な frozenset である契約の pin)。"""
     issue = {"type": "section-structure-mismatch", "severity": "actionable"}
     summary = summarize_parity_results([_result(issue)])
+    # structureMismatch channel のみ populated
     assert summary["structureMismatchIssues"] == 1
     assert summary["structureMismatchByType"] == {"section-structure-mismatch": 1}
     assert summary["structureMismatchFiles"] == 1
-    # audit channel には流れない
+    # audit / snapshotUnusable channel は 0 (cross-channel leak guard)
     assert summary["auditSignalIssues"] == 0
     assert summary["auditSignalsByType"] == {}
     assert summary["auditSignalFiles"] == 0
+    assert summary["snapshotUnusableIssues"] == 0
+    assert summary["snapshotUnusableByType"] == {}
+    assert summary["snapshotUnusableFiles"] == 0
 
 
-def test_source_unusable_does_not_flow_into_audit_signal() -> None:
-    """``snapshot-incomplete`` / ``source-unusable`` は ``snapshotUnusable*`` に
-    流れるが ``auditSignal*`` には流れない。"""
+def test_source_unusable_flows_only_into_snapshot_channel() -> None:
+    """``snapshot-incomplete`` / ``source-unusable`` は ``snapshotUnusable*``
+    にのみ流れ、``auditSignal*`` / ``structureMismatch*`` には流れない
+    (3 channel cross-check)。"""
     snapshot = {"type": "snapshot-incomplete", "severity": "actionable"}
     unusable = {"type": "source-unusable", "severity": "actionable"}
     summary = summarize_parity_results([_result(snapshot, unusable)])
+    # snapshotUnusable channel のみ populated
     assert summary["snapshotUnusableIssues"] == 2
     assert summary["snapshotUnusableByType"] == {
         "snapshot-incomplete": 1,
         "source-unusable": 1,
     }
     assert summary["snapshotUnusableFiles"] == 1
-    # audit channel には流れない
+    # audit / structureMismatch channel は 0 (cross-channel leak guard)
     assert summary["auditSignalIssues"] == 0
     assert summary["auditSignalsByType"] == {}
-
-
-def test_source_unusable_does_not_flow_into_structure_mismatch() -> None:
-    """``snapshot-incomplete`` は ``snapshotUnusable*`` に流れ、
-    ``structureMismatch*`` には漏れない (field 混同の regression guard)。"""
-    issue = {"type": "snapshot-incomplete", "severity": "actionable"}
-    summary = summarize_parity_results([_result(issue)])
-    assert summary["snapshotUnusableIssues"] == 1
     assert summary["structureMismatchIssues"] == 0
     assert summary["structureMismatchByType"] == {}
-    assert summary["structureMismatchFiles"] == 0
 
 
 def test_valid_ack_excludes_structure_mismatch_from_counter() -> None:
@@ -227,12 +224,18 @@ def test_valid_ack_excludes_source_unusable_from_counter() -> None:
 
 def test_coarse_signal_flows_only_into_audit_channel() -> None:
     """``paragraph-count-mismatch`` は ``auditSignal*`` にのみ流れる
-    (``structureMismatch*`` や ``snapshotUnusable*`` には無関係)。positive path pin。"""
+    (``structureMismatch*`` や ``snapshotUnusable*`` には無関係)。3 channel
+    cross-check で disjoint 契約を pin。"""
     issue = {"type": "paragraph-count-mismatch", "severity": "signal"}
     summary = summarize_parity_results([_result(issue)])
+    # audit channel のみ populated
     assert summary["auditSignalIssues"] == 1
     assert summary["auditSignalsByType"] == {"paragraph-count-mismatch": 1}
     assert summary["auditSignalFiles"] == 1
-    # structureMismatch / snapshotUnusable には無関係
+    # structureMismatch / snapshotUnusable channel は 0 (cross-channel leak guard)
     assert summary["structureMismatchIssues"] == 0
+    assert summary["structureMismatchByType"] == {}
+    assert summary["structureMismatchFiles"] == 0
     assert summary["snapshotUnusableIssues"] == 0
+    assert summary["snapshotUnusableByType"] == {}
+    assert summary["snapshotUnusableFiles"] == 0

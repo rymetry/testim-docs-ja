@@ -112,7 +112,9 @@ def _read_en_html(slug: str) -> str:
     if not path.exists():
         pytest.skip(
             f"EN snapshot missing for recall slug {slug!r} at {path}; "
-            "ensure snapshots/en/content/ is populated before running ``-m slow``."
+            "populate ``snapshots/en/content/`` via ``npm run check:snapshots:fetch`` "
+            "or checkout a tree with snapshots included (test_recall.py は slow marker "
+            "無しの default test なので、fixture 不在環境では常に skip される契約)。"
         )
     return path.read_text(encoding="utf-8")
 
@@ -122,7 +124,8 @@ def _read_ja_markdown(slug: str) -> str:
     if not path.exists():
         pytest.skip(
             f"JA markdown missing for recall slug {slug!r} at {path}; "
-            "ensure src/content/docs/ is populated before running ``-m slow``."
+            "ensure ``src/content/docs/`` tree is populated (should be present in any "
+            "repo checkout; missing path indicates a corrupted worktree)."
         )
     return path.read_text(encoding="utf-8")
 

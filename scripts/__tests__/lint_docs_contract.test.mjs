@@ -50,6 +50,11 @@ describe('callout-unknown-type', () => {
     const issues = collectCalloutIssues(':::bogus\nContent\n:::\n');
     const unknown = issues.find((i) => i.rule === 'callout-unknown-type');
     assert.ok(unknown, 'expected callout-unknown-type error');
+    assert.equal(
+      unknown.level,
+      'error',
+      'callout-unknown-type must report as error severity (Python parity)',
+    );
   });
 
   it('does not error on known types', () => {
@@ -73,6 +78,16 @@ describe('callout-unknown-type', () => {
     );
   });
 
+  it('skips unknown callout inside unlabelled code fence (``` alone)', () => {
+    const body = '```\n:::bogus-type\n:::\n```\n';
+    const issues = collectCalloutIssues(body);
+    assert.equal(
+      issues.filter((i) => i.rule === 'callout-unknown-type').length,
+      0,
+      'language-less code fence must still skip callout detection',
+    );
+  });
+
   it('detects unknown callout after code fence (state recovery)', () => {
     const body =
       '```md\n:::example-only\n:::\n```\n\n:::bogus\nreal violation\n:::\n';
@@ -80,6 +95,18 @@ describe('callout-unknown-type', () => {
     const hits = issues.filter((i) => i.rule === 'callout-unknown-type');
     assert.equal(hits.length, 1);
     assert.ok(hits[0].message.includes('bogus'));
+    assert.equal(hits[0].level, 'error');
+  });
+
+  it('accepts 4-colon fence with title attribute (::::info{title="補足"})', () => {
+    // 実 corpus でよく使われる形式 — `{title="..."}` attr の regex 契約 pin
+    const body = '::::info{title="補足"}\nContent\n::::\n';
+    const issues = collectCalloutIssues(body);
+    assert.equal(
+      issues.filter((i) => i.rule === 'callout-unknown-type').length,
+      0,
+      '4-colon fence with attribute block must NOT trigger callout-unknown-type',
+    );
   });
 });
 
@@ -89,15 +116,32 @@ describe('callout-in-list-item', () => {
     const issues = collectCalloutIssues(body);
     const nested = issues.find((i) => i.rule === 'callout-in-list-item');
     assert.ok(nested, 'expected callout-in-list-item error');
+    assert.equal(
+      nested.level,
+      'error',
+      'callout-in-list-item must report as error severity (Python parity)',
+    );
   });
 
   it('errors on callout nested under ordered list item', () => {
     const body = '1. step\n   :::warning\n   body\n   :::\n2. next\n';
     const issues = collectCalloutIssues(body);
-    assert.ok(
-      issues.find((i) => i.rule === 'callout-in-list-item'),
-      'expected error on ordered list nested callout',
-    );
+    const hit = issues.find((i) => i.rule === 'callout-in-list-item');
+    assert.ok(hit, 'expected error on ordered list nested callout');
+    assert.equal(hit.level, 'error');
+  });
+
+  it('triggers rule for each leading whitespace pattern (parametrized)', () => {
+    // Python 側の ``test_any_leading_whitespace_triggers_rule`` と同等。
+    // [ \t]+ charset の regex 契約を space x1/2/3/4 + tab で pin。
+    for (const indent of [' ', '  ', '   ', '    ', '\t']) {
+      const body = `- item\n${indent}:::note\n${indent}body\n${indent}:::\n`;
+      const issues = collectCalloutIssues(body);
+      assert.ok(
+        issues.some((i) => i.rule === 'callout-in-list-item'),
+        `expected callout-in-list-item for indent ${JSON.stringify(indent)}`,
+      );
+    }
   });
 
   it('does not error on top-level callout (no leading whitespace)', () => {

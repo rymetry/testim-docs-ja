@@ -1020,15 +1020,16 @@ guard を維持している:
 
 ### Cutover gate criteria (全て true)
 
-1. `uv run pytest` — 全 pass、coverage >= 90%
+1. `uv run pytest` — 全 pass、coverage >= 90% (**同 PR 内で `pyproject.toml::[tool.coverage.report] fail_under` を 65 → 90 へ戻す**。Phase 5 coexistence の下限 gate 65 は、slow marker 除外で 288-matrix が exercise する path が計上されないための一時措置。Phase 6 で conformance test を golden 化し slow marker を廃止する段階で 90 へ復帰)
 2. `npm run check:parity` via Python — 5-counter = 0
 3. Mutation recall: 9/9 = 100%
 4. Boundary stability >= 0.95
 5. `npm run build` pass (Astro site 無影響)
-6. `npm run lint` pass
-7. `scripts/__tests__/` に `lib_redirects.test.mjs` のみ残存 (他 54 mjs test は Phase 5 で削除済、redirects.mjs は Astro build graph に残るため同 test も production regression gate として維持)
+6. `npm run lint` pass (**同 PR 内で lint:docs を `node scripts/tools/lint_docs.mjs` → `uv run python -m testim_parity.tools.lint_docs` に切り替え**、`scripts/__tests__/lint_docs_contract.test.mjs` を削除、`scripts/tools/lint_docs.mjs` を削除)
+7. `scripts/__tests__/` に `lib_redirects.test.mjs` のみ残存 (他全 mjs test は Phase 5 + Phase 6 で削除済、redirects.mjs は Astro build graph に残るため同 test も production regression gate として維持)
 8. **Cutover exclusion audit**: `uv run pytest -m cutover` が緑 — Phase 5 で導入された `_PY_XFAIL_SLUGS` / `_PY_EXTRACTOR_DRIFT_SLUGS` 等の temporary exclusion frozenset が全て empty であることを assert (下記「Self-enforcing cutover gate」節)
 9. **Golden fixture migration PR** が merge 済 (下記「Conformance test migration」節)
+10. **Lint rule audit**: `scripts/tools/lint_docs.mjs` の全 rule (frontmatter / link / feature-name / code-block / callout / image) が `scripts/py/src/testim_parity/tools/lint_docs.py` で 1:1 で等価実装済であることを、cutover PR の review 時に明示的に confirm する (mjs 側 rule 追加を Python に port し忘れた場合 `lint_docs_contract.test.mjs` は callout scope しか catch しない)
 
 ### Self-enforcing cutover gate (`pytest -m cutover`)
 
@@ -1115,7 +1116,7 @@ conformance harness を spawn) の 2 job が独立実行される構成。Phase 
 | --- | --- | --- |
 | `test` (`npm run test`) | **維持** (lib_redirects.test.mjs のみ、Node 固定) | Astro build graph が redirects.mjs を import する以上、mjs 側の retention test も CI で回す |
 | `python-test` (`uv run pytest --cov`) | **維持 → setup-node 依存削除** | conformance harness (mjs spawn) が golden 化されるので `node` 不要。job 内の `actions/setup-node` step と `npm ci` を削除 |
-| (新規) `python-cutover-gate` | **追加 or python-test に step 追加** | `uv run pytest -m cutover` を cutover PR で走らせ、`_PY_*_SLUGS` frozenset が全て empty を確認 |
+| (新規) `python-cutover-gate` step | **`python-test` job に step 追加** (独立 job にしない) | `uv run pytest -o addopts= -m cutover` を cutover PR の 1 回限り実行。別 job 化すると atomic cutover PR の checks が増えるだけで get no value (gate は PR 単位で 1 回 run できれば十分)。``-o addopts=`` は pyproject.toml の ``not cutover`` default を override するため必須 |
 | `build` / `lint` | **維持** | Node のまま (Astro build / markdownlint) |
 
 **Phase 5 → Phase 6 の rewire 契約**:

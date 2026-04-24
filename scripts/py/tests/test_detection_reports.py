@@ -698,23 +698,27 @@ def test_load_detection_inputs_reads_upstream_recovery(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-FRESH_SYNC: dict[str, Any] = {
-    "schemaVersion": 1,
-    "freshnessState": "fresh",
-    "summary": {
-        "targetPages": 100,
-        "fetchedPages": 100,
-        "notFoundPages": 0,
-        "errorPages": 0,
-        "sidebarVerified": True,
-    },
-    "errors": [],
-}
+def _fresh_sync() -> dict[str, Any]:
+    """fresh source-sync-status.json 相当の factory。``_empty_snapshot`` /
+    ``_empty_parity`` と同理由で factory 化 (nested dict の cross-test mutation 防止)。
+    """
+    return {
+        "schemaVersion": 1,
+        "freshnessState": "fresh",
+        "summary": {
+            "targetPages": 100,
+            "fetchedPages": 100,
+            "notFoundPages": 0,
+            "errorPages": 0,
+            "sidebarVerified": True,
+        },
+        "errors": [],
+    }
 
 
 def test_en_patch_recovery_null_when_upstream_recovery_absent() -> None:
     report = build_actionable_report(
-        _empty_snapshot(), _empty_parity(), [], {"sourceSync": FRESH_SYNC}
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": _fresh_sync()}
     )
     assert report["sourceSyncHealth"]["enPatchRecovery"] is None
     assert report["sourceSyncHealth"]["sourceSyncRecovery"] is None
@@ -738,7 +742,7 @@ def test_empty_upstream_recovery_does_not_open_issue() -> None:
         _empty_snapshot(),
         _empty_parity(),
         [],
-        {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
+        {"sourceSync": _fresh_sync(), "upstreamRecovery": upstream_recovery},
     )
     assert report["sourceSyncHealth"]["enPatchRecovery"]["totalPatches"] == 0
     assert report["sourceSyncHealth"]["sourceSyncRecovery"]["totalExclusions"] == 0
@@ -777,7 +781,7 @@ def test_stale_en_patch_opens_source_sync_health() -> None:
         _empty_snapshot(),
         _empty_parity(),
         [],
-        {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
+        {"sourceSync": _fresh_sync(), "upstreamRecovery": upstream_recovery},
     )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is True
     assert report["sourceSyncHealth"]["enPatchRecovery"]["stalePatches"] == 1
@@ -817,7 +821,7 @@ def test_overdue_exclusion_opens_source_sync_health() -> None:
         _empty_snapshot(),
         _empty_parity(),
         [],
-        {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
+        {"sourceSync": _fresh_sync(), "upstreamRecovery": upstream_recovery},
     )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is True
     assert report["sourceSyncHealth"]["sourceSyncRecovery"]["overdueExclusions"] == 1
@@ -856,7 +860,7 @@ def test_unknown_only_upstream_entries_does_not_open() -> None:
         _empty_snapshot(),
         _empty_parity(),
         [],
-        {"sourceSync": FRESH_SYNC, "upstreamRecovery": upstream_recovery},
+        {"sourceSync": _fresh_sync(), "upstreamRecovery": upstream_recovery},
     )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is False
     assert report["sourceSyncHealth"]["enPatchRecovery"]["unknownPatches"] == 1
@@ -1074,7 +1078,7 @@ def test_non_fresh_freshness_opens_source_sync(freshness: str) -> None:
 
 def test_fresh_does_not_open_source_sync() -> None:
     report = build_actionable_report(
-        _empty_snapshot(), _empty_parity(), [], {"sourceSync": FRESH_SYNC}
+        _empty_snapshot(), _empty_parity(), [], {"sourceSync": _fresh_sync()}
     )
     assert report["sourceSyncHealth"]["shouldOpenIssue"] is False
 
@@ -1110,32 +1114,36 @@ def test_summary_markdown_includes_source_sync_health() -> None:
 # ---------------------------------------------------------------------------
 
 
-CLEAN_PARITY: dict[str, Any] = {
-    "summary": {
-        "checkedAt": "2026-04-07T00:00:00Z",
-        "actionableFiles": 0,
-        "signalFiles": 0,
-        "errorFiles": 0,
-        "baselinedIssues": 0,
-        "baselinedFiles": 0,
-        "baselineInvalidatedSlugs": [],
-        "advisoryQueueIssues": 0,
-        "advisoryQueueFiles": 0,
-    },
-    "files": [],
-    "advisoryQueueScope": {
-        "type": "full",
-        "isComplete": True,
-        "filters": {},
-        "checkedFiles": 100,
-        "totalFiles": 100,
-    },
-    "advisoryQueue": [],
-}
+def _clean_parity() -> dict[str, Any]:
+    """clean parity-check-status.json 相当の factory。``_empty_snapshot`` /
+    ``_empty_parity`` と同理由で factory 化 (nested dict の cross-test mutation 防止)。
+    """
+    return {
+        "summary": {
+            "checkedAt": "2026-04-07T00:00:00Z",
+            "actionableFiles": 0,
+            "signalFiles": 0,
+            "errorFiles": 0,
+            "baselinedIssues": 0,
+            "baselinedFiles": 0,
+            "baselineInvalidatedSlugs": [],
+            "advisoryQueueIssues": 0,
+            "advisoryQueueFiles": 0,
+        },
+        "files": [],
+        "advisoryQueueScope": {
+            "type": "full",
+            "isComplete": True,
+            "filters": {},
+            "checkedFiles": 100,
+            "totalFiles": 100,
+        },
+        "advisoryQueue": [],
+    }
 
 
 def test_parity_followup_always_present() -> None:
-    report = build_actionable_report(_empty_snapshot(), CLEAN_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), _clean_parity(), [])
     followup = report["parityFollowup"]
     assert followup is not None
     assert isinstance(followup["shouldOpenIssue"], bool)
@@ -1146,15 +1154,15 @@ def test_parity_followup_always_present() -> None:
 
 
 def test_parity_followup_closed_when_clean() -> None:
-    report = build_actionable_report(_empty_snapshot(), CLEAN_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), _clean_parity(), [])
     assert report["parityFollowup"]["shouldOpenIssue"] is False
     assert report["parityFollowup"]["body"] == ""
 
 
 def test_parity_followup_opens_with_baselined_issues() -> None:
     parity = {
-        **CLEAN_PARITY,
-        "summary": {**CLEAN_PARITY["summary"], "baselinedIssues": 3, "baselinedFiles": 1},
+        **_clean_parity(),
+        "summary": {**_clean_parity()["summary"], "baselinedIssues": 3, "baselinedFiles": 1},
         "files": [
             {
                 "file": "src/content/docs/overview/page-a.md",
@@ -1188,8 +1196,8 @@ def test_parity_followup_opens_with_baselined_issues() -> None:
 
 def test_parity_followup_opens_with_invalidated_slugs() -> None:
     parity = {
-        **CLEAN_PARITY,
-        "summary": {**CLEAN_PARITY["summary"], "baselineInvalidatedSlugs": ["overview/page-a"]},
+        **_clean_parity(),
+        "summary": {**_clean_parity()["summary"], "baselineInvalidatedSlugs": ["overview/page-a"]},
     }
     report = build_actionable_report(_empty_snapshot(), parity, [])
     assert report["parityFollowup"]["shouldOpenIssue"] is True
@@ -1201,9 +1209,9 @@ def test_parity_followup_opens_with_invalidated_slugs() -> None:
 
 def test_parity_followup_opens_with_complete_advisory_queue_blocking() -> None:
     parity = {
-        **CLEAN_PARITY,
+        **_clean_parity(),
         "summary": {
-            **CLEAN_PARITY["summary"],
+            **_clean_parity()["summary"],
             "advisoryQueueIssues": 2,
             "advisoryQueueFiles": 1,
         },
@@ -1235,9 +1243,9 @@ def test_parity_followup_opens_with_complete_advisory_queue_blocking() -> None:
 
 def test_parity_followup_partial_scope_does_not_open_on_advisory_alone() -> None:
     parity = {
-        **CLEAN_PARITY,
+        **_clean_parity(),
         "summary": {
-            **CLEAN_PARITY["summary"],
+            **_clean_parity()["summary"],
             "advisoryQueueIssues": 2,
             "advisoryQueueFiles": 1,
         },
@@ -1258,9 +1266,9 @@ def test_parity_followup_partial_scope_does_not_open_on_advisory_alone() -> None
 
 def test_parity_followup_invalidated_slugs_in_body() -> None:
     parity = {
-        **CLEAN_PARITY,
+        **_clean_parity(),
         "summary": {
-            **CLEAN_PARITY["summary"],
+            **_clean_parity()["summary"],
             "baselineInvalidatedSlugs": ["overview/page-a", "settings/config"],
         },
     }
@@ -1353,9 +1361,9 @@ def test_parity_body_omits_structure_mismatch_advisory_section() -> None:
 
 def test_source_unusable_counters_exposed() -> None:
     parity = {
-        **CLEAN_PARITY,
+        **_clean_parity(),
         "summary": {
-            **CLEAN_PARITY["summary"],
+            **_clean_parity()["summary"],
             "snapshotUnusableIssues": 3,
             "snapshotUnusableFiles": 2,
             "snapshotUnusableByType": {
@@ -1375,7 +1383,7 @@ def test_source_unusable_counters_exposed() -> None:
 
 
 def test_source_unusable_defaults_when_absent() -> None:
-    report = build_actionable_report(_empty_snapshot(), CLEAN_PARITY, [])
+    report = build_actionable_report(_empty_snapshot(), _clean_parity(), [])
     sub = report["parityFollowup"]["summary"]["sourceUnusable"]
     assert sub["snapshotUnusableIssues"] == 0
     assert sub["snapshotUnusableFiles"] == 0
@@ -1384,9 +1392,9 @@ def test_source_unusable_defaults_when_absent() -> None:
 
 def test_source_unusable_alone_does_not_open_followup() -> None:
     parity = {
-        **CLEAN_PARITY,
+        **_clean_parity(),
         "summary": {
-            **CLEAN_PARITY["summary"],
+            **_clean_parity()["summary"],
             "snapshotUnusableIssues": 5,
             "snapshotUnusableFiles": 3,
             "snapshotUnusableByType": {"snapshot-incomplete": 4, "source-unusable": 1},
@@ -1399,9 +1407,9 @@ def test_source_unusable_alone_does_not_open_followup() -> None:
 
 def test_source_unusable_section_in_body_when_other_signal_opens() -> None:
     parity = {
-        **CLEAN_PARITY,
+        **_clean_parity(),
         "summary": {
-            **CLEAN_PARITY["summary"],
+            **_clean_parity()["summary"],
             "baselinedIssues": 1,
             "baselinedFiles": 1,
             "snapshotUnusableIssues": 4,

@@ -1279,20 +1279,39 @@ def test_check_source_parity_exit_code_1_when_local_page_orphan(tmp_path: Path) 
 # ----------------------------------------------------------------------
 
 
-def test_mask_coverage_records_non_empty_masks_from_ja_body(tmp_path: Path) -> None:
-    """JA body に glossary 用語 (Testim / Visual Editor) が含まれる場合、
-    EN HTML snapshot が存在する run で debug.maskCoverage.summary.segmentsMasked
-    が 1 以上になる。これは PR #384 で修正された kwarg name bug
-    (segmentKind → segment_kind) の regression guard。"""
+def test_mask_coverage_records_non_empty_masks_from_ja_body(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """JA body に glossary 用語 (test fixture で "Phase5TestTerm" を pin) が
+    含まれる場合、EN HTML snapshot が存在する run で
+    debug.maskCoverage.summary.segmentsMasked が 1 以上になる。
+
+    これは PR #384 で修正された kwarg name bug (segmentKind → segment_kind) の
+    regression guard。test 用に minimal な GLOSSARY.md を tmp_path に書き出し、
+    monkeypatch で path を差し替えることで、実 ``docs/GLOSSARY.md`` の内容変更
+    に依存しない独立 test にする (PR #384 round2 review: py-reviewer P2-3)。
+    """
     root = _setup_empty_repo(tmp_path)
 
-    # JA doc: glossary 用語を含む paragraph を少なくとも 1 つ emit する
+    # test 専用 glossary を module-level cache に直接注入する。
+    # ``load_glossary(path=GLOSSARY_PATH)`` の default arg は def 時点で capture
+    # されるため ``monkeypatch.setattr(module, "GLOSSARY_PATH", ...)`` では
+    # 差し替わらない。代わりに ``_glossary_cache`` に目的の list を事前注入する
+    # ことで load_glossary の早期 return 経路を利用する (``load_glossary:50-52``)。
+    # ユニークな sentinel 語 "Phase5TestTerm" を使うことで、実 docs/GLOSSARY.md
+    # の整理作業に test が依存しない (PR #384 round2 py-reviewer P2-3)。
+    from testim_parity import glossary_mask as _glossary_mask_module
+
+    _glossary_mask_module._clear_caches()
+    monkeypatch.setattr(_glossary_mask_module, "_glossary_cache", ["Phase5TestTerm"])
+
     docs = root / "src" / "content" / "docs" / "mask"
     docs.mkdir(parents=True)
     (docs / "page.md").write_text(
         "---\n"
         "title: Mask Coverage Test\n"
-        "description: Testim と Visual Editor を使う。\n"
+        "description: Phase5TestTerm を使うテスト。\n"
         "category: Overview\n"
         "updated: '2026-01-01'\n"
         "sourceUrl: https://docs.tricentis.com/testim/content/mask/page.htm\n"
@@ -1300,54 +1319,53 @@ def test_mask_coverage_records_non_empty_masks_from_ja_body(tmp_path: Path) -> N
         "\n"
         "## 概要\n"
         "\n"
-        "Testim と Visual Editor を使ってテストを作成します。\n",
+        "Phase5TestTerm を使ってテストを作成します。\n",
         encoding="utf-8",
     )
 
-    # EN HTML snapshot: preprocess + turndown + extract の全段階で例外を出さず、
-    # extract_segments_from_html が 1 つ以上 segment を emit する最小構造。
     snapshots = root / "snapshots" / "en" / "content" / "mask"
     snapshots.mkdir(parents=True)
     (snapshots / "page.html").write_text(
-        "<h2>Overview</h2>\n<p>Use the Testim extension with Visual Editor to create tests.</p>\n",
+        "<h2>Overview</h2>\n<p>Use the Phase5TestTerm to create tests.</p>\n",
         encoding="utf-8",
     )
 
     output_path = root / "parity-check-status.json"
-    check_source_parity(
-        root_dir=root,
-        output_path=output_path,
-        stdout=io.StringIO(),
-        stderr=io.StringIO(),
-        slug="mask/page",
-        json_out=True,
-    )
+    try:
+        check_source_parity(
+            root_dir=root,
+            output_path=output_path,
+            stdout=io.StringIO(),
+            stderr=io.StringIO(),
+            slug="mask/page",
+            json_out=True,
+        )
 
-    payload = json.loads(output_path.read_text(encoding="utf-8"))
-    mask_coverage = payload["debug"]["maskCoverage"]
+        payload = json.loads(output_path.read_text(encoding="utf-8"))
+        mask_coverage = payload["debug"]["maskCoverage"]
 
-    # JA body に "Testim" / "Visual Editor" を含む paragraph が 1 つ以上あるので、
-    # mask_coverage.record() が non-empty masks で少なくとも 1 回呼ばれる
-    assert mask_coverage["summary"]["segmentsMasked"] >= 1, (
-        "mask_coverage must capture at least one JA segment that contains "
-        "glossary terms; non-empty segmentsMasked proves that record() was "
-        "called with valid snake_case kwargs (regression guard for PR #384)."
-    )
-    # Glossary counter が "Testim" または "Visual Editor" を含む
-    by_glossary = mask_coverage["summary"]["byGlossaryEntry"]
-    assert any(term in by_glossary for term in ("Testim", "Visual Editor")), (
-        f"byGlossaryEntry must include Testim or Visual Editor, got {by_glossary}"
-    )
-    # masked_segments entries の shape pin: slug / segmentKind / sectionPath /
-    # masks の camelCase key が揃う (artifact parity の契約)
-    masked_segments = mask_coverage["maskedSegments"]
-    assert len(masked_segments) >= 1
-    for entry in masked_segments:
-        assert entry["slug"] == "mask/page"
-        assert "segmentKind" in entry
-        assert "sectionPath" in entry
-        assert isinstance(entry["masks"], list)
-        assert len(entry["masks"]) >= 1
+        # JA body に Phase5TestTerm (fixture glossary term) を含む paragraph が
+        # 1 つ以上あるので、mask_coverage.record() が non-empty masks で呼ばれる
+        assert mask_coverage["summary"]["segmentsMasked"] >= 1, (
+            "mask_coverage must capture at least one JA segment that contains "
+            "glossary terms; non-empty segmentsMasked proves that record() was "
+            "called with valid snake_case kwargs (regression guard for PR #384)."
+        )
+        by_glossary = mask_coverage["summary"]["byGlossaryEntry"]
+        assert "Phase5TestTerm" in by_glossary, (
+            f"byGlossaryEntry must include Phase5TestTerm (fixture-injected), got {by_glossary}"
+        )
+        masked_segments = mask_coverage["maskedSegments"]
+        assert len(masked_segments) >= 1
+        for entry in masked_segments:
+            assert entry["slug"] == "mask/page"
+            assert "segmentKind" in entry
+            assert "sectionPath" in entry
+            assert isinstance(entry["masks"], list)
+            assert len(entry["masks"]) >= 1
+    finally:
+        # test fixture glossary の影響が他 test に漏れないよう必ず cache reset
+        _glossary_mask_module._clear_caches()
 
 
 def test_mask_coverage_stays_empty_when_ja_body_has_no_glossary_terms(
