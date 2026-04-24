@@ -6,17 +6,29 @@ Phase 5 で mjs → pytest 移植中に、Python 版 extractor / align の挙動
 Phase 6 atomic cutover を走らせる前に **全件解消する** ことが docs/
 PYTHON_MIGRATION_PLAN.md Phase 6 の gate 条件に明記されている。
 
-本 module は marker ``cutover`` つきの単一 test で全 exclusion frozenset を
-enumerate し、empty でない限り fail する。Phase 5 coexistence 期間は default
-skip (``pyproject.toml`` の ``addopts = "-m 'not slow and not cutover'"``)、
-Phase 6 cutover PR で ``uv run pytest -m cutover`` を明示的に走らせて緑を確認
-する運用。
+## 本 module の 3 test 構成
 
-**追加方法**: 新たに temporary exclusion frozenset を導入する PR では本 module
-の ``_EXCLUSION_REGISTRY`` に entry を足すこと。これが Phase 6 gate の
-single source of truth。auto-discovery (``test_exclusion_registry_covers_all_patterns``)
-が tests/ 配下を scan し、pattern 定義が registry に未登録なら fail するので、
-単なる hard-code 漏れは automatically catch される。
+1. ``test_all_drift_exclusions_are_empty`` — **cutover marker つき**。
+   Phase 6 cutover PR で ``uv run pytest -o addopts= -m cutover`` により
+   強制 run。``_PY_XFAIL_SLUGS`` / ``_PY_EXTRACTOR_DRIFT_SLUGS`` 全 registry
+   entry が empty でない限り fail。coexistence 期間は default skip
+   (``pyproject.toml`` の ``addopts = "-m 'not slow and not cutover'"``)。
+2. ``test_exclusion_registry_matches_plan_doc`` — **marker 無し** (default CI
+   で run)。registry と plan doc 「Self-enforcing cutover gate」table の
+   ``(module, attribute)`` tuple 集合が完全一致することを plan doc 再パースで
+   assert。Phase 5 期間中の doc / registry drift を catch する。
+3. ``test_exclusion_registry_covers_all_patterns`` — **marker 無し** (default
+   CI で run)。tests/ 配下の ``_PY_*_SLUGS`` 宣言を regex scan し、registry
+   に未登録のものがあれば fail。Phase 5 期間中の hardcode 漏れを catch する。
+
+## 追加 / 変更方法
+
+- 新規 temporary exclusion frozenset を導入する PR は、本 module の
+  ``_EXCLUSION_REGISTRY`` に entry を足し、plan doc 側 table も同 PR で更新
+  すること (test 2/3 が both を enforce)。
+- ``@pytest.mark.cutover`` marker は **test 1** 専用。test 2/3 は Phase 5
+  coexistence 期間中も silent sink を防ぐため default CI で走る契約
+  (PR #384 codex review P2-1 対応)。
 """
 
 from __future__ import annotations
