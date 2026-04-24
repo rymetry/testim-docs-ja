@@ -126,7 +126,8 @@ def test_turndown_page_matches_oracle(slug: str, corpus_oracle: dict) -> None:
     row = corpus_oracle.get(("turndown", slug))
     assert row is not None, (
         f"oracle JSONL missing turndown row for slug={slug!r}. "
-        "Re-run `node scripts/py/tools/emit_corpus_oracle.mjs` to regenerate."
+        "Re-run `npm run test:py:corpus:regen` "
+        "(or `uv run python -m testim_parity.tools.emit_corpus_oracle --out <golden.jsonl> --suite all`)."
     )
 
     html = _read_html(slug)
@@ -159,8 +160,9 @@ def test_turndown_page_matches_oracle(slug: str, corpus_oracle: dict) -> None:
 
     assert canonical_sha256(expected) == row["sha256"], (
         f"oracle JSONL canonical-JSON sha256 diverged for turndown/{slug} — "
-        "mjs canonicalStringify / Python json.dumps(sort_keys=True) の仕様が "
-        "drift した可能性あり (regenerate oracle or fix emit_corpus_oracle.mjs)"
+        "canonicalStringify / Python json.dumps(sort_keys=True) の仕様が "
+        "drift した可能性あり (regenerate via `npm run test:py:corpus:regen` "
+        "or fix `testim_parity.tools.emit_corpus_oracle._canonical_json`)"
     )
 
 

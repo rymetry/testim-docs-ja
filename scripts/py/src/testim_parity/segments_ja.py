@@ -4,7 +4,28 @@ JA markdown body を走査し、exact-diff engine 用の flat な segment 列を
 Kind を判定できない構造は skip することで gate-eligible segment を clean に保つ
 保守的な設計。
 
-## Issue #368 対応 — list-item flatten
+## ⚠ Issue #368 PARTIAL RESOLUTION — Phase 6.2 で最終 close 予定
+
+**Phase 6b cutover (本 module) は Issue #368 を close しない**。Issue #368 §5
+原案は以下の 2 段階を両方実施して初めて resolve:
+
+1. **Phase A (JA parser 改修)**: ``_ActiveListItem`` state machine + strict ``>``
+   rule flatten → **本 module で実装済** ✅
+2. **Phase B (47 file / 263 line content restructure)**: tight sibling
+   (``markerIndent == bodyIndent``) で書かれた既存 47 file を top-level に
+   outdent、または strict ``>`` 契約に合わせて ``+1 indent`` に書き換える
+   → **本 PR scope 外、Phase 6.2 follow-up PR で実施**
+
+本 module の実装は Phase A 相当 (Phase B 未実施なので strict ``>`` narrow 化)
+であり、Issue #368 §3.1 spec の ``>=`` rule とは意図的に divergence している
+(下記「意図的 divergence」節)。Issue #368 は GitHub 上では **OPEN のまま残し**、
+Phase 6.2 (pull-requests unfreeze などで EN ``<li>`` 直下 nested ``<ul>`` の
+実例が入り、Phase B restructure を判断する PR) で最終 close する。
+
+関連: PR #389 本文 ``## Phase 6.2`` 節、``docs/PYTHON_MIGRATION_PLAN.md``
+gate criteria #15、``docs/WRITING_GUIDE.md §list item の indent 設計``。
+
+## Issue #368 Phase A — list-item flatten
 
 EN walker の ``collectInlineText`` は ``<li>`` 内の nested ``<ul>`` / 複数 ``<p>`` /
 ``<img>`` を 1 segment に flatten する。JA parser も対称化するため、activeListItem
@@ -19,7 +40,7 @@ state machine で以下を吸収する:
 4. **Indented code fence** (``leadingWs > activeItem.bodyIndent`` の
    ``\\`\\`\\`...`` / ``~~~...``) → 開閉 fence 間の inner text のみ append
 
-## Issue #368 spec からの意図的 divergence — strict-``>`` rule
+## Issue #368 spec からの意図的 divergence — strict-``>`` rule (Phase B 未実施による)
 
 Issue #368 §3.1 は trigger を **``markerIndent >= bodyIndent``** (>=) で spec 化したが、
 本実装は **``markerIndent > bodyIndent``** (strictly greater) に **narrow 化した意図的
@@ -59,11 +80,12 @@ active list item の text に吸収する:
 8 行は ```yaml fenced code block 内で既に code-block として処理) のため parity は
 byte-identical に維持される。
 
-### Closure 判定
+### Issue #368 Closure 判定 (再掲)
 
 本 deviation と Phase B (content restructure) の両方を対処しない限り Issue #368 は
 厳密には close しない。本実装は **partial resolution** で、Closure は Phase 6.2
-(pull-requests unfreeze 等の実例が入ったとき) の別 PR に委ねる。
+(pull-requests unfreeze 等の実例が入り、Phase B restructure を実施する PR) に委ねる。
+PR #389 (Phase 6b cutover) では ``Closes #368`` を発行しない。
 
 ## mjs と byte-identical に維持される挙動
 

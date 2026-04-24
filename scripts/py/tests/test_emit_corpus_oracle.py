@@ -261,19 +261,46 @@ class TestSummarizeCorpusOracle:
 
 @pytest.mark.corpus
 class TestEmitCorpusOracleFullCorpus:
-    """288-page real-corpus generation — ``@pytest.mark.corpus`` 隔離で nightly 用。
+    """288-page real-corpus generation — ``@pytest.mark.corpus`` 隔離で corpus job 用。
 
     fast gate は上 ``TestEmitCorpusOracleFast`` の 2-slug mini corpus で smoke
-    確認するので、こちらは full 288-page × 3 suite の production 生成が 1 run 走る
+    確認するので、こちらは full 288-page production 生成が各 suite で正しく動く
     ことだけ pin する (drift detection は別 test ``test_drift_against_golden``)。
+
+    ## PR #389 round 4 review P2 対応: suite 単位 parametrize
+
+    旧実装は 1 test で ``--suite all`` (288×3 suite) を serial 生成していたため
+    corpus job 全体を 19.55s → 38.44s まで倍増させていた。Phase5 で xdist 化
+    して 20s 前後まで落としていた corpus job に回帰した形。
+
+    suite ごとに parametrize することで ``-n auto --dist load`` が 3 test を
+    別 worker に分散でき、corpus job 所要時間を 20s 台に戻す。288-row 契約は
+    suite 毎に `_expected_row_count(suite)` で pin し、全 suite 合計 864 row
+    になることは existing ``test_align_288_matrix`` / ``test_segments_en_288_matrix``
+    / ``test_turndown_288_matrix`` が 1 slug = 1 test で別途保証する。
     """
 
-    def test_real_corpus_produces_864_rows(self, tmp_path: Path) -> None:
-        out = tmp_path / "real.jsonl"
-        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "all"])
+    _SUITE_EXPECTATIONS: tuple[tuple[str, int], ...] = (
+        ("segments_en", 288),
+        ("turndown", 288),
+        ("align", 288),
+    )
+
+    @pytest.mark.parametrize(("suite", "expected_rows"), _SUITE_EXPECTATIONS)
+    def test_real_corpus_suite_produces_expected_rows(
+        self, suite: str, expected_rows: int, tmp_path: Path
+    ) -> None:
+        """production generation が suite 毎に 288 row を正しく吐く。
+
+        xdist ``-n auto --dist load`` で segments_en / turndown / align が
+        別 worker に分散される (各 test は ~6-13s)。
+        """
+        out = tmp_path / f"{suite}.jsonl"
+        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", suite])
         assert rc == 0
         rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
-        # 288 slug × 3 suite = 864 row (JA md が全 slug で存在することを前提)
-        assert len(rows) == 864
-        suites = {r["suite"] for r in rows}
-        assert suites == {"segments_en", "turndown", "align"}
+        assert len(rows) == expected_rows, (
+            f"{suite}: expected {expected_rows} rows, got {len(rows)}"
+        )
+        assert all(r["suite"] == suite for r in rows)
+        assert all({"schemaVersion", "suite", "slug", "sha256", "expected"} <= r.keys() for r in rows)

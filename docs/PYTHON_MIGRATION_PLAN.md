@@ -1592,6 +1592,72 @@ extractor / align / pipeline / tools) の Python 化 + conformance の golden �
 
 ---
 
+## Phase 6.2: Post-cutover follow-ups (Issue #368 最終 close 含む)
+
+**Scope**: Phase 6b atomic cutover (PR #389) で意図的に後送りにした follow-up 群。
+いずれも Phase 6b の atomic unit を崩さないよう別 PR に分離した項目。
+
+### Tracking Issue 一覧
+
+| Follow-up | Tracking Issue | Status |
+| --- | --- | --- |
+| **Issue #368 最終 close** (Phase B content restructure) | **#368 (OPEN を維持)** | post-cutover (pull-requests unfreeze 待ち) |
+| Coverage 86 → 90 push (`pipeline` / `tools` / `detection` deep-branch) | post-merge で新規 Issue 起票 | PR #389 merge 後 |
+| `scripts/__tests__/lib_redirects.test.mjs` + `scripts/lib/redirects.mjs` 削除 | Astro 依存解消日に reactive | deferred |
+
+### Issue #368 最終 close の条件
+
+本 PR (PR #389) は Phase A (JA parser flatten + strict `>` rule) のみ実装した
+**partial resolution** であり、`Closes #368` は発行しない。最終 close は以下の
+いずれかが満たされた時点で別 PR で行う:
+
+1. **pull-requests unfreeze 等で EN ``<li>`` 直下 nested ``<ul>`` の実例が入る**: JA
+   author が +1 indent (`docs/WRITING_GUIDE.md §list item の indent 設計`) で書いて
+   EN ``collectInlineText`` と対称な flatten 結果を得るパターンが現れる
+2. **Phase B content restructure を実施**: 47 file / 263 line の tight sibling
+   pattern (`markerIndent == bodyIndent`) を top-level に outdent、または strict
+   `>` 契約に合わせて ``+1 indent`` に書き換える。併せて `segments_ja.py` の
+   trigger を Issue #368 §3.1 原案通りの ``>=`` に緩和する
+
+**どちらのルートを採るかは Phase 6.2 PR 側で判断**:
+
+- Route A (content restructure): Phase B を完遂して `>=` rule に緩和 → 完全な
+  Issue #368 §3.1 spec compliance。47 file 書換えコストと引き換えに parser 契約は
+  原案通り。**推奨**: pull-requests unfreeze が混入するなら同 PR でまとめる
+- Route B (strict `>` 確定): Phase B を棄却し strict `>` rule を Issue #368 の
+  最終仕様として再定義 → 47 file 書換え不要、ただし Issue #368 §3.1 の spec は
+  本 implementation に合わせて revision 必須
+
+### Coverage 86 → 90 push の scope
+
+fast CI gate で 86.86% を記録しているが、plan 原案の 90% goal に届いていない。
+cutover critical path (segments / align / parity / mutation recall / lint_docs /
+check_source_parity / emit_corpus_oracle) は個別に 90%+ を維持しているため、
+coverage gap は主に周辺層にある:
+
+| 層 | 現 coverage (fast) | 狙い |
+| --- | --- | --- |
+| `testim_parity.pipeline.*` | ~65% | 5-step pipeline の error branch / resume path を smoke カバー |
+| `testim_parity.tools.*` (非 lint 系) | ~70% | normalize / sync_frontmatter / fix_alt_all の branch push |
+| `testim_parity.detection.*` (非 parity 系) | ~82% | baseline / reports の edge case |
+
+Phase 6.2 PR では `fail_under = 86` → `88` → `90` の 2 段階 push で incremental に
+coverage を引き上げる (big-bang で 90 goal にすると review が巨大化するため分割)。
+
+### Route 選択の判定フレーム
+
+Phase 6.2 PR に着手するタイミング (Route A/B 判定時) は以下を根拠にする:
+
+1. **pull-requests unfreeze の実施時期**: unfreeze と同 PR でまとめられるなら
+   Route A (Phase B restructure) を選ぶ方が調整コストが低い
+2. **47 file restructure の保守性 impact 再評価**: Phase 6b cutover 後 N ヶ月
+   運用して、tight sibling pattern が増えるペースを観測。増えるなら Route B
+   (strict `>` 確定) の方が将来コストが低い
+3. **Issue #368 §3.1 spec の polish 要否**: strict `>` が Route B で確定するなら
+   Issue 本体の §3.1 spec を revision し、`>=` 原案を「撤回」として明示
+
+---
+
 ## Phase 7: COPY ボタン (独立、Phase 0-6 と並行可能)
 
 **Goal**: JA サイトの全コードスニペットに COPY ボタンを追加

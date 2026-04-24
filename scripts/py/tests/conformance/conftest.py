@@ -39,8 +39,8 @@ from pathlib import Path
 
 import pytest
 
-# Supported oracle row schema versions. ``emit_corpus_oracle.mjs`` が bump した
-# 時は本定数にも追加し、必要なら loader 側で後方互換パースを書く契約。
+# Supported oracle row schema versions. ``testim_parity.tools.emit_corpus_oracle``
+# が bump した時は本定数にも追加し、必要なら loader 側で後方互換パースを書く契約。
 _SUPPORTED_SCHEMA_VERSIONS: frozenset[int] = frozenset({1})
 _REQUIRED_ROW_KEYS: frozenset[str] = frozenset(
     {"schemaVersion", "suite", "slug", "sha256", "expected"}
@@ -48,16 +48,18 @@ _REQUIRED_ROW_KEYS: frozenset[str] = frozenset(
 
 
 def canonical_sha256(value: object) -> str:
-    """Canonical-JSON SHA-256 fingerprint matching ``emit_corpus_oracle.mjs``.
+    """Canonical-JSON SHA-256 fingerprint matching ``emit_corpus_oracle`` の contract.
 
     ``json.dumps(value, sort_keys=True, separators=(",", ":"),
     ensure_ascii=False)`` で canonical JSON を生成し、UTF-8 で SHA-256 を取る。
-    mjs 側の ``canonicalStringify`` 実装と byte-identical な canonical form。
+    Phase 6b cutover 前の mjs ``canonicalStringify`` 実装と byte-identical な
+    canonical form (Phase 6b で Python 側が authoritative 実装に昇格、
+    ``verify_golden_against_mjs.py`` で byte-identical を pin 済)。
 
     **主な目的**: "oracle JSONL row の canonical serialization 契約を pin"
     すること (test 内で ``py == expected`` がすでに値一致を保証するため、
     sha256 自体が tamper 検知に回るケースは稀)。canonical form の仕様が
-    mjs と Python で divergence したら即座に fail する regression guard。
+    emitter と loader で divergence したら即座に fail する regression guard。
     """
     canon = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return hashlib.sha256(canon.encode("utf-8")).hexdigest()
@@ -78,7 +80,8 @@ def _validate_row(row: dict, line_no: int) -> None:
     if missing:
         raise ValueError(
             f"oracle JSONL row {line_no} missing required keys: {sorted(missing)}. "
-            "Regenerate via `npm run test:py:corpus:regen`."
+            "Regenerate via `npm run test:py:corpus:regen` "
+            "(or `uv run python -m testim_parity.tools.emit_corpus_oracle`)."
         )
     schema_version = row["schemaVersion"]
     if schema_version not in _SUPPORTED_SCHEMA_VERSIONS:
@@ -140,7 +143,8 @@ def corpus_oracle(repo_root: Path) -> dict[tuple[str, str], dict]:
             if key in oracle:
                 raise ValueError(
                     f"oracle JSONL has duplicate (suite, slug) key {key!r} "
-                    f"at line {line_no}. Regenerate via emit_corpus_oracle.mjs."
+                    f"at line {line_no}. Regenerate via `npm run test:py:corpus:regen` "
+                    "(or `uv run python -m testim_parity.tools.emit_corpus_oracle`)."
                 )
             oracle[key] = row
     return oracle

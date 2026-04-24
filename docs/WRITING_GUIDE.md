@@ -38,7 +38,7 @@
 
 > **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0 / `snapshot-diff-status.json.summary.{changed, added, removed} = 0`。schema v2 (2026-04-20 cutover) 以降、baseline は期限概念なしの **明示的 paydown が必須な一時的凍結** として運用する (`priority` enum + 明示 PR による解消のみ、`reviewAfter` 期限超過による自動 refire は廃止)。
 > このゴールを達成するため、本ガイドは baseline を増やす方向の変更（JA 独自構造追加 / callout 改変 / Testim 用語翻訳）を全面禁止する。
-> EN 原文が壊れている場合の退避は `scripts/lib/source_sync_exclusions.mjs` (page-level) と `scripts/lib/en_source_patches.mjs` (segment-level) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
+> EN 原文が壊れている場合の退避は `testim_parity.sync_exclusions` (page-level、旧 `scripts/lib/source_sync_exclusions.mjs`) と `testim_parity.en_source_patches` + `scripts/py/_en_source_patches_data.json` (segment-level、旧 `scripts/lib/en_source_patches.mjs`) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
 >
 > **Source-first 例外の canonical registry**:
 >
@@ -50,7 +50,7 @@
 
 ## 📋 frontmatter 必須ルール
 
-すべての記事ファイルには以下の frontmatter が必須です。`src/content.config.ts` と `scripts/tools/lint_docs.mjs` の両方で検証されます。
+すべての記事ファイルには以下の frontmatter が必須です。`src/content.config.ts` と `testim_parity.tools.lint_docs` (Python、旧 `scripts/tools/lint_docs.mjs`) の両方で検証されます。
 
 ```yaml
 ---
@@ -186,7 +186,7 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
 - **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
 - 段落境界・リスト境界・見出し境界は原文に完全に一致させる（1 段落→2 段落分割、1 callout→2 callout 分割等は禁止）
-- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `scripts/lib/en_source_patches.mjs` の slug-scope patch layer (literal find→replace at `preprocessEnHtml` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
+- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `testim_parity.en_source_patches` + `scripts/py/_en_source_patches_data.json` の slug-scope patch layer (literal find→replace at `preprocess_en_html` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
 
 ### 唯一の許容差分（HEREだけ）
 
@@ -365,7 +365,7 @@ Issue #368 spec は trigger を `markerIndent >= bodyIndent` としていたが�
 
 - EN に存在しない **セクション / 段落 / callout / リスト項目 / 見出し** は source parity のために削除する
 - 「読者に親切な補足」「JA 読者向けの注記」等の追加は禁止。翻訳ニュアンスは構造を変えずに文内で表現する
-- 例外は `scripts/lib/source_sync_exclusions.mjs` の `SOURCE_SYNC_EXCLUSIONS` に登録された broken-EN snapshot 退避のみ
+- 例外は `testim_parity.sync_exclusions` の `SOURCE_SYNC_EXCLUSIONS` に登録された broken-EN snapshot 退避のみ
 
 ### その他
 
@@ -379,8 +379,8 @@ Issue #368 spec は trigger を `markerIndent >= bodyIndent` としていたが�
 
 #### 例外の判定トリガー（以下のいずれかが真の場合のみ）
 
-1. **`scripts/lib/source_sync_exclusions.mjs` の `SOURCE_SYNC_EXCLUSIONS` に該当 slug が entry 登録済み**: これが canonical な shallow / broken snapshot registry。登録済みなら source-first の主判定を suspend し、`snapshots/en/content/<slug>.html` ではなく該当 entry が指す `hand-authored snapshot` または `update-lock 対象` として扱う
-2. **`check:parity` の issue detail に `[reason=shallow-snapshot]` / `[reason=escaped-details-residue]` / `[reason=extractor-empty]` が emit されている**: `source_parity_source_usability.mjs::describeReason` が runtime で付与する reason token。これが無ければ snapshot は authoritative
+1. **`testim_parity.sync_exclusions` の `SOURCE_SYNC_EXCLUSIONS` に該当 slug が entry 登録済み**: これが canonical な shallow / broken snapshot registry。登録済みなら source-first の主判定を suspend し、`snapshots/en/content/<slug>.html` ではなく該当 entry が指す `hand-authored snapshot` または `update-lock 対象` として扱う
+2. **`check:parity` の issue detail に `[reason=shallow-snapshot]` / `[reason=escaped-details-residue]` / `[reason=extractor-empty]` が emit されている**: `testim_parity.detection.source_parity_source_usability.describe_reason` が runtime で付与する reason token。これが無ければ snapshot は authoritative
 
 上記いずれも真でなければ、**snapshot は authoritative** として扱い、JA を snapshot に追従させる。**agent の主観判断による「EN が曖昧だから shallow snapshot」等の rationalization は禁止**。
 
@@ -404,14 +404,14 @@ check:parity で [reason=...] token 付与？
 レビューや作業中に新しい記法ルールや品質基準が判明した場合は、本ガイドに追記してください。
 
 1. 該当セクション（callout、リンク、原文準拠等）にルールを追加する
-2. `npm run lint:docs` で機械検証可能なら `scripts/tools/lint_docs.mjs` にもチェックを追加する
+2. `npm run lint:docs` で機械検証可能なら `testim_parity.tools.lint_docs` にもチェックを追加する
 3. 変更を main にコミットする（`docs: WRITING_GUIDE ルール追加`）
 
 ---
 
 ## 🏷️ Testim 機能名・製品名・画面名の英語維持
 
-> **正本は [GLOSSARY.md](./GLOSSARY.md) です**。本節は執筆者向けの要約で、detector (`scripts/lib/parity_glossary_mask.mjs`) は GLOSSARY.md のみを参照します。用語追加・更新は GLOSSARY.md に対して行ってください。
+> **正本は [GLOSSARY.md](./GLOSSARY.md) です**。本節は執筆者向けの要約で、detector (`testim_parity.glossary_mask`) は GLOSSARY.md のみを参照します。用語追加・更新は GLOSSARY.md に対して行ってください。
 
 Testim の固有名詞は英語のまま維持してください。日本語に翻訳しないこと。
 

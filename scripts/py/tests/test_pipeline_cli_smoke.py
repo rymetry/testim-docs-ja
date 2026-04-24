@@ -167,9 +167,22 @@ class TestPrepareLLMTasks:
 class TestVerifyGoldenAgainstMjs:
     """mjs authority への検証 tool の smoke。
 
-    実際に git archive + node を叩くのは test_real_mjs_verify (corpus marker で
-    隔離) に任せ、fast gate では subprocess を mock して制御フローを covered する。
+    実際に git archive + npm ci + node を叩くのは test_real_mjs_verify (manual /
+    nightly で run) に任せ、fast gate では subprocess を mock して制御フローを
+    covered する。
     """
+
+    @staticmethod
+    def _install_default_mocks(monkeypatch: pytest.MonkeyPatch) -> None:
+        """git archive / npm ci / link の副作用を全て no-op に置き換える。
+
+        個別 test で fake を差し替えられるよう、monkeypatch 経由で
+        ``_extract_pre_cutover_tree`` / ``_assert_repo_reachable`` /
+        ``_link_shared_inputs`` / ``_run_npm_ci`` を置く。
+        """
+        monkeypatch.setattr(verify_golden_against_mjs, "_assert_repo_reachable", lambda _: None)
+        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", lambda _: None)
+        monkeypatch.setattr(verify_golden_against_mjs, "_run_npm_ci", lambda _d, _c: None)
 
     def test_missing_golden_returns_two(self, tmp_path: Path) -> None:
         rc = verify_golden_against_mjs.main(["--golden", str(tmp_path / "no-such-golden.jsonl")])
@@ -178,7 +191,7 @@ class TestVerifyGoldenAgainstMjs:
     def test_byte_identical_returns_zero(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """git archive / node / cmp を mock して成功路を covered する。"""
+        """git archive / npm ci / node / cmp を mock して成功路を covered する。"""
         golden = tmp_path / "golden.jsonl"
         golden.write_text("golden content\n", encoding="utf-8")
 
@@ -188,9 +201,6 @@ class TestVerifyGoldenAgainstMjs:
             (dest / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs").write_text(
                 "// stub", encoding="utf-8"
             )
-
-        def fake_link(dest: Path) -> None:
-            pass
 
         def fake_run(cmd: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess:
             # node → regen 生成、cmp → byte-identical
@@ -202,8 +212,8 @@ class TestVerifyGoldenAgainstMjs:
                 return subprocess.CompletedProcess(cmd, 0, "", "")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
-        monkeypatch.setattr(verify_golden_against_mjs, "_extract_mjs_tree", fake_extract)
-        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", fake_link)
+        self._install_default_mocks(monkeypatch)
+        monkeypatch.setattr(verify_golden_against_mjs, "_extract_pre_cutover_tree", fake_extract)
         monkeypatch.setattr(verify_golden_against_mjs, "_run", fake_run)
 
         rc = verify_golden_against_mjs.main(["--golden", str(golden)])
@@ -231,8 +241,8 @@ class TestVerifyGoldenAgainstMjs:
                 return subprocess.CompletedProcess(cmd, 1, "1c1\n< regen\n> golden\n", "")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
-        monkeypatch.setattr(verify_golden_against_mjs, "_extract_mjs_tree", fake_extract)
-        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", lambda _: None)
+        self._install_default_mocks(monkeypatch)
+        monkeypatch.setattr(verify_golden_against_mjs, "_extract_pre_cutover_tree", fake_extract)
         monkeypatch.setattr(verify_golden_against_mjs, "_run", fake_run)
 
         rc = verify_golden_against_mjs.main(["--golden", str(golden)])
@@ -249,8 +259,8 @@ class TestVerifyGoldenAgainstMjs:
             # scripts/ tree は作るが emit_corpus_oracle.mjs は置かない
             (dest / "scripts").mkdir(parents=True, exist_ok=True)
 
-        monkeypatch.setattr(verify_golden_against_mjs, "_extract_mjs_tree", fake_extract)
-        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", lambda _: None)
+        self._install_default_mocks(monkeypatch)
+        monkeypatch.setattr(verify_golden_against_mjs, "_extract_pre_cutover_tree", fake_extract)
 
         rc = verify_golden_against_mjs.main(["--golden", str(golden), "--rev", "HEAD"])
         assert rc == 3
@@ -272,9 +282,82 @@ class TestVerifyGoldenAgainstMjs:
                 return subprocess.CompletedProcess(cmd, 2, "", "node error")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
-        monkeypatch.setattr(verify_golden_against_mjs, "_extract_mjs_tree", fake_extract)
-        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", lambda _: None)
+        self._install_default_mocks(monkeypatch)
+        monkeypatch.setattr(verify_golden_against_mjs, "_extract_pre_cutover_tree", fake_extract)
         monkeypatch.setattr(verify_golden_against_mjs, "_run", fake_run)
 
         rc = verify_golden_against_mjs.main(["--golden", str(golden)])
         assert rc == 4
+
+    def test_shallow_repo_returns_six(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """``_assert_repo_reachable`` が RuntimeError を投げると exit 6。"""
+        golden = tmp_path / "golden.jsonl"
+        golden.write_text("golden\n", encoding="utf-8")
+
+        def fake_unreachable(rev: str) -> None:
+            raise RuntimeError("git repository is shallow. ...")
+
+        monkeypatch.setattr(verify_golden_against_mjs, "_assert_repo_reachable", fake_unreachable)
+
+        rc = verify_golden_against_mjs.main(["--golden", str(golden)])
+        assert rc == 6
+
+    def test_npm_ci_failure_returns_six(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """``_run_npm_ci`` が RuntimeError を投げると exit 6。"""
+        golden = tmp_path / "golden.jsonl"
+        golden.write_text("golden\n", encoding="utf-8")
+
+        def fake_extract(rev: str, dest: Path) -> None:
+            (dest / "scripts" / "py" / "tools").mkdir(parents=True, exist_ok=True)
+            (dest / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs").write_text(
+                "// stub", encoding="utf-8"
+            )
+
+        def fake_npm_failed(dest: Path, cache: Path | None) -> None:
+            raise RuntimeError("npm ci failed ...")
+
+        monkeypatch.setattr(verify_golden_against_mjs, "_assert_repo_reachable", lambda _: None)
+        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", lambda _: None)
+        monkeypatch.setattr(verify_golden_against_mjs, "_extract_pre_cutover_tree", fake_extract)
+        monkeypatch.setattr(verify_golden_against_mjs, "_run_npm_ci", fake_npm_failed)
+
+        rc = verify_golden_against_mjs.main(["--golden", str(golden)])
+        assert rc == 6
+
+    def test_skip_npm_ci_bypasses_install(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """``--skip-npm-ci`` 指定時は ``_run_npm_ci`` を呼ばない (既存 tmp 再利用)。"""
+        golden = tmp_path / "golden.jsonl"
+        golden.write_text("golden\n", encoding="utf-8")
+
+        def fake_extract(rev: str, dest: Path) -> None:
+            (dest / "scripts" / "py" / "tools").mkdir(parents=True, exist_ok=True)
+            (dest / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs").write_text(
+                "// stub", encoding="utf-8"
+            )
+
+        def boom(dest: Path, cache: Path | None) -> None:
+            pytest.fail("_run_npm_ci should not be called when --skip-npm-ci is set")
+
+        def fake_run(cmd: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess:
+            if cmd[0] == "node":
+                out = cmd[cmd.index("--out") + 1]
+                Path(out).write_text("golden\n", encoding="utf-8")
+                return subprocess.CompletedProcess(cmd, 0, "ok", "")
+            if cmd[0] == "cmp":
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        monkeypatch.setattr(verify_golden_against_mjs, "_assert_repo_reachable", lambda _: None)
+        monkeypatch.setattr(verify_golden_against_mjs, "_link_shared_inputs", lambda _: None)
+        monkeypatch.setattr(verify_golden_against_mjs, "_extract_pre_cutover_tree", fake_extract)
+        monkeypatch.setattr(verify_golden_against_mjs, "_run_npm_ci", boom)
+        monkeypatch.setattr(verify_golden_against_mjs, "_run", fake_run)
+
+        rc = verify_golden_against_mjs.main(["--golden", str(golden), "--skip-npm-ci"])
+        assert rc == 0
