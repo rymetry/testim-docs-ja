@@ -911,9 +911,23 @@ corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
 ```
 
 CI の `test` job は `npm run test` (mjs only)、`python-test` job は pytest をそれぞれ独立実行。
-local では `npm run test:all` で両方を連続実行可能。mjs テストファイルは Phase 5 で 54/55 を
-削除し、`scripts/__tests__/lib_redirects.test.mjs` のみ Phase 6 cutover まで残置 (Astro build
-graph が `redirects.mjs` を import するため。`redirects.mjs` 自体は Phase 6 以降も保持する)。
+local では `npm run test:all` で両方を連続実行可能。mjs テストファイルは当初 54/55 を delete
+したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5 終了時点で
+**3 file** が残存している:
+
+- `scripts/__tests__/lib_redirects.test.mjs` (6 test) — Astro build graph が `redirects.mjs`
+  を import するため恒久保持 (Phase 6 以降、Astro 依存解消時の post-Phase-6 cleanup で削除)
+- `scripts/__tests__/lint_docs_contract.test.mjs` (25 test) — `lint:docs` が Phase 6 cutover
+  まで `scripts/tools/lint_docs.mjs` (Node) を実行する契約のため、callout / frontmatter /
+  link / feature-name / image 各 rule を Node 側で pin する coexistence guard (PR #384
+  round 2 で新設、Phase 6 cutover で lint:docs が Python 化する際に削除)
+- `scripts/__tests__/sync_detection_issues.test.mjs` (13 test) — `.github/scripts/sync-detection-issues.cjs`
+  が `scheduled-actionable.yml` の production tooling として稼働中。PR #384 codex review P1
+  対応で復元。Phase 6 atomic cutover では touch せず、Phase 6.1 (post-cutover 別 PR) で
+  `.cjs` の port/retire 判断と同時に処理する
+
+各 file の削除 timing と rationale は下記「Phase 5 実績」表、および Phase 6 cutover gate 7 /
+Phase 6.1 section と cross-reference 済。
 
 ### Coverage target: 90%+ ✅ 達成
 
@@ -1106,8 +1120,17 @@ Phase 6 cutover PR で全 Node backed script を Python CLI に切り替える�
 
 ### 削除対象
 
-- `scripts/__tests__/*.mjs` (lib_redirects.test.mjs 以外すべて → Phase 5 で完了済)
-- **`scripts/__tests__/lint_docs_contract.test.mjs`** — Phase 5 coexistence 期間限定の Node-side 回帰 guard。lint:docs が Phase 6 cutover で Python 実装に切り替わり次第、本 test も `scripts/tools/lint_docs.mjs` 削除と同 commit で **削除** する (Python 側 `test_lint_docs.py::TestCalloutDirective` が単一 SoT になる契約)
+- `scripts/__tests__/*.mjs` — Phase 5 で 52 file を delete 済。Phase 5 終了時点の残存は
+  3 file で、以下 timing でそれぞれ削除:
+  - `scripts/__tests__/lint_docs_contract.test.mjs` (25 test) — **Phase 6 atomic cutover PR**
+    で lint:docs が Python 実装 (`testim_parity.tools.lint_docs`) に切り替わる際、
+    `scripts/tools/lint_docs.mjs` 削除と同 commit で **削除** する (Python 側
+    `test_lint_docs.py::TestCalloutDirective` が単一 SoT になる契約)
+  - `scripts/__tests__/sync_detection_issues.test.mjs` (13 test) — **Phase 6.1 (post-cutover
+    別 PR)** で `.github/scripts/sync-detection-issues.cjs` の port/retire 判断と同時に処理
+    (Phase 6.1 section で Option A/B を選択時は delete、Option C 永久保持時は keep)
+  - `scripts/__tests__/lib_redirects.test.mjs` (6 test) — **post-Phase-6 cleanup** で
+    `redirects.mjs` が Astro 側から無参照化された日に `redirects.mjs` と同時削除
 - `scripts/lib/*.mjs` (33 file) **except `redirects.mjs`**
 - `scripts/detection/*.mjs` (9 file)
 - `scripts/pipeline/*.mjs` (6 file)
