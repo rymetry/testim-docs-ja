@@ -303,4 +303,5 @@ class TestEmitCorpusOracleFullCorpus:
             f"{suite}: expected {expected_rows} rows, got {len(rows)}"
         )
         assert all(r["suite"] == suite for r in rows)
-        assert all({"schemaVersion", "suite", "slug", "sha256", "expected"} <= r.keys() for r in rows)
+        required_keys = {"schemaVersion", "suite", "slug", "sha256", "expected"}
+        assert all(required_keys <= r.keys() for r in rows)

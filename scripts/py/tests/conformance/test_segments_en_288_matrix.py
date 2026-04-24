@@ -136,7 +136,8 @@ def test_segments_en_page_matches_oracle(slug: str, corpus_oracle: dict) -> None
     assert row is not None, (
         f"oracle JSONL missing segments_en row for slug={slug!r}. "
         "Re-run `npm run test:py:corpus:regen` "
-        "(or `uv run python -m testim_parity.tools.emit_corpus_oracle --out <golden.jsonl> --suite all`)."
+        "(or `uv run python -m testim_parity.tools.emit_corpus_oracle "
+        "--out <golden.jsonl> --suite all`)."
     )
 
     html = _read_html(slug)
