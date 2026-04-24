@@ -921,7 +921,7 @@ graph が `redirects.mjs` を import するため。`redirects.mjs` 自体は Ph
 
 | 指標 | 着手前 | 完了時 | 備考 |
 | --- | ---: | ---: | --- |
-| mjs test file 数 | 55 | **3** | 52 file delete (後日 2 file 復元: Phase 5 coexistence guard 用 `lint_docs_contract.test.mjs` と、PR #384 codex review 対応で復元した `sync_detection_issues.test.mjs`)。いずれも Phase 6 cutover 時に対象実装と共に削除 |
+| mjs test file 数 | 55 | **3** | 52 file delete (後日 2 file 復元: Phase 5 coexistence guard 用 `lint_docs_contract.test.mjs` と、PR #384 codex review 対応で復元した `sync_detection_issues.test.mjs`)。削除 timing: `lint_docs_contract` は Phase 6 cutover で lint:docs が Python 化する際に削除、`sync_detection_issues` は Phase 6.1 (post-cutover 別 PR) で `.cjs` の port/retire と同時に削除。`lib_redirects` は Astro 依存解消時の post-Phase-6 cleanup |
 | mjs test case 数 | 2040 | **44** | `lib_redirects.test.mjs` (6) + `lint_docs_contract.test.mjs` (25) + `sync_detection_issues.test.mjs` (13) |
 | pytest file 数 | 68 | **97** | 20+ 新規 + 既存 augment (conformance 39 + top-level 58、実測は `find scripts/py/tests -name 'test_*.py' -not -path '*__pycache__*' \| wc -l`) |
 | pytest case 数 | 931 | **2001** | +1070 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応追加分を含む: routing/factory/skip-guard/primary-pin/mask-coverage/lint-callout/cutover-gate auto-discovery) |
@@ -949,8 +949,11 @@ gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同
 - **debug-only test** (`debug_artifact_independence.test.mjs` / `debug_mask_coverage.test.mjs`) は
   mjs runtime 固有の invariant を assert するもので Python 側に等価な `.debug.*` namespace
   emission path がないため outright delete (port 不要)
-- **`sync_detection_issues.test.mjs`** は `.github/scripts/sync-detection-issues.cjs` (GitHub
-  Action script) を test する、Phase 6 で retire する mjs-only 資産に対する test なので delete
+- **`sync_detection_issues.test.mjs`** は当初 delete したが、PR #384 codex review P1 対応で
+  **復元** した (`.github/scripts/sync-detection-issues.cjs` が `scheduled-actionable.yml` の
+  production tooling として稼働中で、Phase 5 中の回帰検知が必要)。Phase 6 atomic cutover
+  PR の scope には含めず、**Phase 6.1 (post-cutover, 別 PR)** で `.cjs` 自体の port/retire
+  判断と同時に処理する (docs/PYTHON_MIGRATION_PLAN.md 下部「Phase 6.1」節参照)
 - **mask_coverage record() のキーワード引数バグ修正** — `check_source_parity.py:517-522` が
   `segmentKind=` / `sectionPath=` (camelCase) で `create_mask_coverage.record()` を呼んでいたが
   定義側は `segment_kind=` / `section_path=` (snake_case)。5-counter gate が常に 0 で済んで
@@ -1028,7 +1031,9 @@ reviewer から explicit に確認を求められた 8 file の Python 側等価
 4. Boundary stability >= 0.95
 5. `npm run build` pass (Astro site 無影響)
 6. `npm run lint` pass (**同 PR 内で lint:docs を `node scripts/tools/lint_docs.mjs` → `uv run python -m testim_parity.tools.lint_docs` に切り替え**、`scripts/__tests__/lint_docs_contract.test.mjs` を削除、`scripts/tools/lint_docs.mjs` を削除)
-7. `scripts/__tests__/` に `lib_redirects.test.mjs` のみ残存 (他全 mjs test は Phase 5 + Phase 6 で削除済、redirects.mjs は Astro build graph に残るため同 test も production regression gate として維持)
+7. `scripts/__tests__/` に以下 2 file のみ残存 (他全 mjs test は Phase 5 + Phase 6 で削除済):
+   - `lib_redirects.test.mjs` — `scripts/lib/redirects.mjs` が Astro build graph に残るため production regression gate として維持
+   - `sync_detection_issues.test.mjs` — `.github/scripts/sync-detection-issues.cjs` が GitHub Actions 側 production tooling で Phase 6 cutover の scope 外 (下記「Phase 6.1: GitHub Actions tooling port」で別途処理)。Phase 6 atomic cutover PR では touch しない
 8. **Cutover exclusion audit**: `uv run pytest -m cutover` が緑 — Phase 5 で導入された `_PY_XFAIL_SLUGS` / `_PY_EXTRACTOR_DRIFT_SLUGS` 等の temporary exclusion frozenset が全て empty であることを assert (下記「Self-enforcing cutover gate」節)
 9. **Golden fixture migration PR** が merge 済 (下記「Conformance test migration」節)
 10. **Lint rule audit**: `scripts/tools/lint_docs.mjs` の全 rule (frontmatter / link / feature-name / code-block / callout / image) が `scripts/py/src/testim_parity/tools/lint_docs.py` で 1:1 で等価実装済であることを、cutover PR の review 時に明示的に confirm する (mjs 側 rule 追加を Python に port し忘れた場合 `lint_docs_contract.test.mjs` は callout scope しか catch しない)
@@ -1147,11 +1152,14 @@ PR で atomic に書き換える。
 通りで、`--section="$SECTION_FILTER"` 引数は Python CLI 側でも同じ flag 名で受け取れる
 (`check_source_parity.py::parse_args` の `--section=X` が対応、既実装)。
 
-#### 残存 mjs workflow (Phase 6 以降も保持)
+#### 残存 mjs assets (Phase 6 atomic cutover scope 外)
 
-- `.github/scripts/sync-detection-issues.cjs` (GitHub Actions issue sync): **Phase 6 で Python
-  port か retire するかを別途判断**。Phase 5 coexistence では `sync_detection_issues.test.mjs`
-  が production regression guard。
+以下 2 asset は Phase 6 cutover PR では touch せず、それぞれ別タイミングで処理する:
+
+| Asset | 理由 | 処理 phase |
+| --- | --- | --- |
+| `scripts/lib/redirects.mjs` + `scripts/__tests__/lib_redirects.test.mjs` | Astro build graph (`astro.config.mjs::buildRedirectMap`) が `redirects.mjs` を直接 import する。Node native code なので Python port ではなく Astro 側の dependency として扱う | **Phase 6 以降も恒久保持**。redirects.mjs が Astro 側から無参照化された日に `lib_redirects.test.mjs` + `redirects.mjs` を同時削除 (post-Phase-6 cleanup) |
+| `.github/scripts/sync-detection-issues.cjs` + `scripts/__tests__/sync_detection_issues.test.mjs` | GitHub Actions workflow (`scheduled-actionable.yml`) から呼ばれる issue 同期 script。307 行の non-trivial 実装で、Phase 6 atomic cutover scope に含めると merge risk が高すぎる | **Phase 6.1 (post-cutover, 別 PR)** で port/retire 判断 (下記「Phase 6.1」節参照) |
 
 **Phase 5 → Phase 6 の rewire 契約**:
 
@@ -1163,9 +1171,8 @@ PR で atomic に書き換える。
    - `python-test` の `setup-node` / `npm ci` step 削除 (conformance golden 化後)
    - `python-test` の pytest step に `uv run pytest -o addopts= -m cutover` の step を追加
      (1 回限りの cutover gate)
-   - `scheduled-actionable.yml` / `deep-audit.yml` 内の全 mjs CLI を Python CLI に置換
-3. rewire 後は `test` job の scope が lib_redirects 残置 mjs test のみになる。future で redirects.mjs
-   が Astro 側から無参照化された日に `test` job も削除する (post-Phase-6 cleanup)
+   - `scheduled-actionable.yml` / `deep-audit.yml` 内の **docs pipeline / parity check 関連 mjs CLI** を Python CLI に置換 (`.github/scripts/sync-detection-issues.cjs` 呼び出し部分は **Phase 6.1 で扱うため touch しない**)
+3. rewire 後は `test` job の scope が Phase 6 残存 2 test (lib_redirects + sync_detection_issues) になる。sync_detection_issues は Phase 6.1 で処理、lib_redirects は Astro 依存解消時に処理する post-Phase-6 cleanup として扱う
 
 ### Conformance test migration (Phase 6 cutover 時、reviewer P7 対応)
 
@@ -1225,6 +1232,68 @@ fixture は `jsonl` (1 行 1 sample) 形式にして、将来 sample を追加�
 ### Rollback
 
 Single PR。失敗時 `git revert`。Python は `scripts/py/` に残存し mjs と干渉しない。
+
+---
+
+## Phase 6.1: GitHub Actions tooling port (post-cutover, 別 PR)
+
+**Goal**: Phase 6 atomic cutover の scope 外とした `.github/scripts/sync-detection-issues.cjs`
+(GitHub Actions issue 同期 script) の扱いを Phase 6 cutover **後** に別 PR で決定する。
+
+### Scope 分離の理由
+
+- `sync-detection-issues.cjs` は 307 行の non-trivial 実装で、family marker / dedup /
+  close-on-resolved / partial-run guard など独自の issue 管理 logic を持つ。Phase 6
+  atomic cutover PR に含めると merge risk が大幅に上がる。
+- GitHub Actions workflow (`scheduled-actionable.yml`) から呼ばれる **operational tooling**
+  であり、docs content pipeline の core (parity / snapshot / extractor / align) とは
+  独立した layer。Phase 6 cutover の atomic unit としては切り離すのが自然。
+- Phase 5 で一度 delete した test を codex review P1 対応で **復元** したため、
+  Phase 5 coexistence 期間中は `scripts/__tests__/sync_detection_issues.test.mjs`
+  (13 test) が production regression guard として機能する (retire するまで保持)。
+
+### Phase 6.1 で決定する選択肢
+
+Phase 6 cutover 完了後の別 PR で以下いずれかを実施:
+
+#### Option A: Python port
+
+- `scripts/py/src/testim_parity/github/sync_detection_issues.py` として port
+- `scripts/py/tests/test_sync_detection_issues.py` で contract 維持
+- `scheduled-actionable.yml` の呼び出しを `uv run python -m testim_parity.github.sync_detection_issues` に変更
+- mjs + .cjs + test を delete
+
+#### Option B: Retire in favor of `gh issue` CLI
+
+- `sync-detection-issues.cjs` の logic を workflow step 化
+  (`uv run python -m testim_parity.detection.generate_detection_reports` →
+  `docs-actionable-report.json` → `gh issue create/update/close` series)
+- family marker / dedup / partial-run guard を workflow YAML に inline 実装
+- mjs + .cjs + test を delete
+
+#### Option C: Keep as-is indefinitely
+
+- `.cjs` は GitHub Actions 固有の operational 資産として永久保持
+- `sync_detection_issues.test.mjs` も永久保持
+- `test` job を Node 維持 (lib_redirects.test.mjs と同じ扱い)
+
+### 判断タイミング
+
+Phase 6 atomic cutover PR が merge された後、別 PR で上記 3 択を選択する。選択時の
+trade-off は Phase 6 cutover 時点の operational 観点 (tooling volume / workflow
+maintenance cost / team familiarity) に依存するため、plan 側で事前決定しない。
+
+### Phase 6 cutover での scope 境界
+
+Phase 6 atomic cutover PR **では touch しない**:
+
+- `.github/scripts/sync-detection-issues.cjs` (削除しない、書き換えない)
+- `scripts/__tests__/sync_detection_issues.test.mjs` (削除しない、`test` job で走らせ続ける)
+- `scheduled-actionable.yml` の `sync-detection-issues.cjs` 呼び出し step (変更しない)
+
+これにより Phase 6 cutover の atomic unit は「docs content pipeline (parity / snapshot /
+extractor / align / pipeline / tools) の Python 化 + conformance の golden 化」に限定
+され、GitHub Actions operational tooling は別 cycle で扱える。
 
 ---
 
