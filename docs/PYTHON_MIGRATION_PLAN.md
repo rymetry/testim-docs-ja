@@ -924,7 +924,7 @@ graph が `redirects.mjs` を import するため。`redirects.mjs` 自体は Ph
 | mjs test file 数 | 55 | **3** | 52 file delete (後日 2 file 復元: Phase 5 coexistence guard 用 `lint_docs_contract.test.mjs` と、PR #384 codex review 対応で復元した `sync_detection_issues.test.mjs`)。いずれも Phase 6 cutover 時に対象実装と共に削除 |
 | mjs test case 数 | 2040 | **44** | `lib_redirects.test.mjs` (6) + `lint_docs_contract.test.mjs` (25) + `sync_detection_issues.test.mjs` (13) |
 | pytest file 数 | 68 | **97** | 20+ 新規 + 既存 augment (conformance 39 + top-level 58、実測は `find scripts/py/tests -name 'test_*.py' -not -path '*__pycache__*' \| wc -l`) |
-| pytest case 数 | 931 | **2000** | +1069 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応 27 追加分を含む: routing/factory/skip-guard/primary-pin/mask-coverage/lint-callout) |
+| pytest case 数 | 931 | **2001** | +1070 (`uv run pytest -q` 実測、Phase 5 final + PR #384 review 対応追加分を含む: routing/factory/skip-guard/primary-pin/mask-coverage/lint-callout/cutover-gate auto-discovery) |
 | pytest coverage | 95.60% | **95.60%** | `slow` marker 込み local 実測 (`uv run pytest -m slow --cov=testim_parity`)。**CI 実効は ~65-70%** — `slow`/`cutover` 除外で 288-page matrix が coverage に計上されない trade-off。`pyproject.toml::[tool.coverage.report] fail_under = 65` が下限 gate として Phase 5 coexistence を regression guard。Phase 6 cutover 後 `fail_under=90` へ戻す |
 | 5-counter DoD | 0 | **0** | 変更なし |
 | mutation recall (9/9) | 100% | **100%** | `test_recall.py::test_diff_one_mutation_strict_recall_100_percent` gate |
@@ -960,7 +960,7 @@ gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同
 ### 検証 register (Phase 5 完了時の gate log)
 
 - `npm run test:mjs` — 44 pass (lib_redirects 6 + lint_docs_contract 25 + sync_detection_issues 13、Phase 5 coexistence 回帰 guard)
-- `cd scripts/py && uv run pytest -q` — **2000 passed, 1 skipped, 8 deselected** (slow + cutover markers、PR #384 review 2 巡目対応後の実測値、281s)
+- `cd scripts/py && uv run pytest -q` — **2001 passed, 1 skipped, 6 deselected** (slow + cutover markers、PR #384 codex review 対応後の実測値、294s。cutover marker test を 3 から 1 に縮小 — registry/doc sync と auto-discovery は default CI で常時 run する契約に変更)
 - `cd scripts/py && uv run pytest -m slow` — 288-matrix byte-identical (segments_en / turndown / align)
 - `cd scripts/py && uv run ruff check src tests && uv run ruff format --check src tests` — clean
 - `cd scripts/py && uv run mypy src` — Success: no issues found in 60 source files
