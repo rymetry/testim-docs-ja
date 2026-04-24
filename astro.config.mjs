@@ -12,8 +12,20 @@ import remarkCalloutDirectives from '@microflash/remark-callout-directives';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import expressiveCode from 'astro-expressive-code';
+import { pluginFramesTexts } from '@expressive-code/plugin-frames';
 import { buildRedirectMap } from './scripts/lib/redirects.mjs';
 import rehypeWrapTable from './src/lib/rehype-wrap-table.ts';
+
+// Phase 7: Expressive Code の default locale (en) は "Copy to clipboard" /
+// "Copied!" を英語で出すため、`ja` を追加し日本語 label に切り替える。
+// `addLocale` は full set を要求する (3 key: copyButtonTooltip /
+// copyButtonCopied / terminalWindowFallbackTitle) ので 3 件ともに提供。
+pluginFramesTexts.addLocale('ja', {
+  copyButtonTooltip: 'クリップボードにコピー',
+  copyButtonCopied: 'コピーしました',
+  terminalWindowFallbackTitle: 'ターミナル',
+});
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
@@ -104,25 +116,14 @@ export default defineConfig({
       ],
       rehypeWrapTable,
     ],
+    // Phase 7: astro-expressive-code がすべての fenced code block を
+    // handling するため、旧 shikiConfig の ``code-title`` transformer は不要
+    // (Expressive Code の frame plugin が ``title="..."`` meta を native に
+    // 読み取って figure > figcaption に展開する)。shikiConfig 自体は EC が
+    // 内部で shiki を呼ぶ際の default として残しておく (wrap だけ維持)。
     shikiConfig: {
       theme: 'github-dark-dimmed',
       wrap: true,
-      transformers: [
-        {
-          name: 'code-title',
-          pre(node) {
-            // meta文字列からtitleを抽出
-            const meta = this.options.meta?.__raw || '';
-            const titleMatch = meta.match(/title="([^"]+)"/);
-
-            if (titleMatch) {
-              const title = titleMatch[1];
-              node.properties['data-title'] = title;
-              node.properties['data-has-title'] = 'true';
-            }
-          },
-        },
-      ],
     },
   },
 
@@ -137,6 +138,37 @@ export default defineConfig({
   ],
 
   integrations: [
+    // Phase 7: Expressive Code は react() / sitemap() より **前** に並べる。
+    // EC は Astro の markdown pipeline に rehype processor を注入するため、
+    // 他の integration より先に読み込ませて安定 initialization を保つ (docs の
+    // "Install Expressive Code with Astro" 節に準拠)。
+    expressiveCode({
+      // 既存サイトの code block は github-dark-dimmed で慣熟しているため
+      // 継続する。EC は Shiki を下位で呼ぶので theme 名は Shiki と同じ。
+      themes: ['github-dark-dimmed'],
+      // 既存の .docs-prose pre 角丸に揃える (CSS 側と整合、rounded-2xl = 1rem)。
+      styleOverrides: {
+        borderRadius: '1rem',
+        borderColor: 'rgb(15 23 42 / 0.1)',
+        codeFontSize: '0.8125rem', // tailwind text-[13px] 相当
+        codeLineHeight: '1.5rem', // tailwind leading-6 相当
+        frames: {
+          // frame (title / tabs / terminal) の shadow はサイト既存の shadow-lg
+          // (0 10px 15px -3px rgb(0 0 0 / 0.1)) に近付ける。
+          shadowColor: 'rgb(0 0 0 / 0.15)',
+        },
+      },
+      frames: {
+        // ``title="..."`` meta がある場合のみ frame を出したい。EC の default
+        // はファイル名推測 on だが、本サイトは title 明示が主流なので off。
+        extractFileNameFromCode: false,
+      },
+      // JA ローカライズ。上で pluginFramesTexts.addLocale('ja', ...) を登録
+      // 済みなので、default locale を `ja` (two-letter code, EC 推奨) に
+      // 切り替えて copy button / tooltip / terminal fallback title を日本語化。
+      defaultLocale: 'ja',
+      useThemedScrollbars: false, // 既存 overflow-x-auto の scroll UX に干渉しないよう off
+    }),
     react(),
     ...(!isAuthEnabled
       ? [
