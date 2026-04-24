@@ -9,9 +9,16 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-# PR B (CI 高速化) で emit_corpus_oracle.mjs が生成する oracle JSONL。
-# test:py:corpus / python-corpus job が実行時に書き出す artifact で、
-# git では追跡しない (CI run 毎に fresh な mjs 出力が authoritative)。
+# emit_corpus_oracle.mjs / summarize_corpus_oracle.mjs が書き出す一時 artifact。
+# CI run / local drift check 毎に fresh な mjs 出力を得たいので追跡しない
+# (authoritative な committed golden は ``tests/conformance/__oracle__/`` に
+# 置く契約)。全 entry は Phase 5 ``python-corpus`` / Phase 6a drift check /
+# nightly workflow / ``npm run test:py:corpus:drift`` のいずれかが書き出す
+# 中間 file で、commit 対象ではない。
 .corpus_expected.jsonl
+.corpus_live.jsonl
+.corpus_live.sha256.tsv
 .oracle_today.jsonl
+.oracle_sha256.tsv
+.oracle_committed_expected.tsv
 corpus-junit.xml

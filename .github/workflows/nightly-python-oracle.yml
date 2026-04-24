@@ -3,11 +3,11 @@ name: Python oracle snapshot (nightly)
 # Nightly schedule:
 #
 # 1. ``oracle-snapshot`` — mjs oracle JSONL を emit + artifact upload し、
-#    sha256 一覧のみを軽量 TSV artifact として保存する。Phase 5 coexistence
-#    中は committed golden が無いため drift の **実検出** はしない (artifact
-#    14 日分の手動照合で oracle self-regression を追う運用)。Phase 6a
-#    golden-freeze PR で committed golden JSONL との hash 比較を追加して drift
-#    検知必須 gate に昇格する (docs/PYTHON_MIGRATION_PLAN.md Phase 6a 参照)。
+#    committed golden (scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl)
+#    との byte-identical 比較を行う。drift 検出で fail する必須 gate (Phase 6a
+#    以降の運用、docs/PYTHON_MIGRATION_PLAN.md Phase 6a 参照)。
+#    artifact は 14 日分保持して debug 用 snapshot として使える。
+#    Phase 6b cutover で mjs 削除時に本 job も retire 予定。
 #
 # 2. ``parity-smoke`` — PR A で追加した Python ``check_source_parity`` full-repo
 #    smoke (~19 分 CI 実測)。required CI に含めると PR feedback loop を破綻
@@ -78,6 +78,51 @@ jobs:
         # sha256 一覧だけ抽出すれば artifact サイズを大幅縮小できる (full JSONL
         # は MB オーダ、sha256 一覧は KB オーダ)。TSV 形式で suite tab slug tab sha。
         run: node tools/summarize_corpus_oracle.mjs --in .oracle_today.jsonl --out .oracle_sha256.tsv
+      - name: Diff live oracle + sha256 TSV against committed golden
+        # Phase 6a 以降の必須 drift gate。committed golden との 2 段階比較:
+        #   1) .oracle_today.jsonl (live mjs) vs committed JSONL
+        #      — mjs self-regression / scripts/lib drift の検出
+        #   2) summarize(committed JSONL) vs committed sha256 TSV
+        #      — committed TSV が stale なまま merge されるのを防止
+        #      (PR #387 review P2-1 対応)
+        #
+        # PR CI (python-corpus) でも同じ 2 段 drift check を step 化しているが、
+        # nightly は PR を経由しない直接 push / dependabot merge 等でも drift
+        # を拾える safety net として run する (required gate の代替ではなく
+        # 二重化)。
+        run: |
+          GOLDEN_JSONL=tests/conformance/__oracle__/corpus_golden.jsonl
+          GOLDEN_TSV=tests/conformance/__oracle__/corpus_golden.sha256.tsv
+
+          # Step 1: live mjs JSONL vs committed JSONL
+          if ! diff -q .oracle_today.jsonl "$GOLDEN_JSONL"; then
+            echo ""
+            echo "::error::Nightly oracle drift: live mjs output != committed golden JSONL."
+            echo "Regenerate and commit:"
+            echo "  node scripts/py/tools/emit_corpus_oracle.mjs \\"
+            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
+            echo "    --suite segments_en,turndown"
+            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
+            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
+            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
+            exit 1
+          fi
+
+          # Step 2: committed JSONL を再 summarize して committed TSV と diff。
+          # Step 1 で live JSONL == committed JSONL が保証されているので、
+          # 本 step が fail するのは「TSV を手動編集/regen し忘れた」ケース。
+          # 既存 ``.oracle_sha256.tsv`` は live summary なので committed 比較
+          # 用ではない (それとは別に fresh file を書き出して diff する)。
+          node tools/summarize_corpus_oracle.mjs --in "$GOLDEN_JSONL" --out .oracle_committed_expected.tsv
+          if ! diff -q .oracle_committed_expected.tsv "$GOLDEN_TSV"; then
+            echo ""
+            echo "::error::Nightly oracle TSV drift: committed JSONL hashes != committed TSV."
+            echo "The sha256 TSV manifest is stale. Regenerate locally:"
+            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
+            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
+            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
+            exit 1
+          fi
       - name: Upload today's oracle
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

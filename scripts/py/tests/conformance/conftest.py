@@ -8,22 +8,27 @@
 1 row = ``{schemaVersion:1, suite, slug, sha256, expected}``。詳細は
 ``scripts/py/tools/emit_corpus_oracle.mjs`` の module docstring 参照。
 
-## Loader の優先順位
+## Loader の優先順位 (Phase 6a 以降)
 
 1. ``TESTIM_CORPUS_EXPECTED_JSONL`` env var が set されていれば、**絶対パス**
-   として扱って JSONL を読む。CI の ``python-corpus`` job が採用する経路。
-2. env var が無く、かつ **xdist worker** 内なら ``pytest.UsageError`` を raise
-   して fail する (silent な N-way harness 呼び出し / 誤 green を防ぐ。
-   ``pytest.skip`` だと「テストが走らなかった」ことを silent に受け入れて
-   しまう)。
-3. env var が無く、**単一 process** で走っている local 実行なら session 内で
-   1 回だけ ``emit_corpus_oracle.mjs`` を spawn して JSONL を生成する。
+   として扱って JSONL を読む。nightly oracle drift workflow / local debug で
+   live oracle snapshot を注入する escape hatch。
+2. committed golden (``tests/conformance/__oracle__/corpus_golden.jsonl``) が
+   存在すれば、それを authoritative oracle として使う。Phase 6a 以降の
+   default。node subprocess 不要で xdist worker でも stable。
+3. committed golden が無く、かつ **xdist worker** 内なら ``pytest.UsageError``
+   を raise して fail する (silent な N-way harness 呼び出し / 誤 green を
+   防ぐ)。
+4. committed golden が無く、**単一 process** で走っている local 実行なら
+   session 内で 1 回だけ ``emit_corpus_oracle.mjs`` を spawn して JSONL を
+   生成する (Phase 6a 以前の fallback、golden 消失時の safety net)。
 
 ## xdist 下での session 共有
 
 ``scope="session"`` な fixture は xdist ``--dist load`` では worker 毎に 1 回
-ロードされる (xdist の session は process 境界で区切られる)。env var 経由で
-**同じ JSONL file** を全 worker が読むため、実データは共有される。
+ロードされる (xdist の session は process 境界で区切られる)。committed
+golden file を全 worker が同じ file system path で読むため、実データは
+共有される (env var 経由の場合も同じ)。
 """
 
 from __future__ import annotations
@@ -98,6 +103,8 @@ def corpus_oracle(
     """
     env_path = os.environ.get("TESTIM_CORPUS_EXPECTED_JSONL")
     if env_path:
+        # Priority 1: env var escape hatch (nightly drift workflow / local debug)。
+        # committed golden を迂回して live oracle を注入するために使う。
         jsonl_path = Path(env_path)
         if not jsonl_path.is_absolute():
             raise pytest.UsageError(
@@ -106,42 +113,58 @@ def corpus_oracle(
                 f"Got: {env_path!r}"
             )
     else:
-        if _is_xdist_worker():
-            # xdist 下で env var なしは **契約違反**。``pytest.skip`` は silent に
-            # 「テストが走らなかった」ことを受け入れて green になってしまうので、
-            # ``pytest.UsageError`` で fail させて誤 green を防ぐ。
-            raise pytest.UsageError(
-                "TESTIM_CORPUS_EXPECTED_JSONL is required under pytest-xdist to "
-                "avoid N-way harness invocation. Run:\n"
-                "  node scripts/py/tools/emit_corpus_oracle.mjs --out /tmp/oracle.jsonl "
-                "--suite segments_en,turndown\n"
-                "  TESTIM_CORPUS_EXPECTED_JSONL=/tmp/oracle.jsonl uv run pytest "
-                "-m corpus -n auto --dist load"
-            )
-        if not node_available:
-            pytest.skip("node not available; cannot generate oracle JSONL in fallback")
-        tmp_dir = tmp_path_factory.mktemp("corpus_oracle")
-        jsonl_path = (tmp_dir / "oracle.jsonl").resolve()
-        emit_script = repo_root / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs"
-        # ``--suite segments_en,turndown`` で PR B の ``corpus`` marker scope に
-        # 合わせる。default ``all`` は ``align`` も生成するが、現行
-        # ``test_align_288_matrix.py`` は ``slow`` marker で本 loader を経由せず
-        # 独自 harness を使うため、align rows を fallback で生成しても誰も読まず
-        # subprocess 時間を浪費するだけ。また nightly oracle-snapshot と同様に
-        # 将来 Phase 6a golden 化する際に align rows が紛れ込む余地を消す。
-        subprocess.run(
-            [
-                "node",
-                str(emit_script),
-                "--out",
-                str(jsonl_path),
-                "--suite",
-                "segments_en,turndown",
-            ],
-            check=True,
-            timeout=600,
-            cwd=repo_root,
+        # Priority 2: committed golden (Phase 6a 以降の default)。
+        # ``scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl`` が
+        # main branch に存在するなら authoritative oracle として読む。node
+        # subprocess 不要なので xdist worker でも stable。
+        committed_golden = (
+            repo_root
+            / "scripts"
+            / "py"
+            / "tests"
+            / "conformance"
+            / "__oracle__"
+            / "corpus_golden.jsonl"
         )
+        if committed_golden.exists():
+            jsonl_path = committed_golden
+        elif _is_xdist_worker():
+            # Priority 3: committed golden も無く、env var も無い状態で
+            # xdist worker 下は **契約違反**。``pytest.skip`` は silent に
+            # 「テストが走らなかった」ことを受け入れて green になってしまうので
+            # ``pytest.UsageError`` で fail させる。
+            raise pytest.UsageError(
+                "corpus oracle not available. Either commit "
+                "scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl "
+                "(Phase 6a) or set TESTIM_CORPUS_EXPECTED_JSONL. Run:\n"
+                "  node scripts/py/tools/emit_corpus_oracle.mjs "
+                "--out scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl "
+                "--suite segments_en,turndown"
+            )
+        else:
+            # Priority 4: single-process fallback (committed golden 消失時 / 開発
+            # 中の tools 検証用)。session 内で 1 回だけ live oracle を spawn。
+            if not node_available:
+                pytest.skip("node not available; cannot generate oracle JSONL in fallback")
+            tmp_dir = tmp_path_factory.mktemp("corpus_oracle")
+            jsonl_path = (tmp_dir / "oracle.jsonl").resolve()
+            emit_script = repo_root / "scripts" / "py" / "tools" / "emit_corpus_oracle.mjs"
+            # ``--suite segments_en,turndown`` で PR B の ``corpus`` marker scope
+            # と committed golden の suite scope に揃える (align は Phase 6b の
+            # golden 化まで別管理)。
+            subprocess.run(
+                [
+                    "node",
+                    str(emit_script),
+                    "--out",
+                    str(jsonl_path),
+                    "--suite",
+                    "segments_en,turndown",
+                ],
+                check=True,
+                timeout=600,
+                cwd=repo_root,
+            )
 
     if not jsonl_path.exists():
         raise FileNotFoundError(f"oracle JSONL not found at {jsonl_path}")
