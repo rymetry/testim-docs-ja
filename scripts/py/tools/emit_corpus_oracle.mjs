@@ -33,9 +33,13 @@
  *   1 slug / suite でも throw したら stderr に失敗一覧を emit して exit 1 する。
  *   atomic write のため partial JSONL は最終 path に残さない。
  *
- * Phase 6b atomic cutover で mjs harness を削除する際、本 script は最後に 1 回
- * 走らせて ``tests/conformance/__oracle__.jsonl.golden`` を commit したうえで
- * retire する (docs/PYTHON_MIGRATION_PLAN.md Phase 6 参照)。
+ * Phase 6a で committed golden (`scripts/py/tests/conformance/__oracle__/
+ * corpus_golden.jsonl`) が main に入った。以降 CI の ``python-corpus`` job は
+ * committed golden を expected として使い、本 script は PR CI / nightly の
+ * drift check (live mjs output vs committed golden の byte-identical 比較) と
+ * local regen (``npm run test:py:corpus:regen``) でのみ使われる。Phase 6b
+ * atomic cutover で mjs 削除時に本 script も retire する (docs/PYTHON_MIGRATION_PLAN.md
+ * Phase 6 参照)。
  */
 
 import process from 'node:process';

@@ -131,12 +131,20 @@ jobs:
   python-corpus:
     # PR B で新設した 288-page corpus conformance gate。segments_en + turndown
     # の full parametrized test を pytest-xdist ``-n auto --dist load`` で並列
-    # 実行する (8 worker 実測 ~10s、目標 2:30 を大幅下回り)。oracle は
-    # ``node scripts/py/tools/emit_corpus_oracle.mjs`` が事前生成し、全 worker
-    # が ``TESTIM_CORPUS_EXPECTED_JSONL`` 環境変数経由で同じ JSONL を読む
-    # (silent な N-way harness 再呼び出しを防ぐ契約)。align 288-matrix は
-    # ``slow`` marker 側で serial run されるため本 job には含まない (plan doc
-    # Phase 5 CI 高速化節参照)。
+    # 実行する (8 worker 実測 ~10s、目標 2:30 を大幅下回り)。
+    #
+    # Phase 6a 以降: oracle は main にある committed golden
+    # (``scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl``) を使う。
+    # env var / node subprocess 不要なので xdist worker でも stable。
+    #
+    # Drift check (本 job 内 step): mjs で live oracle を再生成して committed
+    # golden と byte-identical 一致するか確認する。mjs lib を変更したのに
+    # committed golden を regenerate し忘れた PR を必ず fail させる required gate
+    # として機能する (docs/PYTHON_MIGRATION_PLAN.md Phase 6a 節参照、Codex
+    # review #1 「nightly は required gate にならない」への対応)。
+    #
+    # align 288-matrix は ``slow`` marker 側で serial run されるため本 job には
+    # 含まない (Phase 6b で golden 化予定、plan doc Phase 5 CI 高速化節参照)。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -149,7 +157,7 @@ jobs:
           cache: 'npm'
       - name: Install Node deps
         # emit_corpus_oracle.mjs が scripts/lib/* を import する経路で
-        # gray-matter 等の npm パッケージが要る。
+        # gray-matter 等の npm パッケージが要る (drift check step で必要)。
         working-directory: ${{ github.workspace }}
         run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
@@ -164,21 +172,37 @@ jobs:
           cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
-      - name: Generate corpus oracle JSONL
-        # 288 page × 2 suite (segments_en + turndown) の expected を mjs
-        # authority で 1 回だけ emit。atomic temp+rename で partial 状態を
-        # 残さない (emit_corpus_oracle.mjs docstring 参照)。
-        run: node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl --suite segments_en,turndown
+      - name: Oracle drift check (live mjs vs committed golden)
+        # mjs で live oracle を再生成して committed golden と diff 比較する。
+        # mjs lib を変更したのに ``tests/conformance/__oracle__/corpus_golden.jsonl``
+        # を regenerate し忘れた PR をここで fail させる。Phase 6a の required
+        # drift gate (Phase 6b cutover で mjs 削除時に本 step も retire 予定)。
+        #
+        # 静的 pytest / node command のみで untrusted input を含まないため
+        # command injection リスクは無い。
+        run: |
+          node tools/emit_corpus_oracle.mjs --out .corpus_live.jsonl --suite segments_en,turndown
+          if ! diff -q .corpus_live.jsonl tests/conformance/__oracle__/corpus_golden.jsonl; then
+            echo ""
+            echo "::error::Oracle drift detected: mjs live output != committed golden."
+            echo "mjs lib or scripts/lib/* was changed without regenerating the committed golden."
+            echo "Run locally (from repo root):"
+            echo "  node scripts/py/tools/emit_corpus_oracle.mjs \\"
+            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
+            echo "    --suite segments_en,turndown"
+            echo "  node scripts/py/tools/summarize_corpus_oracle.mjs \\"
+            echo "    --in scripts/py/tests/conformance/__oracle__/corpus_golden.jsonl \\"
+            echo "    --out scripts/py/tests/conformance/__oracle__/corpus_golden.sha256.tsv"
+            echo "and commit the regenerated fixture in the same PR."
+            exit 1
+          fi
       - name: pytest (corpus)
         # xdist ``-n auto --dist load`` で 576 parametrized test を worker 間に
         # 動的分散する。stdout interleave 対策として ``--tb=short``
         # + ``--junitxml`` artifact を併用する。
-        # ``TESTIM_CORPUS_EXPECTED_JSONL`` は **絶対パス** 必須 (conftest.py の
-        # loader fixture 契約、相対 path は xdist worker cwd semantics を壊す)。
-        # run: 内は静的 pytest command のみで untrusted input を含まないため
-        # command injection リスクは無い。
-        env:
-          TESTIM_CORPUS_EXPECTED_JSONL: ${{ github.workspace }}/scripts/py/.corpus_expected.jsonl
+        # conftest.py の loader fixture が committed golden を最優先するため
+        # env var は不要。本 step は static pytest command のみで command
+        # injection リスクは無い。
         run: uv run pytest -m corpus -n auto --dist load --tb=short --junitxml=corpus-junit.xml
       - name: Upload corpus junit
         if: always()
