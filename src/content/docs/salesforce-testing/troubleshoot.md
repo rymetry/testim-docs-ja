@@ -31,10 +31,10 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 - この権限が Sandbox で利用できない場合は、対象の Sandbox 環境で **Match Production Licenses to Sandbox Without a Refresh** ツールを実行してください。
 
 - **設定 > セキュリティ > ネットワークアクセス**で以下の IP アドレスをホワイトリストに登録します。
-  - 35.85.13.117
-  - 44.228.217.52
-  - 54.245.105.236
-  - 54.214.4.125
+- 35.85.13.117
+- 44.228.217.52
+- 54.245.105.236
+- 54.214.4.125
 
   ![ネットワークアクセスで IP をホワイトリスト登録](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
 

@@ -41,45 +41,35 @@ class TestBasicClassification:
         assert segs[0]["textNorm"] == "section title"
 
 
-class TestListEmitTightSibling:
-    """Tight sibling pattern (``markerIndent == bodyIndent``) — line-based emit。
+class TestListEmitNestedMarker:
+    """Nested marker pattern (``markerIndent >= bodyIndent``) — Issue #368 flatten。
 
-    288 corpus には EN 側が MadCap fragment で ``<ol>`` の直下に兄弟 ``<ul>`` を
-    置いた "sibling list" が 47 file / 263 line 存在する。これらを JA 作成時に
-    ``1. outer\\n   - nested`` のように再現する (``markerIndent == bodyIndent==3``)。
-    EN walker は ``walkBlock`` で sibling を別の list として emit するため、JA も
-    1 行 1 segment emit で parity を成立させる。
-
-    Strict ``>`` rule: ``markerIndent > bodyIndent`` (deeper indent) の場合のみ
-    nested 扱い (次 class ``TestListEmitTrueNested`` で pin)。
+    PR #389 では既存 corpus の sibling list marker を content 側で top-level に
+    outdent し、parser 側は Issue #368 原案の ``>=`` rule に戻した。これにより
+    author が通常の Markdown nested list として書いた場合は EN ``collectInlineText``
+    と対称に 1 list item segment へ flatten される。
     """
 
-    def test_unordered_nested_emits_each_marker(self):
+    def test_unordered_nested_flattens_into_outer(self):
         md = "- Outer\n  - Nested A\n  - Nested B\n- Sibling\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # ``  -`` の leading_ws=2 == body_indent=2 → tight sibling emit
-        assert kinds == ["unordered-list-item"] * 4
-        assert segs[0]["textNorm"] == "outer"
-        assert segs[1]["textNorm"] == "nested a"
-        assert segs[2]["textNorm"] == "nested b"
-        assert segs[3]["textNorm"] == "sibling"
+        # ``  -`` の leading_ws=2 == body_indent=2 → nested marker flatten
+        assert kinds == ["unordered-list-item", "unordered-list-item"]
+        assert segs[0]["textNorm"] == "outer nested a nested b"
+        assert segs[1]["textNorm"] == "sibling"
 
-    def test_ordered_with_nested_unordered_emits_separately(self):
+    def test_ordered_with_nested_unordered_flattens(self):
         md = "1. Outer step\n   - sub A\n   - sub B\n2. Next step\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # ``1.`` の body_indent=3、``   -`` の leading_ws=3 → tight sibling
+        # ``1.`` の body_indent=3、``   -`` の leading_ws=3 → nested marker flatten
         assert kinds == [
             "ordered-list-item",
-            "unordered-list-item",
-            "unordered-list-item",
             "ordered-list-item",
         ]
-        assert segs[0]["textNorm"] == "outer step"
-        assert segs[1]["textNorm"] == "sub a"
-        assert segs[2]["textNorm"] == "sub b"
-        assert segs[3]["textNorm"] == "next step"
+        assert segs[0]["textNorm"] == "outer step sub a sub b"
+        assert segs[1]["textNorm"] == "next step"
 
     def test_flat_list_unchanged(self):
         md = "- alpha\n- beta\n- gamma\n"
@@ -96,14 +86,14 @@ class TestListEmitTightSibling:
 
 
 class TestListEmitTrueNested:
-    """True nested pattern (``markerIndent > bodyIndent``) — Issue #368 flatten。
+    """Deeper nested pattern (``markerIndent > bodyIndent``) — Issue #368 flatten。
 
     EN walker の ``collectInlineText`` は ``<li>`` 直下の nested ``<ul>`` / 複数
     ``<p>`` / ``<img>`` を 1 segment に flatten する。JA parser もこれを対称化
     するため、active list item に対して deeper indent content を吸収する。
 
-    契約: ``markerIndent > bodyIndent`` (strictly greater) のとき nested 扱い。
-    tight sibling (``==``) と区別するための strict-``>`` rule。
+    契約: ``markerIndent >= bodyIndent`` のとき nested 扱い。ここではより深い
+    indent の多段 case も同じく flatten されることを pin する。
     """
 
     def test_nested_unordered_flatten_into_outer(self):
@@ -333,9 +323,9 @@ class TestHorizontalRule:
 
 
 class TestListRegionEdgeCases:
-    """strict ``>`` rule の境界条件を pin する regression guard (Issue #368 flatten 後)。
+    """Issue #368 flatten 後の境界条件を pin する regression guard。
 
-    ``_ActiveListItem`` state machine は ``markerIndent > bodyIndent`` /
+    ``_ActiveListItem`` state machine は ``markerIndent >= bodyIndent`` /
     ``leadingWs > bodyIndent`` のときだけ flatten し、それ以外は line-based emit 相当
     の boundary flush を行う。本 class は以下の境界条件が正しく機能することを
     具体例で確認する:
@@ -345,7 +335,7 @@ class TestListRegionEdgeCases:
       (leading_ws == 0) → active list flush
     - 1-space indent content (leading_ws < body_indent) → active list flush + paragraph emit
     - 4-space indent list marker (CommonMark code-block 相当) → line-based emit で拾う
-    - hard-break (``\\\\`` 末尾 + indent == body_indent) → tight sibling として emit
+    - hard-break (``\\\\`` 末尾 + text indent == body_indent) → paragraph として emit
     """
 
     def test_list_ends_at_code_fence_inside_region(self):
@@ -418,7 +408,7 @@ class TestListRegionEdgeCases:
     def test_one_space_indent_after_list_emits_paragraph(self):
         """blank 行 + 1-space indent の行は list continuation にならない。
 
-        ``- item`` の body_indent=2、`` x`` の leading_ws=1 < 2 → strict ``>`` rule
+        ``- item`` の body_indent=2、`` x`` の leading_ws=1 < 2 → flatten されず、
         で flatten されず、active list を flush して paragraph emit する。
         """
         md = "- item\n\n x\n"
@@ -490,11 +480,11 @@ class TestListRegionEdgeCases:
         assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
 
     def test_hard_break_splits_list_item_and_paragraph(self):
-        """``1. step\\`` + indented next line (indent == body_indent) は tight sibling emit。
+        """``1. step\\`` + indented next line (indent == body_indent) は paragraph emit。
 
         ordered の body_indent=3、続く ``   Next sentence.`` の leading_ws=3 は
-        strict ``>`` rule で flatten 対象外 → active flush + paragraph emit の
-        2 segment になる。
+        marker ではなく text 行なので flatten 対象外 → active flush + paragraph
+        emit の 2 segment になる。
         """
         md = "1. Step one\\\n   Next sentence.\n"
         segs = extract_segments_from_markdown(md)

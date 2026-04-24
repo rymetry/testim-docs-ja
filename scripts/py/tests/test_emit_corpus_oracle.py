@@ -12,12 +12,11 @@ Phase 6b cutover で mjs ``emit_corpus_oracle.mjs`` を Python 実装に port �
 
 ## Fast gate 対応 (PR #389 レビュー P2 対応)
 
-2026-04-24 レビューで「fast gate で 288-page oracle 生成が 28s 掛かる」指摘を
-受け、重い real-repo 生成は ``@pytest.mark.corpus`` に隔離し、fast gate では
-``monkeypatch`` で 2-page mini corpus (snapshots + JA md を tmp に mock) を
-差し込むようにした。現在は 1 scenario につき 2 slug を処理するだけなので
-数百 ms で完走する。real corpus 生成の動作確認は nightly corpus 側 (288-page
-byte-identical test) で担保する。
+2026-04-24/25 レビューで「fast/corpus gate で 288-page oracle 生成が重い」指摘を
+受け、pytest では ``monkeypatch`` で 2-page mini corpus (snapshots + JA md を tmp
+に mock) を差し込む。現在は 1 scenario につき 2 slug を処理するだけなので数百 ms
+で完走する。real corpus の値保証は ``test_*_288_matrix.py`` の 1 slug = 1 test
+conformance と ``npm run test:py:corpus:regen`` の手動再生成で担保する。
 """
 
 from __future__ import annotations
@@ -257,51 +256,3 @@ class TestSummarizeCorpusOracle:
         with pytest.raises(SystemExit) as exc:
             summarize_corpus_oracle.main(["--out", str(out)])
         assert exc.value.code == 2
-
-
-@pytest.mark.corpus
-class TestEmitCorpusOracleFullCorpus:
-    """288-page real-corpus generation — ``@pytest.mark.corpus`` 隔離で corpus job 用。
-
-    fast gate は上 ``TestEmitCorpusOracleFast`` の 2-slug mini corpus で smoke
-    確認するので、こちらは full 288-page production 生成が各 suite で正しく動く
-    ことだけ pin する (drift detection は別 test ``test_drift_against_golden``)。
-
-    ## PR #389 round 4 review P2 対応: suite 単位 parametrize
-
-    旧実装は 1 test で ``--suite all`` (288×3 suite) を serial 生成していたため
-    corpus job 全体を 19.55s → 38.44s まで倍増させていた。Phase5 で xdist 化
-    して 20s 前後まで落としていた corpus job に回帰した形。
-
-    suite ごとに parametrize することで ``-n auto --dist load`` が 3 test を
-    別 worker に分散でき、corpus job 所要時間を 20s 台に戻す。288-row 契約は
-    suite 毎に `_expected_row_count(suite)` で pin し、全 suite 合計 864 row
-    になることは existing ``test_align_288_matrix`` / ``test_segments_en_288_matrix``
-    / ``test_turndown_288_matrix`` が 1 slug = 1 test で別途保証する。
-    """
-
-    _SUITE_EXPECTATIONS: tuple[tuple[str, int], ...] = (
-        ("segments_en", 288),
-        ("turndown", 288),
-        ("align", 288),
-    )
-
-    @pytest.mark.parametrize(("suite", "expected_rows"), _SUITE_EXPECTATIONS)
-    def test_real_corpus_suite_produces_expected_rows(
-        self, suite: str, expected_rows: int, tmp_path: Path
-    ) -> None:
-        """production generation が suite 毎に 288 row を正しく吐く。
-
-        xdist ``-n auto --dist load`` で segments_en / turndown / align が
-        別 worker に分散される (各 test は ~6-13s)。
-        """
-        out = tmp_path / f"{suite}.jsonl"
-        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", suite])
-        assert rc == 0
-        rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
-        assert len(rows) == expected_rows, (
-            f"{suite}: expected {expected_rows} rows, got {len(rows)}"
-        )
-        assert all(r["suite"] == suite for r in rows)
-        required_keys = {"schemaVersion", "suite", "slug", "sha256", "expected"}
-        assert all(required_keys <= r.keys() for r in rows)

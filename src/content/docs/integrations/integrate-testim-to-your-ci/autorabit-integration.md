@@ -46,8 +46,8 @@ AutoRABIT からテストを自動化するには、CI ジョブで Callout URL 
 
 10. Content - ステップ 4 の Swagger から JSON ペイロードを貼り付けます。JSON ペイロードのキーと値のペアで:
 
-    - "grid" : "string" の"string"を、Testim Salesforce の右上のプロフィールの Grids セクションにあるグリッド名の 1 つに置き換えます。
-    - "branch" : "master" の"master"を、テストが実行される Salesforce 環境を指すブランチ名に置き換えます。
+- "grid" : "string" の"string"を、Testim Salesforce の右上のプロフィールの Grids セクションにあるグリッド名の 1 つに置き換えます。
+- "branch" : "master" の"master"を、テストが実行される Salesforce 環境を指すブランチ名に置き換えます。
 
 ![AutoRABIT の Callout URL 設定画面の例](/images/ci-integrations/autorabit-integration/da52470-2025-02-10_11-21-25.png)
 

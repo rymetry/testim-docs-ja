@@ -4,35 +4,23 @@ JA markdown body を走査し、exact-diff engine 用の flat な segment 列を
 Kind を判定できない構造は skip することで gate-eligible segment を clean に保つ
 保守的な設計。
 
-## ⚠ Issue #368 PARTIAL RESOLUTION — Phase 6.2 で最終 close 予定
+## Issue #368 対応 — list-item flatten
 
-**Phase 6b cutover (本 module) は Issue #368 を close しない**。Issue #368 §5
-原案は以下の 2 段階を両方実施して初めて resolve:
+Issue #368 は EN ``collectInlineText`` と JA parser の list-item 抽出セマンティクスを
+対称化するため、parser 側の nested marker flatten と、既存 corpus の tight sibling
+content restructure の両方を必要とした。本 module は parser 側を実装し、既存
+``markerIndent == bodyIndent`` sibling は PR #389 の content update で top-level に
+outdent 済み。
 
-1. **Phase A (JA parser 改修)**: ``_ActiveListItem`` state machine + strict ``>``
-   rule flatten → **本 module で実装済** ✅
-2. **Phase B (47 file / 263 line content restructure)**: tight sibling
-   (``markerIndent == bodyIndent``) で書かれた既存 47 file を top-level に
-   outdent、または strict ``>`` 契約に合わせて ``+1 indent`` に書き換える
-   → **本 PR scope 外、Phase 6.2 follow-up PR で実施**
-
-本 module の実装は Phase A 相当 (Phase B 未実施なので strict ``>`` narrow 化)
-であり、Issue #368 §3.1 spec の ``>=`` rule とは意図的に divergence している
-(下記「意図的 divergence」節)。Issue #368 は GitHub 上では **OPEN のまま残し**、
-Phase 6.2 (pull-requests unfreeze などで EN ``<li>`` 直下 nested ``<ul>`` の
-実例が入り、Phase B restructure を判断する PR) で最終 close する。
-
-関連: PR #389 本文 ``## Phase 6.2`` 節、``docs/PYTHON_MIGRATION_PLAN.md``
-gate criteria #15、``docs/WRITING_GUIDE.md §list item の indent 設計``。
-
-## Issue #368 Phase A — list-item flatten
+GitHub Issue #368 は project-wide review 用に open のまま残すが、実装上の list
+nesting 契約は本 module と ``docs/WRITING_GUIDE.md`` で定義する。
 
 EN walker の ``collectInlineText`` は ``<li>`` 内の nested ``<ul>`` / 複数 ``<p>`` /
 ``<img>`` を 1 segment に flatten する。JA parser も対称化するため、activeListItem
 state machine で以下を吸収する:
 
 1. **Nested list marker** (``^(\\s*)[-*+]`` / ``^(\\s*)\\d+\\.`` で
-   ``markerIndent > activeItem.bodyIndent``) → marker 剥がして text 部分のみ append
+   ``markerIndent >= activeItem.bodyIndent``) → marker 剥がして text 部分のみ append
 2. **Continuation paragraph** (任意テキスト行で ``leadingWs > activeItem.bodyIndent``) →
    行全体を append (whitespace-collapse で空白整形)
 3. **Indented image** (``leadingWs > activeItem.bodyIndent`` の ``![...](...)`` /
@@ -40,52 +28,28 @@ state machine で以下を吸収する:
 4. **Indented code fence** (``leadingWs > activeItem.bodyIndent`` の
    ``\\`\\`\\`...`` / ``~~~...``) → 開閉 fence 間の inner text のみ append
 
-## Issue #368 spec からの意図的 divergence — strict-``>`` rule (Phase B 未実施による)
+### sibling list と nested list の書き分け
 
-Issue #368 §3.1 は trigger を **``markerIndent >= bodyIndent``** (>=) で spec 化したが、
-本実装は **``markerIndent > bodyIndent``** (strictly greater) に **narrow 化した意図的
-deviation** を採用した。両者の違いと採用理由:
-
-- ``>=`` (Issue #368 原案): ``markerIndent == bodyIndent`` の tight sibling も nested
-  扱いして flatten。ただし 288 corpus には JA author が EN の MadCap fragment (``<ol>`` の
-  直下で ``<ul>`` が sibling 配置される構造) を視覚再現するために
-  ``1. outer\\n   - nested`` (``markerIndent == bodyIndent==3``) pattern を使う **47 file /
-  263 line** が存在し、EN 側が sibling emit するため ``>=`` だと over-flatten して parity
-  を壊す。Issue #368 §5 Phase B ではこの 47 file を top-level に outdent して解消する
-  plan だったが、本 Phase 6b atomic cutover では content restructure を scope 外とした
-- ``>`` (本実装): tight sibling を flatten 対象から除外。288 corpus の既存 pattern を
-  そのまま温存しつつ、**+1 以上深い indent** で書かれた「真の nested」だけ flatten する
-
-### 将来の EN ``<li>`` 直下 nested 対応 (pull-requests unfreeze 等)
-
-現 288 corpus には EN ``<li>`` 直下に nested ``<ul>`` を持つ page は 0 件。将来
-``testops/testops-version-control/pull-requests`` 等の unfreeze で実態が変わった場合、
-JA author は **+1 indent (body_indent より 1 列深い)** で書くことで EN
-``collectInlineText`` の 1-segment flatten と対称な出力を得る。著者向けの contract は
-``docs/WRITING_GUIDE.md`` §「list item の indent 設計 (EN parser 対称化、Issue #368)」
-で定義。
+- **Sibling list**: EN が MadCap fragment として ``<ol>`` / ``<ul>`` の sibling list を
+  持つ場合、JA では子 marker を親 item の marker indent まで outdent する。これにより
+  active list item が flush され、独立 segment として emit される。
+- **Nested list**: EN が ``<li>`` 直下に nested ``<ul>`` / ``<ol>`` を持つ場合、JA は
+  ``markerIndent >= bodyIndent`` の nested marker として書く。active list item に
+  flatten され、EN ``collectInlineText`` と同じ 1 segment になる。
 
 ### 吸収対象
 
-``markerIndent > bodyIndent`` / ``leadingWs > bodyIndent`` を満たす以下の 4 pattern を
+``markerIndent >= bodyIndent`` / ``leadingWs > bodyIndent`` を満たす以下の 4 pattern を
 active list item の text に吸収する:
 
-- Tight sibling (``markerIndent == bodyIndent``): 独立 segment emit (line-based 互換)
-- True nested marker (``markerIndent > bodyIndent``): flatten (content のみ append)
+- Sibling marker (``markerIndent < bodyIndent``): 独立 segment emit
+- Nested marker (``markerIndent >= bodyIndent``): flatten (content のみ append)
 - Continuation paragraph (``leadingWs > bodyIndent``): flatten
 - Indented image (``leadingWs > bodyIndent``): space 1 個として吸収 (EN ``<img>`` 対称)
 - Indented code fence (``leadingWs > bodyIndent``): fence inner を text flatten
 
-288 corpus の nested 行は全て ``markerIndent == bodyIndent`` (残りの strict-``>`` 候補
-8 行は ```yaml fenced code block 内で既に code-block として処理) のため parity は
-byte-identical に維持される。
-
-### Issue #368 Closure 判定 (再掲)
-
-本 deviation と Phase B (content restructure) の両方を対処しない限り Issue #368 は
-厳密には close しない。本実装は **partial resolution** で、Closure は Phase 6.2
-(pull-requests unfreeze 等の実例が入り、Phase B restructure を実施する PR) に委ねる。
-PR #389 (Phase 6b cutover) では ``Closes #368`` を発行しない。
+288 corpus に存在した旧 tight sibling marker は content 側で outdent 済みのため、
+``>=`` flatten と corpus parity は両立する。
 
 ## mjs と byte-identical に維持される挙動
 
@@ -104,7 +68,7 @@ PR #389 (Phase 6b cutover) では ``Closes #368`` を発行しない。
 - code fence — backtick / tilde 両方、開閉 fence 間の body を ``code-block`` emit
 - standalone image line (``![...](...)`` / ``<Image>`` / ``<img>``) → ``image``
 - horizontal rule (``---`` / ``***`` / ``___``) は segment を emit しない
-- tight sibling list (``markerIndent <= bodyIndent``) → 各行 1 segment emit
+- sibling list (``markerIndent < bodyIndent``) → 各行 1 segment emit
 """
 
 from __future__ import annotations
@@ -220,7 +184,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
       は通常の classification path を通るため ``callout-body`` 以外の kind で emit
       される (EN ``walkCalloutBody`` と同じ挙動)
     - ``<details>`` 内の text block は ``paragraph`` で emit (EN walker と同等)
-    - Issue #368 flatten: ``activeListItem`` で ``markerIndent > bodyIndent`` /
+    - Issue #368 flatten: ``activeListItem`` で ``markerIndent >= bodyIndent`` /
       ``leadingWs > bodyIndent`` の nested content を text に吸収
     """
     if not isinstance(body, str):
@@ -408,15 +372,9 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
             i += 1
             continue
 
-        # ----- Indented absorption by active_list (Issue #368 flatten) -----
-        if active_list is not None and leading_ws > active_list.body_indent:
+        # ----- Nested marker absorption by active_list (Issue #368 flatten) -----
+        if active_list is not None and leading_ws >= active_list.body_indent:
             stripped = line.lstrip()
-            # Image → space 1 個 (EN ``<img>`` と対称)
-            if _IMAGE_RE.match(stripped):
-                active_list.text_parts.append(" ")
-                i += 1
-                continue
-            # Nested list marker → marker 剥がしで content のみ append
             nested_o = _ORDERED_RE.match(stripped)
             if nested_o:
                 active_list.text_parts.append(nested_o.group(2))
@@ -427,15 +385,23 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                 active_list.text_parts.append(nested_u.group(2))
                 i += 1
                 continue
+
+        # ----- Indented content absorption by active_list (Issue #368 flatten) -----
+        if active_list is not None and leading_ws > active_list.body_indent:
+            stripped = line.lstrip()
+            # Image → space 1 個 (EN ``<img>`` と対称)
+            if _IMAGE_RE.match(stripped):
+                active_list.text_parts.append(" ")
+                i += 1
+                continue
             # Generic text → そのまま append
             active_list.text_parts.append(stripped)
             i += 1
             continue
 
-        # ----- Less/equal indent → active_list 境界 -----
-        # active_list は tight sibling pattern では line-based emit と同じ振る舞い
-        # (次の top-level marker で flush)。ここで flush して以降の handler で
-        # 通常処理する。
+        # ----- Non-nested content → active_list boundary -----
+        # ``markerIndent < bodyIndent`` の sibling marker や ``leadingWs <= bodyIndent``
+        # の plain text は current list item に吸収せず、通常の handler で処理する。
         if active_list is not None:
             emit_active_list()
 

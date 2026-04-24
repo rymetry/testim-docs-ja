@@ -67,9 +67,9 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0277227-header.png)
 
 10. 認証ヘッダーを設定するには **Authorization** タブをクリックし、次のいずれかの方式を選択します。
-    - **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の認証方式を使いたい場合に選択します。この場合、認証ヘッダーは **Header** タブで手動入力する必要があります。
-    - **Basic** – エンドポイントが Basic 認証を使用する場合に選択します。ユーザー名とパスワードを入力します。
-    - **Bearer** – エンドポイントが Bearer トークン認証を使用する場合に選択します。トークンを入力します。
+- **None** – 認証情報を送信しない場合、または Basic / Bearer 以外の認証方式を使いたい場合に選択します。この場合、認証ヘッダーは **Header** タブで手動入力する必要があります。
+- **Basic** – エンドポイントが Basic 認証を使用する場合に選択します。ユーザー名とパスワードを入力します。
+- **Bearer** – エンドポイントが Bearer トークン認証を使用する場合に選択します。トークンを入力します。
 
 :::note
 **Authorization** タブで **None** 以外を選択した場合、その設定が **Header** タブで手動入力した Authorization 値を上書きします。
@@ -99,8 +99,8 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/bc9b3fc-showstepproperties.png)
 
 14. **Properties** パネルの **Send via web page** チェックボックスでは API 呼び出しの実行コンテキストを制御できます。
-    - チェックを外す – ブラウザコンテキストの外側から API を送信します。ブラウザの制限（CORS など）を避けたい場合に有効です。
-    - チェックを付ける – ブラウザ情報（Cookie など）も含めて送信したい場合に使用します（Cookie は自動的に送信されます）。
+- チェックを外す – ブラウザコンテキストの外側から API を送信します。ブラウザの制限（CORS など）を避けたい場合に有効です。
+- チェックを付ける – ブラウザ情報（Cookie など）も含めて送信したい場合に使用します（Cookie は自動的に送信されます）。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/3cf1b19-properties.png)
 
@@ -318,8 +318,8 @@ Assertion セクションでも、比較値としてパラメーターをその�
 
 - **Download the response info** – **View Sent Request** の右側にあるダウンロードボタンをクリックすると、レスポンス全体を含んだ JSON ファイルをローカルにダウンロードできます。
 - **Assertion response** – Assertion を設定している場合、それぞれの Assertion の横に次のいずれかの結果が表示されます。
-  - **Passed** – 条件が TRUE になり、Assertion が成功したことを示します。
-  - **Failed** – 条件が FALSE となり、Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
+- **Passed** – 条件が TRUE になり、Assertion が成功したことを示します。
+- **Failed** – 条件が FALSE となり、Assertion が失敗したことを示します。この場合ステップは失敗し、テスト全体も失敗となります。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/639898e-image_12.png)
 

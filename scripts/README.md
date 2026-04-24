@@ -186,7 +186,7 @@ acknowledgement の対象外:
 
 ### EN source patches (Route W, 2026-04-17 以降)
 
-- `testim_parity.en_source_patches` (旧 `scripts/lib/en_source_patches.mjs`): broken EN HTML snapshot を `preprocess_en_html` 境界で修復する slug-scope literal find→replace patch 層。定義データは `scripts/py/_en_source_patches_data.json` に JSON で authoritative に保持
+- `testim_parity.en_source_patches` (旧 `scripts/lib/en_source_patches.mjs`): broken EN HTML snapshot を `preprocess_en_html` 境界で修復する slug-scope literal find→replace patch 層。定義データは `scripts/py/src/testim_parity/_en_source_patches_data.json` に JSON で authoritative に保持
 - `preprocess_en_html(html, slug=..., patch_coverage=...)` が optional 引数で patch application + coverage 集計を driver。slug 未指定時は no-op (backward-compat)
 - `testim_parity.detection.check_source_parity` は run 単位で `create_en_source_patch_coverage()` を集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
 - 4 enum (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) 以外は登録不可、各 entry は `docs/UPSTREAM_DEFECTS.md#UD-NNN` の anchor へ結線必須

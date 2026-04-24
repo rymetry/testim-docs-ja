@@ -92,10 +92,10 @@ MFA のシークレットキーはパラメーターとして扱えません。
 **接続情報にパラメーターを使う:**
 
 1. 次のいずれかの方法でパラメーターを定義します。
-   - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-   - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/running-tests/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-   - **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。\
-     その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
+- **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+- **設定ファイルにパラメーターを追加** – [Configuration file](/docs/running-tests/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
+- **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。\
+その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
 2. _Salesforce auto-login_ ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメーターを設定します。
 
 ## MFA のセットアップ
@@ -108,8 +108,8 @@ Salesforce 側でシークレットキーを取得し、Testim のプロパテ�
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/bc293ae-image.png)
 
 2. 既に **App Registration: One-Time Password Authenticator** に Google Authenticator や Microsoft Authenticator などのサードパーティ認証アプリが登録されている場合、シークレットキーを取得するために一度切断してから再接続する必要があります。
-   - **User Details** の **App Registration - One-Time Password Authenticator** 設定で **Disconnect** をクリックします。
-   - まだサードパーティ認証アプリを登録していない場合は、この手順はスキップして次へ進みます。
+- **User Details** の **App Registration - One-Time Password Authenticator** 設定で **Disconnect** をクリックします。
+- まだサードパーティ認証アプリを登録していない場合は、この手順はスキップして次へ進みます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/e1f92f2-image_1.png)
 

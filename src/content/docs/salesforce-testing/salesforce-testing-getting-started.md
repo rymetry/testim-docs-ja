@@ -44,8 +44,8 @@ Testim for Salesforce テストを作成する前に、Salesforce 環境を Test
    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
 
 2. **Select Type**フィールドで、Salesforce 環境のタイプを選択します:
-   - **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
-   - **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
+- **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
+- **Sandbox** - サンドボックス環境は、より小規模な開発またはテスト環境です。
 3. **Environment Name**フィールドに、環境の名前を入力します
 4. 次のいずれかを実行します:
 

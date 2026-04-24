@@ -38,7 +38,7 @@
 
 > **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0 / `snapshot-diff-status.json.summary.{changed, added, removed} = 0`。schema v2 (2026-04-20 cutover) 以降、baseline は期限概念なしの **明示的 paydown が必須な一時的凍結** として運用する (`priority` enum + 明示 PR による解消のみ、`reviewAfter` 期限超過による自動 refire は廃止)。
 > このゴールを達成するため、本ガイドは baseline を増やす方向の変更（JA 独自構造追加 / callout 改変 / Testim 用語翻訳）を全面禁止する。
-> EN 原文が壊れている場合の退避は `testim_parity.sync_exclusions` (page-level、旧 `scripts/lib/source_sync_exclusions.mjs`) と `testim_parity.en_source_patches` + `scripts/py/_en_source_patches_data.json` (segment-level、旧 `scripts/lib/en_source_patches.mjs`) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
+> EN 原文が壊れている場合の退避は `testim_parity.sync_exclusions` (page-level、旧 `scripts/lib/source_sync_exclusions.mjs`) と `testim_parity.en_source_patches` + `scripts/py/src/testim_parity/_en_source_patches_data.json` (segment-level、旧 `scripts/lib/en_source_patches.mjs`) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
 >
 > **Source-first 例外の canonical registry**:
 >
@@ -186,7 +186,7 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
 - **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
 - 段落境界・リスト境界・見出し境界は原文に完全に一致させる（1 段落→2 段落分割、1 callout→2 callout 分割等は禁止）
-- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `testim_parity.en_source_patches` + `scripts/py/_en_source_patches_data.json` の slug-scope patch layer (literal find→replace at `preprocess_en_html` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
+- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `testim_parity.en_source_patches` + `scripts/py/src/testim_parity/_en_source_patches_data.json` の slug-scope patch layer (literal find→replace at `preprocess_en_html` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
 
 ### 唯一の許容差分（HEREだけ）
 
@@ -324,22 +324,22 @@ EN snapshot           →  JA 翻訳
 
 #### list item の indent 設計 (EN parser 対称化、Issue #368)
 
-JA parser は EN `collectInlineText` と対称化するため、**list item の「真の nested」** を
-検出するために **indent 深さに従う flatten ルール** を持つ。これは書き分け可能な author-facing
-contract で、EN の HTML 構造に合わせて JA の indent を選ぶ:
+JA parser は EN `collectInlineText` と対称化するため、list item 内の nested marker を
+`markerIndent >= bodyIndent` で active list item に flatten する。EN の HTML 構造に
+合わせて JA の indent を選ぶ:
 
-- **tight sibling (indent == body_indent)** — line-based emit で **独立した segment になる**
+- **sibling list** — 独立した segment にしたい場合は、子 marker を親 item の
+  marker indent まで outdent する
+  - 例: `1. outer\n- sibling` (ordered の body_indent=3、`-` の indent=0)
+  - 想定対応 EN 構造: `<ol><li>outer</li><ul><li>sibling</li></ul></ol>` (MadCap fragment の `<ul>` が `<li>` 直下ではなく sibling として配置される)
+- **nested list** — `markerIndent >= bodyIndent` の marker は active list item に
+  **flatten される**
   - 例: `1. outer\n   - nested` (ordered の body_indent=3、`-` の indent=3)
-  - 想定対応 EN 構造: `<ol><li>outer</li><ul><li>nested</li></ul></ol>` (MadCap fragment の `<ul>` が `<li>` 直下ではなく sibling として配置される)
-  - 現行 288 corpus はこの pattern を 47 file / 263 line 使用。視覚的にはインデントされて見えるが、parity 上は EN sibling `<ul>` と 1:1 対応する
-- **true nested (indent > body_indent、+1 列以上深い)** — active list item に **flatten される**
-  - 例: `1. outer\n    - nested` (ordered の body_indent=3、`-` の indent=4)
   - 想定対応 EN 構造: `<ol><li>outer<ul><li>nested</li></ul></li></ol>` (`<li>` 直下に nested `<ul>` が入り、EN `collectInlineText` が "outer nested" の 1 segment に flatten)
-  - 288 corpus には現状 0 件。pull-requests unfreeze 等で EN が nested `<ul>` を持つようになった場合、JA を **+1 indent** で書くことで EN `collectInlineText` の 1-segment flatten と対称な出力になる
 
-Issue #368 spec は trigger を `markerIndent >= bodyIndent` としていたが、上記の tight sibling pattern
-(47 file / 263 line) の parity を保つため、実装は **strict `>`** (`markerIndent > bodyIndent`) に narrow 化した
-意図的 deviation。詳細は `scripts/py/src/testim_parity/segments_ja.py` docstring 参照。
+PR #389 では旧 sibling 表現 (`markerIndent == bodyIndent`) を使っていた既存 corpus を
+top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約を parser 側で
+実装済み。
 
 **continuation paragraph** / **indented image** / **indented code fence** も同じく
 `leadingWs > bodyIndent` のとき active list item に flatten される:

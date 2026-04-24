@@ -46,10 +46,10 @@ keywords:
 :::
 
 - **アプリケーション要件** — この入門ガイドでは[Enhanced Mode (Mobile)](/docs/overview/testim-overview/enhanced-mode-mobile)のみを使用するため、次の要件を満たす必要があります。
-  - ネイティブアプリ: Android は Java または Kotlin、iOS は Objective-C または Swift
-  - WebView を含むネイティブアプリ
-  - React Native アプリ
-  - Flutter アプリ
+- ネイティブアプリ: Android は Java または Kotlin、iOS は Objective-C または Swift
+- WebView を含むネイティブアプリ
+- React Native アプリ
+- Flutter アプリ
 
 ## モバイルテストの記録
 

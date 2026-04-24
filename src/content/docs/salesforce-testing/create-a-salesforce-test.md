@@ -24,9 +24,9 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 テストにステップを追加するには 2 つの方法があります:
 
 - **ステップを手動で追加** - ステップを手動で追加できます。ステップは次のカテゴリに整理されています:
-  - **Salesforce ステップ** - Salesforce アプリケーションの使用に固有のステップ。Salesforce ステップは、Salesforce アプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforce アプリケーション内でフォームなどの Salesforce オブジェクトを表示および設定したりできます。詳細については、[Salesforce ステップ](/docs/salesforce-testing/salesforce-steps)を参照してください
-  - **事前定義ステップ** - Web アプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](/docs/editing-tests/steps#手動ステップ)を参照してください
-  - **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/editing-tests/shareable-steps)を参照してください。
+- **Salesforce ステップ** - Salesforce アプリケーションの使用に固有のステップ。Salesforce ステップは、Salesforce アプリケーションに深く統合されており、単一のステップ内で複数のアクションを実行したり、Testim for Salesforce アプリケーション内でフォームなどの Salesforce オブジェクトを表示および設定したりできます。詳細については、[Salesforce ステップ](/docs/salesforce-testing/salesforce-steps)を参照してください
+- **事前定義ステップ** - Web アプリケーションのテストに関連する一般的なステップ。詳細については、[手動ステップ](/docs/editing-tests/steps#手動ステップ)を参照してください
+- **共有ステップ** - 特定のプロジェクト内の複数のテスト間で共有されるステップ。詳細については、[共有ステップ](/docs/editing-tests/shareable-steps)を参照してください。
 - **[ステップの記録](/docs/salesforce-testing/create-a-salesforce-test#ステップの記録)** - Record ボタンをクリックすると、Salesforce アプリケーション（ベース URL）を表示するブラウザが開きます。入力、クリックなどのすべてのインタラクションは、自動的にテストのステップに変換されます。ステップの記録は、Salesforce 環境で広範なカスタマイズが行われたために Salesforce ステップを使用できない場合にも役立ちます。
 
 **2 つの方法を組み合わせることが可能です** - 一部のステップを手動で追加してから追加のステップを記録したり、その逆も可能です。

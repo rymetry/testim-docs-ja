@@ -62,11 +62,11 @@ Applitools Eyes アカウントと Testim アカウント間で情報を交換�
 ![Applitools Eyes で API キーの Team や Permissions などを設定する画面](/images/applitools-integration/applitools-integration/c62aa9e-Testim_247_r.png)
 
 6. オプションを以下のように入力します:
-   - **Team**フィールドで、ドロップダウンリストからチームを選択します。
-   - **User**フィールドで、適切なユーザーを選択します。
-   - **Permissions**セクションで、**Execute**と**Merge**のスイッチを右に切り替えます。
-   - **Expiry**フィールドで、オプションで API の有効期限を入力します。
-   - **Purpose**フィールドで、オプションでこの API の目的を入力します。
+- **Team**フィールドで、ドロップダウンリストからチームを選択します。
+- **User**フィールドで、適切なユーザーを選択します。
+- **Permissions**セクションで、**Execute**と**Merge**のスイッチを右に切り替えます。
+- **Expiry**フィールドで、オプションで API の有効期限を入力します。
+- **Purpose**フィールドで、オプションでこの API の目的を入力します。
 7. **Add**ボタンをクリックします。\
    キーが作成され、**API keys**画面に表示されます。
 

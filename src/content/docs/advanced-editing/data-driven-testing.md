@@ -35,15 +35,15 @@ keywords:
 
 - **Visual Editor（UI）経由** - テストデータは**セットアップ**ステップの**テストデータ**プロパティを通じて追加されます。データセットは JavaScript で定義され、複数の順序付きデータセットはオブジェクトの JS 配列リテラルで定義されます。詳細は[Visual Editor からのデータ駆動テストの設定](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor)を参照してください。
 - **[設定ファイル経由](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file)** - 設定ファイルは、設定ファイルフックを実行しながら、テストを実行するために必要なすべてのパラメーターを含む一般的な JS ファイルです。これらのフック（例:`beforeSuite`）の 1 つを通じて、実行全体または特定のテストにテストデータを追加できます。このデータセットは、Visual Editor で定義されたデータセットを上書きできます。テストは CLI を使用して実行でき、この実行で設定ファイルを使用するフラグを追加します。設定ファイルオプションは、データが使用されるスコープに対して広範な汎用性と細かい制御を提供します:
-  - **実行レベル** - 設定フック内の`return`セクションの後にデータパラメーターを配置すると、実行に含まれるすべてのテストで同じデータが実行されます。
+- **実行レベル** - 設定フック内の`return`セクションの後にデータパラメーターを配置すると、実行に含まれるすべてのテストで同じデータが実行されます。
 
     ![実行レベルのデータ設定例](/images/data-driven-testing/data-driven-testing/44a22c0-image_1.png)
 
-  - **テストレベル** - `return`セクション内に`overrideTestData`オブジェクトを追加できます。これにより、テスト名で指定されたテストにデータを追加でき、同じ実行内で 1 つのテストに 1 つのパラメーター、別のテストに別のパラメーターを指定することができます。
+- **テストレベル** - `return`セクション内に`overrideTestData`オブジェクトを追加できます。これにより、テスト名で指定されたテストにデータを追加でき、同じ実行内で 1 つのテストに 1 つのパラメーター、別のテストに別のパラメーターを指定することができます。
 
     ![テストレベルのデータ設定例](/images/data-driven-testing/data-driven-testing/9037352-2024-01-24_16-13-40.png)
 
-  - **[外部ファイルにリンクされたデータオブジェクトの使用](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)** - 外部ソース（CSV、DB など）からのテストデータは、設定ファイルを使用して 1 つまたは複数のテストに渡すことができます。パラメーターは`return`セクション内（つまり**実行レベル**）または`overrideTestData object`内（つまり**テストレベル**）のいずれかに配置できます。テストは CLI を使用して実行でき、この実行で設定ファイルを使用するフラグを追加します。
+- **[外部ファイルにリンクされたデータオブジェクトの使用](/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source)** - 外部ソース（CSV、DB など）からのテストデータは、設定ファイルを使用して 1 つまたは複数のテストに渡すことができます。パラメーターは`return`セクション内（つまり**実行レベル**）または`overrideTestData object`内（つまり**テストレベル**）のいずれかに配置できます。テストは CLI を使用して実行でき、この実行で設定ファイルを使用するフラグを追加します。
 
 - **[パラメーターファイル経由](/docs/advanced-editing/parameters/json-parameters-file-parameters)** - パラメーターファイルは、パラメーターとその値を含む JSON ファイルです。これは、Visual Editor で定義されたデータセットを上書きするより簡単な方法です。ただし、**_実行レベルのスコープのみ_**を提供します。つまり、すべてのパラメーターとその値は、実行に含まれるすべてのテストで使用されます。テストは CLI を使用して実行でき、この実行でパラメーターファイルを使用するフラグを追加します。CLI コマンドは、実行に含まれるテストにパラメーターを渡します。
 
