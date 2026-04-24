@@ -95,29 +95,36 @@ jobs:
       - name: mypy
         run: uv run mypy src
       - name: pytest (fast)
-        # default addopts の 6 marker (``not corpus and not slow and not
-        # cutover and not parity_smoke and not recall and not boundary``) を
-        # yaml 側で **明示的に重ねて指定**。重い gate は nightly 側で run する:
+        # default addopts の 7 marker (``not corpus and not slow and not
+        # cutover and not parity_smoke and not recall and not boundary and
+        # not real_repo``) を yaml 側で **明示的に重ねて指定**。重い gate は
+        # nightly 側で run する:
         #
-        #   - ``parity_smoke`` (CI 実測 ~19 分) / ``recall`` / ``boundary``
-        #     → ``nightly-python-oracle.yml`` (``parity-smoke`` /
-        #       ``python-quality-full``)
+        #   - ``parity_smoke`` (CI 実測 ~19 分) / ``recall`` / ``boundary`` /
+        #     ``real_repo`` → ``nightly-python-oracle.yml``
+        #     (``parity-smoke`` / ``python-quality-full``)
         #   - ``corpus`` → ``python-corpus`` (同 CI yaml 内 job)
         #   - ``slow`` / ``cutover`` → local / Phase 6b 手動 run
         #
         # ``--durations=30`` で top 30 の実効時間を毎回出し、fast gate 内の
-        # 新規律速を早期検知する (``recall`` / ``boundary`` を外した後の fast
-        # gate 内で潜在的に重い test が沈む事故を防ぐ defense in depth)。
+        # 新規律速を早期検知する (marker 移設後の fast gate 内で潜在的に重い
+        # test が沈む事故を防ぐ defense in depth)。
         #
         # この ``run:`` は静的 pytest command のみで untrusted input を
         # 含まないため command injection リスクは無い。
-        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary' --cov=testim_parity --cov-report=term-missing --durations=30
+        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary and not real_repo' --cov=testim_parity --cov-report=term-missing --durations=30
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-coverage
           path: scripts/py/.coverage
+          # ``.coverage`` は dot-prefixed の hidden file。upload-artifact@v4
+          # は default で hidden file を skip するため、この flag を付けないと
+          # "No files were found" で artifact が空になる (PR #386 round 3 で
+          # 発覚した bug)。pytest-cov が ``scripts/py/.coverage`` を生成する
+          # contract は維持する。
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
 

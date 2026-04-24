@@ -97,6 +97,16 @@ markers = [
   # cutover 後は ``python-parity-smoke`` が Python-only fast/corpus gate の
   # 1 segment として標準化される (docs/PYTHON_MIGRATION_PLAN.md 参照)。
   "parity_smoke: Python check_source_parity full-repo smoke (~5min, opt-in)",
+  # Real-repo snapshot integration benchmarks (``test_structure_fixtures.py``
+  # / ``test_source_usability_fixtures.py``). 実 EN HTML snapshot + JA
+  # markdown を load して align + structure comparator / source-usability
+  # detector を end-to-end で走らせる。CI 実測で 1 test あたり 28-83s かかる
+  # ため default PR gate には乗らない。nightly ``python-quality-full`` で
+  # ``recall`` / ``boundary`` と同 job で run し、Phase 6b cutover PR で
+  # required 昇格する。boundary とは semantic が分かれる ("real repo との
+  # 実 integration" vs "structure stability score") ため独立 marker として
+  # 導入した。
+  "real_repo: real-repo snapshot integration benchmarks (real EN HTML / JA md)",
 ]
 # default addopts は 6 marker (corpus / slow / cutover / parity_smoke /
 # recall / boundary) を **local でも CI でも** 除外する。PR feedback loop に
@@ -125,10 +135,15 @@ markers = [
 # - ``boundary`` (``test_segments_boundary.py`` + ``test_clean_page_fixtures.py``)
 #   は manifest 全ページを構造比較する sentinel 群。``recall`` と同じ扱いで
 #   nightly 専用に寄せ、Phase 6b cutover で required に昇格する。
+# - ``real_repo`` (``test_structure_fixtures.py`` + ``test_source_usability_fixtures.py``)
+#   は real EN snapshot + JA md を end-to-end で走らせる integration。CI
+#   実測で single test が 28-83s (parametrize ごと)、single detector test が
+#   38s と重く、旧 default pytest で python-fast を 5 分超に押し上げていた。
+#   ``recall`` / ``boundary`` と同じく nightly 移設 + Phase 6b 昇格。
 #
 # CI yaml (``.github/workflows/ci.yml``) でも同等の marker filter を **明示的に
 # 重ねて指定** する (この file の変更による silent 無効化を防ぐ defense in depth)。
-addopts = "-m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary'"
+addopts = "-m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary and not real_repo'"
 
 [tool.coverage.report]
 # Phase 4b-5 temporary: ``corpus`` marker (288-page matrix conformance) を

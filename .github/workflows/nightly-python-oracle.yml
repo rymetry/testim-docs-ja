@@ -15,12 +15,16 @@ name: Python oracle snapshot (nightly)
 #    Phase 6b cutover PR で別途 ``pytest -m cutover`` が run する契約 (本 workflow
 #    では ``not cutover`` で除外)。
 #
-# 3. ``python-quality-full`` — ``recall`` / ``boundary`` marker の full-repo
-#    benchmark (``test_recall.py`` / ``test_baseline_recall.py`` /
-#    ``test_segments_boundary.py`` / ``test_clean_page_fixtures.py``)。旧
-#    default pytest で実行していたが CI 実測 24 分 + と重く PR feedback loop
-#    を停止させていたため nightly 側に移設した。Phase 6b cutover PR で
-#    required 昇格させる (docs/PYTHON_MIGRATION_PLAN.md Phase 6b 参照)。
+# 3. ``python-quality-full`` — ``recall`` / ``boundary`` / ``real_repo``
+#    marker の full-repo benchmark (``test_recall.py`` /
+#    ``test_baseline_recall.py`` / ``test_segments_boundary.py`` /
+#    ``test_clean_page_fixtures.py`` / ``test_structure_fixtures.py`` /
+#    ``test_source_usability_fixtures.py``)。旧 default pytest で実行して
+#    いたが CI 実測 24 分 + と重く PR feedback loop を停止させていたため
+#    nightly 側に移設した。``real_repo`` marker は round 3 で追加 (real EN
+#    snapshot + JA md を end-to-end で走らせる integration 群)。Phase 6b
+#    cutover PR で required 昇格させる (docs/PYTHON_MIGRATION_PLAN.md
+#    Phase 6b 参照)。
 #
 # 実行時間: oracle-snapshot ~2min + parity-smoke ~20min + python-quality-full
 # ~30min (3 job 並列、longest ~30min)。
@@ -101,17 +105,19 @@ jobs:
         run: uv run pytest -m 'parity_smoke and not cutover' --tb=short --durations=10
 
   python-quality-full:
-    # recall / boundary marker の full-repo benchmark。旧 default pytest で
-    # 実行していたが CI 実測 24 分 + と重く PR feedback loop を停止させていた
-    # ため nightly 移設。Issue #368 / Phase 6b cutover で必要な quality gate
-    # なので **消さずに** 毎日 1 回 run する。cutover marker は Phase 6b cutover
-    # PR 側で強制 run するため本 job では除外。
+    # recall / boundary / real_repo marker の full-repo benchmark。旧 default
+    # pytest で実行していたが CI 実測 24 分 + (recall+boundary) + 150s 超
+    # (real_repo) と重く PR feedback loop を停止させていたため nightly 移設。
+    # Issue #368 / Phase 6b cutover で必要な quality gate なので **消さずに**
+    # 毎日 1 回 run する。cutover marker は Phase 6b cutover PR 側で強制 run
+    # するため本 job では除外。
     #
     # 将来的な改善 (Phase 6b 以降): test_recall.py / test_baseline_recall.py を
     # 1 slug = 1 test に parametrize して ``pytest-xdist -n auto --dist load``
     # で並列化する。現状は single-test 内で manifest を loop しているため
-    # xdist の効果が限定的なので、nightly では serial run のまま lru_cache /
-    # module-level constant で重複計算を削ることを優先した (PR B 実装範囲)。
+    # xdist の効果が限定的なので、nightly では serial run のまま
+    # ``functools.cache`` / module-level constant で重複計算を削ることを優先
+    # した (PR B 実装範囲)。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -140,8 +146,8 @@ jobs:
           cache-dependency-glob: 'scripts/py/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
-      - name: pytest (recall + boundary)
-        # ``-m 'recall or boundary'`` で full-repo benchmark を run。
-        # ``--durations=30`` で top 30 の律速を可視化する (Phase 6b で xdist
-        # 並列化する際の optimizer input)。
-        run: uv run pytest -m 'recall or boundary' --tb=short --durations=30
+      - name: pytest (recall + boundary + real_repo)
+        # ``-m 'recall or boundary or real_repo'`` で full-repo benchmark を
+        # run。``--durations=30`` で top 30 の律速を可視化する (Phase 6b で
+        # xdist 並列化する際の optimizer input)。
+        run: uv run pytest -m 'recall or boundary or real_repo' --tb=short --durations=30
