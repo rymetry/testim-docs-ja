@@ -27,6 +27,12 @@ dependencies = [
 dev = [
   "pytest>=8.0",
   "pytest-cov>=5.0",
+  # PR B (Phase 5 CI 高速化): 288-page corpus conformance を slug-parametrized
+  # test に分解して worker 間で動的分散する。``-n auto`` + ``--dist load`` で
+  # Phase 4b-5 実測 4:17 を ubuntu-latest 4 worker 並列で ~2 分に短縮する想定
+  # (docs/PYTHON_MIGRATION_PLAN.md Phase 5 CI 高速化計画 参照)。``[psutil]``
+  # extra は worker CPU affinity 検出のため必須 (xdist docs 推奨)。
+  "pytest-xdist[psutil]>=3.6",
   "ruff>=0.4",
   "mypy>=1.10",
   # Phase 1 で BS4 / lxml / html5lib を segments_en.py が使い始めるため、
@@ -51,14 +57,21 @@ markers = [
   "boundary: boundary stability (score >= 0.95)",
   "recall: mutation recall (9/9 = 100%)",
   "integration: full pipeline",
-  # 288-page matrix conformance (~4 min)。default で除外し、**CI も local も**
-  # ``addopts = "-m 'not slow and not cutover'"`` で skip する運用 (Phase 4b-5
-  # coexistence)。merge 前に shape drift を検証したい reviewer は local で
-  # ``uv run pytest -m slow`` を **明示 run** する。Phase 6 cutover で
-  # conformance が golden 化される段階で slow marker は自然退場する。
-  # align_288_matrix はアルゴリズム計算が重いため pytest-xdist でも律速 (単一
-  # test がシリアル)、slow-marker で opt-in する設計が最善策。
-  "slow: 288-page corpus conformance (align + segments_en 全ページ走査)",
+  # 288-page corpus conformance (segments_en + turndown 全ページ走査)。
+  # PR B (Phase 5 CI 高速化) で slug-parametrize + pytest-xdist ``-n auto
+  # --dist load`` で並列化した (8 worker 実測 ~10s)。``corpus`` は default で
+  # CI / local の両方から除外し、pytest-xdist 込みの実行を ``uv run pytest
+  # -m corpus -n auto --dist load`` として別 job (``python-corpus``) で走らせる
+  # (docs/PYTHON_MIGRATION_PLAN.md 参照)。Phase 6b cutover で mjs harness 削除
+  # + committed golden fixture 比較に移行する段階で ``corpus`` marker は永続化
+  # する (``slow`` の align は cutover 後に retire する)。
+  "corpus: 288-page corpus conformance (segments_en + turndown, xdist 対応)",
+  # align 288-matrix は oracle 化が複雑 (Python 生成 segments を mjs align に
+  # 渡す旧 test の narrow semantics を保持するため) なので、Phase 6b cutover
+  # で golden fixture 化する段階まで ``slow`` marker のまま単一 serial test
+  # を維持する。``corpus`` と独立に skip できるよう別 marker で扱う (PR B の
+  # xdist 並列化 scope 外)。
+  "slow: 288-page align conformance (align_288_matrix, serial 1-test batch)",
   # Phase 6 atomic cutover の self-enforcing gate。Phase 5 で port 中に
   # 発覚した Python extractor / align drift を Phase 6 cutover PR で解消したかを
   # auto audit する。``_PY_XFAIL_SLUGS`` / ``_PY_EXTRACTOR_DRIFT_SLUGS`` 等の
@@ -74,39 +87,44 @@ markers = [
   # 1 segment として標準化される (docs/PYTHON_MIGRATION_PLAN.md 参照)。
   "parity_smoke: Python check_source_parity full-repo smoke (~5min, opt-in)",
 ]
-# default addopts は slow / cutover / parity_smoke を **local でも CI でも**
-# 除外する。
+# default addopts は corpus / slow / cutover / parity_smoke を **local でも
+# CI でも** 除外する。
 #
-# - ``slow`` (288-page matrix conformance) は ~4 min かかるため CI feedback loop
-#   を阻害する。Phase 6 cutover で conformance が golden 化される段階で自然退場。
-#   事前 run は reviewer が local で ``uv run pytest -m slow`` を明示実行する運用。
+# - ``corpus`` (288-page segments_en + turndown conformance, xdist 対応) は
+#   ~10s で走る軽量 gate だが ``python-fast`` の coverage 計測とは独立 run
+#   したいため別 job ``python-corpus`` で ``uv run pytest -m corpus -n auto
+#   --dist load`` として走らせる。
+# - ``slow`` は 288-page align conformance (serial 1-test batch, ~4 min)。
+#   PR B では parametrize せず旧方式のまま残した (oracle 化は Phase 6b
+#   cutover で golden fixture 化と同時に行う計画)。CI では skip、reviewer が
+#   local で ``uv run pytest -m slow`` を pre-merge で明示 run する運用。
 # - ``cutover`` は Phase 6 cutover PR 内で ``uv run pytest -o addopts= -m cutover``
 #   を **1 回限り強制 run** する gate。coexistence 期間は skip のまま。
 # - ``parity_smoke`` は PR A で導入した Python ``check_source_parity`` full-repo
-#   smoke (~5 min)。default run は skip、CI では専用 step
-#   ``uv run pytest -m parity_smoke`` で明示 run する。Phase 6b atomic cutover で
-#   ``python-parity-smoke`` job が Python-only gate の segment として標準化される。
+#   smoke (~5 min)。default run は skip、CI では専用 job
+#   (``python-parity-smoke``) で ``uv run pytest -m 'parity_smoke and not cutover'``
+#   として run する。Phase 6b atomic cutover で Python-only gate の segment
+#   として標準化される。
 #
-# CI yaml (``.github/workflows/ci.yml`` の ``python-test`` job) でも同等の
-# ``-m 'not slow and not cutover and not parity_smoke'`` を **明示的に重ねて指定**
-# する (この file の変更による silent 無効化を防ぐ defense in depth)。
-addopts = "-m 'not slow and not cutover and not parity_smoke'"
+# CI yaml (``.github/workflows/ci.yml``) でも同等の marker filter を **明示的に
+# 重ねて指定** する (この file の変更による silent 無効化を防ぐ defense in depth)。
+addopts = "-m 'not corpus and not slow and not cutover and not parity_smoke'"
 
 [tool.coverage.report]
-# Phase 4b-5 temporary: ``slow`` marker (288-page matrix conformance) を CI
-# default で skip した結果、288-page matrix が exercise していた segments_en /
-# align / turndown 系 path が coverage に計上されず、CI 実効 coverage は ~65-70%
-# まで下がる (slow 込み local 実測は 95.60%、Phase 5 完了時点)。
+# Phase 4b-5 temporary: ``corpus`` marker (288-page matrix conformance) を
+# ``python-fast`` job default で skip した結果、288-page matrix が exercise
+# していた segments_en / align / turndown 系 path が ``python-fast`` の
+# coverage には計上されない。別 job ``python-corpus`` が corpus を走らせるが
+# coverage は ``python-fast`` 側で測るため、``python-fast`` 単体の実効
+# coverage は ~65-70% に下がる (corpus 込み local 実測は 95.60%、Phase 5 時点)。
 #
-# Phase 6 atomic cutover で conformance test 一式を golden snapshot に退場させ、
-# slow marker が不要になる段階で ``fail_under = 90`` へ戻す。それまでは
-# reviewer が pre-merge に ``uv run pytest -m slow`` で補完する運用契約
+# Phase 6 atomic cutover で mjs harness 削除 + committed golden fixture 化する
+# 段階で coverage 計測戦略を再整備し、``fail_under = 90`` へ戻す予定
 # (docs/PYTHON_MIGRATION_PLAN.md Phase 5 実績表 / Phase 6 gate 1 を参照)。
 #
-# ``fail_under = 65`` は **Phase 5 coexistence 下限値**。CI で slow 除外後も
-# 少なくとも 65% は維持する regression guard として機能する (急激な coverage
-# 崩壊を検知する下限 gate)。Phase 5 期間中にこの値を変更する場合は plan doc
-# 側の coverage 記述も同時に update する契約。
+# ``fail_under = 65`` は **Phase 5 coexistence 下限値**。急激な coverage 崩壊を
+# 検知する下限 gate として機能する。Phase 5 期間中にこの値を変更する場合は
+# plan doc 側の coverage 記述も同時に update する契約。
 fail_under = 65
 
 [tool.ruff]

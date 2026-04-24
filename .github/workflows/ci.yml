@@ -46,12 +46,14 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-  python-test:
-    # Covers the in-flight Python port (see docs/PYTHON_MIGRATION_PLAN.md).
-    # Runs unit tests, conformance tests (which spawn node against mjs
-    # sources), lint, format, and type-check. Node is installed because the
-    # conformance harness at scripts/py/conformance/harness.mjs imports
-    # scripts/lib/*.mjs. Drop this job only after the cutover in Phase 6.
+  python-fast:
+    # PR B (Phase 5 CI 高速化): 旧 ``python-test`` を分割した fast feedback gate。
+    # ruff / format / mypy / 単体 + conformance fast tests (``not corpus`` /
+    # ``not slow`` / ``not cutover`` / ``not parity_smoke``)。288-page corpus +
+    # align batch + full-repo smoke は ``python-corpus`` / ``python-parity-smoke``
+    # に分離した (docs/PYTHON_MIGRATION_PLAN.md 参照)。
+    # Node は ``not corpus`` scope の conformance 一部が mjs harness を呼ぶため
+    # 必要 (Phase 6b cutover で削除予定)。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -66,7 +68,6 @@ jobs:
         # conformance harness (scripts/py/conformance/harness.mjs) が
         # scripts/lib/project.mjs 経由で npm パッケージ ``gray-matter`` を
         # import するため、Python テスト実行前に node_modules を解決する。
-        # これが無いと conformance テストが ERR_MODULE_NOT_FOUND で全滅する。
         working-directory: ${{ github.workspace }}
         run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
@@ -89,44 +90,100 @@ jobs:
         run: uv run ruff format --check src tests
       - name: mypy
         run: uv run mypy src
-      - name: pytest
-        # Phase 4b-5 の一時措置: ``slow`` marker (288-page matrix conformance) は
-        # CI でも skip する (~4 分かかり PR feedback loop を阻害)。``cutover`` は
-        # Phase 6 cutover PR 専用、``parity_smoke`` は PR A の full-repo smoke で
-        # ~5 分かかるため別 step に分離 (下記 ``check_source_parity smoke`` 参照)。
-        # Phase 6 atomic cutover で mjs 削除 + conformance test 退場に伴って
-        # ``slow`` は自然解消し、``parity_smoke`` は ``python-parity-smoke`` job
-        # に格上げされる。
-        #
-        # ``pyproject.toml`` の ``addopts`` が default で効くが、CI yaml でも
-        # **明示的** に ``-m`` を重ねて「この 3 marker を CI default から外す契約」
-        # を yaml レベルで可視化する (PR #384 user request: 意図の pin、
-        # pyproject.toml 変更時の silent 無効化防止)。この ``run:`` は静的な
-        # pytest command のみで untrusted input を含まないため command injection
-        # リスクは無い。
-        run: uv run pytest -m 'not slow and not cutover and not parity_smoke' --cov=testim_parity --cov-report=term-missing
-      - name: check_source_parity smoke
-        # PR A (``MaskCoverage`` blocker 修正) の acceptance gate。実 ROOT_DIR に
-        # 対して Python ``check_source_parity`` CLI を走らせ、CLI 完走 /
-        # payload schema / ``debug.maskCoverage`` shape を pin する。~5 分かかる
-        # ため上の pytest step とは分離 (job 内だが別 step)。Phase 6b atomic
-        # cutover で ``python-parity-smoke`` job に昇格予定 (PR B で分離する)。
-        # このレベルの分離でも「PR A の refactor が production 経路を壊していない」
-        # 保証は CI run で毎回確認される。
-        #
-        # ``-m 'parity_smoke and not cutover'``: parity_smoke marker の test の
-        # うち、5-counter 0 を要求する cutover-only test (Phase 5 coexistence 中は
-        # Python extractor drift により fail する) を除外する。Phase 6b で
-        # cutover exclude を外す (``uv run pytest -m parity_smoke`` 単純化)。
-        # run: 内は静的 pytest command のみで untrusted input を含まないため
-        # command injection リスクは無い。
-        run: uv run pytest -m 'parity_smoke and not cutover' --tb=short
+      - name: pytest (fast)
+        # default addopts (``-m 'not corpus and not slow and not cutover and
+        # not parity_smoke'``) を yaml 側で **明示的に重ねて指定**。``parity_smoke``
+        # は PR A で追加した full-repo smoke で ``python-parity-smoke`` job が
+        # 独立に run する。この ``run:`` は静的 pytest command のみで untrusted
+        # input を含まないため command injection リスクは無い。
+        run: uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke' --cov=testim_parity --cov-report=term-missing
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-coverage
           path: scripts/py/.coverage
+          if-no-files-found: ignore
+          retention-days: 7
+
+  python-parity-smoke:
+    # PR A で追加した full-repo smoke (``check_source_parity`` を real ROOT_DIR
+    # で走らせて schema / maskCoverage shape を pin する)。Phase 5 coexistence
+    # 中は ~5 分かかるため ``python-fast`` から分離。Phase 6b atomic cutover で
+    # Python-only gate になる段階で本 job は恒常化する。
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        run: pip install 'uv==0.11.7'
+      - name: Sync Python deps
+        run: uv sync --all-extras
+      - name: pytest (parity_smoke)
+        # ``-m 'parity_smoke and not cutover'``: Phase 5 coexistence 中は
+        # cutover-marked 5-counter test は fail するため除外。Phase 6b で外す。
+        # run: 内は静的 pytest command のみで untrusted input を含まないため
+        # command injection リスクは無い。
+        run: uv run pytest -m 'parity_smoke and not cutover' --tb=short
+
+  python-corpus:
+    # PR B で新設した 288-page corpus conformance gate。segments_en + turndown
+    # の full parametrized test を pytest-xdist ``-n auto --dist load`` で並列
+    # 実行する (8 worker 実測 ~10s、目標 2:30 を大幅下回り)。oracle は
+    # ``node scripts/py/tools/emit_corpus_oracle.mjs`` が事前生成し、全 worker
+    # が ``TESTIM_CORPUS_EXPECTED_JSONL`` 環境変数経由で同じ JSONL を読む
+    # (silent な N-way harness 再呼び出しを防ぐ契約)。align 288-matrix は
+    # ``slow`` marker 側で serial run されるため本 job には含まない (plan doc
+    # Phase 5 CI 高速化節参照)。
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install Node deps
+        # emit_corpus_oracle.mjs が scripts/lib/* を import する経路で
+        # gray-matter 等の npm パッケージが要る。
+        working-directory: ${{ github.workspace }}
+        run: npm ci
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        run: pip install 'uv==0.11.7'
+      - name: Sync Python deps
+        run: uv sync --all-extras
+      - name: Generate corpus oracle JSONL
+        # 288 page × 2 suite (segments_en + turndown) の expected を mjs
+        # authority で 1 回だけ emit。atomic temp+rename で partial 状態を
+        # 残さない (emit_corpus_oracle.mjs docstring 参照)。
+        run: node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl --suite segments_en,turndown
+      - name: pytest (corpus)
+        # xdist ``-n auto --dist load`` で 576 parametrized test を worker 間に
+        # 動的分散する。stdout interleave 対策として ``--tb=short``
+        # + ``--junitxml`` artifact を併用する。
+        # ``TESTIM_CORPUS_EXPECTED_JSONL`` は **絶対パス** 必須 (conftest.py の
+        # loader fixture 契約、相対 path は xdist worker cwd semantics を壊す)。
+        # run: 内は静的 pytest command のみで untrusted input を含まないため
+        # command injection リスクは無い。
+        env:
+          TESTIM_CORPUS_EXPECTED_JSONL: ${{ github.workspace }}/scripts/py/.corpus_expected.jsonl
+        run: uv run pytest -m corpus -n auto --dist load --tb=short --junitxml=corpus-junit.xml
+      - name: Upload corpus junit
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: corpus-junit
+          path: scripts/py/corpus-junit.xml
           if-no-files-found: ignore
           retention-days: 7
 

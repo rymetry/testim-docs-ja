@@ -1,8 +1,8 @@
 """Phase 1 verification gate: 288-page segment extraction matrix。
 
-``snapshots/en/content/**/*.html`` 全ページについて、mjs と Python の
-``extract_segments_from_html`` 出力を byte 比較する。PYTHON_MIGRATION_PLAN.md
-の Phase 1 verification gate:
+``snapshots/en/content/**/*.html`` 全ページについて、Python の
+``extract_segments_from_html`` 出力を JSONL oracle (mjs 側の値) と byte 比較
+する。PYTHON_MIGRATION_PLAN.md の Phase 1 verification gate:
 
     > 全 288+ snapshot ページで segments_en 出力を mjs と比較
     > 比較対象: segmentKind, sectionPath, segment 数が一致
@@ -10,9 +10,13 @@
 本テストは **segment count + {segmentKind, sectionPath, textNorm,
 tokensInvariant, segmentIndex} full equality** を hard 確認する。
 
-mjs 側は 1 回の node プロセスで 288 call を batch 処理する (``harness.mjs``
-の batch dispatch 契約)。288 個を逐次 spawn すると ~30s かかるため、
-fixture scope=module で batch を 1 度だけ実行する。
+## xdist 並列化 (PR B)
+
+PR B で serial 1 test → **slug-parametrized 288 test** に分解し、pytest-xdist
+``-n auto --dist load`` で worker 間に動的分散する。mjs harness は ``python-
+corpus`` job で 1 回だけ spawn して expected JSONL を生成し、全 worker が
+``TESTIM_CORPUS_EXPECTED_JSONL`` env var 経由でそれを共有する (詳細は
+``tests/conformance/conftest.py`` の ``corpus_oracle`` fixture)。
 
 ## Allowlist lifecycle (architect review H3)
 
@@ -43,12 +47,13 @@ fixture scope=module で batch を 1 度だけ実行する。
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
 from testim_parity.segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_html
 
-from ._harness import run_batch
+from .conftest import canonical_sha256
 
 SNAPSHOT_ROOT_PARTS = ("snapshots", "en", "content")
 
@@ -79,106 +84,115 @@ class AllowEntry:
 _ALLOWLIST: dict[str, AllowEntry] = {}
 
 
-def _collect_snapshots(repo_root) -> list[tuple[str, str]]:
-    """``(slug, html)`` のリストを返す。slug は拡張子なしの相対パス。"""
+def _collect_slugs() -> list[str]:
+    """Collect slug list at **collect time** for ``@pytest.mark.parametrize``.
+
+    ``pytest_generate_tests`` を使わず module-level 定数にすることで、xdist
+    worker 側 collection も同じ list を生成する (filesystem-deterministic)。
+    """
+    repo_root = Path(__file__).resolve().parents[4]
     root = repo_root
     for part in SNAPSHOT_ROOT_PARTS:
         root = root / part
     if not root.exists():
         return []
-    pairs: list[tuple[str, str]] = []
+    slugs: list[str] = []
     for path in sorted(root.rglob("*.html")):
         rel = path.relative_to(root).with_suffix("")
         slug = rel.as_posix()
-        pairs.append((slug, path.read_text(encoding="utf-8")))
-    return pairs
-
-
-@pytest.fixture(scope="module")
-def snapshot_pages(repo_root) -> list[tuple[str, str]]:
-    pages = _collect_snapshots(repo_root)
-    if not pages:
-        pytest.skip("snapshots/en/content/ が空 — snapshot fetch 未実行")
-    return pages
-
-
-@pytest.fixture(scope="module")
-def mjs_segments_by_slug(repo_root, node_available, snapshot_pages) -> dict[str, list]:
-    if not node_available:
-        pytest.skip("node not available")
-    # 288 call を 1 回の node spawn で batch 処理する。harness は batch-per-
-    # process 契約なので、これで startup コストが amortize される。
-    calls = [
-        {"function": "segments_en_extract", "args": [html, slug]} for slug, html in snapshot_pages
-    ]
-    results = run_batch(repo_root, calls, timeout=300.0)
-    return {slug: mjs for (slug, _html), mjs in zip(snapshot_pages, results, strict=True)}
-
-
-@pytest.mark.slow
-def test_all_288_pages_match(snapshot_pages, mjs_segments_by_slug):
-    """288 page すべてで Python segment list が mjs と byte 一致。
-
-    Divergence が出たページは集約して失敗 message に出す (1 件ずつ失敗させる
-    と最初の 1 件で stop するため全体像が掴めない)。
-    """
-    divergences: list[str] = []
-    for slug, html in snapshot_pages:
         if slug in _ALLOWLIST:
-            continue  # intentional divergence
-        # production caller と同じ shape で callout allow list を明示的に渡す
-        # (review H4: Python default は None = no normalization で mjs と揃えた
-        # ため、test 側が production API 契約をシミュレートする)。
-        py = extract_segments_from_html(
-            html, slug=slug, callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS
-        )
-        mjs = mjs_segments_by_slug[slug]
-        if py != mjs:
-            # diff 要点のみ抽出して noise を抑える
-            py_count = len(py)
-            mjs_count = len(mjs)
-            first_diff_idx: int | None = None
-            for i in range(min(py_count, mjs_count)):
-                if py[i] != mjs[i]:
-                    first_diff_idx = i
-                    break
-            detail = f"  slug={slug}\n    py_count={py_count} mjs_count={mjs_count}"
-            if first_diff_idx is not None:
-                detail += (
-                    f"\n    first diff at index {first_diff_idx}:"
-                    f"\n      py  = {py[first_diff_idx]!r}"
-                    f"\n      mjs = {mjs[first_diff_idx]!r}"
-                )
-            elif py_count != mjs_count:
-                # どちらか長いほうの末尾を参考に出す
-                longer = py if py_count > mjs_count else mjs
-                detail += f"\n    extra trailing segment: {longer[-1]!r}"
-            divergences.append(detail)
+            continue
+        slugs.append(slug)
+    return slugs
 
-    assert not divergences, f"{len(divergences)} page(s) diverged from mjs:\n" + "\n".join(
-        divergences[:10]
+
+_ALL_SLUGS = _collect_slugs()
+
+
+def _read_html(slug: str) -> str:
+    """Load EN snapshot HTML for a slug."""
+    repo_root = Path(__file__).resolve().parents[4]
+    path = repo_root
+    for part in SNAPSHOT_ROOT_PARTS:
+        path = path / part
+    return (path / f"{slug}.html").read_text(encoding="utf-8")
+
+
+@pytest.mark.corpus
+@pytest.mark.parametrize("slug", _ALL_SLUGS)
+def test_segments_en_page_matches_oracle(slug: str, corpus_oracle: dict) -> None:
+    """1 slug = 1 test: Python segment list が JSONL oracle (mjs) と byte 一致。
+
+    xdist ``-n auto --dist load`` で 288 case が worker 間に動的分散される。
+    ``corpus_oracle`` fixture は session-scope で (suite, slug) key の dict を
+    持つ (xdist worker 毎に 1 回だけロード、JSONL file は env var 経由で共有)。
+
+    ``sha256`` field も比較することで、oracle JSONL が tampered / truncated 時
+    に早期検知する (drift 検知の byte-parity fingerprint)。
+    """
+    row = corpus_oracle.get(("segments_en", slug))
+    assert row is not None, (
+        f"oracle JSONL missing segments_en row for slug={slug!r}. "
+        "Re-run `node scripts/py/tools/emit_corpus_oracle.mjs` to regenerate."
+    )
+
+    html = _read_html(slug)
+    # production caller と同じ shape で callout allow list を明示的に渡す
+    # (review H4: Python default は None = no normalization で mjs と揃えた
+    # ため、test 側が production API 契約をシミュレートする)。
+    py = extract_segments_from_html(
+        html, slug=slug, callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS
+    )
+    expected = row["expected"]
+
+    if py != expected:
+        py_count = len(py)
+        ex_count = len(expected)
+        first_diff_idx: int | None = None
+        for i in range(min(py_count, ex_count)):
+            if py[i] != expected[i]:
+                first_diff_idx = i
+                break
+        detail = f"  slug={slug}\n    py_count={py_count} mjs_count={ex_count}"
+        if first_diff_idx is not None:
+            detail += (
+                f"\n    first diff at index {first_diff_idx}:"
+                f"\n      py  = {py[first_diff_idx]!r}"
+                f"\n      mjs = {expected[first_diff_idx]!r}"
+            )
+        elif py_count != ex_count:
+            longer = py if py_count > ex_count else expected
+            detail += f"\n    extra trailing segment: {longer[-1]!r}"
+        pytest.fail(f"segment divergence:\n{detail}")
+
+    # sha256 integrity check (oracle JSONL tamper detection)
+    assert canonical_sha256(expected) == row["sha256"], (
+        f"oracle JSONL sha256 mismatch for segments_en/{slug} — "
+        "JSONL may be truncated or tampered (regenerate via emit_corpus_oracle.mjs)"
     )
 
 
-@pytest.mark.slow
-def test_segment_counts_and_kinds_summary(snapshot_pages, mjs_segments_by_slug):
-    """summary-level check: 合計 segment 数と kind 分布が mjs と一致。
+@pytest.mark.corpus
+def test_segment_counts_and_kinds_summary(corpus_oracle: dict) -> None:
+    """Aggregate check: 合計 segment 数と kind 分布が oracle と一致。
 
-    ``test_all_288_pages_match`` が throw した場合でも、ここで aggregate な
-    divergence 把握ができるよう補助 assert を置く。
+    slug-parametrized test が throw した場合でも、ここで aggregate な
+    divergence 把握ができるよう補助 assert を置く。single-test のまま残す
+    (aggregate なので parametrize する意味が薄い)。
     """
     py_total = 0
     mjs_total = 0
     py_kinds: dict[str, int] = {}
     mjs_kinds: dict[str, int] = {}
-    for slug, html in snapshot_pages:
-        # production caller と同じ shape で callout allow list を明示的に渡す
-        # (review H4: Python default は None = no normalization で mjs と揃えた
-        # ため、test 側が production API 契約をシミュレートする)。
+    for slug in _ALL_SLUGS:
+        row = corpus_oracle.get(("segments_en", slug))
+        if row is None:
+            continue
+        html = _read_html(slug)
         py = extract_segments_from_html(
             html, slug=slug, callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS
         )
-        mjs = mjs_segments_by_slug[slug]
+        mjs = row["expected"]
         py_total += len(py)
         mjs_total += len(mjs)
         for s in py:

@@ -21,6 +21,17 @@ divergent な slug (``_DIVERGENT_ALLOWLIST``) は allowlist に計上する。�
 Phase 2 nested list flatten 由来の 147 slug が divergent。segment 数が mjs と
 一致する slug のみ align を走らせ byte 比較する。
 
+## PR B coexistence note
+
+PR B で ``slow`` marker を ``corpus`` に rename した際、本 test は
+**slug-parametrize しない** 設計を維持した: oracle 経由で align を比較する
+には、oracle 側も Python-generated segments を入力にする必要がある (旧 test
+は Python と mjs 両方に Python segments を流し込んで「align byte-parity」を
+narrow に検証する設計だった)。オフライン oracle 化は Python 側での segments
+dump → mjs oracle 再入力という 2-stage pipeline を要するため、Phase 6b
+cutover で golden fixture 化する段階で整理する (それまで segments_en /
+turndown とは異なり serial 1 test のまま ``-n auto`` worker の 1 人が担当)。
+
 Note: node spawn コストを抑えるため 288 page 全体を 1 batch で処理する。
 mjs 側で align_segments まで流すため batch timeout を 600s に拡張する。
 """

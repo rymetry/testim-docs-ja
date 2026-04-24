@@ -904,16 +904,28 @@ corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
     "test:mjs": "node --test scripts/__tests__/*.mjs",
     "test:py": "cd scripts/py && uv run pytest",
     "test:py:cov": "cd scripts/py && uv run pytest --cov=testim_parity --cov-report=term-missing",
+    "test:py:quick": "cd scripts/py && uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke'",
     "test:py:slow": "cd scripts/py && uv run pytest -m slow",
-    "test:all": "npm run test:mjs && npm run test:py"
+    "test:py:corpus": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl && TESTIM_CORPUS_EXPECTED_JSONL=\"$PWD/.corpus_expected.jsonl\" uv run pytest -m corpus -n auto --dist load --tb=short",
+    "test:py:full": "cd scripts/py && uv run pytest -m ''",
+    "test:quick": "npm run test:mjs && npm run test:py:quick",
+    "test:all": "npm run test:mjs && npm run test:py:full"
   }
 }
 ```
 
-CI の `test` job は `npm run test` (mjs only)、`python-test` job は pytest をそれぞれ独立実行。
-local では `npm run test:all` で両方を連続実行可能。mjs テストファイルは当初 54/55 を delete
-したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5 終了時点で
-**3 file** が残存している:
+CI は PR B で分割済み: `node-test` (mjs only), `python-fast` (ruff / format / mypy / `pytest
+-m 'not corpus and not slow and not cutover and not parity_smoke'`), `python-parity-smoke`
+(PR A の `check_source_parity` full-repo smoke), `python-corpus` (288-page conformance,
+pytest-xdist `-n auto --dist load`)。`python-drift` は nightly schedule
+(`.github/workflows/nightly-python-drift.yml`) で mjs oracle の self-regression を監視する。
+
+local では `npm run test:all` で mjs + full pytest を連続実行可能
+(corpus + slow + cutover + parity_smoke を含む)。fast iteration 用に
+`npm run test:quick` (mjs + `not corpus and not slow and not cutover and not parity_smoke`)
+も提供。mjs テストファイルは当初 54/55 を
+delete したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5
+終了時点で **3 file** が残存している:
 
 - `scripts/__tests__/lib_redirects.test.mjs` (6 test) — Astro build graph が `redirects.mjs`
   を import するため恒久保持 (Phase 6 以降、Astro 依存解消時の post-Phase-6 cleanup で削除)
@@ -983,6 +995,47 @@ gap-fill parity / detection_reports+mutation_corpus / giant source_parity)。同
 - `cd scripts/py && uv run mypy src` — Success: no issues found in 60 source files
 - `npm run check:parity` — **5-counter = 0 維持**
 - `npm run build` — 290 pages pass
+
+### Phase 5 CI 高速化 (PR B, post-Phase-5 別 PR)
+
+Phase 5 完了後の follow-up として、288-page corpus conformance の CI 所要時間を短縮する
+infrastructure 整備を PR B として分離実装する。Phase 5 の本体 (pytest port) とは独立なので
+別 PR で扱う。
+
+**目標**: `corpus` gate を ubuntu-latest で 2:30 以下 (escalation 閾値: 3 回測定中央値 > 3:00
+なら次 PR で `pytest-split` + matrix 分割追加)。
+
+**変更点**:
+
+- **`emit_corpus_oracle.mjs` 新設**: `scripts/py/tools/emit_corpus_oracle.mjs` が
+  288 page × {segments_en, turndown, align} 分の mjs 側 expected を JSONL で 1 回だけ生成。
+  1 row = `{schemaVersion:1, suite, slug, sha256, expected}`。`sha256` は `expected` の
+  canonical JSON (`sort_keys=True, separators=(",", ":")`) に対する SHA-256 で、tamper / truncate
+  検知の fingerprint として機能。出力は atomic temp+rename で partial file を残さない。
+- **`corpus` marker 導入 (segments_en + turndown)**: `test_segments_en_288_matrix.py` と
+  `test_turndown_288_matrix.py` を slug-parametrize (1 slug = 1 pytest case, 計 576 test)。
+  `corpus_oracle` session-scope fixture (`tests/conformance/conftest.py`) が worker 毎に
+  1 回だけ JSONL を in-memory dict 化し、test は `(suite, slug)` key で lookup する。
+  xdist 並列化で実測 **~10s** (8 worker Mac, 目標 2:30 を大幅下回り)。
+- **`slow` marker 維持 (align 288-matrix)**: `test_align_288_matrix.py` は Python-generated
+  segments を mjs align に流し込む narrow conformance の設計上 oracle 化が 2-stage pipeline を
+  要する。Phase 6b cutover で committed golden fixture 化する段階まで serial 1-test batch の
+  まま `slow` marker で残す (CI では skip、reviewer が local で明示 run)。
+- **`pytest-xdist[psutil]` dev 依存追加**: `python-corpus` job は `-n auto --dist load
+  --junitxml=corpus-junit.xml` で worker 間動的分散 + interleave 対策。
+- **CI job 分割**: `python-test` (single) → `python-fast` + `python-parity-smoke` +
+  `python-corpus` + `python-drift` (nightly)。Node 依存は `python-fast` / `python-corpus` /
+  `python-drift` のみ (mjs harness import のため)、`python-parity-smoke` は Python-only。
+
+**oracle JSONL の CI 契約**: `TESTIM_CORPUS_EXPECTED_JSONL` env var **絶対パス必須**
+(xdist worker の cwd semantics を壊さないため)。env var 未 set + xdist 内 = fail (silent
+な N-way harness 再呼び出しを防ぐ)。local non-xdist fallback では `conftest.py` fixture が
+emit_corpus_oracle.mjs を 1 回だけ subprocess 起動して session 内で生成する。
+
+**Phase 6 以降**: Phase 6a golden-freeze PR で mjs oracle と committed golden JSONL の差分
+監視を `python-drift` nightly gate の必須昇格として扱う。Phase 6b atomic cutover で mjs
+harness 削除後、`slow` marker (align) は golden fixture 比較に置換されて退場し、`corpus`
+marker が Python-only gate の segment として恒常化する。
 
 ### 既知の follow-up (Phase 6 着手前に検討)
 
