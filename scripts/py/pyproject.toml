@@ -54,8 +54,19 @@ packages = ["src/testim_parity"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
-  "boundary: boundary stability (score >= 0.95)",
-  "recall: mutation recall (9/9 = 100%)",
+  # Full-repo structural boundary benchmark (``test_segments_boundary.py``
+  # + ``test_clean_page_fixtures.py``). Every test walks the representative
+  # manifest × ``CLEAN_PAGE_SLUGS`` through ``_analyze_page`` /
+  # ``_run_structure_comparator``; running in the ``python-fast`` PR gate
+  # would add minutes per PR. Excluded from default addopts, exercised by
+  # the ``python-quality-full`` nightly job (``nightly-python-oracle.yml``)
+  # and escalated to required in the Phase 6b cutover PR.
+  "boundary: boundary stability (score >= 0.95, full-repo manifest walk)",
+  # Full-repo mutation recall benchmark (``test_recall.py`` +
+  # ``test_baseline_recall.py``). Runs every diff=1 mutation type against
+  # every manifest slug — 10+ minute workload. Same ``python-fast``
+  # exclusion / nightly escalation contract as ``boundary``.
+  "recall: mutation recall (9/9 = 100%, full-repo manifest walk)",
   "integration: full pipeline",
   # 288-page corpus conformance (segments_en + turndown 全ページ走査)。
   # PR B (Phase 5 CI 高速化) で slug-parametrize + pytest-xdist ``-n auto
@@ -87,8 +98,10 @@ markers = [
   # 1 segment として標準化される (docs/PYTHON_MIGRATION_PLAN.md 参照)。
   "parity_smoke: Python check_source_parity full-repo smoke (~5min, opt-in)",
 ]
-# default addopts は corpus / slow / cutover / parity_smoke を **local でも
-# CI でも** 除外する。
+# default addopts は 6 marker (corpus / slow / cutover / parity_smoke /
+# recall / boundary) を **local でも CI でも** 除外する。PR feedback loop に
+# 乗る pytest は単位時間で走る必要があり、full-repo manifest benchmark
+# (~10 min〜1 時間オーダー) は全て opt-in に寄せる方針。
 #
 # - ``corpus`` (288-page segments_en + turndown conformance, xdist 対応) は
 #   ~10s で走る軽量 gate だが ``python-fast`` の coverage 計測とは独立 run
@@ -101,14 +114,21 @@ markers = [
 # - ``cutover`` は Phase 6 cutover PR 内で ``uv run pytest -o addopts= -m cutover``
 #   を **1 回限り強制 run** する gate。coexistence 期間は skip のまま。
 # - ``parity_smoke`` は PR A で導入した Python ``check_source_parity`` full-repo
-#   smoke (~5 min)。default run は skip、CI では専用 job
-#   (``python-parity-smoke``) で ``uv run pytest -m 'parity_smoke and not cutover'``
-#   として run する。Phase 6b atomic cutover で Python-only gate の segment
-#   として標準化される。
+#   smoke (CI 実測 ~19 分)。required PR CI では feedback loop を破綻させる
+#   ため nightly (``nightly-python-oracle.yml``) に移設した。Phase 6b atomic
+#   cutover で Python-only gate の segment として標準化される。
+# - ``recall`` (``test_recall.py`` + ``test_baseline_recall.py``) は全 diff=1
+#   mutation を全 manifest slug に適用する benchmark。旧 default run では CI
+#   実測 24 分以上かかり PR feedback loop を停止させていた。Phase 5 では
+#   nightly (``python-quality-full``) のみで走らせ、Phase 6b cutover PR で
+#   required に昇格する (docs/PYTHON_MIGRATION_PLAN.md Phase 6b 参照)。
+# - ``boundary`` (``test_segments_boundary.py`` + ``test_clean_page_fixtures.py``)
+#   は manifest 全ページを構造比較する sentinel 群。``recall`` と同じ扱いで
+#   nightly 専用に寄せ、Phase 6b cutover で required に昇格する。
 #
 # CI yaml (``.github/workflows/ci.yml``) でも同等の marker filter を **明示的に
 # 重ねて指定** する (この file の変更による silent 無効化を防ぐ defense in depth)。
-addopts = "-m 'not corpus and not slow and not cutover and not parity_smoke'"
+addopts = "-m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary'"
 
 [tool.coverage.report]
 # Phase 4b-5 temporary: ``corpus`` marker (288-page matrix conformance) を

@@ -9,6 +9,7 @@ pin する。
 from __future__ import annotations
 
 import json
+from functools import cache
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,12 @@ from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
 from testim_parity.segments_shared import GATE_ELIGIBLE_KINDS
+
+# Full-repo structural boundary benchmark. Every test walks the manifest
+# via ``_analyze_page``; running in ``python-fast`` would add minutes per
+# PR. Excluded from default addopts, exercised nightly via
+# ``python-quality-full`` (see .github/workflows/nightly-python-oracle.yml).
+pytestmark = pytest.mark.boundary
 
 MANIFEST_PATH: Path = Path(__file__).parent / "fixtures" / "source-parity-goldens" / "manifest.json"
 
@@ -62,7 +69,13 @@ def _stability_score(en_counts: dict[str, int], ja_counts: dict[str, int]) -> fl
     return 1.0 - diff / (max_total * 2)
 
 
+@cache
 def _analyze_page(slug: str, gate_set: frozenset[str]) -> dict:
+    # Memoised per (slug, gate_set). The boundary suite has 10+ tests that
+    # all iterate the full manifest with the same ``GATE_ELIGIBLE_KINDS``
+    # frozenset, so without a cache every manifest slug is re-extracted
+    # 10+ times. ``frozenset`` is hashable and immutable, so it participates
+    # in the cache key cleanly. Returned dict is read-only in every caller.
     html = (ROOT_DIR / "snapshots" / "en" / "content" / f"{slug}.html").read_text(encoding="utf-8")
     md = (ROOT_DIR / "src" / "content" / "docs" / f"{slug}.md").read_text(encoding="utf-8")
     en_segments = extract_segments_from_html(html)

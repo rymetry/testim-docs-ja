@@ -904,10 +904,13 @@ corpus 全体の byte parity は Phase 4b.1 で上記 ``_collapse_whitespace`` +
     "test:mjs": "node --test scripts/__tests__/*.mjs",
     "test:py": "cd scripts/py && uv run pytest",
     "test:py:cov": "cd scripts/py && uv run pytest --cov=testim_parity --cov-report=term-missing",
-    "test:py:quick": "cd scripts/py && uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke'",
+    "test:py:quick": "cd scripts/py && uv run pytest -m 'not corpus and not slow and not cutover and not parity_smoke and not recall and not boundary'",
     "test:py:slow": "cd scripts/py && uv run pytest -m slow",
-    "test:py:corpus": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl && TESTIM_CORPUS_EXPECTED_JSONL=\"$PWD/.corpus_expected.jsonl\" uv run pytest -m corpus -n auto --dist load --tb=short",
-    "test:py:full": "cd scripts/py && uv run pytest -m ''",
+    "test:py:corpus": "cd scripts/py && node tools/emit_corpus_oracle.mjs --out .corpus_expected.jsonl --suite segments_en,turndown && TESTIM_CORPUS_EXPECTED_JSONL=\"$PWD/.corpus_expected.jsonl\" uv run pytest -m corpus -n auto --dist load --tb=short",
+    "test:py:parity-smoke": "cd scripts/py && uv run pytest -m 'parity_smoke and not cutover' --tb=short",
+    "test:py:quality": "cd scripts/py && uv run pytest -m 'recall or boundary' --tb=short --durations=30",
+    "test:py:cutover": "cd scripts/py && uv run pytest -o addopts= -m cutover",
+    "test:py:full": "cd scripts/py && uv run pytest -m 'not cutover'",
     "test:quick": "npm run test:mjs && npm run test:py:quick",
     "test:all": "npm run test:mjs && npm run test:py:full"
   }
@@ -918,16 +921,22 @@ CI は PR B で分割済み:
 
 - **required (PR feedback loop, pull_request trigger)**: `node-test` (mjs only),
   `python-fast` (ruff / format / mypy / `pytest -m 'not corpus and not slow and not
-  cutover and not parity_smoke'`), `python-corpus` (288-page conformance, pytest-xdist
-  `-n auto --dist load`)。astral-sh/setup-uv + `uv.lock` keyed cache で uv install 高速化。
+  cutover and not parity_smoke and not recall and not boundary'`), `python-corpus`
+  (288-page conformance, pytest-xdist `-n auto --dist load`)。astral-sh/setup-uv +
+  `uv.lock` keyed cache で uv install 高速化。
 - **nightly (`.github/workflows/nightly-python-oracle.yml`)**: `oracle-snapshot` が mjs
   oracle JSONL + sha256 TSV を 14 日 artifact 保存、`parity-smoke` が PR A の
-  full-repo `check_source_parity` smoke を走らせる (CI 実測 ~19 分、required から分離)。
+  full-repo `check_source_parity` smoke を走らせる (CI 実測 ~19 分、required から分離)、
+  `python-quality-full` が `recall` + `boundary` marker の full-repo benchmark
+  (`test_recall.py` / `test_baseline_recall.py` / `test_segments_boundary.py` /
+  `test_clean_page_fixtures.py`) を走らせる (CI 実測 ~30 分、旧 default pytest で
+  feedback loop を停止させていたため nightly 移設)。
 
-local では `npm run test:all` で mjs + full pytest を連続実行可能
-(corpus + slow + cutover + parity_smoke を含む)。fast iteration 用に
-`npm run test:quick` (mjs + `not corpus and not slow and not cutover and not parity_smoke`)
-も提供。mjs テストファイルは当初 54/55 を
+local では `npm run test:all` で mjs + `test:py:full` (`-m 'not cutover'`、
+corpus / slow / parity_smoke / recall / boundary は全て run される) を連続実行。
+日常 iteration 用には `npm run test:quick` (mjs + 6 marker exclude)、full-repo
+quality gate だけ回したい時は `npm run test:py:quality` (`-m 'recall or boundary'`)。
+mjs テストファイルは当初 54/55 を
 delete したが、その後 coexistence guard 用に 2 file を restore / 新設した結果、Phase 5
 終了時点で **3 file** が残存している:
 
@@ -1028,11 +1037,31 @@ infrastructure 整備を PR B として分離実装する。Phase 5 の本体 (p
 - **`pytest-xdist[psutil]` dev 依存追加**: `python-corpus` job は `-n auto --dist load
   --junitxml=corpus-junit.xml` で worker 間動的分散 + interleave 対策。
 - **CI job 分割**: `python-test` (single) → required (`python-fast` と
-  `python-corpus`) + nightly (`parity-smoke` と `oracle-snapshot`)。PR A の
-  parity_smoke (~19 分 CI 実測) は required feedback loop を破綻させるため
-  nightly 側に移設。Node 依存は `python-fast` (一部 conformance が mjs
-  harness を呼ぶ) / `python-corpus` (oracle 生成) / `oracle-snapshot` のみ。
+  `python-corpus`) + nightly (`parity-smoke` / `oracle-snapshot` /
+  `python-quality-full`)。PR A の parity_smoke (~19 分 CI 実測) は required
+  feedback loop を破綻させるため nightly 側に移設。Node 依存は `python-fast`
+  (一部 conformance が mjs harness を呼ぶ) / `python-corpus` (oracle 生成) /
+  `oracle-snapshot` / `python-quality-full` (`test_clean_page_fixtures.py` 等で
+  構造比較に mjs lib を import する経路があるため `npm ci` を揃える) のみ。
   setup-uv + uv.lock keyed cache も同時に導入済。
+- **`recall` / `boundary` marker の nightly 移設**: 旧 default pytest に
+  含まれていた `test_recall.py` / `test_baseline_recall.py` (mutation recall,
+  CI 実測 ~24 分) / `test_segments_boundary.py` / `test_clean_page_fixtures.py`
+  (boundary benchmark, manifest 全ページ構造比較) に `pytestmark` を付与して
+  default `addopts` から除外。required PR CI では走らず、nightly
+  `python-quality-full` job で `-m 'recall or boundary'` として run する。
+  Phase 6b cutover PR で required 昇格する (cutover gate criteria 3 番
+  "Mutation recall: 9/9 = 100%" の execution vehicle)。
+  - 重複計算削減: `test_recall.py::_analyze_page` / `test_segments_boundary.py
+    ::_analyze_page` / `test_clean_page_fixtures.py::_run_structure_comparator`
+    に `@lru_cache(maxsize=None)` を付与。同一 slug が複数 test / mutation
+    loop 内で再計算されていた問題を nightly 移設と同時に解消。
+  - 将来的な改善 (Phase 6b 以降): `test_recall.py` / `test_baseline_recall.py`
+    を 1 slug = 1 test に parametrize して `pytest-xdist -n auto --dist load`
+    で並列化する。現状は single-test 内で manifest を loop しているため
+    xdist の効果が限定的なので、Phase 5 では serial run + lru_cache で
+    済ませた (`corpus` marker で実装済の slug-parametrize の pattern を
+    後続 PR で踏襲する)。
 
 **oracle JSONL の CI 契約**: `TESTIM_CORPUS_EXPECTED_JSONL` env var **絶対パス必須**
 (xdist worker の cwd semantics を壊さないため)。env var 未 set + xdist 内 = fail (silent

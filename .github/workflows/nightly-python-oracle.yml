@@ -15,7 +15,15 @@ name: Python oracle snapshot (nightly)
 #    Phase 6b cutover PR で別途 ``pytest -m cutover`` が run する契約 (本 workflow
 #    では ``not cutover`` で除外)。
 #
-# 実行時間: oracle-snapshot ~2min + parity-smoke ~20min (両 job 並列)。
+# 3. ``python-quality-full`` — ``recall`` / ``boundary`` marker の full-repo
+#    benchmark (``test_recall.py`` / ``test_baseline_recall.py`` /
+#    ``test_segments_boundary.py`` / ``test_clean_page_fixtures.py``)。旧
+#    default pytest で実行していたが CI 実測 24 分 + と重く PR feedback loop
+#    を停止させていたため nightly 側に移設した。Phase 6b cutover PR で
+#    required 昇格させる (docs/PYTHON_MIGRATION_PLAN.md Phase 6b 参照)。
+#
+# 実行時間: oracle-snapshot ~2min + parity-smoke ~20min + python-quality-full
+# ~30min (3 job 並列、longest ~30min)。
 #
 # 本 workflow の run: は静的 command のみで、github.event.* 等の untrusted
 # input を一切参照しない (schedule / workflow_dispatch のみ trigger のため
@@ -91,3 +99,49 @@ jobs:
         # Phase 5 coexistence 中は cutover marker の 5-counter 0 gate は
         # fail 前提なので除外。Phase 6b cutover PR 側で明示的に run する。
         run: uv run pytest -m 'parity_smoke and not cutover' --tb=short --durations=10
+
+  python-quality-full:
+    # recall / boundary marker の full-repo benchmark。旧 default pytest で
+    # 実行していたが CI 実測 24 分 + と重く PR feedback loop を停止させていた
+    # ため nightly 移設。Issue #368 / Phase 6b cutover で必要な quality gate
+    # なので **消さずに** 毎日 1 回 run する。cutover marker は Phase 6b cutover
+    # PR 側で強制 run するため本 job では除外。
+    #
+    # 将来的な改善 (Phase 6b 以降): test_recall.py / test_baseline_recall.py を
+    # 1 slug = 1 test に parametrize して ``pytest-xdist -n auto --dist load``
+    # で並列化する。現状は single-test 内で manifest を loop しているため
+    # xdist の効果が限定的なので、nightly では serial run のまま lru_cache /
+    # module-level constant で重複計算を削ることを優先した (PR B 実装範囲)。
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/py
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install Node deps
+        # recall / boundary テストは Python segments_en / segments_ja のみを
+        # 使うため node_modules は直接不要だが、scripts/py/tools の一部経路が
+        # scripts/lib/* を load する際に gray-matter を期待するので ``npm ci``
+        # を入れて共通 setup と揃えた。
+        working-directory: ${{ github.workspace }}
+        run: npm ci
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version-file: scripts/py/.python-version
+      - name: Install uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
+        with:
+          version: '0.11.7'
+          enable-cache: true
+          cache-dependency-glob: 'scripts/py/uv.lock'
+      - name: Sync Python deps
+        run: uv sync --all-extras
+      - name: pytest (recall + boundary)
+        # ``-m 'recall or boundary'`` で full-repo benchmark を run。
+        # ``--durations=30`` で top 30 の律速を可視化する (Phase 6b で xdist
+        # 並列化する際の optimizer input)。
+        run: uv run pytest -m 'recall or boundary' --tb=short --durations=30
