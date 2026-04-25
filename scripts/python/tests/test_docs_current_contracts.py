@@ -17,7 +17,7 @@ CURRENT_CONTRACT_PATHS = (
     "docs/OPS_DESIGN.md",
     "docs/WRITING_GUIDE.md",
     ".github/copilot-instructions.md",
-    ".claude/CLAUDE.md",
+    "CLAUDE.md",
     "scripts/README.md",
 )
 
@@ -32,13 +32,13 @@ CURRENT_OPS_PATHS = (
     "docs/TRANSLATION_GUIDE.md",
     "docs/WRITING_GUIDE.md",
     ".github/copilot-instructions.md",
-    ".claude/CLAUDE.md",
+    "CLAUDE.md",
     "scripts/README.md",
 )
 
 CURRENT_AGENT_GUIDE_PATHS = (
     ".github/copilot-instructions.md",
-    ".claude/CLAUDE.md",
+    "CLAUDE.md",
 )
 
 REMOVED_MJS_CANONICAL_REFERENCES = (
