@@ -427,10 +427,10 @@
   }
 
   .docs-prose .callout-note {
-    @apply border-slate-200 bg-slate-50/70 text-slate-700;
+    @apply border-blue-200 bg-blue-50/70 text-blue-900;
   }
   .docs-prose .callout-note .callout-hint {
-    @apply text-slate-600;
+    @apply text-blue-600;
   }
 
   .docs-prose .callout-info {
