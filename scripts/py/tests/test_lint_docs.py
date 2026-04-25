@@ -601,3 +601,72 @@ class TestLegacyFaIcon:
     def test_no_pattern_clean(self) -> None:
         issues = lint_content(_make_doc(body="**テストを作成するには:**\n"), _TEST_PATH)
         assert _rules(issues, "legacy-fa-icon") == []
+
+
+# ---------------------------------------------------------------------------
+# L. EN/JA structure signature
+# ---------------------------------------------------------------------------
+
+
+class TestStructureSignature:
+    def test_matching_structure_passes(self, tmp_path: Path) -> None:
+        snapshot = tmp_path / "test.html"
+        snapshot.write_text(
+            "<body><h2>Section</h2><ol><li><p>Step</p><p>Continuation</p></li></ol></body>",
+            encoding="utf-8",
+        )
+        issues = lint_content(
+            _make_doc(body="## Section\n\n1. Step\n\n   Continuation\n"),
+            _TEST_PATH,
+            en_snapshot_path=snapshot,
+            slug="overview/test",
+        )
+        assert _rules(issues, "structure-signature-mismatch") == []
+
+    def test_translated_heading_text_does_not_mismatch(self, tmp_path: Path) -> None:
+        snapshot = tmp_path / "test.html"
+        snapshot.write_text(
+            "<body><h2>English heading</h2><p>Body</p></body>",
+            encoding="utf-8",
+        )
+        issues = lint_content(
+            _make_doc(body="## 日本語の見出し\n\n本文\n"),
+            _TEST_PATH,
+            en_snapshot_path=snapshot,
+            slug="overview/test",
+        )
+        assert _rules(issues, "structure-signature-mismatch") == []
+
+    def test_mismatch_reports_error(self, tmp_path: Path) -> None:
+        snapshot = tmp_path / "test.html"
+        snapshot.write_text(
+            "<body><h2>Section</h2><ol><li><p>Step</p><p>Continuation</p></li></ol></body>",
+            encoding="utf-8",
+        )
+        issues = lint_content(
+            _make_doc(body="## Section\n\n1. Step\n\n x\n"),
+            _TEST_PATH,
+            en_snapshot_path=snapshot,
+            slug="overview/test",
+        )
+        hit = next((i for i in issues if i["rule"] == "structure-signature-mismatch"), None)
+        assert hit is not None
+        assert hit["level"] == "error"
+
+    def test_frontmatter_error_skips_structure_rule(self, tmp_path: Path) -> None:
+        snapshot = tmp_path / "test.html"
+        snapshot.write_text(
+            "<body><h2>Section</h2><ol><li><p>Step</p><p>Continuation</p></li></ol></body>",
+            encoding="utf-8",
+        )
+        issues = lint_content(
+            _make_doc(
+                fm={"sourceUrl": "https://example.com/docs/foo"},
+                body="## Section\n\n1. Step\n\n x\n",
+            ),
+            _TEST_PATH,
+            en_snapshot_path=snapshot,
+            slug="overview/test",
+        )
+        assert any(i["rule"] == "sourceUrl-format" for i in issues)
+        assert _rules(issues, "structure-signature-mismatch") == []

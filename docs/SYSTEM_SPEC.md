@@ -22,19 +22,19 @@ Testim Help Documentation (docs.tricentis.com/testim) の日本語ローカラ�
 EN snapshot (docs.tricentis.com)
   |
   v
-snapshot_update.mjs ── fetch EN HTML (#mc-main-content)
+testim_parity.detection.snapshot_update ── fetch EN HTML (#mc-main-content)
   |
   v
-snapshot_diff.mjs ── git diff で変更検知
+testim_parity.detection.snapshot_diff ── git diff で変更検知
   |
   v
-check_source_parity.mjs ── EN/JA 構造比較 (exact diff engine)
+testim_parity.detection.check_source_parity ── EN/JA 構造比較 (exact diff engine)
   |
   v
-pipeline.mjs ── 翻訳ワークフロー (fetch -> placeholders -> LLM tasks -> apply)
+testim_parity.pipeline.pipeline ── 翻訳ワークフロー (fetch -> placeholders -> LLM tasks -> apply)
   |
   v
-lint_docs.mjs + build ── QA gate
+testim_parity.tools.lint_docs + build ── QA gate
   |
   v
 Vercel deploy
@@ -44,24 +44,24 @@ Vercel deploy
 
 | artifact | schemaVersion | 生成スクリプト |
 | --- | --- | --- |
-| `snapshot-diff-status.json` | 1 | `snapshot_diff.mjs` |
-| `source-sync-status.json` | 2 | `snapshot_update.mjs` |
-| `parity-check-status.json` | 1 | `check_source_parity.mjs` |
-| `docs-actionable-report.json` | 1 | `generate_detection_reports.mjs` |
+| `snapshot-diff-status.json` | 1 | `testim_parity.detection.snapshot_diff` |
+| `source-sync-status.json` | 2 | `testim_parity.detection.snapshot_update` |
+| `parity-check-status.json` | 1 | `testim_parity.detection.check_source_parity` |
+| `docs-actionable-report.json` | 1 | `testim_parity.detection.generate_detection_reports` |
 
-全 artifact は `schemaVersion` を持ち、`generate_detection_reports.mjs --strict` が schema validation を実行する。
+全 artifact は `schemaVersion` を持ち、`testim_parity.detection.generate_detection_reports --strict` が schema validation を実行する。
 
 ### ランタイムデータファイル
 
 | ファイル | 用途 |
 | --- | --- |
-| `docs/GLOSSARY.md` | 3-tier 用語集 (Tier A: 固有名詞, B: UI label, C: 一般 IT 用語)。`parity_glossary_mask.mjs` が参照 |
+| `docs/GLOSSARY.md` | 3-tier 用語集 (Tier A: 固有名詞, B: UI label, C: 一般 IT 用語)。`testim_parity.glossary_mask` が参照 |
 | `docs/INVARIANT_TOKENS.md` | 23 種の invariant token pattern 定義。正規表現で英語維持 token をマスク |
 | `docs/SIDEBAR_URLS.md` | 全 287 URL のマスターリスト。カテゴリ・ページ順序の single source of truth |
 
 ## 検出システム仕様
 
-### パリティチェック (`check_source_parity.mjs`)
+### パリティチェック (`testim_parity.detection.check_source_parity`)
 
 Section-anchored exact diff engine。EN snapshot と JA Markdown を canonical segment に分解し、weighted LCS で比較する。
 
@@ -82,7 +82,7 @@ Section-anchored exact diff engine。EN snapshot と JA Markdown を canonical s
 
 **baseline**: `parity-baseline.json` (schema v2)。`entries[]` で既知 drift を凍結し、active 集計から除外する。
 
-### スナップショット diff (`snapshot_diff.mjs`)
+### スナップショット diff (`testim_parity.detection.snapshot_diff`)
 
 EN HTML snapshot (`snapshots/en/content/`) の git diff で変更を検知する。
 
@@ -90,15 +90,15 @@ EN HTML snapshot (`snapshots/en/content/`) の git diff で変更を検知する
 
 **出力**: `snapshot-diff-status.json`。
 
-### ソース同期健全性 (`snapshot_update.mjs`)
+### ソース同期健全性 (`testim_parity.detection.snapshot_update`)
 
 EN snapshot fetch の健全性を freshness state で表す。
 
 **freshness state**: `fresh` / `partial` / `broken`。source-sync-status.json の `freshnessState` に記録。
 
-**除外 registry**: `scripts/lib/source_sync_exclusions.mjs` で壊れた EN page を隔離。`excludedPages` counter で可視化。除外 slug は fetch を継続するが snapshot を上書きしない。recovery probe で `excluded-broken` / `excluded-recovered` を判定する。
+**除外 registry**: `testim_parity.sync_exclusions` で壊れた EN page を隔離。`excludedPages` counter で可視化。除外 slug は fetch を継続するが snapshot を上書きしない。recovery probe で `excluded-broken` / `excluded-recovered` を判定する。現在 active entry はないが、page-level freeze 機構は維持する。
 
-### 上流回復検出 (`check_upstream_recovery.mjs`)
+### 上流回復検出 (`testim_parity.detection.check_upstream_recovery`)
 
 `en_source_patches` (segment-level) と `source_sync_exclusions` (page-level) の 2-mechanism を横断して、上流修正の自動検知と登録解除忘れの persistent reminder を提供する。
 
@@ -133,8 +133,8 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 
 | mechanism | scope | 用途 | truth source |
 | --- | --- | --- | --- |
-| **Mechanism 1**: page-level freeze | ページ全体 | 壊れた EN page を snapshot 同期から隔離 | `scripts/lib/source_sync_exclusions.mjs` |
-| **Mechanism 2**: segment-level patch | slug-scope literal find/replace | EN HTML の typo / href-miswire / madcap-artifact / stale-reference を修復 | `scripts/lib/en_source_patches.mjs` |
+| **Mechanism 1**: page-level freeze | ページ全体 | 壊れた EN page を snapshot 同期から隔離 | `testim_parity.sync_exclusions` |
+| **Mechanism 2**: segment-level patch | slug-scope literal find/replace | EN HTML の typo / href-miswire / madcap-artifact / stale-reference を修復 | `testim_parity.en_source_patches` + `_en_source_patches_data.json` |
 
 **禁止される suppression**: intentional-divergence allowlist、callout-normalization allowlist、JA-side policy suppression、およびparity 時に EN/JA drift を隠す一切の suppression lane。
 

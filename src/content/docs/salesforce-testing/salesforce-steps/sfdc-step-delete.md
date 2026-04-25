@@ -29,8 +29,8 @@ keywords:
 1. テストで、削除ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、削除ステップを選択します。\
-   **削除**ステップが追加され、次の**オブジェクトプロパティ**が表示されます。
+**削除**ステップが追加され、次の**オブジェクトプロパティ**が表示されます。
 
-   ![スクリーンショット](/images/salesforce-steps/sfdc-step-delete/f1f2053-deletestep.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-delete/f1f2053-deletestep.png)
 
 4. 完了したら、**保存**をクリックします。

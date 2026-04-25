@@ -83,7 +83,7 @@ keywords:
 
 12. **詳細** をクリックして [高度なスケジューラーオプション](/docs/running-tests/scheduler#高度なスケジューラーオプション) を構成します。
 
-    ![モバイルスケジューラーの高度なオプション設定画面](/images/running-tests/scheduler-mobile/1b576ad-scheduler3.png)
+![モバイルスケジューラーの高度なオプション設定画面](/images/running-tests/scheduler-mobile/1b576ad-scheduler3.png)
 
 13. **作成** をクリックしてスケジューラーを保存します。
 

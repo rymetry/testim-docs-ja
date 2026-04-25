@@ -46,7 +46,7 @@ Auto grouping は、プロジェクト全体のテストから重複したステ
 **自動グルーピング候補を確認するには:**
 
 1. メインメニューで **Auto-grouping** をクリックします。\
-   画面右側の **Auto Grouping** ペイン（黒いペイン）に候補一覧が表示されます。ここには次の情報が含まれます。
+画面右側の **Auto Grouping** ペイン（黒いペイン）に候補一覧が表示されます。ここには次の情報が含まれます。
 - **Project duplication level** – プロジェクト全体の重複レベル。これは、master ブランチ内でグループ化できるもののまだグループ化されていない重複ステップの量を 0〜100 のスコアで表したものです。重複レベルを下げるには、一覧の候補を採用していきます。詳細は [重複レベルスコア](#duplication-level-scoring) を参照してください。
 
 :::note
@@ -60,7 +60,7 @@ Auto grouping は、プロジェクト全体のテストから重複したステ
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/1839b7d-Screen_Shot_2021-02-28_at_9.51.19.png)
 
 2. 候補をクリックして詳細を表示します。\
-   重複ステップを含むテスト／グループの詳細リストが **Test List** ペインに表示されます。
+重複ステップを含むテスト／グループの詳細リストが **Test List** ペインに表示されます。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/79c9465-Screen_Shot_2021-02-28_at_9.52.04.png)
 
@@ -115,7 +115,7 @@ Auto grouping は、プロジェクト全体のテストから重複したステ
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/282da88-Feb-28-2021_10-23-47.gif)
 
 2. いずれかのフィルター項目をクリックします。\
-   対象の一覧が表示されます。
+対象の一覧が表示されます。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/4b25c4d-testname.PNG)
 
@@ -156,6 +156,6 @@ Auto grouping は、プロジェクト全体のテストから重複したステ
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/cc757a0-Screen_Shot_2020-10-29_at_18.53.28.png)
 
 7. **Create** をクリックします。\
-   自動グルーピングが完了すると、完了メッセージが表示され、続けて次のグループ候補を処理できます。
+自動グルーピングが完了すると、完了メッセージが表示され、続けて次のグループ候補を処理できます。
 
 ![自動グルーピングのスクリーンショット](/images/advanced-features/auto-grouping2/0a5c88f-Screen_Shot_2020-10-28_at_13.33.39.png)

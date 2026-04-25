@@ -178,7 +178,7 @@ acknowledgement の対象外:
 ### Parity detection — glossary mask と URL normalize (Phase 0, 2026-04-14 以降)
 
 - `testim_parity.glossary_mask` (旧 `scripts/lib/parity_glossary_mask.mjs`): `docs/GLOSSARY.md` と `docs/INVARIANT_TOKENS.md` を読み、segment text を Testim 用語 + invariant pattern でマスクする
-- `testim_parity.detection.parity_normalize` (旧 `scripts/lib/parity_normalize.mjs`): URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
+- `testim_parity.normalize` (旧 `scripts/lib/parity_normalize.mjs`): URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
 - `testim_parity.detection.check_source_parity` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.* を読まない**契約）
 - 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/py/tests/test_glossary_mask.py` に追加する
 

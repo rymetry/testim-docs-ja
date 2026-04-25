@@ -50,7 +50,7 @@ Contacts などの一部の Salesforce オブジェクトは、Opportunities、C
 6. 新しいタブ（つまり、デフォルトの Related タブ以外）を作成した場合は、**Tab Name** フィールドに、作成したタブのタブ名を指定します。
 7. **アクションを選択**フィールドで、**Create** を選択します。
 8. **レコードタイプを選択**の下で、関連リストオブジェクトを追加したいレコードのレコードタイプを選択します。上の例では、タイプは **External or Internal Contact** のいずれかになります。\
-   関連リストオブジェクトのフィールドが表示されます。(\*) で示されているフィールドは必須です。
+関連リストオブジェクトのフィールドが表示されます。(\*) で示されているフィールドは必須です。
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-relatedlistaction/0c6f260-fieldlistcreate.png)
 

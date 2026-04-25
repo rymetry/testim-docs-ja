@@ -14,6 +14,7 @@ from typing import Any
 
 import pytest
 
+from testim_parity.en_source_patches import EN_SOURCE_PATCHES
 from testim_parity.detection.check_upstream_recovery import (
     build_upstream_recovery_status,
     compute_en_patch_status,
@@ -114,6 +115,16 @@ def test_en_patch_status_stale_when_snapshot_present_but_no_hit(tmp_path: Path) 
     # synthetic slug is readable but registry has no real patch for it → stale.
     assert result[0]["statusA"] == "stale"
     assert result[0]["hits"] == 0
+
+
+def test_en_patch_status_preserves_crlf_find_strings(tmp_path: Path) -> None:
+    patch = next(p for p in EN_SOURCE_PATCHES if p["id"] == "UD-016A-subscription-plans-host-localhost-cli-span")
+    snapshot = tmp_path / "administration" / "subscription-plans.html"
+    snapshot.parent.mkdir(parents=True)
+    snapshot.write_bytes(f"<html>{patch['find']}</html>".encode("utf-8"))
+    result = compute_en_patch_status(now_ms=_NOW_MS, snapshots_root=tmp_path, patches=[patch])
+    assert result[0]["statusA"] == "active"
+    assert result[0]["hits"] == 1
 
 
 def test_en_patch_status_unknown_when_no_snapshot(tmp_path: Path) -> None:

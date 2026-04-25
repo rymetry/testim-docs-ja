@@ -28,7 +28,7 @@ Docker コンテナを使用して Jenkins とテストを統合するには、�
 ## 次の手順に従ってください
 
 1. Jenkins で新しいアイテムを作成します:\
-   ​
+​
 
 ![Jenkins で新しいジョブを作成する画面](/images/ci-integrations/jenkins-integration-using-docker/a2e99b5-Jenkins2.PNG)
 

@@ -1,6 +1,6 @@
 # Testim Docs JA 用語集（GLOSSARY）
 
-本ファイルは **翻訳者と検知系 (`scripts/lib/parity_glossary_mask.mjs`) が参照する canonical な用語集** です。ここに登録された用語は英語のまま維持され、`segment-untranslated` 検知から除外されます。
+本ファイルは **翻訳者と検知系 (`testim_parity.glossary_mask`) が参照する canonical な用語集** です。ここに登録された用語は英語のまま維持され、`segment-untranslated` 検知から除外されます。
 
 登録基準:
 - Testim / Tricentis の固有名詞（製品名・機能名・画面名）
@@ -13,12 +13,12 @@
 本 GLOSSARY は `maskSegmentText` の正規チャネルであり、**WRITING_GUIDE で policy 化された term のみ text replacement で mask** する仕組み。設計原則:
 
 1. **GLOSSARY ≠ classifier allowlist**: 削除済の `TECH_TOKEN_ALLOWLIST` (residue-word-count filter) とは別経路。本 GLOSSARY の term は WRITING_GUIDE authoritative な英語維持 policy に紐付く
-2. **broken EN snapshot 退避のみ別機構**: `source_sync_exclusions.mjs` / `parity_artifact_registry.mjs` は EN 上流 broken 限定で、GLOSSARY とは別目的
+2. **broken EN snapshot 退避のみ別機構**: `testim_parity.sync_exclusions` / `testim_parity.en_source_patches` は EN 上流 broken 限定で、GLOSSARY とは別目的
 3. **新規追加は reviewer 承認**: 安易な追加は classifier 検知精度 dilution (将来 untranslated 見逃し)。WRITING_GUIDE 3 条件 (dev tools 標準 / JA エンジニア慣用 / 翻訳で情報損失) 全て満たさないと登録不可
 
 ## 3-tier 分類（M4 実施 / 2026-04-16）
 
-本 GLOSSARY は以下の 3 tier に分類される。各 `##` section 見出しに `[Tier X]` 接頭辞を付記し、検知系 (`parity_glossary_mask.mjs`) は tier を区別せず全 entry を読む。
+本 GLOSSARY は以下の 3 tier に分類される。各 `##` section 見出しに `[Tier X]` 接頭辞を付記し、検知系 (`testim_parity.glossary_mask`) は tier を区別せず全 entry を読む。
 
 | Tier | 内容 | 登録例 |
 | --- | --- | --- |
@@ -31,7 +31,7 @@
 - **新規追加時**: Tier A/B に該当しない汎用語は GLOSSARY ではなく [INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) の narrow pattern に追加する
 - **compound general 禁止**: `browser version` / `major version` / `Add action` / `Add validation` 等の compound general 一般語は全 Tier で登録禁止（false-negative 源）
 - **Tier C の範囲**: narrow 文脈で英語維持が許容される用語のみ。判定は [TRANSLATION_GUIDE.md §5.4 許容される一般 IT 用語](./TRANSLATION_GUIDE.md) 参照
-- **duplicate 禁止**: 同一用語の case / whitespace 変異 entry は merge する。検知は `npm run lint:glossary`（`scripts/tools/check_glossary_duplicates.mjs`）
+- **duplicate 禁止**: 同一用語の case / whitespace 変異 entry は merge する。検知は `npm run lint:glossary`（`testim_parity.tools.check_glossary_duplicates`）
 
 ### duplicate 現況 (M4 時点)
 
@@ -45,9 +45,9 @@
 
 登録手順:
 1. 以下のカテゴリ配下に行を追加する
-2. `scripts/lib/parity_glossary_mask.mjs` は起動時に本ファイルをパースするため、再起動で反映される
+2. `testim_parity.glossary_mask` は起動時に本ファイルをパースするため、再起動で反映される
 3. 登録後に `npm run check:parity` で影響を確認する
-4. 重複検出は `npm run lint:glossary` で確認（T21 / `scripts/tools/check_glossary_duplicates.mjs`）
+4. 重複検出は `npm run lint:glossary` で確認（`testim_parity.tools.check_glossary_duplicates`）
 
 ---
 

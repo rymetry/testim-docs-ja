@@ -31,7 +31,7 @@ keywords:
 1. メインメニューで **Resources** を選択。
 2. **Hidden Parameters** セクションで **Add hidden parameter** をクリック。
 
-   ![非表示パラメーターの追加](/images/parameters/hidden-parameters/8a620c6-image.png)
+![非表示パラメーターの追加](/images/parameters/hidden-parameters/8a620c6-image.png)
 
 3. パラメーター名と説明（任意）を入力し、**Create**。
 
@@ -42,7 +42,7 @@ keywords:
 1. メインメニューから **Resources** → **Hidden Parameters** を開き、一覧を表示。
 2. 目的のパラメーターを右クリックし **Edit**。削除は **Delete** を選択。
 
-   ![非表示パラメーターの編集](/images/parameters/hidden-parameters/d3dc1ce-image.png)
+![非表示パラメーターの編集](/images/parameters/hidden-parameters/d3dc1ce-image.png)
 
 ## 非表示パラメーターを使ってテストを実行
 

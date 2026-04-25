@@ -55,14 +55,14 @@ keywords:
 
 1. バグトラッキングシステムが Testim と統合されていることを確認してください。詳細および詳細な手順については、[バグトラッカー設定](/docs/integrations/bug-tracker-settings)を参照してください。
 2. **Tag Test Failure**ダイアログで、**Create issue**をクリックして、バグトラッキングシステムに新しい課題を作成します。\
-   バグの詳細が自動的に作成され、**Publish Bug**画面が表示されます。
+バグの詳細が自動的に作成され、**Publish Bug**画面が表示されます。
 
 ![Jira に作成された課題の例](/images/results/tag-remote-runs-failures/60c8974-jiraaftercreateissue.PNG)
 
 3. **Summary**フィールドに、わかりやすい要約を入力します。
 4. Project と Type の選択を変更し、提案されたテキストを編集できます。
 5. 完了したら、**Publish**をクリックして課題を公開します。\
-   **Link to issue**フィールドには、新しく作成された課題または既存の課題の URL が含まれます。
+**Link to issue**フィールドには、新しく作成された課題または既存の課題の URL が含まれます。
 
 ![Link to issue フィールドに課題 URL を設定](/images/results/tag-remote-runs-failures/c4ab431-linktoissue.png)
 
@@ -73,7 +73,7 @@ keywords:
 テスト失敗にタグを付けた後、既存のテスト失敗タグを編集できます。
 
 1. **Test List**画面から、該当するテストをクリックします。\
-   Test Editor画面に、以前に選択したテスト失敗タグが表示されます。
+Test Editor画面に、以前に選択したテスト失敗タグが表示されます。
 
 ![Test Editorに表示される既存の失敗タグ](/images/results/tag-remote-runs-failures/84be8ad-previoustag.png)
 
@@ -93,7 +93,7 @@ keywords:
 
 1. **Runs -> Test Runs**に移動します。
 2. 時間枠ドロップダウンメニューを使用して、該当する時間枠を設定します。\
-   リストの下部にテスト実行のリストが表示されます。
+リストの下部にテスト実行のリストが表示されます。
 
 ![Test Runs 画面での複数テスト選択](/images/results/tag-remote-runs-failures/8031cf7-tag3.png)
 
@@ -113,7 +113,7 @@ keywords:
 複数の失敗したテストにタグを付けた後、Testim が再発する問題を認識すると、以前の選択に基づいて失敗タグが提案されます。提案される失敗タグは、テスト結果画面の上部に表示されます。**テスト結果画面から提案された失敗タグを使用するには:**
 
 1. テスト結果画面の上部で、提案された失敗タグにマウスを合わせます。\
-   次のダイアログが表示されます。
+次のダイアログが表示されます。
 
 ![テスト結果画面に表示される提案失敗タグ](/images/results/tag-remote-runs-failures/bac5964-tag7.PNG)
 
@@ -126,7 +126,7 @@ keywords:
 
 1. **Runs -> Test Runs**に移動します。
 2. 時間枠ドロップダウンメニューを使用して、該当する時間枠を設定します。\
-   リストの下部にテスト実行のリストが表示されます。
+リストの下部にテスト実行のリストが表示されます。
 3. 提案された失敗タグを含むテストには、「Suggested」というラベルが付けられます。
 4. 提案された失敗タグにマウスを合わせます。
 
@@ -142,7 +142,7 @@ keywords:
 レポートビューで、失敗タイプ別の失敗に関する統計を表示できます。失敗に関するデータを蓄積することで、トレンドを特定し、修復やプロセス改善の対象を絞ることができます。**失敗レポートを表示するには:**
 
 1. **Insights -> Reports**に移動します。\
-   失敗レポートは上から 3 番目のレポートです。
+失敗レポートは上から 3 番目のレポートです。
 2. ドロップダウンメニューをクリックして、レポートの時間枠を選択します。
 
 ![Insights レポートの時間枠選択](/images/results/tag-remote-runs-failures/65b3172-timeframe.PNG)

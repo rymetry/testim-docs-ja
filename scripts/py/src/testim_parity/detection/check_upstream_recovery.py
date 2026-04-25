@@ -132,7 +132,10 @@ def compute_en_patch_status(
         snapshot_path = root / f"{slug}.html"
         if not snapshot_path.exists():
             continue
-        raw = snapshot_path.read_text(encoding="utf-8")
+        # ``en_source_patches`` find strings intentionally preserve MadCap CRLF
+        # boundaries. ``Path.read_text`` normalizes newlines on some platforms and
+        # can make an active patch look stale, so mirror check_source_parity.
+        raw = snapshot_path.read_bytes().decode("utf-8")
         try:
             preprocess_en_html(raw, slug=slug, patch_coverage=coverage)
             snapshot_seen.add(slug)

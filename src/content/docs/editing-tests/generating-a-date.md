@@ -35,12 +35,12 @@ keywords:
 ![アクションオプションメニュー](/images/test-utilities/generating-a-date/f22a0db-Testim_083a.png)
 
 2. **"M"**（Testim の事前定義ステップ）をクリックします。\
-   事前定義ステップのメニューが開きます。
+事前定義ステップのメニューが開きます。
 
 ![事前定義ステップメニュー](/images/test-utilities/generating-a-date/bb5ad0a-Testim_034.png)
 
 3. **Actions** をクリックします。\
-   Actions セクションが展開されます。
+Actions セクションが展開されます。
 
 ![Actions メニュー](/images/test-utilities/generating-a-date/981810c-Testim_079.png)
 

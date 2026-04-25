@@ -29,12 +29,12 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-      npm install -g @testim/testim-cli
-      testim --label "<LABEL>" \
-      --token "<TOKEN>" \
-      --project "<PROJECT ID>" \
-      --grid "<Your grid name>" \
-      --report-file testim-tests-report.xml
+npm install -g @testim/testim-cli
+testim --label "<LABEL>" \
+--token "<TOKEN>" \
+--project "<PROJECT ID>" \
+--grid "<Your grid name>" \
+--report-file testim-tests-report.xml
     displayName: 'npm install testim-cli and run tests'
 
   - task: PublishTestResults@2

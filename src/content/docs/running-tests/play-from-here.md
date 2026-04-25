@@ -28,6 +28,6 @@ keywords:
 
 1. 実行を開始したい位置の矢印をクリックします。
 2. **ここから再生**ボタンをクリックします。\
-   ![ここから再生のスクリーンショット](/images/test-execution/play-from-here/5039ce9-playfromhere.png)
+![ここから再生のスクリーンショット](/images/test-execution/play-from-here/5039ce9-playfromhere.png)
 
 セットアップステップの実行後、この位置からテストの実行が開始されます。

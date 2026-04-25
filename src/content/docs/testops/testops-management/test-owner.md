@@ -58,7 +58,7 @@ keywords:
 ![Replace Test Owner ウィンドウ](/images/testops-management/test-owner/a0e5978-Testim_194_r.png)
 
 4. 新しいオーナーを選択し、**Confirm** をクリックします。\
-   ウィンドウが閉じ、新しいオーナーがリストに表示されます。
+ウィンドウが閉じ、新しいオーナーがリストに表示されます。
 5. **ステッププロパティを表示**アイコンをクリックして、**テスト構成プロパティ**パネルを閉じます。
 
 ### テストライブラリでテストオーナーを変更
@@ -70,7 +70,7 @@ keywords:
 ![テストライブラリ画面](/images/testops-management/test-owner/41cae47-Testim_192.png)
 
 2. オーナーを変更したいテスト（または複数のテスト）を選択します。\
-   追加のオプションが**トップメニュー**に表示されます。
+追加のオプションが**トップメニュー**に表示されます。
 
 ![トップメニューオプション](/images/testops-management/test-owner/9237d3f-Testim_193a.png)
 
@@ -83,7 +83,7 @@ keywords:
 ![Replace Test Owner ウィンドウ](/images/testops-management/test-owner/3419b72-Testim_194_r.png)
 
 4. 新しいオーナーを選択し、**Confirm** をクリックします。\
-   ウィンドウが閉じ、新しいオーナーがリストに表示されます。
+ウィンドウが閉じ、新しいオーナーがリストに表示されます。
 
 ![オーナー変更プロセス](/images/testops-management/test-owner/617e420-Feb-08-2021_08-56-14.gif)
 
@@ -111,7 +111,7 @@ keywords:
 :::
 
 4. **Apply** をクリックします。\
-   フィルターが適用され、オーナー条件を満たすテストのみが表示されます。
+フィルターが適用され、オーナー条件を満たすテストのみが表示されます。
 
 :::note
 **Filter Test** ペインの下部にある **Reset filters** をクリックしてから **Apply** をクリックすることで、フィルターを削除できます。
@@ -132,7 +132,7 @@ keywords:
 ![Suite Runs リスト](/images/testops-management/test-owner/911a46f-Testim_198.png)
 
 2. フィルタリングしたい **Test Suite** をクリックします。\
-   そのスイートのテストリストを含む新しい画面が表示されます。
+そのスイートのテストリストを含む新しい画面が表示されます。
 3. **Advanced filters** アイコンをクリックします。
 
 ![Advanced filters アイコン](/images/testops-management/test-owner/a1519d8-Testim_199a.png)

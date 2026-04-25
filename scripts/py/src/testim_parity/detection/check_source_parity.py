@@ -331,6 +331,8 @@ def check_source_parity(
     slug: str | None = None,
     output_path: Path | None = None,
     root_dir: Path | None = None,
+    source_sync_status_path: Path | None = None,
+    snapshot_diff_status_path: Path | None = None,
     stdout: TextIO | None = None,
     stderr: TextIO | None = None,
     now: datetime.datetime | None = None,
@@ -348,8 +350,12 @@ def check_source_parity(
     )
     effective_baseline = effective_root / "parity-baseline.json"
     ack_path = effective_root / "parity-acknowledgements.json"
-    source_sync_status_path = effective_root / "source-sync-status.json"
-    snapshot_diff_status_path = effective_root / "snapshot-diff-status.json"
+    effective_source_sync_status = source_sync_status_path or (
+        effective_root / "source-sync-status.json"
+    )
+    effective_snapshot_diff_status = snapshot_diff_status_path or (
+        effective_root / "snapshot-diff-status.json"
+    )
     snapshots_dir = effective_root / "snapshots" / "en" / "content"
     sidebar_urls_path = effective_root / "docs" / "SIDEBAR_URLS.md"
     docs_dir = _resolve_docs_dir(root_dir)
@@ -358,9 +364,9 @@ def check_source_parity(
         sidebar_urls_path.read_text(encoding="utf-8") if sidebar_urls_path.exists() else ""
     )
     sidebar_slugs = load_sidebar_slugs(sidebar_text)
-    source_sync_payload = _load_source_sync_payload(source_sync_status_path)
+    source_sync_payload = _load_source_sync_payload(effective_source_sync_status)
     freshness_state = source_sync_payload.get("freshnessState") if source_sync_payload else None
-    snapshot_diff_payload = _load_snapshot_diff_payload(snapshot_diff_status_path)
+    snapshot_diff_payload = _load_snapshot_diff_payload(effective_snapshot_diff_status)
     snapshot_slugs = collect_snapshot_slugs(snapshots_dir)
     all_files = find_md_files(docs_dir)
 

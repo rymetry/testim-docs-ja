@@ -28,7 +28,7 @@ keywords:
 
 1. **Test Editor**または**テスト実行**画面で完了したテストに移動します。
 2. **再生メニュー**（Test Editor）をクリックするか、**テスト実行を右クリック**（テスト実行）して、**同じパラメーターでローカル再実行**オプションを選択します。\
-   ![同じパラメーターでローカル再実行のスクリーンショット](/images/test-execution/rerun-locally-with-the-same-params/09763c4-c367a60-rerunlocally.png)
+![同じパラメーターでローカル再実行のスクリーンショット](/images/test-execution/rerun-locally-with-the-same-params/09763c4-c367a60-rerunlocally.png)
 
 :::note{title="ベース URL"}
 選択したテスト実行で使用されたベース URL は、「同じパラメーターでローカル再実行」オプションで使用されます。セットアップステップのベース URL は、特定のテスト実行でオーバーライドされている可能性があります。ベース URL 設定の詳細については、[ベース URL](/docs/running-tests/base-url)を参照してください。

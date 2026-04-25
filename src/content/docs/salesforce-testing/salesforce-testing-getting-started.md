@@ -41,7 +41,7 @@ Testim for Salesforce のテストは、Salesforce アプリケーションと�
 Testim for Salesforce テストを作成する前に、Salesforce 環境を Testim for Salesforce に接続する必要があります。Salesforce 環境がすでに接続されている場合は、次のステップにスキップできます。**Salesforce 環境を接続するには**:
 
 1. Testim for Salesforce アカウントで、**Settings > Salesforce > Environments**に移動し、**Connect a salesforce environment**を選択します。\
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/681f2b6-connect.png)
 
 2. **Select Type**フィールドで、Salesforce 環境のタイプを選択します:
 - **Production** - 本番環境は、エンドユーザーが使用するライブ環境です。
@@ -69,42 +69,42 @@ Salesforce ログイン画面が表示されます。
 
 1. **New Test**をクリックします。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d3dd794-newtest.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d3dd794-newtest.png)
 
-   エディターで新しいテストが開きます。ここでテストステップを追加します。
+エディターで新しいテストが開きます。ここでテストステップを追加します。
 
 2. 最初のステップはセットアップステップで、基本的なテスト構成を設定します。**Setup**ステップで、**Show properties**ボタンをクリックします。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/9dc1f8d-showproperties.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/9dc1f8d-showproperties.png)
 
-   **Properties**ペインが表示されます。
+**Properties**ペインが表示されます。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/03e8e96-propeties_pane.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/03e8e96-propeties_pane.png)
 
 3. **Base URL**に Salesforce 環境の URL が含まれていることを確認します。
 4. 最初のステップの後、マウスを **+** ボタンの上に移動し、**+** （ステップを追加）ボタンをクリックします。
 5. **Salesforce steps**タブの下で、**Log in**ステップをクリックします。このステップは、選択されたペルソナ/ユーザーを使用して Salesforce 環境にログインします。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/398d8d3-login.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/398d8d3-login.png)
 
-   Log in ステップが追加され、**Object**ペインが表示されます。
+Log in ステップが追加され、**Object**ペインが表示されます。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/1fbf0ad-loginand_object.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/1fbf0ad-loginand_object.png)
 
 6. **Select login persona**の下で、ドロップダウンメニューをクリックし、テスト全体で使用する関連ペルソナを選択します。環境を接続すると、システムはデフォルトの管理者ペルソナを作成します。ただし、追加のペルソナが作成されている場合もあります。追加のペルソナを作成する場合は、[ペルソナの作成とユーザーの追加](/docs/salesforce-testing/create-a-persona-and-add-users)の手順に従ってください。
 7. **+** ボタンをクリックして、別のステップを追加します。
 8. **Salesforce steps**タブの下で、**Launch app**ステップをクリックします。このステップは、環境内で選択されたアプリを起動します。
 9. ステップの**Object**ペインで、**Select App**の下で、**Sales**オプションを選択します。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/0dbd17f-salesapp.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/0dbd17f-salesapp.png)
 
 10. **+** ボタンをクリックして、別のステップを追加します。
 11. **Salesforce steps**タブの下で、**Record Operations**をクリックし、次に**Create**ステップをクリックします。このステップは、**Object**と**Record**を作成します。
 12. ステップの**Object**ペインで、**Select the Object**の下で、**Account**を選択します。
 13. **Select Record Type**フィールドが表示される場合（環境の構成に依存）、利用可能なオプションのいずれかを選択します。\
-    **Customer Account**フォームがペインに表示されます。
+**Customer Account**フォームがペインに表示されます。
 
-    ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d6e7105-createv2.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d6e7105-createv2.png)
 
 14. 必須フィールドはアスタリスク（\*）でマークされています。この場合、`Account Name`フィールドが必須です。デプロイメントは、他のフィールドを必須として構成されている場合があります。各必須フィールドについて、**Action**の下で**Input**を選択し、**Value**フィールドをクリックして値を選択するか文字列を入力します。
 15. **+** ボタンをクリックして、別のステップを追加します。
@@ -115,7 +115,7 @@ Salesforce ログイン画面が表示されます。
 20. **Log out**ステップをクリックします。このステップは、Salesforce アプリケーションからログアウトします。
 21. **Save**をクリックします。
 
-    **Save Test**ウィンドウが表示されます。
+**Save Test**ウィンドウが表示されます。
 
 ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/9c85234-Image_007.png)
 
@@ -124,8 +124,8 @@ Salesforce ログイン画面が表示されます。
 :::
 
 22. **Name**フィールドに「Create account」と入力し、**OK**をクリックします。\
-    テストが保存されます。\
-    おめでとうございます、最初のテストを作成しました！
+テストが保存されます。\
+おめでとうございます、最初のテストを作成しました！
 
 ## テストの実行
 
@@ -133,7 +133,7 @@ Salesforce ログイン画面が表示されます。
 
 1. エディター画面で、**Run**ボタンをクリックします。
 
-   ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/334dca8-runbutton.png)
+![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/334dca8-runbutton.png)
 
 新しいブラウザが開き、Salesforce 環境でテストステップが実行されます。テストが完了すると、ポップアップウィンドウにテストが成功したかどうかが表示されます。
 

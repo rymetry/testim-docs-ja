@@ -39,7 +39,7 @@ keywords:
 ![ステップ追加矢印](/images/validations/validate-element-attribute/3f42de6-small-screen3.png)
 
 4. 再び **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/validate-element-attribute/0bd37d9-Testim_237_r.png)
 
@@ -92,7 +92,7 @@ Testim はテスト実行時に、選択した要素の属性が期待値を持�
 ![CLI](/images/validations/validate-element-attribute/61bac26-reassign.png)
 
 5. **AUT** ウィンドウで、新しく選択したい要素を特定しクリックします。\
-   選択された要素が **Properties** パネルの **Target element** ボックスに表示されます。
+選択された要素が **Properties** パネルの **Target element** ボックスに表示されます。
 6. **Attribute name** に新しい要素の属性名を入力します。
 7. **Expected value** に新しい属性の期待値を入力します。
 

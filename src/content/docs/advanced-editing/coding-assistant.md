@@ -36,15 +36,15 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 2. **Write code with AI** ボタンをクリックします。
 
-   ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/cf577d9-writecodewithai.png)
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/cf577d9-writecodewithai.png)
 
 3. 注意事項を確認し、同意します。
 
-   ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/df40920-image_4.png)
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/df40920-image_4.png)
 
 4. コーディングアシスタントとは右側のチャットペインを通じて対話します。チャットペイン下部にプロンプトを入力できます。
 
-   ![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/e2c25d1-codingassistant.png)
+![Coding Assistant のスクリーンショット](/images/special-steps/coding-assistant/e2c25d1-codingassistant.png)
 
 5. 「/」（スラッシュ）キーを押します。
 

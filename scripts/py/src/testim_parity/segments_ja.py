@@ -21,11 +21,11 @@ state machine で以下を吸収する:
 
 1. **Nested list marker** (``^(\\s*)[-*+]`` / ``^(\\s*)\\d+\\.`` で
    ``markerIndent >= activeItem.bodyIndent``) → marker 剥がして text 部分のみ append
-2. **Continuation paragraph** (任意テキスト行で ``leadingWs > activeItem.bodyIndent``) →
+2. **Continuation paragraph** (任意テキスト行で ``leadingWs >= activeItem.bodyIndent``) →
    行全体を append (whitespace-collapse で空白整形)
-3. **Indented image** (``leadingWs > activeItem.bodyIndent`` の ``![...](...)`` /
+3. **Indented image** (``leadingWs >= activeItem.bodyIndent`` の ``![...](...)`` /
    ``<Image>`` / ``<img>``) → 空白 1 個として append (EN ``<img>`` → space 処理と対称)
-4. **Indented code fence** (``leadingWs > activeItem.bodyIndent`` の
+4. **Indented code fence** (``leadingWs >= activeItem.bodyIndent`` の
    ``\\`\\`\\`...`` / ``~~~...``) → 開閉 fence 間の inner text のみ append
 
 ### sibling list と nested list の書き分け
@@ -39,14 +39,14 @@ state machine で以下を吸収する:
 
 ### 吸収対象
 
-``markerIndent >= bodyIndent`` / ``leadingWs > bodyIndent`` を満たす以下の 4 pattern を
+``markerIndent >= bodyIndent`` / ``leadingWs >= bodyIndent`` を満たす以下の 4 pattern を
 active list item の text に吸収する:
 
 - Sibling marker (``markerIndent < bodyIndent``): 独立 segment emit
 - Nested marker (``markerIndent >= bodyIndent``): flatten (content のみ append)
-- Continuation paragraph (``leadingWs > bodyIndent``): flatten
-- Indented image (``leadingWs > bodyIndent``): space 1 個として吸収 (EN ``<img>`` 対称)
-- Indented code fence (``leadingWs > bodyIndent``): fence inner を text flatten
+- Continuation paragraph (``leadingWs >= bodyIndent``): flatten
+- Indented image (``leadingWs >= bodyIndent``): space 1 個として吸収 (EN ``<img>`` 対称)
+- Indented code fence (``leadingWs >= bodyIndent``): fence inner を text flatten
 
 288 corpus に存在した旧 tight sibling marker は content 側で outdent 済みのため、
 ``>=`` flatten と corpus parity は両立する。
@@ -110,16 +110,30 @@ _WHITESPACE_COLLAPSE_RE = re.compile(r"\s+")
 @dataclass
 class _ActiveListItem:
     """Issue #368 flatten state — 活性 list item と、その ``bodyIndent`` に依存する
-    deeper-indent content の吸収を担う。
+    continuation content の吸収を担う。
 
     ``bodyIndent`` はリスト行中の ``(.+)`` capture 開始列 (``match.start(content_group)``)。
-    これ以上深い ``leadingWs`` の content は current item に flatten される。
+    ``leadingWs >= bodyIndent`` の content は current item に flatten される。
     """
 
     kind: str  # "ordered-list-item" | "unordered-list-item"
     body_indent: int
     text_parts: list[str] = field(default_factory=list)
     start_line: int = 0
+
+
+def _is_active_list_structural_boundary(stripped: str) -> bool:
+    """Active list item に吸収せず、通常の block handler に渡す境界行か。"""
+
+    return bool(
+        _HEADING_RE.match(stripped)
+        or _CALLOUT_OPEN_RE.match(stripped)
+        or _CALLOUT_CLOSE_RE.match(stripped)
+        or _HTML_TABLE_OPEN_RE.match(stripped)
+        or _TABLE_ROW_RE.match(stripped)
+        or _DETAILS_TOKEN_RE.search(stripped)
+        or _HORIZONTAL_RULE_RE.match(stripped)
+    )
 
 
 class _Emitter:
@@ -185,7 +199,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
       される (EN ``walkCalloutBody`` と同じ挙動)
     - ``<details>`` 内の text block は ``paragraph`` で emit (EN walker と同等)
     - Issue #368 flatten: ``activeListItem`` で ``markerIndent >= bodyIndent`` /
-      ``leadingWs > bodyIndent`` の nested content を text に吸収
+      ``leadingWs >= bodyIndent`` の nested content を text に吸収
     """
     if not isinstance(body, str):
         return []
@@ -311,7 +325,7 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                 # Indented fence inside activeListItem → Issue #368 §3.2 #5:
                 # fence 内 content を text として list item に吸収 (EN ``<li><pre>``
                 # → ``collectInlineText`` 透過と対称)。
-                if active_list is not None and leading_ws > active_list.body_indent:
+                if active_list is not None and leading_ws >= active_list.body_indent:
                     fence_match = _FENCE_RE.match(trimmed)
                     assert fence_match is not None  # matched above
                     next_idx, content = scan_indented_fence(i, fence_match.group(1))
@@ -362,9 +376,14 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                 while j < n and lines[j].strip() == "":
                     j += 1
                 if j < n:
-                    next_ws = len(lines[j]) - len(lines[j].lstrip())
-                    if next_ws > active_list.body_indent:
-                        # blank 行 + deeper indent 継続 → active に留まる
+                    next_line = lines[j]
+                    next_ws = len(next_line) - len(next_line.lstrip())
+                    next_stripped = next_line.lstrip()
+                    if (
+                        next_ws >= active_list.body_indent
+                        and not _is_active_list_structural_boundary(next_stripped)
+                    ):
+                        # blank 行 + bodyIndent 以上の継続 → active に留まる
                         i = j
                         continue
                 emit_active_list()
@@ -387,20 +406,23 @@ def extract_segments_from_markdown(body: object) -> list[dict[str, Any]]:
                 continue
 
         # ----- Indented content absorption by active_list (Issue #368 flatten) -----
-        if active_list is not None and leading_ws > active_list.body_indent:
+        if active_list is not None and leading_ws >= active_list.body_indent:
             stripped = line.lstrip()
-            # Image → space 1 個 (EN ``<img>`` と対称)
-            if _IMAGE_RE.match(stripped):
-                active_list.text_parts.append(" ")
+            if _is_active_list_structural_boundary(stripped):
+                emit_active_list()
+            else:
+                # Image → space 1 個 (EN ``<img>`` と対称)
+                if _IMAGE_RE.match(stripped):
+                    active_list.text_parts.append(" ")
+                    i += 1
+                    continue
+                # Generic text → そのまま append
+                active_list.text_parts.append(stripped)
                 i += 1
                 continue
-            # Generic text → そのまま append
-            active_list.text_parts.append(stripped)
-            i += 1
-            continue
 
         # ----- Non-nested content → active_list boundary -----
-        # ``markerIndent < bodyIndent`` の sibling marker や ``leadingWs <= bodyIndent``
+        # ``markerIndent < bodyIndent`` の sibling marker や ``leadingWs < bodyIndent``
         # の plain text は current list item に吸収せず、通常の handler で処理する。
         if active_list is not None:
             emit_active_list()

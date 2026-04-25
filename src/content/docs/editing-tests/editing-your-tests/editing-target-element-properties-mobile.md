@@ -31,15 +31,15 @@ keywords:
 
 1. ターゲット要素をハイライトしたいステップの上にマウスを移動し、**Show Properties** ボタンをクリックします。
 
-   ![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties-mobile/6d153d2-properties.png)
+![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties-mobile/6d153d2-properties.png)
 
-   プロパティパネルが右側に開きます。
+プロパティパネルが右側に開きます。
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**Highlight** リンクをクリックします。
 
-   ハイライトは数秒間のみ表示されます。
+ハイライトは数秒間のみ表示されます。
 
-   ![ハイライト表示](/images/steps-editing-tests/editing-target-element-properties-mobile/7d30537-highlightshown.png)
+![ハイライト表示](/images/steps-editing-tests/editing-target-element-properties-mobile/7d30537-highlightshown.png)
 
 ## ターゲット要素の再割り当て
 
@@ -48,19 +48,19 @@ keywords:
 
 1. 再割り当てしたいステップの上にマウスを移動し、**Show Properties** ボタンをクリックします。
 
-   ![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties-mobile/6bd4cc7-properties.png)
+![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties-mobile/6bd4cc7-properties.png)
 
-   プロパティパネルが右側に開きます。
+プロパティパネルが右側に開きます。
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**Reassign** リンクをクリックします。
 
-   ![再割り当て選択](/images/steps-editing-tests/editing-target-element-properties-mobile/a45ee01-reassignselected.png)
+![再割り当て選択](/images/steps-editing-tests/editing-target-element-properties-mobile/a45ee01-reassignselected.png)
 
 3. 目的の要素をクリックします。より良い安定性のために、テキスト要素を選択し、外側のフレーム、画像、アイコンは避けてください。
 
-   再割り当てされたターゲット要素のプレビューがプロパティペインに表示されます。
+再割り当てされたターゲット要素のプレビューがプロパティペインに表示されます。
 
-   ![新しいターゲット要素](/images/steps-editing-tests/editing-target-element-properties-mobile/3428802-newtargetelement.png)
+![新しいターゲット要素](/images/steps-editing-tests/editing-target-element-properties-mobile/3428802-newtargetelement.png)
 
 ## ロケーターの表示
 

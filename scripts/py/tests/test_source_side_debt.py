@@ -46,12 +46,9 @@ FULL_SCOPE = {"type": "full", "isComplete": True, "filters": {"slug": None, "sec
 # ---------------------------------------------------------------------------
 
 
-def test_registry_contains_pull_requests_seed() -> None:
+def test_registry_empty_after_pull_requests_recovery_cleanup() -> None:
     slugs = list_source_side_debt_slugs()
-    assert len(slugs) >= 1, f"expected at least one source-side debt entry, got {len(slugs)}"
-    assert DEBT_SLUG in slugs, (
-        f"pull-requests must be seeded as the first known debt entry. Actual slugs: {slugs}"
-    )
+    assert slugs == []
 
 
 def test_registry_only_contains_upstream_broken_entries() -> None:

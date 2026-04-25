@@ -51,17 +51,17 @@ keywords:
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/014defd-Testim_116a.png)
 
 2. **フォルダー**（Shared steps）をクリックします。\
-   共有ステップメニューが開きます。
+共有ステップメニューが開きます。
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/ab52494-Testim_070_r.png)
 
 3. 既存のグループステップのリストから、目的のグループを選択します。\
-   グループがテストに追加されます。
+グループがテストに追加されます。
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/b9e1760-Testim_117.png)
 
 4. そのグループ左の **>（矢印）** にカーソルを合わせます。\
-   アクションオプションが表示されます。
+アクションオプションが表示されます。
 5. **Toggle Breakpoint** をクリックします。
 
 ![グループコンテキストのスクリーンショット](/images/advanced-features/group-context/c007533-Testim_118_r.png)

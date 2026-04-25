@@ -250,12 +250,12 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 ![アクションオプション](/images/validations/email-validation/fd77ed2-Testim_283a_r.png)
 
 2. “**M**”（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/0ab4994-Testim_270_r2.png)
 
 3. **Actions** をクリックします。  
-   **Actions** メニューが展開されます。
+**Actions** メニューが展開されます。
 
 ![メールアドレス生成設定](/images/validations/email-validation/4502efd-Testim_299_r.png)
 
@@ -299,11 +299,11 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 **恒久的メールアドレスを見つけるには：**
 
 1. **Settings > Email Service** に移動します。  
-   恒久的メールアドレスが表示されます。  
-   ![設定アイコン](/images/validations/email-validation/3b33312-emailaddresses.png)
+恒久的メールアドレスが表示されます。  
+![設定アイコン](/images/validations/email-validation/3b33312-emailaddresses.png)
 
 2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
-   ![コピーボタン](/images/validations/email-validation/bb1c588-emailaddresses2.png)
+![コピーボタン](/images/validations/email-validation/bb1c588-emailaddresses2.png)
 
 ### 一時的メールアドレスオプション
 
@@ -314,11 +314,11 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 Email Service 画面から一時的メールアドレスを表示およびコピーすることも可能です。→ **一時的メールアドレスを見つけるには：**
 
 1. **Settings > Email Service** に移動します。  
-   一時的メールアドレスはタイトルに "Temporary" とマークされています。  
-   ![設定アイコン](/images/validations/email-validation/f061421-image_1.png)
+一時的メールアドレスはタイトルに "Temporary" とマークされています。  
+![設定アイコン](/images/validations/email-validation/f061421-image_1.png)
 
 2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
-   ![コピーボタン](/images/validations/email-validation/18ef3a0-image_2.png)
+![コピーボタン](/images/validations/email-validation/18ef3a0-image_2.png)
 
 ## Run API Action ステップの使用
 
@@ -356,12 +356,12 @@ Run API Action ステップを使用して、一時的/恒久的メールアド�
 ![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
 2. “**M**”（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
 3. **Validations** をクリックします。\
-   **Validations** メニューが展開されます。
+**Validations** メニューが展開されます。
 
 ![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
@@ -378,17 +378,17 @@ Run API Action ステップを使用して、一時的/恒久的メールアド�
 5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
 6. これがこのテストまたは他のテストで再利用できるようにする共有ステップである場合は、**Shared step** の隣のボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。  
-   共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
+共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
 
 7. **Create Step** をクリックします。
 
 8. **Coded** タブをクリックします。  
-   ![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)
+![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)
 
-   **function** エディターが開き、右側に **Properties** パネルが開きます。
+**function** エディターが開き、右側に **Properties** パネルが開きます。
 
 9. 次のいずれかを実行します：  
-   **恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。
+**恒久的メールオプションの場合** - 恒久的メールアドレスをコピーし、**Email address** フィールドに貼り付けます。このメールアドレスはシングルクォートまたはダブルクォートで囲む必要があります。
 
 ![コピーボタン](/images/validations/email-validation/9489320-emailaddressfield.png)
 
@@ -483,12 +483,12 @@ exportsTest.emailLink = emailLinks[0];
 ![アクションオプション](/images/validations/email-validation/cbc623c-Testim_283a_r.png)
 
 2. “**M**”（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![ステップ選択](/images/validations/email-validation/408099e-Testim_270_r2.png)
 
 3. **Validations** をクリックします。\
-   **Validations** メニューが展開されます。
+**Validations** メニューが展開されます。
 
 ![メール検証設定](/images/validations/email-validation/056be62-Testim_303_r.png)
 
@@ -505,10 +505,10 @@ exportsTest.emailLink = emailLinks[0];
 5. **Name the new step** フィールドに、このステップの（意味のある）名前を入力します。
 
 6. これがこのテストまたは他のテストで再利用できるようにする共有ステップである場合は、**Shared step** の隣のボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。  
-   共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
+共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
 
 7. **Create Step** をクリックします。  
-   ![コードレス画面](/images/validations/email-validation/873ab96-codeless_screen.png)
+![コードレス画面](/images/validations/email-validation/873ab96-codeless_screen.png)
 
 8. **Email Filters** の下で、有効にしたい条件タイプのチェックボックスを選択して、受信箱内のメールを特定する条件を指定します。これらの条件すべてに一致するメール（つまり AND 条件）が検証されてステップが成功します。受信箱内のメールがこれらの条件のいずれにも一致しない場合、ステップは失敗します。すべての条件はオプションですが、少なくとも 1 つの条件を有効にする必要があります：
 
@@ -581,4 +581,4 @@ exportsTest.emailLink = emailLinks[0];
 - `emailData` - フィルタされたメール内のすべてのパラメーターを含みます
 - `emailExtractedText` - オプションで抽出されたテキストを含みます
 - `emailExtractedLinks` - オプションで抽出されたリンクの配列を含みます。  
-  `emailExtractedLinks` は配列です。配列内のエントリにアクセスするには、`emailExtractedLinks[n]` を使用します。`0` は最初のエントリを表します。
+`emailExtractedLinks` は配列です。配列内のエントリにアクセスするには、`emailExtractedLinks[n]` を使用します。`0` は最初のエントリを表します。

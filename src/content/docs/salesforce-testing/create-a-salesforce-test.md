@@ -52,12 +52,12 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 **新しいテストを作成するには:**
 
 1. Testim for Salesforce アカウントで、**Settings > Salesforce**に移動し、画面右上の**New test**をクリックします。  
-   ![新しい Salesforce テスト作成ボタン](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
+![新しい Salesforce テスト作成ボタン](/images/salesforce-testing/create-a-salesforce-test/e6d6f6e-newtest.png)
 
-   デフォルトの**Setup Step**で新しいテストが表示されます。
+デフォルトの**Setup Step**で新しいテストが表示されます。
 
 2. **Show Properties**アイコンをクリックし、**Properties Panel**で目的の設定を編集することで、ステップのプロパティを変更できます。  
-   ![Salesforce テストのプロパティペイン](/images/salesforce-testing/create-a-salesforce-test/1ca3180-properties.png)
+![Salesforce テストのプロパティペイン](/images/salesforce-testing/create-a-salesforce-test/1ca3180-properties.png)
 
 **Setup Step**には次のプロパティが含まれます:
 

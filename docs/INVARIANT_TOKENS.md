@@ -2,7 +2,7 @@
 
 <!-- markdownlint-disable MD038 MD052 MD056 MD060 -->
 
-本ファイルは **JA 内に英語のまま残るべき invariant token のパターン定義** です。`scripts/lib/parity_glossary_mask.mjs` が読み、マッチした token は `segment-untranslated` 検知から除外されます。
+本ファイルは **JA 内に英語のまま残るべき invariant token のパターン定義** です。`testim_parity.glossary_mask` が読み、マッチした token は `segment-untranslated` 検知から除外されます。
 
 各 pattern には:
 - `id`: 識別子（debug.maskCoverage で出力される）

@@ -46,12 +46,12 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 ![スクリーンショット](/images/validations/validate-element-text/b22feac-Screen_Shot_2021-04-18_at_6.39.03.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
-   Predefined steps メニューが開きます。
+Predefined steps メニューが開きます。
 
 ![検証](/images/validations/validate-element-text/46a723c-Testim_034_r.png)
 
 5. **Validations** をクリックします。\
-   Validations セクションが展開されます。
+Validations セクションが展開されます。
 
 ![検証](/images/validations/validate-element-text/9d4b608-Testim_035_r.png)
 
@@ -62,7 +62,7 @@ Element Text 検証は、指定した要素の存在を前提にする点で Ele
 :::
 
 7. AUT ウィンドウで検証したい要素をクリックして選択します。\
-   ステップが作成され、選択した要素のサムネイルがステップに表示されます。
+ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
 ![検証オプション](/images/validations/validate-element-text/1915d47-Testim_090.png)
 
@@ -125,7 +125,7 @@ Ctrl キーを押しながら複数の要素をクリックして、複数テキ
 ![要素設定](/images/validations/validate-element-text/17dc6a7-Testim_010a_r.png)
 
 6. AUT 上で新しい要素を特定し、クリックして選択します。\
-   選択した要素が Properties パネルの **Target element** に表示されます。
+選択した要素が Properties パネルの **Target element** に表示されます。
 7. 先ほどと同じステップ左の **Toggle Breakpoint** をクリックして、ブレークポイントを解除します。
 
 ### 検証テキストの編集

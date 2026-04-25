@@ -58,7 +58,7 @@ Testim は、1 つ以上の劣化したロケーターが自動改善された�
 ![自動改善対象のステップに Self healing アイコンが表示されている画面](/images/test-management/locators-auto-improve/bcd9e8a-Testim_583b_r.png)
 
 3. **Apply**をクリックします。\
-   フィルターが適用され、自動改善されたテストのみが表示されます。
+フィルターが適用され、自動改善されたテストのみが表示されます。
 4. **Filter Test**ペインの右上にある「**X**」をクリックして閉じます。
 
 :::note

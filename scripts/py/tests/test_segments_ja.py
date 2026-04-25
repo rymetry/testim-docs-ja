@@ -140,6 +140,15 @@ class TestListEmitTrueNested:
         assert segs[0]["textNorm"] == "first step. continuation paragraph."
         assert segs[1]["textNorm"] == "second step."
 
+    def test_body_indent_equal_continuation_paragraph_flatten(self):
+        """``bodyIndent`` ちょうどの continuation paragraph も flatten される。"""
+        md = "1. First step.\n\n   Continuation paragraph.\n\n2. Second step.\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["ordered-list-item", "ordered-list-item"]
+        assert segs[0]["textNorm"] == "first step. continuation paragraph."
+        assert segs[1]["textNorm"] == "second step."
+
     def test_indented_image_absorbed_as_space(self):
         """``- item\\n    ![alt](img)`` で image は absorb される。
 
@@ -151,6 +160,14 @@ class TestListEmitTrueNested:
         segs = extract_segments_from_markdown(md)
         assert len(segs) == 1
         assert segs[0]["segmentKind"] == "unordered-list-item"
+        assert segs[0]["textNorm"] == "item with image"
+
+    def test_body_indent_equal_image_absorbed_as_space(self):
+        """``bodyIndent`` ちょうどの image も standalone image にしない。"""
+        md = "1. Item with image\n   ![alt](/x.png)\n"
+        segs = extract_segments_from_markdown(md)
+        assert len(segs) == 1
+        assert segs[0]["segmentKind"] == "ordered-list-item"
         assert segs[0]["textNorm"] == "item with image"
 
     def test_indented_code_fence_absorbed_as_text(self):
@@ -168,6 +185,15 @@ class TestListEmitTrueNested:
         assert "var x = 1;" in segs[0]["textNorm"]
         assert segs[1]["textNorm"] == "after"
 
+    def test_body_indent_equal_code_fence_absorbed_as_text(self):
+        """``bodyIndent`` ちょうどの code fence は code-block に分離しない。"""
+        md = "1. step\n\n   ```js\n   var x = 1;\n   ```\n\n2. after\n"
+        segs = extract_segments_from_markdown(md)
+        kinds = [s["segmentKind"] for s in segs]
+        assert kinds == ["ordered-list-item", "ordered-list-item"]
+        assert segs[0]["textNorm"] == "step var x = 1;"
+        assert segs[1]["textNorm"] == "after"
+
     def test_tight_sibling_not_flattened_across_top_level_marker(self):
         """``- a\\n    - nested\\n- sibling`` は [flatten, sibling] の 2 items。
 
@@ -181,13 +207,8 @@ class TestListEmitTrueNested:
         assert segs[0]["textNorm"] == "outer nested"
         assert segs[1]["textNorm"] == "sibling"
 
-    def test_hard_break_continuation_remains_separate(self):
-        """``-  bullet\\\\\\n  indent`` (leading_ws=2 == body_indent=2) は tight
-        sibling扱いで 2 segment emit のまま。
-
-        ``results/test-runs.md`` 等で使われる mjs 互換 pattern。flatten は
-        ``leading_ws > body_indent`` の場合のみなので、ここでは発動しない。
-        """
+    def test_hard_break_continuation_absorbs_equal_body_indent(self):
+        """``leading_ws == body_indent`` の text continuation は list item に入る。"""
         md = (
             "- 緑のバー - 合格\n"
             "- 赤のバー - 不合格\\\n"
@@ -195,7 +216,10 @@ class TestListEmitTrueNested:
         )
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item", "unordered-list-item", "paragraph"]
+        assert kinds == ["unordered-list-item", "unordered-list-item"]
+        assert segs[1]["textNorm"] == (
+            "赤のバー - 不合格\\ バーにカーソルを合わせると、その詳細が表示されます。"
+        )
 
 
 class TestCallout:
@@ -326,7 +350,7 @@ class TestListRegionEdgeCases:
     """Issue #368 flatten 後の境界条件を pin する regression guard。
 
     ``_ActiveListItem`` state machine は ``markerIndent >= bodyIndent`` /
-    ``leadingWs > bodyIndent`` のときだけ flatten し、それ以外は line-based emit 相当
+    ``leadingWs >= bodyIndent`` のときだけ flatten し、それ以外は line-based emit 相当
     の boundary flush を行う。本 class は以下の境界条件が正しく機能することを
     具体例で確認する:
 
@@ -335,7 +359,7 @@ class TestListRegionEdgeCases:
       (leading_ws == 0) → active list flush
     - 1-space indent content (leading_ws < body_indent) → active list flush + paragraph emit
     - 4-space indent list marker (CommonMark code-block 相当) → line-based emit で拾う
-    - hard-break (``\\\\`` 末尾 + text indent == body_indent) → paragraph として emit
+    - hard-break (``\\\\`` 末尾 + text indent == body_indent) → list item に flatten
     """
 
     def test_list_ends_at_code_fence_inside_region(self):
@@ -377,14 +401,8 @@ class TestListRegionEdgeCases:
         # horizontal rule 自体は emit されず、後続 paragraph だけ emit
         assert kinds == ["unordered-list-item", "paragraph"]
 
-    def test_indented_fence_inside_list_separate_segments(self):
-        """indented code fence は mjs では paragraph / code-block emit。
-
-        Phase 2 では CommonMark flatten で list item に吸収していたが、Phase 6b で
-        mjs line-based に合わせた。indented ``\\`\\`\\`js`` は top-level fence
-        regex に match しないので paragraph 扱いになる。2-space indent の
-        continuation text も paragraph。mjs と同じ 1 行 1 segment emit。
-        """
+    def test_indented_fence_inside_list_absorbed(self):
+        """bodyIndent ちょうどの fence と continuation は list item に吸収される。"""
         md = (
             "1. step one\n\n"
             "   ```js\n"
@@ -395,15 +413,9 @@ class TestListRegionEdgeCases:
         )
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        # mjs: step one (bullet) → paragraph ('```js var x = 1; ```' のテキスト) →
-        # paragraph (continuation) → step two (bullet)
-        assert "ordered-list-item" in kinds
-        assert "paragraph" in kinds
-        # step one と step two が独立 segment
-        bullets = [s for s in segs if s["segmentKind"] == "ordered-list-item"]
-        assert len(bullets) == 2
-        assert bullets[0]["textNorm"] == "step one"
-        assert bullets[1]["textNorm"] == "step two"
+        assert kinds == ["ordered-list-item", "ordered-list-item"]
+        assert segs[0]["textNorm"] == "step one var x = 1; continuation paragraph"
+        assert segs[1]["textNorm"] == "step two"
 
     def test_one_space_indent_after_list_emits_paragraph(self):
         """blank 行 + 1-space indent の行は list continuation にならない。
@@ -479,19 +491,13 @@ class TestListRegionEdgeCases:
         assert kinds == ["unordered-list-item"] * 3
         assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
 
-    def test_hard_break_splits_list_item_and_paragraph(self):
-        """``1. step\\`` + indented next line (indent == body_indent) は paragraph emit。
-
-        ordered の body_indent=3、続く ``   Next sentence.`` の leading_ws=3 は
-        marker ではなく text 行なので flatten 対象外 → active flush + paragraph
-        emit の 2 segment になる。
-        """
+    def test_hard_break_absorbs_equal_body_indent_text(self):
+        """``1. step\\`` + indent == body_indent の next line は flatten。"""
         md = "1. Step one\\\n   Next sentence.\n"
         segs = extract_segments_from_markdown(md)
         kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["ordered-list-item", "paragraph"]
-        assert segs[0]["textNorm"] == "step one\\"
-        assert segs[1]["textNorm"] == "next sentence."
+        assert kinds == ["ordered-list-item"]
+        assert segs[0]["textNorm"] == "step one\\ next sentence."
 
     def test_top_level_fence_still_terminates_list_region(self):
         """top-level (non-indented) fence は list region を終了させる。

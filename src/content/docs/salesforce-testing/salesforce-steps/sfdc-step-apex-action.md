@@ -27,9 +27,9 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 
 1. エディターで、**+** ボタンをクリックしてステップを追加します。
 2. **Salesforce ステップ**タブの下で、**API 操作**をクリックし、**APEX を実行**ステップを選択します。\
-   **function** エディターが開き、右側に **プロパティ**パネルが開きます:
+**function** エディターが開き、右側に **プロパティ**パネルが開きます:
 
-   ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/c0c4dc9-Picture2.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/c0c4dc9-Picture2.png)
 
 3. **プロパティ**パネルの**説明**フィールドで、このステップの説明をオプションで編集します。デフォルトの説明は「Salesforce - APEX Action」です。
 4. function テキストボックスに、目的の APEX コードを入力します。パラメーターを定義している場合は、APEX コードでそれらのパラメーターを参照できます。
@@ -45,7 +45,7 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 
 3. **JS** インジケーターの横に、APEX スクリプトで使用されるこのパラメーターの名前を付けます。これは、エディターウィンドウの関数宣言で自動的に引数として表示されます。
 
-   ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/fbe2f4f-Picture3.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/fbe2f4f-Picture3.png)
 
 ## 値のエクスポート
 

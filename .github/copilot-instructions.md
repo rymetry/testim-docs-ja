@@ -24,14 +24,14 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 
 ## スクリプト構成
 
-`scripts/` は機能別に 4 ディレクトリに整理:
+`scripts/` の運用コードは Python package `scripts/py/src/testim_parity/` が canonical:
 
 | ディレクトリ | 責務 |
 | ------------ | ------ |
-| `scripts/detection/` | パリティチェック、スナップショット取得/差分、変更検出 |
-| `scripts/pipeline/` | 翻訳パイプライン: EN ソース取得 → プレースホルダー → LLM タスク → 翻訳適用 |
-| `scripts/tools/` | lint、正規化、frontmatter 同期などのユーティリティ |
-| `scripts/lib/` | 共有ライブラリ（パリティ解析、turndown、MadCap TOC パーサー等） |
+| `testim_parity.detection` | パリティチェック、スナップショット取得/差分、変更検出 |
+| `testim_parity.pipeline` | 翻訳パイプライン: EN ソース取得 → プレースホルダー → LLM タスク → 翻訳適用 |
+| `testim_parity.tools` | lint、正規化、frontmatter 同期などのユーティリティ |
+| `testim_parity.*` shared modules | パリティ解析、turndown、MadCap TOC パーサー等 |
 
 ## コマンド一覧
 
@@ -79,12 +79,12 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 ## ドキュメントパイプライン
 
-`scripts/pipeline/pipeline.mjs` が翻訳ワークフロー全体をオーケストレーション:
+`testim_parity.pipeline.pipeline` が翻訳ワークフロー全体をオーケストレーション:
 
 1. EN ソース取得
-2. プレースホルダー生成 (`generate_untranslated_placeholders.mjs`)
-3. LLM タスク準備 (`prepare_llm_tasks.mjs`)
-4. LLM 翻訳適用 (`apply_llm_translations.mjs`)
+2. プレースホルダー生成 (`testim_parity.pipeline.generate_untranslated_placeholders`)
+3. LLM タスク準備 (`testim_parity.pipeline.prepare_llm_tasks`)
+4. LLM 翻訳適用 (`testim_parity.pipeline.apply_llm_translations`)
 
 `scripts/.checkpoint` によるチェックポイントベースのレジューム対応。
 
@@ -92,8 +92,8 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 - **Content スナップショット**: 各 EN ページ HTML から `#mc-main-content` を抽出、`snapshots/en/content/{folder}/{basename}.html` に保存
 - **Sidebar スナップショット**: MadCap Flare TOC データをパース、`snapshots/en/sidebar.json` に保存
-- **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換し、JA 翻訳と構造比較
-- **上流欠陥管理**: 壊れた EN ソースは `scripts/lib/source_sync_exclusions.mjs`（page-level freeze）と `scripts/lib/en_source_patches.mjs`（segment-level patch）で隔離。詳細は `docs/UPSTREAM_DEFECTS.md`
+- **パリティ比較**: EN HTML と JA Markdown を Python extractor で canonical segment 化し、構造比較
+- **上流欠陥管理**: 壊れた EN ソースは `testim_parity.sync_exclusions`（page-level freeze）と `testim_parity.en_source_patches` + `_en_source_patches_data.json`（segment-level patch）で隔離。詳細は `docs/UPSTREAM_DEFECTS.md`
 
 ## 権威ソース
 

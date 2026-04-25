@@ -4,7 +4,7 @@
 
 - **Status**: Active (v2, 2026-04-20 — Reserved IDs table added, proposal B')
 - **Owner**: Testim JA Docs parity subsystem
-- **Related**: `scripts/lib/en_source_patches.mjs`, `docs/PARITY_GUIDE.md`
+- **Related**: `scripts/py/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
 ## Reserved IDs (proposal B', Codex Round-3 approved)
 
@@ -38,17 +38,17 @@ Prior to v2, PR C and PR D both attempted to allocate `UD-005` concurrently for 
 
 ### Scope of B' (intentionally narrow)
 
-Already-merged IDs (`UD-001`..`UD-004`) are **not renumbered**. Codex Round-3 explicitly flagged that renumbering `UD-004 → UD-009` would churn `en_source_patches.mjs`, tracker, tests, and plan docs without corresponding benefit. The table above simply **reserves future IDs** and establishes allocation protocol going forward.
+Already-merged IDs (`UD-001`..`UD-004`) are **not renumbered**. Codex Round-3 explicitly flagged that renumbering `UD-004 → UD-009` would churn the patch registry, tracker, tests, and plan docs without corresponding benefit. The table above simply **reserves future IDs** and establishes allocation protocol going forward.
 
 ## Purpose
 
 MadCap Flare で生成された EN HTML snapshot に含まれる **broken upstream defect** を集中管理する。各 defect は:
 
-1. `en_source_patches` registry (`scripts/lib/en_source_patches.mjs`) の `id` と 1:1 で対応する anchor を持つ
+1. `en_source_patches` registry (`scripts/py/src/testim_parity/_en_source_patches_data.json`) の `id` と 1:1 で対応する anchor を持つ
 2. Tricentis への上流報告 status を記録する
 3. Upstream 修正確認時の patch removal 条件 (SOP) を持つ
 
-JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaround を埋め込むことは禁止 (plan §1.1 / absolute principle 4)。broken-EN は必ず EN HTML boundary (`preprocessEnHtml`) で slug-scope literal patch として処理する。
+JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaround を埋め込むことは禁止 (plan §1.1 / absolute principle 4)。broken-EN は必ず EN HTML boundary (`preprocess_en_html`) で slug-scope literal patch として処理する。
 
 ## Defect classes
 
@@ -79,13 +79,13 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - Variant A (plain): `<p>Verify -this action verifies ...`
   - Variant B (strong): `<p><strong>Verify</strong> -this action verifies ...`
   - 本来は `Verify - this action verifies ...` と半角スペースが入るべき箇所
-- **Fix applied**: preprocessEnHtml 内で `-this action verifies` → `- this action verifies` に置換
+- **Fix applied**: `preprocess_en_html` 内で `-this action verifies` → `- this action verifies` に置換
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP**: Tricentis が該当 HTML を修正して MadCap rebuild、`docs.tricentis.com/testim` に反映されたら:
   1. `snapshots/en/content/salesforce-testing/salesforce-steps/sfdc-step-{create,edit,quickactions,relatedlistaction,validate}.html` を再取得
   2. `grep '-this action verifies'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-001A / UD-001B entry を削除
-  4. `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-001A / UD-001B entry を削除
+  4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ### UD-002: Salesforce Steps "Log out" href miswire
 
@@ -96,13 +96,13 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Affected slugs** (1):
   - `salesforce-testing/salesforce-steps`
 - **Defect**: parent index page の共通操作リスト "Log out" エントリのリンクターゲットが誤って `sfdc-step-launchapp.htm` を指している。本来は `sfdc-step-logout.htm` (別の子ページが正しく存在する)。
-- **Fix applied**: preprocessEnHtml 内で `<a href="sfdc-step-launchapp.htm">Log out</a>` → `<a href="sfdc-step-logout.htm">Log out</a>` に置換
+- **Fix applied**: `preprocess_en_html` 内で `<a href="sfdc-step-launchapp.htm">Log out</a>` → `<a href="sfdc-step-logout.htm">Log out</a>` に置換
 - **JA side**: JA markdown は既に `sfdc-step-logout` への正しいリンクを保持 (UX 上正しい)。patch により EN/JA 両側で同じ `/docs/salesforce-testing/salesforce-steps/sfdc-step-logout` token が emit され、parity alignment 成立。
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP**:
   1. `snapshots/en/content/salesforce-testing/salesforce-steps.html` を再取得
   2. `grep '<a href="sfdc-step-launchapp.htm">Log out</a>'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-002 entry を削除
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-002 entry を削除
   4. baseline 再生成
 
 ### UD-003: broken-table-row-as-paragraph in predefined-properties-in-config-file-hooks
@@ -123,16 +123,17 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after patch applied and upstream fix confirmed):
   1. `snapshots/en/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.html` を再取得
   2. `grep '| globalParameters | | |'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-003 entry を削除
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-003 entry を削除
   4. baseline 再生成
 
 ### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
 
-- **Patch IDs**: `UD-004A-scheduler-high-speed-mode`, `UD-004C-scheduler-slack-integration-anchor`
+- **Patch IDs**: `UD-004A-scheduler-high-speed-mode`, `UD-004C-scheduler-slack-integration-anchor` (archived)
 - **Defect class**: `stale-reference`
 - **Added**: 2026-04-18
 - **Rescoped**: 2026-04-18 (PR #337 rework — URL-localization takes precedence over raw mirror)
 - **Applied**: 2026-04-18 (Category B PR — UD-004A + UD-004C promoted from candidate to applied; UD-004B retired as N/A)
+- **Recovered/archived**: 2026-04-25 (Issue #368 completion cleanup)
 - **Review after**: 2026-10-18
 - **Affected slugs** (2):
   - `running-tests/scheduler` (UD-004A + UD-004C)
@@ -146,13 +147,13 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - `UD-004C-scheduler-slack-integration-anchor`: `<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>` → `<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>` (scheduler + scheduler-mobile 両方に適用)
   - `UD-004B`: **N/A retired** — scheduler-mobile には high-speed-mode legacy URL 参照が存在しないため、当初 plan 時の推測上の patch は不要 (EN HTML grep で確認済)
   - 結果: baseline から URL token mismatch 由来の segment-extra/missing pair が消滅 (scheduler 5→1, scheduler-mobile 3→1 / 残 1 件ずつは segment-inconclusive tokenless-near-tie = P2-5 対象)
-- **Status**: `applied (UD-004A + UD-004C)`
+- **Status**: `recovered / archived` — live and refreshed local snapshots no longer contain either legacy `help.testim.io` pattern; entries removed from `_en_source_patches_data.json`.
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP** (after upstream fix confirmed):
-  1. `snapshots/en/content/running-tests/scheduler.html` と `scheduler-mobile.html` を再取得
-  2. `grep 'help.testim.io'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-004A / UD-004C entry を削除
-  4. baseline 再生成 (既存 entry は tokenless-near-tie のみ残存するはず)
+  1. `snapshots/en/content/running-tests/scheduler.html` と `scheduler-mobile.html` を再取得済み
+  2. `grep 'help.testim.io'` が 0 hit であることを確認済み
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-004A / UD-004C entry を削除済み
+  4. baseline 新規 entry 追加なし。`npm run check:parity -- --json` で 5-counter 0 を確認する
 
 ### UD-005: legacy `help.testim.io/docs/<basename>` display-text / `index.htm` self-link in hooks & parameters pages
 
@@ -180,7 +181,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after upstream fix confirmed):
   1. `snapshots/en/content/advanced-editing/hooks.html`, `.../parameters.html`, `.../parameters/parameter-override-rules.html` を再取得
   2. `grep 'help.testim.io/docs/'` および `grep 'doc:https'` および `grep '"index\.htm"'` が 0 hit であることを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-005A-F entry を削除
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-005A-F entry を削除
   4. baseline 再生成
 
 ### UD-006: `-variable` typo in editing-tests/search-within-a-test Search limitations list
@@ -197,7 +198,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/editing-tests/search-within-a-test.html` を再取得
   2. `grep '-variable name'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-006 entry を削除
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-006 entry を削除
   4. baseline 再生成
 
 ### UD-007: `step.This` typo in guides/generate-random-data-with-js
@@ -214,7 +215,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/guides/generate-random-data-with-js.html` を再取得
   2. `grep 'step\.This'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-007 entry を削除
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-007 entry を削除
   4. baseline 再生成
 
 ### UD-008: `index.htm` CLI self-link in running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone
@@ -232,7 +233,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.html` を再取得
   2. `grep '<a href="index.htm">CLI command</a>'` が 0 hit になったことを確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-008 entry を削除
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-008 entry を削除
   4. baseline 再生成
 
 ### UD-009: `index.htm` self-link miswire in grid-management child pages
@@ -259,8 +260,8 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after upstream fix confirmed):
   1. 5 slug の EN HTML snapshot を再取得
   2. `grep 'href="index.htm#adding-a-grid"'` が全 5 file で 0 hit を確認
-  3. `scripts/lib/en_source_patches.mjs` から UD-009 entry を削除
-  4. `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-009 entry を削除
+  4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
 
@@ -296,22 +297,22 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   2. UD-010A: `grep '<p>\u200b## Run with external'` が 0 hit になったことを確認
   3. UD-010B: `grep '<p>\u200b5. Enter a value'` が 0 hit になったことを確認
   4. UD-010C/D: `grep -E '<p>\u200b[23]\. (Create|Select)'` が 0 hit になったことを確認
-  5. `scripts/lib/en_source_patches.mjs` から UD-010A/B/C/D entry を削除
+  5. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-010A/B/C/D entry を削除
   6. JA 側 vsts-and-tfs-integration の orphan paragraph も `​N. ` prefix を再度付与するか、EN upstream が正規 `<li>` に戻れば JA も正規番号リストに統合するか、reviewer 判断
   7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
-  8. `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
+  8. `npm run generate:parity-baseline -- --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
 
 ## Adding a new defect
 
 新しい broken-EN defect を見つけた際のチェックリスト:
 
 1. **Classification**: 4 enum (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) のどれに当てはまるか判断。該当なしの場合は新規 class 追加を plan 改定として提案する (独自に追加しない)
-2. **Reproducibility**: EN HTML snapshot を grep して literal match で `find` 文字列を確定する。preprocessEnHtml の他 normalize (`normalizeEscapedCallouts` / `normalizeEscapedFaqDetails` / `unescapeDetails`) を通った後の HTML 形で書く
+2. **Reproducibility**: EN HTML snapshot を grep して literal match で `find` 文字列を確定する。`preprocess_en_html` の normalize (`normalize_escaped_callouts` / `normalize_escaped_faq_details` / `unescape_details`) を通った後の HTML 形で書く
 3. **Idempotency check**: `replace` が `find` を部分文字列として含まない (test で自動検証)
-4. **Slug scope**: 影響する slug を列挙し、`slugs: Object.freeze([...])` に登録
+4. **Slug scope**: 影響する slug を列挙し、`slugs` array に登録
 5. **Linked defect anchor**: 本ファイルに `## UD-NNN: <summary>` セクションを追加し、`linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-NNN'` で refer
-6. **Tests**: `scripts/__tests__/en_source_patches.test.mjs` に application test と mismatch test を追加
-7. **Baseline regen**: `node scripts/detection/generate_parity_baseline.mjs --regenerate --rationale="add UD-NNN patch"`、新規追加 0 を確認
+6. **Tests**: `scripts/py/tests/test_en_source_patches.py` に application test と mismatch test を追加
+7. **Baseline regen**: `npm run generate:parity-baseline -- --regenerate --rationale="add UD-NNN patch"`、新規追加 0 を確認
 8. **Upstream report**: Tricentis への報告 ticket 起票、本ファイルの "Tricentis upstream report status" を更新
 
 ## Review cadence
@@ -321,20 +322,19 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   1. Tricentis への報告 status 再確認
   2. Upstream fix 未完了なら reviewAfter を 3-6 ヶ月延長し本ファイルに rationale 追記
   3. Upstream fix 完了なら Removal SOP を実行
-- Phase B 以降は `scripts/detection/check_upstream_recovery.mjs` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
+- Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
 
 上流 defect の probe 結果を時系列で記録する。Phase A/B の `upstream-recovery-status.json` + 手動 triage から得られた事実のみ記載。
 
-### 2026-04-20 — `source_sync_exclusions: testops/testops-version-control/pull-requests`
+### 2026-04-25 — upstream recovery cleanup
 
-- **背景**: 2026-04-20 session で Plan Rev 4 §Task 7 (pull-requests registry cleanup) を triage
-- **Probe 実行**: `npm run check:snapshots:fetch -- --slug=testops/testops-version-control/pull-requests` を実行。snapshot file は registry ガードにより上書きされないが、`snapshot_update.mjs` が live HTML を fetch → extractor を走らせて `source-sync-status.json.pages[].recoveryProbe` を更新する
-- **Probe 出力 (`source-sync-status.json` から抜粋)**: `fetchStatus: 'excluded-broken'` / `recoveryProbe: { issueType: 'snapshot-incomplete', reason: 'extractor-empty', expectedIssueType: 'snapshot-incomplete', expectedReason: 'extractor-empty', expectedMatch: true }` — `expectedMatch: true` は **今回 fetch した live HTML** が登録時の defect signature と一致することを示す (registry の declared status を echo しているのではなく、actual re-probe の結果)
-- **判定**: 登録時の破損パターン (MadCap が本文全体を単一 `<code>` ブロックに畳み込み、extractor が 0 segments を返す) が依然として live HTML に存在する
-- **Action**: `SOURCE_SYNC_EXCLUSIONS` entry を維持。`reviewAfter: 2026-10-09` は **未超過** (probe 時点 2026-04-20 から 171 日後) のため **延長せず現状維持** (Plan Step 5 の `reviewAfter` 更新は reviewAfter が超過した場合のみ適用される条件付き手順)。`scripts/__tests__/source_parity_source_side_debt.test.mjs` の seeded pin も変更なし
-- **次回 probe トリガー**: (A) `reviewAfter` 超過で `check_patch_review_cadence.mjs` が warn、または (B) `upstream-recovery-status.json.mechanisms.source_sync_exclusions[*].statusA === 'stale'` を観測したとき
+- **`source_sync_exclusions` 判定**: `testops/testops-version-control/pull-requests` は `fetchStatus: 'excluded-recovered'` / `statusA: 'stale'` を確認。登録時の破損パターン (MadCap が本文全体を単一 `<code>` ブロックに畳み込み、extractor が 0 segments を返す) は現行 upstream で再現しない。
+- **`source_sync_exclusions` action**: `testim_parity.sync_exclusions` から entry を削除。page-level freeze 機構は維持するが、現在 active source-side debt は 0 件。
+- **`en_source_patches` 判定**: `check_upstream_recovery` の CRLF-preserving read 修正後、UD-016 / UD-018 / UD-019 / UD-020 は active と再判定。UD-004A / UD-004C のみ stale と確定。
+- **`en_source_patches` action**: UD-004A / UD-004C を `_en_source_patches_data.json` から削除し、UD-004 は recovered/archived 状態に更新。
+- **確認**: cleanup 後の `npm run check:upstream-recovery` は `total=32 active=32 stale=0 overdue=0 unknown=0` を期待値とする。
 
 ## Related docs
 
