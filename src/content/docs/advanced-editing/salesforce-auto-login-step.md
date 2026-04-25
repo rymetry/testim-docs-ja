@@ -47,12 +47,12 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/9b114f6-Testim_566.png)
 
 2. “**M**”（Testim predefined steps）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/c70c927-Testim_544_r.png)
 
 3. **Salesforce** をクリックします。\
-   **Salesforce** メニューが展開されます。
+**Salesforce** メニューが展開されます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/cedf632-Testim_545_r.png)
 
@@ -79,7 +79,7 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 9. **Login URL** に環境のログイン URL を入力します。
 10. **Username** と **Password** に認証情報を入力します。
 11. MFA を使う場合は [Setting up MFA](/docs/advanced-editing/salesforce-auto-login-step#mfa-のセットアップ) に従います。\
-    これで設定は完了です。
+これで設定は完了です。
 
 ### パラメーターの使用
 

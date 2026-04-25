@@ -71,7 +71,7 @@ Filter Test ペインの各セクション内で条件を検索することも�
 :::
 
 3. **Apply** をクリックします。\
-   フィルターが適用され、条件を満たすテストのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
+フィルターが適用され、条件を満たすテストのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
 
 :::note
 Filter Test ペインの下部にある **Reset filters** をクリックしてから **Apply** をクリックすることで、フィルターを削除できます。

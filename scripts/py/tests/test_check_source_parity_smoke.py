@@ -62,12 +62,60 @@ def full_repo_parity_payload(tmp_path_factory: pytest.TempPathFactory) -> dict:
     """
     tmp_path = tmp_path_factory.mktemp("parity_smoke")
     output_path = tmp_path / "parity-check-status.json"
+    source_sync_path = tmp_path / "source-sync-status.json"
+    snapshot_diff_path = tmp_path / "snapshot-diff-status.json"
+    run_id = "cutover-smoke-linked-run"
+    inventory_fingerprint = "sha256:" + ("0" * 64)
+    run_scope = {
+        "type": "full",
+        "isComplete": True,
+        "filters": {"slug": None, "section": None},
+    }
+    source_sync_path.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 2,
+                "runId": run_id,
+                "checkedAt": "2026-04-25T00:00:00.000Z",
+                "freshnessState": "fresh",
+                "sourceInventoryFingerprint": inventory_fingerprint,
+                "sidebarFingerprint": "sha256:" + ("1" * 64),
+                "runScope": run_scope,
+                "summary": {
+                    "sidebarVerified": True,
+                    "excludedPages": 0,
+                    "excludedBrokenPages": 0,
+                    "excludedRecoveredPages": 0,
+                },
+                "pages": [],
+                "errors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    snapshot_diff_path.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "runId": "cutover-smoke-snapshot-diff",
+                "sourceSyncRunId": run_id,
+                "checkedAt": "2026-04-25T00:00:00.000Z",
+                "sourceInventoryFingerprint": inventory_fingerprint,
+                "runScope": run_scope,
+                "summary": {},
+                "changes": [],
+            }
+        ),
+        encoding="utf-8",
+    )
     stdout_buf = io.StringIO()
     stderr_buf = io.StringIO()
 
     exit_code = check_source_parity(
         root_dir=ROOT_DIR,
         output_path=output_path,
+        source_sync_status_path=source_sync_path,
+        snapshot_diff_status_path=snapshot_diff_path,
         stdout=stdout_buf,
         stderr=stderr_buf,
         json_out=True,

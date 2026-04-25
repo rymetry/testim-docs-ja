@@ -23,19 +23,19 @@ Gearset の CI またはデプロイジョブからテストを自動化する�
 1. Testim/TTA for Salesforce で、**Settings > API**に移動します。
 2. **Generate API Key**をクリックします。
 
-   ![API キー生成ボタンが表示された画面](/images/ci-integrations/gearset-integration/b650ac8-generate1.png)
+![API キー生成ボタンが表示された画面](/images/ci-integrations/gearset-integration/b650ac8-generate1.png)
 
 3. キーの名前を入力し、**Generate**をクリックします。
 
-   ![API キー名入力と Generate ボタンの画面](/images/ci-integrations/gearset-integration/e9d4a48-generateapi.png)
+![API キー名入力と Generate ボタンの画面](/images/ci-integrations/gearset-integration/e9d4a48-generateapi.png)
 
 4. 表示された API キーをコピーし、**Done**をクリックします。このキーが表示されるのは生成時のみなので、できるだけ早くコピーしてください。
 
-   ![生成された API キーをコピーする画面](/images/ci-integrations/gearset-integration/7c2ad4a-copy.png)
+![生成された API キーをコピーする画面](/images/ci-integrations/gearset-integration/7c2ad4a-copy.png)
 
 5. [Testim REST API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/testimio/public-openapi/main/api.yaml) を Swagger で開き、テスト、テストプラン、テストスイート、またはテストラベルなどのリモート実行 API 呼び出しのタイプを選択して、JSON ペイロードをコピーします。
 
-   ![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
+![Swagger 上で Testim REST API ペイロードを確認する画面](/images/ci-integrations/gearset-integration/05e5bea-gearset_api.png)
 
 6. Gearset の Deployment または CI ジョブの Webhook で、以下の手順に従います:
 

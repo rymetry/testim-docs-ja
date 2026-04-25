@@ -32,7 +32,7 @@ TeamCity とテストを統合するには、まず TeamCity マシンまたは�
 ![Command Line ランナータイプを選択する TeamCity の画面](/images/ci-integrations/teamcity-integration/6e50ad2-gUJV3NuQS3mxZyjN9mM9_08-new-build-step-type.png)
 
 3. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用して Custom Script を設定します。\
-   以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
+以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell
 set -x

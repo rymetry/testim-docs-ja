@@ -342,11 +342,11 @@ top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約�
 実装済み。
 
 **continuation paragraph** / **indented image** / **indented code fence** も同じく
-`leadingWs > bodyIndent` のとき active list item に flatten される:
+`leadingWs >= bodyIndent` のとき active list item に flatten される:
 
-- `- item\n\n    continuation` → 1 segment "item continuation"
-- `- item\n    ![alt](img)` → 1 segment "item" (image は space 1 個に縮退)
-- ``- step\n\n    ```js\n    var x;\n    ``` `` → 1 segment "step var x;" (fence inner を text flatten)
+- `1. item\n\n   continuation` → 1 segment "item continuation"
+- `1. item\n   ![alt](img)` → 1 segment "item" (image は space 1 個に縮退)
+- ``1. step\n\n   ```js\n   var x;\n   ``` `` → 1 segment "step var x;" (fence inner を text flatten)
 
 ### テーブル
 

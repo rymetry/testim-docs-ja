@@ -192,11 +192,11 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 **Edit Configuration** ペインが表示されます。
 
 3. **Before/After Hooks** セクションで作成したいフックタイプにチェックを入れます。  
-   例:
-   _Before test handler – テスト前に実行  
-   _ Before each step handler – 各ステップ前に実行  
-   _After each step handler – 各ステップ後に実行  
-   _ After test handler – テスト後に実行
+例:
+_Before test handler – テスト前に実行  
+_ Before each step handler – 各ステップ前に実行  
+_After each step handler – 各ステップ後に実行  
+_ After test handler – テスト後に実行
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/b9e4709-2023-01-03_14-51-20.png)
 
@@ -212,7 +212,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/7e42513-2023-01-04_14-36-47small.png)
 
 6. **Save** をクリックしてテストを保存します。  
-   これで、選択したテストにフックが追加されます。
+これで、選択したテストにフックが追加されます。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/603e29d-propertiespanel.gif)
 
@@ -250,7 +250,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 - **Success** – ステップ／テストが成功した場合のみ実行
 - **Failure** – ステップ／テストが失敗した場合のみ実行
 7. **Add** をクリックします。  
-   これで、作成したフック構成が関連テストで利用可能になります。
+これで、作成したフック構成が関連テストで利用可能になります。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/0cbe19a-configlist.gif)
 
@@ -283,7 +283,7 @@ Test Configuration Hooks は、プロパティパネル／構成リスト画面�
 - Success – ステップ／テストが成功した場合のみ実行
 - Failure – ステップ／テストが失敗した場合のみ実行
 6. **Change** をクリックして保存します。  
-   これで、そのテストは新しいデフォルト構成（フック設定を含む）を使用するようになります。
+これで、そのテストは新しいデフォルト構成（フック設定を含む）を使用するようになります。
 
 ![フック設定のスクリーンショット](/images/advanced-features/hooks/c475584-defaultconfig.gif)
 

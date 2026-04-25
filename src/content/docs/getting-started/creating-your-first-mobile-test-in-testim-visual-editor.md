@@ -125,7 +125,7 @@ VMG でテストを実行する場合、テストの起動には 30 秒から 1 
 
 2. アクションメニューの **Run** ボタンをクリックします。
 
-   ![Run ボタン](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/2222b37-runtest4.png)
+![Run ボタン](/images/getting-started/creating-your-first-mobile-test-in-testim-visual-editor/2222b37-runtest4.png)
 
 3. テストを実行するデバイスを選択します。Enhanced mode で記録したテストは VMG 上のデバイスでのみ実行できます。
 4. **Done** をクリックします。

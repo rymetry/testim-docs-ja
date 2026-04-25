@@ -26,8 +26,8 @@ keywords:
 
 1. テストで**プロパティ**ボタンをクリックします。
 
-   ![テストのプロパティボタン](/images/salesforce-utilities/log-screenshots/b82e3e1-logscreenshots1.png)
+![テストのプロパティボタン](/images/salesforce-utilities/log-screenshots/b82e3e1-logscreenshots1.png)
 
 2. **プロパティ**パネルの**Salesforce オプション**で、**ログのスクリーンショット**チェックボックスを選択します。
 
-   ![Salesforce オプションのログのスクリーンショット設定](/images/salesforce-utilities/log-screenshots/6bc5c9e-logscreenshots2.png)
+![Salesforce オプションのログのスクリーンショット設定](/images/salesforce-utilities/log-screenshots/6bc5c9e-logscreenshots2.png)

@@ -42,12 +42,12 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/afcfd40-Testim_566.png)
 
 2. “**M**”（Testim predefined steps）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/eb0f440-Testim_544_r.png)
 
 3. **Salesforce** をクリックします。\
-   **Salesforce** メニューが展開されます。
+**Salesforce** メニューが展開されます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/67feeca-Testim_545_r.png)
 
@@ -63,21 +63,21 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 
 5. **Name the new step** フィールドに、このステップのわかりやすい名前を入力します。
 6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step folder** リストから保存先フォルダーを選択します。共有ステップにしない場合はチェックを外します。\
-   共有ステップの詳細は [グループ](/docs/editing-tests/groups) を参照してください。
+共有ステップの詳細は [グループ](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
-   **function** エディターが開き、右側に Properties パネルが表示されます。
+**function** エディターが開き、右側に Properties パネルが表示されます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/db6f5b8-Testim_537.png)
 
 8. **Properties** パネルの **Description** フィールドで、このステップの説明を必要に応じて編集します（既定値は “Run Salesforce Apex action”）。
 9. APEX コードを実行したい Salesforce 環境への接続情報を入力します。\
-   文字列（シングルまたはダブルクォートで囲む）またはパラメーター（クォートなし）を指定できます。パラメーターの使い方の詳細は後述の [Using Parameters](/docs/advanced-editing/salesforce-apex-action-step#パラメーターの使用) を参照してください。
+文字列（シングルまたはダブルクォートで囲む）またはパラメーター（クォートなし）を指定できます。パラメーターの使い方の詳細は後述の [Using Parameters](/docs/advanced-editing/salesforce-apex-action-step#パラメーターの使用) を参照してください。
 
 - **URL** フィールドに、対象 Salesforce 環境の URL を入力します。
 - **Username** フィールドに、Salesforce のユーザー名を入力します。
 - **Password** フィールドに、Salesforce のパスワードを入力します。
 - **Security Token** フィールドに、Salesforce で発行されたセキュリティトークンを入力します。\
-  セキュリティトークンは Salesforce の **My Personal Information** セクションから再発行できます。
+セキュリティトークンは Salesforce の **My Personal Information** セクションから再発行できます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/433db97-Testim_535.png)
 
@@ -103,7 +103,7 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/eb1a459-Testim_541a.png)
 
 14. 実行前に **npm i -g @testim/testim-cli && testim connect** を実行して CLI エージェントを起動してください。\
-    起動していない場合は、テスト実行時に接続を促すプロンプトが表示されます。
+起動していない場合は、テスト実行時に接続を促すプロンプトが表示されます。
 
 ![Salesforce APEX アクションステップのスクリーンショット](/images/special-steps/salesforce-apex-action-step/5f98f17-Testim_536_r.png)
 
@@ -119,7 +119,7 @@ Salesforce 環境で 2FA が有効な場合、テスト実行マシンの IP を
 - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
 - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/running-tests/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
 - **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。\
-  その後、エクスポート機能を使ってパラメーターを _Salesforce APEX action_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
+その後、エクスポート機能を使ってパラメーターを _Salesforce APEX action_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
 
 2. _Salesforce APEX action_ ステップの **URL**、**Username**、**Password** フィールドに、上記で定義したパラメーターを設定します。
 

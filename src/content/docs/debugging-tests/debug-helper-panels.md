@@ -60,12 +60,12 @@ Testim エディターを使用する際、デバッグプロセス中にテス�
 **テキストでコンソールログをフィルタリングするには:**
 
 - **Filter entries by log text**フィールドにテキスト（部分テキストも可）を入力して、フィルター文字列に一致するコンソールエントリのみを表示します。\
-  ![コンソールログのフィルタリング](/images/debugging/debug-helper-panels/ec8750f-small-d9944c6-small-filterconsole.png)
+![コンソールログのフィルタリング](/images/debugging/debug-helper-panels/ec8750f-small-d9944c6-small-filterconsole.png)
 
 **優先度でコンソールログをフィルタリングするには:**
 
 - **レベル**ドロップダウンメニューをクリックして、コンソールログに表示されるコンソールエントリのレベルを変更します。\
-  ![コンソールログレベル](/images/debugging/debug-helper-panels/5c8327c-small-bc77ba3-small-consolelevels.png)
+![コンソールログレベル](/images/debugging/debug-helper-panels/5c8327c-small-bc77ba3-small-consolelevels.png)
 
 ### 複数のテスト実行でのコンソールログの保持
 

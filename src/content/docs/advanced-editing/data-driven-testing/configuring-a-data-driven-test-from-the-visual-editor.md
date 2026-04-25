@@ -25,19 +25,19 @@ UI で Setup ステップのプロパティパネルから「**テストデー�
 2. **テストデータ**をクリックします。
 3. JS エディターでデータセットを定義します。
 
-   単一のデータセットの簡単な例:
+単一のデータセットの簡単な例:
 
-   ```javascript title="単一データセット"
-   return {
+```javascript title="単一データセット"
+return {
      username: 'Matan',
      password: '123',
-   };
-   ```
+};
+```
 
-   以下は、例で定義したデータセットです:
+以下は、例で定義したデータセットです:
 
-   ```javascript title="複数データセット"
-   return [
+```javascript title="複数データセット"
+return [
      {
        username: 'tomsmith',
        password: 'SuperSecretPassword!',
@@ -46,8 +46,8 @@ UI で Setup ステップのプロパティパネルから「**テストデー�
        username: 'david',
        password: 'SecretPassword?',
      },
-   ];
-   ```
+];
+```
 
 :::note
 return 行の括弧は残しておく必要があります。
@@ -66,7 +66,7 @@ return 行の括弧は残しておく必要があります。
 
 6. テストを実行します。
 
-   テストは最初のデータセットで実行されます:
+テストは最初のデータセットで実行されます:
 
 ![テスト実行結果](/images/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor/ca3d466-Capture1.png)
 

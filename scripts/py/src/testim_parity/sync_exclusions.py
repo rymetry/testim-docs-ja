@@ -1,4 +1,4 @@
-"""Source-Side Debt Exclusion Registry (``source_sync_exclusions.mjs`` port)。
+"""Source-Side Debt Exclusion Registry (Python canonical implementation)。
 
 EN upstream 側が broken で parity comparator の前提を満たさない page を明示的に
 管理する registry。自動除外は一切しない — 人間が upstream broken と確認した slug
@@ -25,8 +25,8 @@ registry に登録されたページは:
    のみ recovery 判定対象で、それ以外や extractor 例外は fail-close で
    ``excluded-broken`` に倒す
 
-mjs 側と同じ dict shape を保持する。conformance harness 経由で byte-identical を
-保証するため、key 順序と value 型は mjs と揃える。
+registry が空でも page-level freeze 機構自体は維持する。新しい upstream debt が
+発生した場合は、この dict に slug-scoped entry を追加する。
 """
 
 from __future__ import annotations
@@ -42,28 +42,10 @@ __all__ = [
 ]
 
 
-# mjs ``SOURCE_SYNC_EXCLUSIONS`` と 1:1。新規追加時は両側を同じ PR で更新する。
-# MappingProxyType で read-only 化 (mjs ``Object.freeze`` 相当)。value 側の dict は
+# MappingProxyType で read-only 化。value 側の dict は
 # ``get_exclusion`` が shallow copy して返すため外部コードが mutate しても
 # registry 本体は影響を受けない。
-_REGISTRY: dict[str, dict[str, Any]] = {
-    "testops/testops-version-control/pull-requests": {
-        "reason": "broken-upstream-source",
-        "note": (
-            "EN live HTML collapses the full article body into a single <code> block "
-            'inside <div class="codeSnippet">. The MadCap Flare extractor produces 0 '
-            "body segments, so the parity comparator cannot align sections. A hand-authored "
-            "snapshot can keep parity checks stable, but every snapshot fetch would overwrite "
-            "that fix. Registered here so snapshot_update stops overwriting "
-            "the frozen reference file."
-        ),
-        "expectedIssueType": "snapshot-incomplete",
-        "expectedReason": "extractor-empty",
-        "addedAt": "2026-04-09",
-        "reviewAfter": "2026-10-09",
-        "linkedIssue": 247,
-    },
-}
+_REGISTRY: dict[str, dict[str, Any]] = {}
 
 SOURCE_SYNC_EXCLUSIONS: MappingProxyType[str, dict[str, Any]] = MappingProxyType(_REGISTRY)
 

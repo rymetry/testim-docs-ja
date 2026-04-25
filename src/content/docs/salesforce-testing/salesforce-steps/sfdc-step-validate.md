@@ -28,9 +28,9 @@ keywords:
 1. テストで、検証ステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**検証**ステップを選択します。\
-   検証ステップが追加され、次のオブジェクトプロパティが表示されます。
+検証ステップが追加され、次のオブジェクトプロパティが表示されます。
 
-   ![スクリーンショット](/images/salesforce-steps/sfdc-step-validate/77f2be9-validate1.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-validate/77f2be9-validate1.png)
 
 4. **オブジェクトを選択**ドロップダウンメニューをクリックし、目的のオブジェクトタイプを選択します。オブジェクトタイプは、検証されるレコードのタイプを決定します。
 5. 場合によっては、**レコードタイプ**も選択する必要があります。これはレコードのサブタイプのようなものです。

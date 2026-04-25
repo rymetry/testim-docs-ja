@@ -45,12 +45,12 @@ keywords:
 ![Play Scenario ボタン](/images/validations/checkbox-and-radio-button-validation/784405c-Testim_133a.png)
 
 4. もう一度 **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/checkbox-and-radio-button-validation/9c03152-Testim_134_r.png)
 
 5. **Validations** をクリックします。\
-   Validations メニューが展開されます。
+Validations メニューが展開されます。
 
 ![検証](/images/validations/checkbox-and-radio-button-validation/7b3d72a-Testim_135_r.png)
 
@@ -61,7 +61,7 @@ keywords:
 :::
 
 7. AUT ウィンドウで、検証したいチェックボックスまたはラジオボタンを特定し、クリックして選択します。\
-   ステップが作成され、選択した要素のサムネイルがステップに表示されます。
+ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
 ![作成されたチェックボックス検証ステップ](/images/validations/checkbox-and-radio-button-validation/e16e50e-Testim_136.png)
 
@@ -95,5 +95,5 @@ keywords:
 ![チェックボックス](/images/validations/checkbox-and-radio-button-validation/db9dd10-Testim_141a_r.png)
 
 5. AUT ウィンドウで、選択したい新しいチェックボックス/ラジオボタンを特定し、クリックします。\
-   選択したチェックボックス/ラジオボタンが Properties パネルの Target ボックスに表示されます。
+選択したチェックボックス/ラジオボタンが Properties パネルの Target ボックスに表示されます。
 6. チェックボックス/ラジオボタンを再割り当てしたステップの左側にある同じ **Toggle Breakpoint** ボタンをクリックして、ブレークポイントを削除します。

@@ -54,20 +54,20 @@ keywords:
 8. Testim for Salesforce で、**設定 > ペルソナ**に移動します。
 9. 目的のペルソナと環境の組み合わせで **+** ボタンをクリックします。
 
-   ![ペルソナの資格情報を追加（＋）](/images/salesforce-utilities/setting-mfa-for-salesforce/fa12927-plus.png)
+![ペルソナの資格情報を追加（＋）](/images/salesforce-utilities/setting-mfa-for-salesforce/fa12927-plus.png)
 
 10. **ユーザー名とパスワードでログイン**を選択します。\
-    **資格情報の追加**ダイアログが表示されます。
+**資格情報の追加**ダイアログが表示されます。
 
-    ![資格情報の追加ダイアログ](/images/salesforce-utilities/setting-mfa-for-salesforce/d6163b6-addcredentials.png)
+![資格情報の追加ダイアログ](/images/salesforce-utilities/setting-mfa-for-salesforce/d6163b6-addcredentials.png)
 
 11. 目的の**Salesforce プロファイル**と**Salesforce ユーザー**が選択されていることを確認します。
 12. **Salesforce パスワード**を入力します。
 13. **MFA 認証キー**に、上記のステップ 7 で保存したキーを貼り付け、**保存**をクリックします。\
-    検証コードが表示されます:
+検証コードが表示されます:
 
 ![Testim for Salesforce の検証コード](/images/salesforce-utilities/setting-mfa-for-salesforce/76d0fe8-image_5.png)
 
 10. Salesforce に戻り、表示された検証コードを**検証コード**に入力し、**接続**をクリックします。
 
-    ![Salesforce の検証コード入力](/images/salesforce-utilities/setting-mfa-for-salesforce/f22ed82-7022745-pasted_image_0_4.png)
+![Salesforce の検証コード入力](/images/salesforce-utilities/setting-mfa-for-salesforce/f22ed82-7022745-pasted_image_0_4.png)

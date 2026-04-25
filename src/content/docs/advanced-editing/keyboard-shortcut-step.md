@@ -106,4 +106,4 @@ keywords:
 
 6. 変換を無効化したい場合は **Unsync Fields** をクリックします。
 
-   ![キーボードショートカットステップのスクリーンショット](/images/special-steps/keyboard-shortcut-step/7d37244-unlink.png)
+![キーボードショートカットステップのスクリーンショット](/images/special-steps/keyboard-shortcut-step/7d37244-unlink.png)

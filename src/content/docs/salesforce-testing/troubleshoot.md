@@ -24,7 +24,7 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 - API アクセスをサポート - Enterprise / Performance / Unlimited / Developer のいずれかの Edition 組織（Salesforce の上位エディション群）が必要です。Professional Edition 組織は、アドオンとして API アクセスを追加できます。Salesforce Essentials Edition は API アクセスをサポートしていません。
 - **管理 > ユーザー > プロファイル**で、Salesforce 環境に接続するために選択されたユーザーに対して REST API が有効になっています。
 
-  ![プロファイル設定で REST API を有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
+![プロファイル設定で REST API を有効化](/images/salesforce-utilities/troubleshoot/40062a4-profiles.png)
 
 - Salesforce 環境に接続する Salesforce アカウントには、**Approve Uninstalled Connected Apps**（インストールされていない接続アプリを承認）権限が必要です。
 
@@ -36,11 +36,11 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 - 54.245.105.236
 - 54.214.4.125
 
-  ![ネットワークアクセスで IP をホワイトリスト登録](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
+![ネットワークアクセスで IP をホワイトリスト登録](/images/salesforce-utilities/troubleshoot/6f77e19-Picture1.png)
 
 - ブロックされている追加の IP アドレスをホワイトリストに登録します。**設定 > ID > ログイン履歴**で、アプリケーション「Testim for Salesforce」に対してブロックされている「制限付き IP」アドレスをログイン履歴で確認してください。
 
-  ![ログイン履歴で制限付き IP を確認](/images/salesforce-utilities/troubleshoot/32799d4-Picture2.png)
+![ログイン履歴で制限付き IP を確認](/images/salesforce-utilities/troubleshoot/32799d4-Picture2.png)
 
 ## Grid 上のスケジュール済みテスト実行が失敗する
 
@@ -54,13 +54,13 @@ Salesforce 環境に接続するには、Salesforce 環境が以下の要件を�
 Grid からの外部アクセスを妨げている可能性のある以下の制限を削除してください:
 
 - IP アドレス範囲（会社レベル） - **設定 > セキュリティ > ネットワークアクセス**
-  ![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
+![会社レベルのネットワークアクセス制限](/images/salesforce-utilities/troubleshoot/622ae9f-Picture3.png)
 
 - IP アドレス範囲（プロファイルレベル） - **設定 > ユーザー > プロファイル > ログイン IP アドレス範囲**
-  ![プロファイルレベルのログイン IP アドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
+![プロファイルレベルのログイン IP アドレス範囲](/images/salesforce-utilities/troubleshoot/d10a2bb-Picture4.png)
 
 - ログイン時間（プロファイルレベル） - **ユーザー > プロファイル > ログイン時間**
-  ![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
+![プロファイルレベルのログイン時間制限](/images/salesforce-utilities/troubleshoot/e4526ac-Picture5.png)
 
 :::note
 IP アドレス制限が必要な場合は、ホワイトリストに登録する必要がある IP アドレスについて[サポート](https://www.testim.io/contact-us/)にお問い合わせください。
@@ -85,11 +85,11 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 1. Tricentis Testim Extension をシークレットモードで実行するように構成します。
 
-   ![Chrome 拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
+![Chrome 拡張機能のシークレットモード設定](/images/salesforce-utilities/troubleshoot/06d7fe3-troubleshoot_site_setting.png)
 
 2. シークレットモードでテストを実行します。
 
-   ![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
+![シークレットモードでのテスト実行](/images/salesforce-utilities/troubleshoot/909b048-troubleshoot_run_incognito_mode.png)
 
 ## Salesforce でレコードが見つからない
 
@@ -109,11 +109,11 @@ IP アドレス制限が必要な場合は、ホワイトリストに登録す�
 
 - **Find ステップ** - レコードを見つけるための検索ステップ:
 
-  ![Find ステップの例](/images/salesforce-utilities/troubleshoot/b20c5ec-find.png)
+![Find ステップの例](/images/salesforce-utilities/troubleshoot/b20c5ec-find.png)
 
 - **Sleep ステップ** - 次の反復を待機するスリープステップ。
 
-  ![Sleep ステップの例](/images/salesforce-utilities/troubleshoot/46c1a28-sleep.png)
+![Sleep ステップの例](/images/salesforce-utilities/troubleshoot/46c1a28-sleep.png)
 
 ## Salesforce レコーダーを使用した自動化が Salesforce 選択リストから値を選択しない
 
@@ -137,7 +137,7 @@ Salesforce 選択リストの自動化は困難です。選択を記録する際
 
 1. Salesforce ページの読み込み時間が Grid とローカル実行で異なる場合があります。予期しない追加のページ読み込み時間により、このタイムアウトエラーが発生する可能性があります。
 
-   **可能な解決策** - 失敗するテストステップの前に、Salesforce ステップ[ページ読み込みを待機](/docs/salesforce-testing/salesforce-steps/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
+**可能な解決策** - 失敗するテストステップの前に、Salesforce ステップ[ページ読み込みを待機](/docs/salesforce-testing/salesforce-steps/sfdc-step-waitforpageload)を追加してください。このステップは、Salesforce ページの読み込みが完了するまでテスト実行を一時停止します。
 
 2. ローカル記録またはローカル実行中にユーザーがブラウザウィンドウのサイズを変更した場合。
 

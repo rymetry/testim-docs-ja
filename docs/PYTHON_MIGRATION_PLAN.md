@@ -221,22 +221,21 @@ python-test:
 
 11 leaf 全て conformance test で byte-level 一致確認済。
 
-### en_source_patches の dual-source-of-truth 運用
+### en_source_patches の post-cutover 運用
 
-`scripts/lib/en_source_patches.mjs` が patch の **唯一の定義ソース**。Python 側は
-`scripts/py/src/testim_parity/_en_source_patches_data.json` 経由で同じデータを
-読むため、mjs を編集した PR では必ず JSON を再生成する:
+Phase 6b cutover 後は `scripts/py/src/testim_parity/_en_source_patches_data.json` が
+patch の **唯一の定義ソース**。Python 側の `testim_parity.en_source_patches` が
+この JSON を読み込むため、patch 追加・削除は JSON を直接編集して検証する:
 
 ```bash
-npm run regen:py-patches    # JSON を再生成して git に commit
-npm run check:py-patches    # drift 検出のみ (CI が自動実行)
+cd scripts/py
+uv run python -m testim_parity.tools.validate_en_source_patches
+uv run pytest tests/test_en_source_patches.py
 ```
 
-CI の `python-test` job の一番最初で `check:py-patches` が走るため、再生成を忘れて
-push すると CI が失敗する。さらに `test_registry_full_dump_matches_mjs` conformance
-テストが mjs の literal と Python が読んだ JSON を byte 比較し、
-`test_every_patch_replays_identically` が 34 patch 全てについて
-`find → replace` を両 runtime で照合することで、silent drift を 3 重に防ぐ。
+JSON schema / duplicate / stale registry は `validate_en_source_patches` で検証し、
+patch replay と integration coverage は pytest 側で pin する。mjs literal との
+dual-source-of-truth drift check は cutover 完了により retired。
 
 ### Phase 0 キャリーフォワードノート
 
@@ -1208,7 +1207,7 @@ Phase 6a PR 自体は small scope (fixture commit + conftest / 2 段 CI drift ch
 
   cutover critical path (segments / align / parity / mutation recall / lint_docs / check_source_parity — 個別に 90%+) は維持しているが、CI gate での総合値は fast scope 86.86% が reality。plan 原案の 90% goal には届いていないため、`pipeline` / `tools` / `detection` 系の deep-branch smoke を追加して 90% へ引き上げる **Phase 6.2 follow-up Issue** を post-merge で起票する (本 PR scope 外)
 - **golden oracle 検証 (round 2 review 対応)**: committed golden (864 rows: segments_en + turndown + align) が **mjs authority と byte-identical** であることを `scripts/py/src/testim_parity/tools/verify_golden_against_mjs.py` で再検証可能に。git archive + node で pre-cutover commit から mjs 一式を一時復元 → emit_corpus_oracle.mjs を run → cmp で比較する one-shot tool。初回実行および round 5 content restructure 後の再実行で byte-identical を確認済 (2026-04-25)
-- **Issue #368 flatten 完了 (round 5 対応)**: round 1 で line-based emit に revert していたが、round 2 で `_ActiveListItem` state machine を戻し、round 5 で既存 corpus の sibling marker (`markerIndent == bodyIndent`) を top-level に outdent した上で、Issue #368 原案通り **`markerIndent >= bodyIndent`** の nested marker flatten に復帰。`segments_ja.py` が nested marker / continuation paragraph / indented image / indented code fence の 4 pattern を flatten し、`TestListEmitNestedMarker` / `TestListEmitTrueNested` で回帰 test を pin。GitHub Issue #368 は project-wide review 用に OPEN 維持するが、実装契約は本 PR で満たす
+- **Issue #368 flatten 完了 (round 5 + 2026-04-25 review 対応)**: round 1 で line-based emit に revert していたが、round 2 で `_ActiveListItem` state machine を戻し、round 5 で既存 corpus の sibling marker (`markerIndent == bodyIndent`) を top-level に outdent した上で、Issue #368 原案通り nested marker は **`markerIndent >= bodyIndent`**、continuation paragraph / indented image / indented code fence / blank-line continuation は **`leadingWs >= bodyIndent`** で flatten する契約に復帰。`segments_ja.py` が 4 pattern を flatten し、`TestListEmitNestedMarker` / `TestListEmitTrueNested` と bodyIndent equality tests で回帰 test を pin。GitHub Issue #368 は project-wide review 用に OPEN 維持するが、実装契約は本 PR で満たす
 - **package-lock.json cleanup (round 2 review 対応)**: `npm install --package-lock-only` で gray-matter / turndown の lockfile entry を削除 (`rg gray-matter package-lock.json` / `rg turndown package-lock.json` 共に 0 件)
 - **fast / corpus gate slim (round 2 + round 5 review 対応)**: `test_emit_corpus_oracle.py::test_default_all_suites_emits_three_suites` が 28.44s で full 288-page corpus を走らせていたため、2-page mini corpus を monkeypatch で差し込む `TestEmitCorpusOracleFast` に分離。round 5 で full-corpus generation smoke も corpus marker から削除し、real corpus の値保証は `test_*_288_matrix.py` の 1 slug = 1 test conformance と `npm run test:py:corpus:regen` の手動再生成に集約
 - **CI required gate 昇格 (round 2 review 対応)**: `pyproject.toml` docstring が「Phase 6b で recall / boundary / real_repo を required 昇格」と謳っていたが YAML step が無く nightly のみだったため、`.github/workflows/ci.yml` の `python-fast` job に `pytest -o addopts= -m 'recall or boundary or real_repo'` step を追加 (local 15-20s で完走)
@@ -1235,7 +1234,7 @@ Phase 6a PR 自体は small scope (fixture commit + conftest / 2 段 CI drift ch
     - `.github/scripts/sync-detection-issues.cjs` + `scripts/__tests__/sync_detection_issues.test.mjs` (Phase 6.1 で扱う)
 13. **recall / boundary / real_repo required 昇格** (round 2 review 対応): `.github/workflows/ci.yml` の `python-fast` job に `uv run pytest -o addopts= -m 'recall or boundary or real_repo'` step を追加して PR required 扱いにする。本 PR 以前は `pyproject.toml` docstring に「Phase 6b で required 昇格」と書かれていたが YAML step が無く nightly のみだった。local で 15-20s で完走するため blocking gate として適切
 14. **golden oracle mjs authority 再検証** (round 2 review 対応): committed golden (segments_en + turndown + align の 864 rows) が mjs authority と byte-identical であることを `scripts/py/src/testim_parity/tools/verify_golden_against_mjs.py` で一度検証する (git archive + node で pre-cutover mjs を tmp 復元 → emit_corpus_oracle.mjs run → cmp)。この tool は commit して post-cutover の将来 Python 実装変更時の drift detection にも再利用できる
-15. **Issue #368 flatten 実装完了、Issue は review 用に OPEN 維持** (round 5 対応): `scripts/py/src/testim_parity/segments_ja.py` に `_ActiveListItem` state machine を実装し、**Issue #368 原案通り `markerIndent >= bodyIndent`** で nested marker を flatten。既存 288 corpus の sibling marker は content 側で top-level に outdent し、nested marker / continuation paragraph / indented image / indented code fence の 4 pattern を pin。PR body は `Closes #368` を使わず、GitHub Issue #368 は merge 後の project-wide review 用に OPEN のまま残す
+15. **Issue #368 flatten 実装完了、Issue は review 用に OPEN 維持** (round 5 + 2026-04-25 review 対応): `scripts/py/src/testim_parity/segments_ja.py` に `_ActiveListItem` state machine を実装し、nested marker は **`markerIndent >= bodyIndent`**、continuation paragraph / indented image / indented code fence / blank-line continuation は **`leadingWs >= bodyIndent`** で flatten。既存 288 corpus の sibling marker は content 側で top-level に outdent し、Issue #368 の 4 pattern を pin。PR body は `Closes #368` を使わず、GitHub Issue #368 は merge 後の project-wide review 用に OPEN のまま残す
 
 ### Self-enforcing cutover gate (`pytest -m cutover`)
 
@@ -1605,8 +1604,9 @@ extractor / align / pipeline / tools) の Python 化 + conformance の golden �
 
 ### Issue #368 review の扱い
 
-PR #389 で Phase B content restructure と `markerIndent >= bodyIndent` parser rule を
-実装し、Issue #368 の list nesting 契約は満たした。ただし、ユーザー要望により
+PR #389 で Phase B content restructure と `markerIndent >= bodyIndent` /
+`leadingWs >= bodyIndent` parser rule を実装し、Issue #368 の list nesting 契約は満たした。
+ただし、ユーザー要望により
 GitHub Issue #368 は merge 時点では close せず、project-wide review の checklist として
 OPEN のまま残す。PR body でも `Closes #368` は使わない。
 
@@ -1636,17 +1636,13 @@ coverage gap は主に周辺層にある:
 Phase 6.2 PR では `fail_under = 86` → `88` → `90` の 2 段階 push で incremental に
 coverage を引き上げる (big-bang で 90 goal にすると review が巨大化するため分割)。
 
-### Route 選択の判定フレーム
+### Route 選択メモの扱い
 
-Phase 6.2 PR に着手するタイミング (Route A/B 判定時) は以下を根拠にする:
-
-1. **pull-requests unfreeze の実施時期**: unfreeze と同 PR でまとめられるなら
-   Route A (Phase B restructure) を選ぶ方が調整コストが低い
-2. **47 file restructure の保守性 impact 再評価**: Phase 6b cutover 後 N ヶ月
-   運用して、tight sibling pattern が増えるペースを観測。増えるなら Route B
-   (strict `>` 確定) の方が将来コストが低い
-3. **Issue #368 §3.1 spec の polish 要否**: strict `>` が Route B で確定するなら
-   Issue 本体の §3.1 spec を revision し、`>=` 原案を「撤回」として明示
+過去の Route A/B メモでは `leadingWs > bodyIndent` を継続する選択肢も検討したが、
+2026-04-25 の review で Issue #368 原契約を authoritative とし、`leadingWs >= bodyIndent`
+を確定した。今後は sibling list を content 側で outdent し、continuation paragraph /
+image / code fence / blank-line continuation は parent list item に flatten する運用を
+`docs/WRITING_GUIDE.md` と `docs/PARITY_GUIDE.md` の現在形契約とする。
 
 ---
 

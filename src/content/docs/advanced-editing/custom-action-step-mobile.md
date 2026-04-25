@@ -85,7 +85,7 @@ keywords:
 
 16. 戻る矢印でエディターに戻ります。
 
-    ![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/af049a0-Run_Shared_action.jpg)
+![カスタムアクション（モバイル）のスクリーンショット](/images/advanced-features/custom-action-step-mobile/af049a0-Run_Shared_action.jpg)
 
 ステップが作成されます。
 

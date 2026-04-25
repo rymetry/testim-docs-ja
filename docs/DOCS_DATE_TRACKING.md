@@ -92,7 +92,7 @@ npm run check:snapshots:fetch -- --dry-run
 `fetch_translate_images.mjs` はスナップショットから自動的に読み込みます（HTML → turndown で Markdown 変換）:
 
 ```bash
-node scripts/pipeline/fetch_translate_images.mjs --mode=full
+npm run docs:fetch -- --mode=full
 ```
 
 ### 新規ページ追加時
@@ -109,7 +109,7 @@ node scripts/pipeline/fetch_translate_images.mjs --mode=full
 
 ### Source-side debt（broken upstream）の隔離
 
-upstream 英語原文自体が broken で parity comparator の前提を満たさないページ（例: `testops/testops-version-control/pull-requests`）は、 `scripts/lib/source_sync_exclusions.mjs` の **明示 registry** で管理し、通常の翻訳同期レーンから分離します。
+upstream 英語原文自体が broken で parity comparator の前提を満たさないページは、`testim_parity.sync_exclusions` の **明示 registry** で管理し、通常の翻訳同期レーンから分離します。現在 active entry はありません。
 
 **運用契約:**
 
@@ -160,11 +160,11 @@ git commit -m "feat: 初回英語原文スナップショット"
 
 ## 関連ファイル
 
-- `scripts/lib/madcap_toc.mjs` — MadCap Flare TOC データ解析
-- `scripts/lib/source_sync_exclusions.mjs` — Source-side debt registry
-- `scripts/lib/source_sync_health.mjs` — `source-sync-status.json` 生成と freshness 判定
-- `scripts/detection/snapshot_update.mjs` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON + exclusion 分岐）
-- `scripts/detection/snapshot_diff.mjs` — 比較 & レポート
+- `testim_parity.madcap_toc` — MadCap Flare TOC データ解析
+- `testim_parity.sync_exclusions` — Source-side debt registry
+- `testim_parity.sync_health` — `source-sync-status.json` 生成と freshness 判定
+- `testim_parity.detection.snapshot_update` — HTML フェッチ & 保存（コンテンツ HTML + サイドバー JSON + exclusion 分岐）
+- `testim_parity.detection.snapshot_diff` — 比較 & レポート
 - `.github/workflows/scheduled-actionable.yml` — 3 日ごとの定期チェック（日本語 warning/error メッセージ）
 - `.github/workflows/deep-audit.yml` — 手動 deep audit
 

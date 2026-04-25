@@ -22,9 +22,9 @@ keywords:
 **保存されなかったテストを復旧するには:**
 
 1. 編集していたテストを開きます。\
-   次のダイアログが表示されます。
+次のダイアログが表示されます。
 
-   ![テスト復旧ダイアログ](/images/test-utilities/recovering-a-test-that-was-not-saved/f9d3bb2-2024-07-01_12-38-43.png)
+![テスト復旧ダイアログ](/images/test-utilities/recovering-a-test-that-was-not-saved/f9d3bb2-2024-07-01_12-38-43.png)
 
 2. 次のいずれかを実行します。
 3. **Recover** をクリックして、未保存のテストを復旧します。

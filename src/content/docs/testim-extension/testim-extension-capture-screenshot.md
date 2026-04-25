@@ -29,12 +29,12 @@ keywords:
 2. Testim にログインしていない場合は、**Login To Start**をクリックします。すでにログインしている場合は、ステップ 5 に進みます。
 3. 開いた新しいタブでログインプロセスを完了し、前のタブに戻ります。
 4. 再度**Testim Extension**アイコンをクリックします。\
-   拡張機能メニューが開きます。
+拡張機能メニューが開きます。
 
 ![Testim Extension メニュー](/images/testim-extension/testim-extension-capture-screenshot/9919332-Testim_extension.PNG)
 
 5. **Capture Screenshot**をクリックします。\
-   画面が固定され、注釈ツールバーが表示されます。
+画面が固定され、注釈ツールバーが表示されます。
 
 ![注釈ツールバー](/images/testim-extension/testim-extension-capture-screenshot/92260ba-annotation_toolbar.PNG)
 

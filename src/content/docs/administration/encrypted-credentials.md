@@ -52,9 +52,9 @@ keywords:
 1. **Resources > Credentials** に移動します。
 2. **New Credentials** をクリックします。
 
-   **New Credentials** 画面が表示されます。
+**New Credentials** 画面が表示されます。
 
-   ![New Credentials 画面](/images/project-user-management/encrypted-credentials/e251eb4-image.png)
+![New Credentials 画面](/images/project-user-management/encrypted-credentials/e251eb4-image.png)
 
 3. **Name** フィールドに、暗号化された認証情報の名前を入力します。この名前は、CLI でテストを実行する場合などに `<keyName>` として参照されます。
 4. **Description** フィールドに、必要に応じて説明を入力します。
@@ -174,9 +174,9 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 2. **View Profile** をクリックします。
 3. **User Access Key** タブをクリックします。
 
-   固有の User Access Key が保護のため部分的に隠された状態で表示されます。
+固有の User Access Key が保護のため部分的に隠された状態で表示されます。
 
-   ![User Access Key の表示画面](/images/project-user-management/encrypted-credentials/b030eeb-useraccesskey2.png)
+![User Access Key の表示画面](/images/project-user-management/encrypted-credentials/b030eeb-useraccesskey2.png)
 
 4. **Copy** ボタンをクリックしてキーをコピーします。
 
@@ -198,7 +198,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 2. **Advanced** をクリックします。
 3. **Credentials** の下で、暗号化された認証情報の使用が許可されているユーザーをドロップダウンメニューから選択します。自分自身のユーザーまたはリスト内の別のユーザーを選択できます。
 
-   ![Scheduler の Credentials 設定](/images/project-user-management/encrypted-credentials/6483bb8-scheduler2.png)
+![Scheduler の Credentials 設定](/images/project-user-management/encrypted-credentials/6483bb8-scheduler2.png)
 
 4. **Create** をクリックします。
 
@@ -216,9 +216,9 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 2. **View Profile** をクリックします。
 3. **User Access Key** タブをクリックします。
 
-   固有の User Access Key が保護のため部分的に隠された状態で表示されます。
+固有の User Access Key が保護のため部分的に隠された状態で表示されます。
 
-   ![User Access Key の表示画面](/images/project-user-management/encrypted-credentials/e2d356f-useraccesskey2.png)
+![User Access Key の表示画面](/images/project-user-management/encrypted-credentials/e2d356f-useraccesskey2.png)
 
 4. **Copy** ボタンをクリックしてキーをコピーします。
 

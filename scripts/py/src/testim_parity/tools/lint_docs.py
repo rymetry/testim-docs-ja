@@ -15,7 +15,11 @@ from typing import Any
 
 import frontmatter
 
+from ..preprocess_en import preprocess_en_html
 from ..project import DOCS_DIR, PROJECT_ROOT, file_path_to_slug
+from ..segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_html
+from ..segments_ja import extract_segments_from_markdown
+from ..segments_shared import GATE_ELIGIBLE_KINDS
 from ..sidebar import get_section_slug_set
 
 __all__ = [
@@ -24,6 +28,7 @@ __all__ = [
     "check_feature_names",
     "check_frontmatter",
     "check_images",
+    "check_structure_signature",
     "check_links",
     "lint_content",
     "main",
@@ -78,6 +83,17 @@ _IMAGE_RE = re.compile(r"""!\[[^\]]*]\((/images/[^)]+)\)|<img[^>]+src=["'](/imag
 
 _DESCRIPTION_PLACEHOLDER_RE = re.compile(r"^原文:", re.UNICODE)
 _DESCRIPTION_TODO_RE = re.compile(r"^todo", re.IGNORECASE)
+
+_FRONTMATTER_RULES: frozenset[str] = frozenset(
+    {
+        "sourceUrl-required",
+        "sourceUrl-format",
+        "description-placeholder",
+        "title-required",
+        "category-required",
+        "updated-required",
+    }
+)
 
 
 def _parse_frontmatter_with_lines(content: str) -> tuple[dict[str, Any], str, int]:
@@ -311,12 +327,174 @@ def check_images(body: str, body_start: int, reporter: _Reporter) -> None:
             )
 
 
+_GATE_KIND_SET: frozenset[str] = frozenset(GATE_ELIGIBLE_KINDS)
+_LIST_ITEM_KINDS: frozenset[str] = frozenset({"ordered-list-item", "unordered-list-item"})
+_LIST_CONTINUATION_KINDS: frozenset[str] = frozenset(
+    {"paragraph", "image", "code-block", "ordered-list-item", "unordered-list-item"}
+)
+
+
+def _format_structure_diffs(diffs: list[dict[str, Any]]) -> str:
+    preview: list[str] = []
+    for diff in diffs[:3]:
+        kind = diff.get("segmentKind") or "section"
+        section = diff.get("sectionPath") or "(preface)"
+        preview.append(f"{diff.get('type')}:{kind}@{section}")
+    suffix = "" if len(diffs) <= 3 else f", ... +{len(diffs) - 3}"
+    return "[" + ", ".join(preview) + suffix + "]"
+
+
+def _split_kinds_by_heading(segments: list[dict[str, Any]]) -> list[list[str]]:
+    sections: list[list[str]] = [[]]
+    for segment in segments:
+        kind = str(segment.get("segmentKind") or "")
+        if kind == "heading":
+            sections.append([])
+            continue
+        if kind in _GATE_KIND_SET:
+            sections[-1].append(kind)
+    return sections
+
+
+def _kind_lcs_unmatched(en_kinds: list[str], ja_kinds: list[str]) -> tuple[set[int], set[int]]:
+    n = len(en_kinds)
+    m = len(ja_kinds)
+    dp = [[0] * (m + 1) for _ in range(n + 1)]
+    for i in range(n - 1, -1, -1):
+        for j in range(m - 1, -1, -1):
+            if en_kinds[i] == ja_kinds[j]:
+                dp[i][j] = dp[i + 1][j + 1] + 1
+            else:
+                dp[i][j] = max(dp[i + 1][j], dp[i][j + 1])
+
+    matched_en: set[int] = set()
+    matched_ja: set[int] = set()
+    i = 0
+    j = 0
+    while i < n and j < m:
+        if en_kinds[i] == ja_kinds[j]:
+            matched_en.add(i)
+            matched_ja.add(j)
+            i += 1
+            j += 1
+        elif dp[i + 1][j] >= dp[i][j + 1]:
+            i += 1
+        else:
+            j += 1
+
+    return set(range(n)) - matched_en, set(range(m)) - matched_ja
+
+
+def _is_list_continuation_sensitive(kinds: list[str], index: int) -> bool:
+    kind = kinds[index]
+    if kind in _LIST_ITEM_KINDS:
+        return True
+    return kind in _LIST_CONTINUATION_KINDS and index > 0 and kinds[index - 1] in _LIST_ITEM_KINDS
+
+
+def _structure_kind_diffs(
+    en_segments: list[dict[str, Any]], ja_segments: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    en_sections = _split_kinds_by_heading(en_segments)
+    ja_sections = _split_kinds_by_heading(ja_segments)
+    if len(en_sections) != len(ja_sections):
+        return [
+            {
+                "type": "section-count-mismatch",
+                "segmentKind": "section",
+                "sectionPath": f"EN={len(en_sections)} JA={len(ja_sections)}",
+            }
+        ]
+
+    diffs: list[dict[str, Any]] = []
+    for section_index, (en_kinds, ja_kinds) in enumerate(
+        zip(en_sections, ja_sections, strict=False)
+    ):
+        unmatched_en, unmatched_ja = _kind_lcs_unmatched(en_kinds, ja_kinds)
+        for index in sorted(unmatched_en):
+            if _is_list_continuation_sensitive(en_kinds, index):
+                diffs.append(
+                    {
+                        "type": "segment-missing",
+                        "segmentKind": en_kinds[index],
+                        "sectionPath": f"section#{section_index}",
+                    }
+                )
+        for index in sorted(unmatched_ja):
+            if _is_list_continuation_sensitive(ja_kinds, index):
+                diffs.append(
+                    {
+                        "type": "segment-extra",
+                        "segmentKind": ja_kinds[index],
+                        "sectionPath": f"section#{section_index}",
+                    }
+                )
+    return diffs
+
+
+def check_structure_signature(
+    body: str,
+    reporter: _Reporter,
+    *,
+    slug: str,
+    en_snapshot_path: Path | None,
+) -> None:
+    """EN snapshot と JA markdown の structure alignment を比較する。
+
+    ``npm run lint`` は翻訳文の exact parity までは見ない。ここでは parity 本体と
+    同じ parser で section ごとの kind skeleton を作り、Issue #368 で問題になった
+    list continuation / image / code fence の分離のような segment 欠落・余剰だけを
+    早期に落とす。
+    """
+
+    if en_snapshot_path is None or not en_snapshot_path.exists():
+        return
+    try:
+        raw_en_html = en_snapshot_path.read_bytes().decode("utf-8")
+    except OSError as err:
+        reporter.err(
+            "structure-snapshot-read-failed",
+            f"Failed to read EN snapshot for structure lint: {err}",
+            1,
+        )
+        return
+    try:
+        en_html = preprocess_en_html(raw_en_html, slug=slug)
+        en_segments = list(
+            extract_segments_from_html(
+                en_html,
+                slug=slug,
+                callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS,
+            )
+        )
+        ja_segments = list(extract_segments_from_markdown(body))
+    except Exception as err:  # noqa: BLE001 - lint should surface parser/extractor failures
+        reporter.err(
+            "structure-signature-mismatch",
+            f"EN/JA structure lint could not extract segments: {err}",
+            1,
+        )
+        return
+
+    structure_diffs = _structure_kind_diffs(en_segments, ja_segments)
+    if not structure_diffs:
+        return
+
+    reporter.err(
+        "structure-signature-mismatch",
+        f"EN/JA structure signature differs: {_format_structure_diffs(structure_diffs)}",
+        1,
+    )
+
+
 def lint_content(
     content: str,
     file_path: Path,
     *,
     all_slugs: set[str] | None = None,
     headings_by_slug: dict[str, set[str]] | None = None,
+    en_snapshot_path: Path | None = None,
+    slug: str | None = None,
 ) -> list[dict[str, Any]]:
     """1 document を lint する (mjs ``lintContent`` 等価)。"""
     reporter = _Reporter(file_path)
@@ -328,6 +506,22 @@ def lint_content(
     check_code_blocks(body, body_start, reporter)
     check_callouts(body, body_start, reporter)
     check_images(body, body_start, reporter)
+    if en_snapshot_path is not None and not any(
+        issue["rule"] in _FRONTMATTER_RULES for issue in reporter.issues
+    ):
+        resolved_slug = slug
+        if resolved_slug is None:
+            try:
+                resolved_slug = file_path_to_slug(file_path, DOCS_DIR)
+            except ValueError:
+                resolved_slug = None
+        if resolved_slug is not None:
+            check_structure_signature(
+                body,
+                reporter,
+                slug=resolved_slug,
+                en_snapshot_path=en_snapshot_path,
+            )
 
     return reporter.issues
 
@@ -390,11 +584,15 @@ def main(argv: list[str] | None = None) -> int:
     for file_path in files:
         try:
             content = file_path.read_text(encoding="utf-8")
+            slug = file_path_to_slug(file_path, DOCS_DIR)
+            en_snapshot_path = PROJECT_ROOT / "snapshots" / "en" / "content" / f"{slug}.html"
             issues = lint_content(
                 content,
                 file_path,
                 all_slugs=all_slugs,
                 headings_by_slug=headings_by_slug,
+                en_snapshot_path=en_snapshot_path,
+                slug=slug,
             )
             for issue in issues:
                 location = f":{issue['line']}" if issue.get("line") else ""

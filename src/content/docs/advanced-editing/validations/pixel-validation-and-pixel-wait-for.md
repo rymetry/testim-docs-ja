@@ -133,7 +133,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 
 3. [Configuration List](/docs/test-management/shared-configuration#構成ライブラリでテスト構成を作成および変更する) に記載されている基本設定を入力します。
 4. **Advanced** をクリックし、[Test Configuration](/docs/recording-tests/how-to-record-a-test) に説明されている詳細設定を入力します。\
-   詳細設定が表示されます。
+詳細設定が表示されます。
 
 ![Visual validation の詳細設定画面](/images/validations/pixel-validation-and-pixel-wait-for/938763b-Testim_602_r.png)
 

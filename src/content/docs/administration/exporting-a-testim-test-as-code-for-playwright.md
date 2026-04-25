@@ -28,12 +28,12 @@ Testim テストを Playwright 用に適応されたコードとしてエクス�
 1. エディターでテストを開きます。
 2. ブラウザで、URL の末尾に以下のサフィックスを追加して **Enter** を押します。
 
-   ```text
-   ?embedMode=true&exportPuppeteer=true&exportSelenium=true&exportPlaywright=true
-   ```
+```text
+?embedMode=true&exportPuppeteer=true&exportSelenium=true&exportPlaywright=true
+```
 
-   テストのコードがコードビューアーに表示されます。**Playwright** タブが選択されていることを確認してください。
+テストのコードがコードビューアーに表示されます。**Playwright** タブが選択されていることを確認してください。
 
-   ![Playwright コードビューアーに表示されたエクスポート結果](/images/project-user-management/exporting-a-testim-test-as-code-for-playwright/5d19af1-playwright1.png)
+![Playwright コードビューアーに表示されたエクスポート結果](/images/project-user-management/exporting-a-testim-test-as-code-for-playwright/5d19af1-playwright1.png)
 
 3. **Copy code** をクリックして、表示されたコードをコピーします。

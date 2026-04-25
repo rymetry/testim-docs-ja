@@ -33,9 +33,9 @@ Local Devices セクションでは、Tricentis Mobile Agent（TMA）に接続�
 device UDID は簡単にコピーでき、例えば CLI を通じて特定のデバイスでテストを実行するために使用できます。**デバイス UDID をコピーするには:**
 
 1. UDID にカーソルを合わせます。\
-   コピーアイコンが表示されます。
+コピーアイコンが表示されます。
 
 ![モバイルデバイスの UDID にカーソルを合わせてコピーアイコンを表示している画面](/images/test-management/view-local-connected-mobile-devices/5fb74a4-UDID.png)
 
 2. コピーアイコンをクリックします。\
-   UDID がクリップボードにコピーされます。
+UDID がクリップボードにコピーされます。

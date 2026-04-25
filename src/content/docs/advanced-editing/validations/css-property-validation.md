@@ -41,12 +41,12 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 ![ステップ追加矢印](/images/validations/css-property-validation/87450ab-Testim_145a.png)
 
 4. もう一度 **（矢印記号）** にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/css-property-validation/b552e53-Testim_134_r.png)
 
 5. **Validations** をクリックします。\
-   **Validations** メニューが展開されます。
+**Validations** メニューが展開されます。
 
 ![検証](/images/validations/css-property-validation/dc8c30a-Testim_135_r.png)
 
@@ -57,7 +57,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 :::
 
 7. **AUT** ウィンドウで、CSS プロパティを検証したい関連要素を特定し、クリックして選択します。\
-   **CSS Property Validation** フォームが表示されます。
+**CSS Property Validation** フォームが表示されます。
 
 ![検証](/images/validations/css-property-validation/1399203-cssvalidation2.png)
 
@@ -94,7 +94,7 @@ CSS プロパティ検証では、色・背景色・フォントなど任意の 
 ![CLI](/images/validations/css-property-validation/d15fcbd-Testim_150a_r.png)
 
 5. **AUT** ウィンドウで、選択したい新しい要素を特定し、クリックします。\
-   選択した要素が **Properties** パネルの **Target element** ボックスに表示されます。
+選択した要素が **Properties** パネルの **Target element** ボックスに表示されます。
 6. **Properties** パネルの **Property name** フィールドに、新しい要素のプロパティ名を入力します。
 7. **Properties** パネルの **Expected value** フィールドに、新しいプロパティの期待値を入力します。
 

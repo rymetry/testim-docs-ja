@@ -49,7 +49,7 @@
 
 チェック項目の詳細（actionable / signal の一覧、`--fail-on` フラグ、acknowledgements、出力形式）は `scripts/README.md` を参照。
 
-**セクション絞り込み**: `node scripts/detection/check_source_parity.mjs --section="概要"`
+**セクション絞り込み**: `npm run check:parity -- --section="概要"`
 
 **単一ページ**: `npm run check:parity -- --slug=overview/testim-overview`
 
@@ -184,8 +184,8 @@ npm run test && npm run build
    a. 該当 slug の EN snapshot を手動で fetch し直す (`npm run check:snapshots:fetch -- --slug=<slug>`)
    b. 現在の EN HTML を目視し、欠陥が実際に消えているかを確認する (stale signal だけで削除しない)
    c. 消えていれば:
-      - `en_source_patches` 系: `scripts/lib/en_source_patches.mjs` から entry を削除
-      - `source_sync_exclusions` 系: `scripts/lib/source_sync_exclusions.mjs` から entry を削除 + `scripts/__tests__/source_parity_source_side_debt.test.mjs` の seeded pin を調整
+      - `en_source_patches` 系: `_en_source_patches_data.json` から entry を削除
+      - `source_sync_exclusions` 系: `testim_parity.sync_exclusions` から entry を削除 + Python registry tests を調整
       - どちらも `docs/UPSTREAM_DEFECTS.md` の対応 entry を archive 状態に更新
       - `npm run check:parity` が 0 issues を維持していることを確認
    d. まだ消えていなければ managed issue にコメントで状況記録 (次週 run で再評価)
@@ -268,7 +268,7 @@ sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstrea
 **構造的な防壁:**
 
 1. `parity-check-status.json.summary.runScope` に `{ type, isComplete, filters }` を出力する
-2. `generate_detection_reports.mjs` が runScope を `docs-actionable-report.json` の top-level に複写する
+2. `npm run check:summary` (`testim_parity.detection.generate_detection_reports`) が runScope を `docs-actionable-report.json` の top-level に複写する
 3. `.github/scripts/sync-detection-issues.cjs` が `report.runScope?.isComplete !== true` を検出した場合、**listManagedIssues を呼ぶ前に early return + warning** する
 4. legacy report (`runScope === null` / 欠如) は後方互換のため従来どおり sync する。将来的に fail-closed へ切り替えることを検討する
 
@@ -376,7 +376,7 @@ gate に異常が出たら
 5. 修正 + 再 cutover を再実施
 6. **再 cutover の前提**: 検出された failure pattern を baseline-recall / determinism / 新規 test として regression guard を仕込んでから再実施。テスト追加なしの再 cutover は禁止
 
-revert すると segment-* issues は cutover 前の状態に戻る。baseline 機構そのもの（schema, generation script, alignment）はそのままなので、`generate_parity_baseline.mjs` 等のツールは引き続き使える。
+revert すると segment-* issues は cutover 前の状態に戻る。baseline 機構そのもの（schema, generation script, alignment）はそのままなので、`npm run generate:parity-baseline` は引き続き使える。
 
 ### Path 2 — Translate-first, rebaseline as last resort
 
@@ -395,7 +395,7 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
    - 翻訳完了後は新しい snapshot fingerprint で gate が自然に green に戻る
 3. **第二選択肢（justification 必須）: rebaseline**
    - 翻訳追従が現実的でない場合のみ
-   - `node scripts/detection/generate_parity_baseline.mjs --slug=<slug>[,<slug>...]` で部分再生成
+   - `npm run generate:parity-baseline -- --slug=<slug>[,<slug>...]` で部分再生成
    - 再生成 diff を含む PR を起こし、PR description に必ず justification を記載:
      - なぜ翻訳追従でなく rebaseline を選んだか
      - 想定される paydown のタイミング
@@ -418,12 +418,12 @@ baseline は bug backlog として運用する:
 - 新規 issue は原則として baseline に追加しない。修正するか、glossary / normalize / artifact registry / page-level exclusion のいずれかで説明可能に除外する
 - schema v2 では entry に `priority` (`high`/`medium`/`low`) と任意 `note` を付与する。paydown の優先順位決定はこれらで行う
 - Quarterly review は「方針再検討」ではなく「残 backlog の burn-down 進捗確認」として実施
-- 再生成手順: `npm run check:parity` と `node scripts/detection/generate_parity_baseline.mjs`
+- 再生成手順: `npm run check:parity` と `npm run generate:parity-baseline`
 
 ### Orphan baseline entry
 
 detector / extractor / preprocessor の仕様変更で、runtime が emit しなくなった
-issueType の baseline entry は **orphan** として残留する。`check_source_parity.mjs`
+issueType の baseline entry は **orphan** として残留する。`testim_parity.detection.check_source_parity`
 は完走時に orphan を以下の経路で可視化する:
 
 - `parity-check-status.json.summary.orphanBaselineEntries` (総数) および
@@ -434,7 +434,7 @@ issueType の baseline entry は **orphan** として残留する。`check_sourc
 掃除手順:
 
 1. `npm run check:parity` の CLI 出力で orphan 件数と byType を確認
-2. 該当 slug に対して `node scripts/detection/generate_parity_baseline.mjs --slug=<slug>` で再生成
+2. 該当 slug に対して `npm run generate:parity-baseline -- --slug=<slug>` で再生成
 3. 再度 `npm run check:parity` を走らせて `orphanBaselineEntries === 0` を確認
 
 `scripts/__tests__/source_parity_orphan_integration.test.mjs` が
@@ -456,7 +456,7 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 
 1. ブラウザと `npm run check:snapshots:fetch -- --slug=<slug> --dry-run` で live source が broken であることを確認する
 2. 必要なら一時 snapshot で `npm run check:parity -- --slug=<slug>` を実行し、detector の `issueType` と `reason` を確認する
-3. `scripts/lib/source_sync_exclusions.mjs` の `SOURCE_SYNC_EXCLUSIONS` に entry を追加する
+3. `testim_parity.sync_exclusions` の `SOURCE_SYNC_EXCLUSIONS` に entry を追加する
 4. 必要なら `snapshots/en/content/<slug>.html` に hand-authored snapshot を置く
 5. 関連テストを更新し、`npm run lint && npm run test && npm run build` を通す
 
@@ -479,7 +479,7 @@ pin する。repo-global な baseline/status file を奪い合わないよう、
 - `snapshotUnusableIssues === 0`
 
 ただし `result` フィールドは `freshnessState !== 'fresh'` のとき実装契約上
-`inconclusive` に degrade する (`check_source_parity.mjs::computeParityResult`)。
+`inconclusive` に degrade する (`testim_parity.detection.check_source_parity.compute_parity_result`)。
 local で snapshot fetch をしていない限り `freshnessState: broken` なので、
 `result` は `inconclusive` のままで正常。CI 環境のみ `result: pass` が期待される。
 

@@ -70,8 +70,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 - **Resolution** セクションで、ドロップダウン矢印をクリックして、希望する解像度を選択します。
 
 4. **Advanced** をクリックします。\
-   詳細構成オプションが表示されます。\
-   ![テスト構成の詳細設定セクションで Native Events の動作を設定する画面](/images/test-management/shared-configuration/eac30c0-advancednative.jpg)
+詳細構成オプションが表示されます。\
+![テスト構成の詳細設定セクションで Native Events の動作を設定する画面](/images/test-management/shared-configuration/eac30c0-advancednative.jpg)
 
 5. **General** セクションで、**Step timeout**、**Step delay**、**Setup step timeout** の設定を必要に応じて変更します。詳細については、[Test Configuration Parameters](/docs/recording-tests/how-to-record-a-test#テスト構成のパラメーター) を参照してください。
 
@@ -79,16 +79,16 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 7. **Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
 
-   ![Before と After hooks の設定を編集するテスト構成詳細画面](/images/test-management/shared-configuration/93bbedb-3845ef1-image_1.png)
+![Before と After hooks の設定を編集するテスト構成詳細画面](/images/test-management/shared-configuration/93bbedb-3845ef1-image_1.png)
 
-   ネイティブオーバーライドでテストを実行した後、テスト実行サマリーにネイティブまたは非ネイティブオーバーライドが適用されたかどうかの表示が表示されます。以下の例では、**Native click event** オプションが選択されています。
+ネイティブオーバーライドでテストを実行した後、テスト実行サマリーにネイティブまたは非ネイティブオーバーライドが適用されたかどうかの表示が表示されます。以下の例では、**Native click event** オプションが選択されています。
 
-   ![新しいテスト構成の内容を確認し Change ボタンで保存する画面](/images/test-management/shared-configuration/1a9eceb-028f074-image.png)
+![新しいテスト構成の内容を確認し Change ボタンで保存する画面](/images/test-management/shared-configuration/1a9eceb-028f074-image.png)
 
 8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/advanced-editing/hooks) を参照してください。
 
 9. **Add** をクリックします。\
-   構成が作成され、**Configuration Library** に追加されます。
+構成が作成され、**Configuration Library** に追加されます。
 
 ### テスト構成のクローン作成
 
@@ -101,7 +101,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 **Configuration Library** が表示されます。
 
 2. クローンしたいテスト構成の行をクリックします。\
-   コンテキストツールが表示されます。
+コンテキストツールが表示されます。
 
 ![選択したテスト構成の行にコンテキストツールが表示されている画面](/images/test-management/shared-configuration/b2ffc88-Testim_590a.png)
 
@@ -119,7 +119,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
 5. **Clone** をクリックします。\
-   構成がクローンされ、**Configuration Library** に表示されます。
+構成がクローンされ、**Configuration Library** に表示されます。
 
 ### テスト構成の変更
 
@@ -132,7 +132,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 **Configuration Library** が表示されます。
 
 2. 変更したいテスト構成の行をダブルクリックします。\
-   **Edit Config** 設定が表示されます。
+**Edit Config** 設定が表示されます。
 
 ![Edit Config 画面でブラウザや解像度など構成詳細を編集する画面](/images/test-management/shared-configuration/7ef3c8f-editconfig.jpg)
 
@@ -144,7 +144,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 - **Resolution** セクションで、希望する解像度を選択します。
 
 4. **Advanced** をクリックします。\
-   詳細構成オプションが表示されます。
+詳細構成オプションが表示されます。
 
 ![Edit Config 画面で Native Events やその他の詳細オプションを変更する画面](/images/test-management/shared-configuration/6780665-editconfig2.jpg)
 
@@ -153,7 +153,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 7. **Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
 8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/advanced-editing/hooks) を参照してください。
 9. **Change** をクリックします。\
-   構成が変更されます。
+構成が変更されます。
 
 ### テスト構成の名前変更
 
@@ -166,7 +166,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 **Configuration Library** が表示されます。
 
 2. 名前を変更したいテスト構成の行をクリックします。\
-   コンテキストツールが表示されます。
+コンテキストツールが表示されます。
 
 ![選択された構成行にコンテキストツールが表示されている Configuration Library 画面](/images/test-management/shared-configuration/815c253-Testim_590a.png)
 
@@ -184,7 +184,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 4. **New name** フィールドに、この構成の新しい名前を入力します。
 5. **OK** をクリックします。\
-   構成の名前が変更されます。
+構成の名前が変更されます。
 
 ### テスト構成の削除
 
@@ -197,7 +197,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 **Configuration Library** が表示されます。
 
 2. 削除したいテスト構成の行をクリックします。\
-   コンテキストツールが表示されます。
+コンテキストツールが表示されます。
 
 ![選択された構成に対して Delete アイコンを使用できる状態を示すコンテキストツールバー](/images/test-management/shared-configuration/2917eb3-Testim_590a.png)
 
@@ -214,7 +214,7 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 ![構成削除の確認内容が表示された Delete 確認ダイアログ](/images/test-management/shared-configuration/ac8e414-Testim_592_r.png)
 
 4. **Delete** をクリックします。\
-   構成が **Configuration Library** から削除されます。
+構成が **Configuration Library** から削除されます。
 
 ## 構成ライブラリのフィルタリング
 
@@ -275,4 +275,4 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 6. **Message** フィールドに、必要に応じて、このバージョンで行われた変更の説明を入力します。
 7. **OK** をクリックします。\
-   テストが保存されます。**Configuration** 設定の **Name** フィールドに名前を入力した場合、構成は **Configuration Library** に一覧表示されます。
+テストが保存されます。**Configuration** 設定の **Name** フィールドに名前を入力した場合、構成は **Configuration Library** に一覧表示されます。

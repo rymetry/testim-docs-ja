@@ -105,7 +105,7 @@ CTRL/CMD キーを押しながら、目的のテストのそれぞれをクリ�
 ![複数のテストを選択して Change Base URL ボタンを押す画面](/images/test-management/managing-tests-and-folders/23df7a9-2023-11-05_13-11-49.png)
 
 3. 目的のベース URL を入力し、**Change** をクリックします。\
-   ![新しいベース URL を入力して Change をクリックするベース URL 変更ダイアログ](/images/test-management/managing-tests-and-folders/9f47ff5-2023-11-05_13-26-59.png)
+![新しいベース URL を入力して Change をクリックするベース URL 変更ダイアログ](/images/test-management/managing-tests-and-folders/9f47ff5-2023-11-05_13-26-59.png)
 
 ## テストのクローン作成
 
@@ -126,7 +126,7 @@ Test Library 画面でテストとフォルダーの名前を変更できます�
 
 3. **New name** フィールドに、ファイルまたはフォルダーの新しい名前を入力します。
 4. **OK** をクリックします。\
-   名前が変更されたファイルまたはフォルダーがテストライブラリに表示されます。
+名前が変更されたファイルまたはフォルダーがテストライブラリに表示されます。
 
 ## テスト/フォルダーを削除する
 

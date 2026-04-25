@@ -106,12 +106,12 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 ![テストステップの追加位置](/images/validations/validate-download/2258769-Testim_155a.png)
 
 2. 「**M**」（Testim 定義済みステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![Testim 定義済みステップメニュー](/images/validations/validate-download/001f998-Testim_134_r.png)
 
 3. **Validations** をクリックします。\
-   **Validations** メニューが展開されます。
+**Validations** メニューが展開されます。
 
 ![Validate download ステップの選択](/images/validations/validate-download/75e9d7f-Testim_156_r.png)
 
@@ -127,17 +127,17 @@ Validate download ステップを追加する一般的な手順は、ダウン�
 
 5. **Name the new step** フィールドに、このステップの名前を入力します。
 6. このステップをこのテストまたは他のテストで再利用可能な共有ステップにする場合は、**Shared step** の横のチェックボックスを選択したまま（デフォルト）にし、**Select shared step** フォルダーリストからこのステップを保存するフォルダーを選択します。そうでない場合は、チェックボックスの選択を解除します。\
-   共有ステップの詳細については [Groups](/docs/editing-tests/groups) を参照してください。
+共有ステップの詳細については [Groups](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
-   **function** エディターが開き、右側に **Properties** パネルが表示されます。
+**function** エディターが開き、右側に **Properties** パネルが表示されます。
 
 ![Validate download エディター画面](/images/validations/validate-download/7d6af62-Testim_158.png)
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定: “Run download validation”）。
 9. 次の手順で必要なパラメーターを定義します:\
-   **Properties** パネルで **+ PARAMS** ボタンをクリックします。\
-   **JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
-   **Package parameter**: NPM パッケージ変数を追加する場合は、ドロップダウンリストから **Package** を選択し、パッケージ変数を入力します。
+**Properties** パネルで **+ PARAMS** ボタンをクリックします。\
+**JS parameter**: JavaScript パラメーターを追加する場合は、ドロップダウンリストから **JS** を選択し、JavaScript パラメーターを入力します。\
+**Package parameter**: NPM パッケージ変数を追加する場合は、ドロップダウンリストから **Package** を選択し、パッケージ変数を入力します。
 
 :::warning
 コード内で npm パッケージを使用する場合は `require` を書かず、ステップのプロパティで PACKAGE パラメーターとして渡してください。

@@ -17,11 +17,11 @@ keywords:
 
 1. 目的のステップの上にマウスを移動し、**Show Properties** アイコンをクリックします。
 
-   ![プロパティアイコン](/images/steps-editing-tests/editing-a-steps-properties/3bd689a-properties.png)
+![プロパティアイコン](/images/steps-editing-tests/editing-a-steps-properties/3bd689a-properties.png)
 
-   プロパティパネルが右側に開きます。
+プロパティパネルが右側に開きます。
 
-   ![プロパティパネル](/images/steps-editing-tests/editing-a-steps-properties/2958483-2023-10-10_16-17-44.png)
+![プロパティパネル](/images/steps-editing-tests/editing-a-steps-properties/2958483-2023-10-10_16-17-44.png)
 
 2. 目的の変更を行います。
 

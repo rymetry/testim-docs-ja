@@ -28,9 +28,9 @@ keywords:
 
 1. 記録中に **Mirroring Toolbar** の **More actions** をクリック。
 2. **Set Geolocation** を選択します。\
-   ステップ設定画面が表示されます。
+ステップ設定画面が表示されます。
 
-   ![ジオロケーション設定ステップのスクリーンショット](/images/special-steps/set-geolocation/d7ff4c5-geo1.png)
+![ジオロケーション設定ステップのスクリーンショット](/images/special-steps/set-geolocation/d7ff4c5-geo1.png)
 
 3. 次のいずれかを実行します。
 4. 地図上で位置を指定します。拡大縮小・移動が可能です。地図上の目的のポイントをクリックして位置を選択します。

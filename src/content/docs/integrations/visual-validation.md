@@ -44,12 +44,12 @@ Applitools Eyes アカウントと Testim アカウント間で情報を交換�
 ![Applitools Eyes のメインメニューに表示される Admin メニュー](/images/applitools-integration/applitools-integration/528d244-Testim_244_r.png)
 
 3. **Admin**をクリックします。\
-   **Admin panel**が開きます。
+**Admin panel**が開きます。
 
 ![Applitools Eyes の Admin パネル画面](/images/applitools-integration/applitools-integration/ef5d9c2-Testim_245.png)
 
 4. **API keys**をクリックします。\
-   **API keys**画面が開きます。
+**API keys**画面が開きます。
 
 ![Applitools Eyes の API keys 画面](/images/applitools-integration/applitools-integration/bd902b4-Testim_246.png)
 
@@ -68,7 +68,7 @@ Applitools Eyes アカウントと Testim アカウント間で情報を交換�
 - **Expiry**フィールドで、オプションで API の有効期限を入力します。
 - **Purpose**フィールドで、オプションでこの API の目的を入力します。
 7. **Add**ボタンをクリックします。\
-   キーが作成され、**API keys**画面に表示されます。
+キーが作成され、**API keys**画面に表示されます。
 
 ![作成された API キーが API keys 一覧に表示された画面](/images/applitools-integration/applitools-integration/fbfd882-Testim_248.png)
 
@@ -102,9 +102,9 @@ Applitools Eyes アカウントと Testim アカウント間で情報を交換�
 5. **Cloud URL**フィールドに、Applitools アプリケーションのベース URL（例: [https://eyes.applitools.com/](https://eyes.applitools.com/)）を入力します。
 6. **Run Key**と**Merge Key**フィールドに、Applitools で以前に作成したキーを入力します。
 7. **App Name**フィールドに、オプションでアプリの名前を入力します。\
-   デフォルトのアプリ名は Project ID です。
+デフォルトのアプリ名は Project ID です。
 8. **Connect**をクリックします。\
-   成功アイコンが表示され、Applitools が Testim と統合されます。ビジュアル検証および wait-for ステップの使用を開始できます。[Visual Validation](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)を参照してください。
+成功アイコンが表示され、Applitools が Testim と統合されます。ビジュアル検証および wait-for ステップの使用を開始できます。[Visual Validation](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)を参照してください。
 
 ![Applitools 統合が成功しビジュアル検証ステップが有効になったことを示す画面](/images/applitools-integration/applitools-integration/446380f-Testim_265_r.png)
 

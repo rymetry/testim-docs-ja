@@ -176,12 +176,12 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
 ![ネットワーク検証ステップの追加画面](/images/validations/add-network-validation/138a257-Testim_283a_r.png)
 
 2. **「M」**（Testim の事前定義ステップ）をクリックします。\
-   **Predefined steps** メニューが開きます。
+**Predefined steps** メニューが開きます。
 
 ![追加されたネットワーク検証ステップ](/images/validations/add-network-validation/97d3be5-Testim_270_r2.png)
 
 3. **Validations** をクリックします。\
-   **Validations** メニューが展開されます。
+**Validations** メニューが展開されます。
 
 ![ネットワーク検証のコードエディター画面](/images/validations/add-network-validation/82d4e6d-Testim_303_r.png)
 
@@ -197,9 +197,9 @@ _networkRequests_ 配列に含まれるオブジェクトで、次の項目を�
 
 5. **Name the new step** フィールドに、このステップの（わかりやすい）名前を入力します。
 6. このステップを共有ステップとして他のテストでも再利用できるようにする場合は、**Shared step** の隣のチェックボックスを選択したまま（デフォルト）にし、**Select shared step folder** リストからこのステップを保存するフォルダーを選択します。共有しない場合は、チェックボックスの選択を解除します。\
-   共有ステップの詳細については、[Groups](/docs/editing-tests/groups) を参照してください。
+共有ステップの詳細については、[Groups](/docs/editing-tests/groups) を参照してください。
 7. **Create Step** をクリックします。\
-   **function** エディターが開き、右側に **Properties** パネルが表示されます。
+**function** エディターが開き、右側に **Properties** パネルが表示されます。
 
 ![ナビゲーションステップ前の状態](/images/validations/add-network-validation/989f939-Testim_310.png)
 
@@ -395,7 +395,7 @@ if (isOverMax) throw new Error(`Some calls were over ${maxTimeInMS}MS`);
 1. **Setup Step** で **Show Properties** をクリックします。
 2. **Network Capture Options** の下で、**Capture request body** および/または **Capture response body** オプションを選択します。
 
-   ![ネットワークキャプチャオプションの設定画面](/images/validations/add-network-validation/f6815ea-network_capture_options.png)
+![ネットワークキャプチャオプションの設定画面](/images/validations/add-network-validation/f6815ea-network_capture_options.png)
 
 3. **Save** をクリックしてテストを保存します。
 

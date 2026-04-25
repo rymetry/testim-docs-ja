@@ -34,11 +34,11 @@ keywords:
 **テスト内を検索するには:**
 
 1. テスト画面で **Search** ボタンをクリックします。\
-   ![検索ボタン](/images/test-utilities/search-within-a-test/e200c02-searchbutton.png)
+![検索ボタン](/images/test-utilities/search-within-a-test/e200c02-searchbutton.png)
 
 2. 検索語を入力します。検索は大文字・小文字を区別しません。検索語は最低 3 文字必要です。\
-   検索結果は **Search Results** ペインに表示されます。各結果は、検索語に（完全または部分的に）一致した要素を含むステップを表します。一致箇所は黄色でハイライトされます。詳細は [検索結果の見方](#検索結果の見方) を参照してください。\
-   ![検索結果ペイン](/images/test-utilities/search-within-a-test/f945272-searchresults.JPG)
+検索結果は **Search Results** ペインに表示されます。各結果は、検索語に（完全または部分的に）一致した要素を含むステップを表します。一致箇所は黄色でハイライトされます。詳細は [検索結果の見方](#検索結果の見方) を参照してください。\
+![検索結果ペイン](/images/test-utilities/search-within-a-test/f945272-searchresults.JPG)
 
 3. 任意の検索結果をクリックすると該当ステップが開きます。
 

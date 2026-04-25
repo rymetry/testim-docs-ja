@@ -48,7 +48,7 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 ![Jira API トークンと Xray クライアント情報を入力する画面](/images/test-management-integrations/xray-integration/a4eef2a-image_1.png)
 
 5. **Connect（接続）** をクリックします。\
-   この時点で、Testim は Xray のプロジェクトに関連付けられましたが、特定のテストにはマッピングされていません。
+この時点で、Testim は Xray のプロジェクトに関連付けられましたが、特定のテストにはマッピングされていません。
 
 :::info
 一度に 1 つの TMS（テスト管理システム）のみ接続できます。Testim システムが既に別の TMS に接続されている場合は、まずその TMS を切断してから Xray に接続する必要があります。ただし、TMS を切断すると、テスト間の接続が削除されます。そのため、以前の TMS に再度接続する場合は、接続も再作成する必要があります。
@@ -56,7 +56,7 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 
 6. Testim で、関連付けたい Xray プロジェクトをリストから選択します。
 
-   ![関連付けたい Xray プロジェクトを選択する画面](/images/test-management-integrations/xray-integration/88115b5-image_2.png)
+![関連付けたい Xray プロジェクトを選択する画面](/images/test-management-integrations/xray-integration/88115b5-image_2.png)
 
 ## Testim のテストを Xray テストケースにマッピングする
 

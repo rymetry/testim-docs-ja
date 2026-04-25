@@ -39,6 +39,6 @@ keywords:
 ![URL の入力](/images/handling-ui-actions/navigation/ac74c3a-image.png)
 
 6. ナビゲーションで新しいタブを開きたい場合は、**新しいタブで URL を開く**チェックボックスを選択します。\
-   新しいナビゲーションステップが、選択した場所のテストに追加されます。
+新しいナビゲーションステップが、選択した場所のテストに追加されます。
 
 ![ナビゲーションステップが追加された](/images/handling-ui-actions/navigation/abb8218-navigation-step-added.jpg)

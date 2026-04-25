@@ -42,15 +42,15 @@ keywords:
 1. テストで、クイックアクションステップの前に、目的のレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
 3. **Salesforce ステップ**タブの下で、**レコード操作**をクリックし、**クイックアクション**ステップを選択します。\
-   **クイックアクション**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
+**クイックアクション**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
 
-   ![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/dc44746-quickactions.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/dc44746-quickactions.png)
 
 4. **レコードタイプを選択**の下で、クイックアクション項目を追加したいレコードのレコードタイプを選択します。
 5. **クイックアクションを選択**の下で、目的の**クイックアクション**を選択します。\
-   クイックアクションのフォームが表示されます。各クイックアクションには異なるフォームがあります。(\*) で示されているフィールドは必須です。
+クイックアクションのフォームが表示されます。各クイックアクションには異なるフォームがあります。(\*) で示されているフィールドは必須です。
 
-   ![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/1def12e-quickactionnewtask.png)
+![スクリーンショット](/images/salesforce-steps/sfdc-step-quickactions/1def12e-quickactionnewtask.png)
 
 6. 入力したい各フィールドについて、Action の下で次のオプションのいずれかを選択します:
 7. **Input** - 指定された値をフィールドに入力します。フィールドが編集不可の場合、このアクションはリストされません。このアクションには、以下で説明するように値を入力する必要があります。

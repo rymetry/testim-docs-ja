@@ -1,4 +1,4 @@
-"""en_source_patches の integration-style test (Bundle 1 + Category B)。
+"""en_source_patches の integration-style test (Bundle 1)。
 
 acceptance gates #6 / #7 / #10 を real EN snapshot に対して検証する:
 
@@ -32,7 +32,7 @@ JA_BUNDLE_DIR: Path = (
 )
 
 
-# Target slugs per plan Bundle 1 (UD-001 / UD-002) + Category B (UD-004A/C)
+# Target slugs per plan Bundle 1 (UD-001 / UD-002).
 TARGET_SLUG_SNAPSHOTS: list[dict[str, object]] = [
     {
         "slug": "salesforce-testing/salesforce-steps/sfdc-step-create",
@@ -62,18 +62,6 @@ TARGET_SLUG_SNAPSHOTS: list[dict[str, object]] = [
     {
         "slug": "salesforce-testing/salesforce-steps",
         "path": SALESFORCE_SNAPSHOT_ROOT / "salesforce-steps.html",
-        "minHits": 1,
-    },
-    {
-        "slug": "running-tests/scheduler",
-        "path": SNAPSHOTS_ROOT / "running-tests" / "scheduler.html",
-        # UD-004A ×1 (high-speed-mode) + UD-004C ×1 (Slack anchor) = 2
-        "minHits": 2,
-    },
-    {
-        "slug": "running-tests/scheduler-mobile",
-        "path": SNAPSHOTS_ROOT / "running-tests" / "scheduler-mobile.html",
-        # UD-004C ×1 (Slack anchor only; no high-speed-mode reference)
         "minHits": 1,
     },
 ]
@@ -184,9 +172,9 @@ class TestNoNewMechanism:
         total_slugs = sum(len(entry["slugs"]) for entry in ARTIFACT_REGISTRY)
         assert total_slugs == 8, "slug count drift in artifact registry"
 
-    def test_gate13_sync_exclusions_has_one_entry(self) -> None:
-        """gate #13: ``SOURCE_SYNC_EXCLUSIONS`` は 1 entry のみ。"""
-        assert len(SOURCE_SYNC_EXCLUSIONS) == 1, "new source sync exclusions are forbidden"
+    def test_gate13_sync_exclusions_has_no_active_entries(self) -> None:
+        """gate #13: recovered source sync exclusions are removed from the registry."""
+        assert len(SOURCE_SYNC_EXCLUSIONS) == 0, "source sync exclusions require review"
 
 
 # ---------------------------------------------------------------------------

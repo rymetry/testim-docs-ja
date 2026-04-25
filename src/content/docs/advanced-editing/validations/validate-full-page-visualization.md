@@ -38,23 +38,23 @@ RCA および `Ultrafast Test Cloud`（追加環境の追加）機能は、適�
 
 1. 検証を追加したい位置の矢印記号にマウスを合わせます。
 
-   ![矢印記号](/images/visual-validations/validate-full-page-visualization/2760163-Testim_275b.png)
+![矢印記号](/images/visual-validations/validate-full-page-visualization/2760163-Testim_275b.png)
 
-   **アクションオプション**が表示されます。
+**アクションオプション**が表示されます。
 
-   ![アクションオプション](/images/visual-validations/validate-full-page-visualization/3bc96ed-Testim_267a_r.png)
+![アクションオプション](/images/visual-validations/validate-full-page-visualization/3bc96ed-Testim_267a_r.png)
 
 2. 「**M**」（Testim 定義済みステップ）をクリックします。
 
-   **定義済みステップ**メニューが開きます。
+**定義済みステップ**メニューが開きます。
 
-   ![定義済みステップメニュー](/images/visual-validations/validate-full-page-visualization/8957b3e-Testim_270_r.png)
+![定義済みステップメニュー](/images/visual-validations/validate-full-page-visualization/8957b3e-Testim_270_r.png)
 
 3. **検証**をクリックします。
 
-   **検証**メニューが展開されます。
+**検証**メニューが展開されます。
 
-   ![検証メニュー](/images/visual-validations/validate-full-page-visualization/d74c896-Testim_271_r.png)
+![検証メニュー](/images/visual-validations/validate-full-page-visualization/d74c896-Testim_271_r.png)
 
 4. メニューをスクロールして、**フルページのビジュアル検証**を選択します。
 

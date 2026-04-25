@@ -201,11 +201,11 @@ keywords:
 3. Predefined steps の一覧から該当ステップを選択します。
 4. **Add Step** ダイアログで **Shared step** チェックボックスをオンにします。
 
-   ![共有ステップの設定](/images/groups/shareable-steps/3a14d05-image.png)
+![共有ステップの設定](/images/groups/shareable-steps/3a14d05-image.png)
 
 5. 共有ステップを **Root** フォルダー以外に配置したい場合は、**Select shared step folder** でフィールドをクリックし、既存フォルダーを選ぶか **Add Folder** をクリックして新しいフォルダー名を指定します。**Select** をクリックして確定します。
 
-   ![フォルダーの追加](/images/groups/shareable-steps/a69521b-addfolder.png)
+![フォルダーの追加](/images/groups/shareable-steps/a69521b-addfolder.png)
 
 ## 既存ステップを共有ステップに変更
 
@@ -215,11 +215,11 @@ keywords:
 
 1. 共有可能な通常ステップで **Show Properties** をクリックします。
 
-   ![Show Properties ボタン](/images/groups/shareable-steps/d887de9-showproperties.png)
+![Show Properties ボタン](/images/groups/shareable-steps/d887de9-showproperties.png)
 
 2. Properties ペインで **Shared Step** リンクをクリックします。
 
-   ![Shared Step リンク](/images/groups/shareable-steps/54d39fb-shaedsteplink.png)
+![Shared Step リンク](/images/groups/shareable-steps/54d39fb-shaedsteplink.png)
 
 ## 共有ステップの再利用
 
@@ -230,10 +230,10 @@ keywords:
 **共有ステップを再利用するには:**
 
 1. ステップを追加したい位置の（矢印）にカーソルを合わせます。\
-   アクションのオプションが表示されます。
+アクションのオプションが表示されます。
 2. "M"（Testim の事前定義ステップ）をクリックします。\
-   Predefined steps メニューが開きます。
+Predefined steps メニューが開きます。
 3. **Shared Steps** タブをクリックします。\
-   ステップの一覧が表示されます。
+ステップの一覧が表示されます。
 4. 目的の共有ステップをクリックしてテストに追加します。
 5. **Properties**（歯車アイコン）をクリックしてプロパティを変更します。

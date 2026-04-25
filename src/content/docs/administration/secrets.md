@@ -45,7 +45,7 @@ Test Editorからシークレットマネージャーにアクセスすること
 1. **Resources > Secrets Manager** に移動します。
 2. **New Secret** をクリックします。
 
-   ![New Secret を作成するフォーム](/images/project-user-management/secrets/6876945-image.png)
+![New Secret を作成するフォーム](/images/project-user-management/secrets/6876945-image.png)
 
 3. **Name** フィールドに、シークレットの名前を入力します。以下に説明する正しい構文に従っていることを確認してください。
 4. **Value** フィールドに、秘密にしておく値（電話番号、パスワードなど）を入力します。
@@ -70,7 +70,7 @@ Test Editorからシークレットマネージャーにアクセスすること
 
 1. Test Editorを開き、シークレットを追加するステップを選択します。
 2. **Set Text** ステップの **Show Properties** ボタンを選択します。\
-   ステップの Properties ペインが表示されます。
+ステップの Properties ペインが表示されます。
 3. **Assign** の下で、**Secret** オプションを選択します。
 4. リストから使用したいシークレットを選択します。
 

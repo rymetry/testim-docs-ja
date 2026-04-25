@@ -570,7 +570,7 @@ Callout（`:::` ディレクティブ）、コードブロック、リスト、�
 
 ### 5.4 許容される一般 IT 用語（英語維持）
 
-Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のまま維持してよい。検知系 (`scripts/lib/parity_glossary_mask.mjs` + `docs/INVARIANT_TOKENS.md`) の narrow pattern で保護される。
+Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のまま維持してよい。検知系 (`testim_parity.glossary_mask` + `docs/INVARIANT_TOKENS.md`) の narrow pattern で保護される。
 
 **判定原則**:
 

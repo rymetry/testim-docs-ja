@@ -77,7 +77,7 @@ Testim はドラッグ&ドロップステップを自動的にテストに追加
 2. そのステップの**プロパティを表示**アイコンをクリックします。
 3. **プロパティ**メニューで、**ネイティブイベント**チェックボックスを選択して有効にします。
 
-   ![ネイティブイベントの設定](/images/handling-ui-actions/drag-drop-step/dbac9aa-image.png)
+![ネイティブイベントの設定](/images/handling-ui-actions/drag-drop-step/dbac9aa-image.png)
 
 4. 無効にするには、チェックボックスの選択を解除します。
 

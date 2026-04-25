@@ -55,7 +55,7 @@ npm run check:parity -- --section=advanced-editing
 
 | 状況 | baseline 許容 | 理由 |
 | --- | --- | --- |
-| EN upstream 自体が壊れている (`source-unusable` / `snapshot-incomplete`) | ✅ | upstream 修正待ち、`scripts/lib/source_sync_exclusions.mjs` が canonical |
+| EN upstream 自体が壊れている (`source-unusable` / `snapshot-incomplete`) | ✅ | upstream 修正待ち、`testim_parity.sync_exclusions` が canonical |
 | EN-only の小 artifact (具体 EN HTML anomaly に traceable) | △ **厳格条件下のみ** | 下記 §EN-only artifact の厳格条件 参照 |
 | JA 側の構造修正で簡単に解消可能 | ❌ | content 修正で解消 |
 | Testim UI 用語で GLOSSARY 未登録 | ❌ | GLOSSARY Tier A/B に追加 |
@@ -75,11 +75,11 @@ baseline 追加には **以下を全て満たす** 必要がある:
 
 EN upstream の欠陥を JA side に mirror させず吸収するため、本 repo は **2 機構のみ**を採用する。どちらも **"broken-EN retreat" という ONE purpose** に属し、粒度が異なるだけ (第 3 の許容機構追加は禁止。`docs/SYSTEM_SPEC.md` §2-mechanism suppression design 参照)。
 
-### Mechanism 1: page-level freeze (`scripts/lib/source_sync_exclusions.mjs`)
+### Mechanism 1: page-level freeze (`testim_parity.sync_exclusions`)
 
 ページ全体が MadCap 出力で使い物にならない slug を snapshot 凍結対象として登録。snapshot fetch は行うが実際の file は上書きせず、`source-sync-status.json.pages[].fetchStatus` に `excluded-broken` / `excluded-recovered` を出力する。
 
-### Mechanism 2: segment-level patch (`scripts/lib/en_source_patches.mjs`)
+### Mechanism 2: segment-level patch (`testim_parity.en_source_patches` + `_en_source_patches_data.json`)
 
 ページの一部に限定した MadCap authoring artifact (ZWSP 段落、broken pipe row、href-miswire 等) を抽出前に literal replace する。粒度を保ちつつ JA を source-first mirror させられる。
 
@@ -87,12 +87,12 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 
 1. **登録**: upstream 欠陥を人手で検証後、適切な mechanism に entry 追加 (`reviewAfter` を `addedAt` + 6 ヶ月で必ず設定)
 2. **自動検知**:
-   - `scripts/detection/check_upstream_recovery.mjs` が毎 run で `upstream-recovery-status.json` を derive
+   - `npm run check:upstream-recovery` が毎 run で `upstream-recovery-status.json` を derive
    - 各 entry に `statusA` (`active` / `stale` / `unknown`) と `statusB` (`current` / `overdue`) が付与される
-   - `en_source_patches_integration.test.mjs` は全 patches を slug-driven で scan (非 gating warning)
+   - `scripts/py/tests/test_en_source_patches_integration.py` は全 patches を slug-driven で scan
 3. **上流修正後の surfacing** (non-blocking):
    - PR trigger: `.github/workflows/ci.yml` の sticky comment が hidden marker `<!-- upstream-recovery: sticky -->` で idempotent upsert
-   - Weekly trigger: `.github/workflows/scheduled-actionable.yml` が `upstream-recovery-status.json` を artifact upload し、`detection_reports.mjs` が `sourceSyncHealth` family 内の `enPatchRecovery` / `sourceSyncRecovery` section で managed issue に surface
+   - Weekly trigger: `.github/workflows/scheduled-actionable.yml` が `upstream-recovery-status.json` を artifact upload し、`testim_parity.detection_reports` が `sourceSyncHealth` family 内の `enPatchRecovery` / `sourceSyncRecovery` section で managed issue に surface
 4. **人手削除**:
    - registry entry を削除 (seeded pin test があれば併せて解除)
    - `docs/UPSTREAM_DEFECTS.md` の対応 entry を archive 状態に更新
@@ -110,6 +110,17 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 - `statusB`: `reviewAfter` が UTC 00:00 を過ぎた瞬間に `overdue`
 - `source-sync-status.json` 不在時 (local dev / PR CI) は全 exclusion entry が `statusA: 'unknown'` になり、stale 判定には使われない (fail-safe)
 
+## JA parser 制約と運用 SOP
+
+Issue #368 以降、JA parser は EN `collectInlineText` と対称になるよう list item 内の継続要素を flatten する。
+
+- nested marker は `markerIndent >= bodyIndent` のとき親 list item に吸収する
+- continuation paragraph / indented image / indented code fence / blank-line continuation は `leadingWs >= bodyIndent` のとき親 list item に吸収する
+- EN が MadCap fragmented sibling list (`<ol>` / `<ul>` の sibling) を持つ場合、JA では子 marker を親 item の marker indent まで outdent して独立 segment にする
+- list item 内の `:::callout` directive は禁止。callout は list の外に出し、必要なら list を分割する
+- `npm run lint` は EN snapshot と JA markdown の structure signature を比較し、list continuation / image / code-block の分離を `structure-signature-mismatch` として早期検知する
+- `structure-signature-mismatch` は baseline 追加で隠さず、JA content / parser / source-side debt のどれが正しいかを特定して修正する
+
 ### 絶対原則: 許容機構は broken EN snapshot 退避にのみ正当化される
 
 検知システムの purpose は EN(t) vs EN(t-1) (diff1) と EN(t) vs JA(t) (diff2) を両方 0 に収束させることである。
@@ -120,7 +131,7 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 
 ## EN source patches layer
 
-`scripts/lib/en_source_patches.mjs` は **broken upstream defect の HTML 境界 patch 層**。`preprocessEnHtml(html, { slug, patchCoverage })` が canonical EN HTML を生成する際に slug-scope で literal `find → replace` を適用する。JA markdown 側で workaround を埋め込むことは禁止。
+`testim_parity.en_source_patches` は **broken upstream defect の HTML 境界 patch 層**。定義データは `scripts/py/src/testim_parity/_en_source_patches_data.json` が authoritative。`preprocess_en_html` が canonical EN HTML を生成する際に slug-scope で literal `find → replace` を適用する。JA markdown 側で workaround を埋め込むことは禁止。
 
 **特徴**:
 
@@ -253,13 +264,13 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
 - **翻訳ガイドライン**: `docs/TRANSLATION_GUIDE.md` のルール（Testim 用語英語維持、ですます調、NG/OK パターン）を必ずエージェントに送ること
 - **PR 分離**: 検知コードの修正とドキュメント修正は別 PR にする
 - **EN ゴミ混入禁止**: EN のアーティファクト（`</Image>` 等）を JA に含めない
-- **テスト確認**: リスト項目数を変更したら `KNOWN_ORDERED_DRIFTS`（`source_parity_segments_boundary.test.mjs`）を確認
+- **テスト確認**: リスト項目数を変更したら `scripts/py/tests/test_segments_boundary.py` と `npm run lint` の structure signature を確認
 - **Prettier 注意**: `npm run format` はリポジトリ全体を変更する。PR 対象ファイルのみに限定する
 - **新 pattern の提案手順**: エージェントが未知 pattern の mechanism-pending residual を発見した場合、PR description / コミット message に `[PENDING REVIEWER APPROVAL]` マーカーを付与して提案する。reviewer gate の承認を経て初めて登録する
 
 ## PR merge gate matrix
 
-全ての PR が `parity-baseline.json`、`scripts/lib/source_parity_*`、`scripts/lib/en_source_patches.mjs` を touch する場合、以下の gate を通過しない限り merge 不可。
+全ての PR が `parity-baseline.json`、`testim_parity` の segment / align / patch 実装、または `_en_source_patches_data.json` を touch する場合、以下の gate を通過しない限り merge 不可。
 
 ### 必須不変量
 
@@ -320,8 +331,8 @@ EN upstream に由来する artifact の扱い:
 
 | artifact 種別 | 対応層 | 例 |
 | ------ | -------- | ------ |
-| Page 全体が壊れている | `scripts/lib/source_sync_exclusions.mjs` (page-level update-lock + 復旧 probe) | `testops/testops-version-control/pull-requests` |
-| URL / link token の差異 | `scripts/lib/parity_normalize.mjs` (URL rewrite ルール) | `help.testim.io/docs/X` ↔ `/docs/X` |
-| 英語 UI 用語・機能名 | `docs/GLOSSARY.md` + `parity_glossary_mask.mjs` | `Visual Editor`, `Pre-run hook` |
-| 英語 invariant pattern | `docs/INVARIANT_TOKENS.md` + `parity_glossary_mask.mjs` | `--project-id`, `Shift+S` |
-| EN HTML 内の segment-level 具体 defect | `scripts/lib/en_source_patches.mjs` (slug-scope literal find→replace) | `docs/UPSTREAM_DEFECTS.md` 参照 |
+| Page 全体が壊れている | `testim_parity.sync_exclusions` (page-level update-lock + 復旧 probe) | 現在 active entry なし |
+| URL / link token の差異 | `testim_parity.normalize` (URL rewrite ルール) | `help.testim.io/docs/X` ↔ `/docs/X` |
+| 英語 UI 用語・機能名 | `docs/GLOSSARY.md` + `testim_parity.glossary_mask` | `Visual Editor`, `Pre-run hook` |
+| 英語 invariant pattern | `docs/INVARIANT_TOKENS.md` + `testim_parity.glossary_mask` | `--project-id`, `Shift+S` |
+| EN HTML 内の segment-level 具体 defect | `testim_parity.en_source_patches` + `_en_source_patches_data.json` | `docs/UPSTREAM_DEFECTS.md` 参照 |

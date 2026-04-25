@@ -45,12 +45,12 @@ Element not visible 検証では、要素がページ上で表示されていな
 ![スクリーンショット](/images/validations/validate-element-not-visible/a073c5b-Screen_Shot_2021-04-18_at_6.39.03.png)
 
 4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
-   Predefined steps メニューが開きます。
+Predefined steps メニューが開きます。
 
 ![検証](/images/validations/validate-element-not-visible/33395a4-Testim_034_r.png)
 
 5. **Validations** をクリックします。\
-   Validations セクションが展開されます。
+Validations セクションが展開されます。
 
 ![検証](/images/validations/validate-element-not-visible/3cb61d5-Testim_035_r.png)
 
@@ -61,7 +61,7 @@ Element not visible 検証では、要素がページ上で表示されていな
 :::
 
 7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。\
-   ステップが作成され、選択した要素のサムネイルがステップに表示されます。
+ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
 ![非表示検証](/images/validations/validate-element-not-visible/5680a81-Testim_089.png)
 
@@ -108,5 +108,5 @@ Element not visible 検証では、要素がページ上で表示されていな
 ![要素設定](/images/validations/validate-element-not-visible/756ba35-Testim_010a_r.png)
 
 6. AUT 上で新しい要素を特定し、クリックして選択します。\
-   選択した要素が Properties パネルの **Target element** に表示されます。
+選択した要素が Properties パネルの **Target element** に表示されます。
 7. 先ほどと同じステップ左の **Toggle Breakpoint** をクリックして、ブレークポイントを解除します。

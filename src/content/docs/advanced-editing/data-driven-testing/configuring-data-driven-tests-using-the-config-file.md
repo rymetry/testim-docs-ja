@@ -75,7 +75,7 @@ exports.config = {
 
 1. 設定ファイルを作成するか、既存のファイルを編集します。
 2. `beforeSuite`フック下の`overrideTestData`にテスト名とデータセット（データセットは JSON 形式である必要があります）を追加します。設定ファイルの他のすべての部分は残す/含める必要があります。\
-   以下は、設定ファイルの beforeSuite フックの例です:
+以下は、設定ファイルの beforeSuite フックの例です:
 
 ```javascript
 beforeSuite: function () {
