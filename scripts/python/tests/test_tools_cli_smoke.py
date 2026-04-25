@@ -160,6 +160,22 @@ class TestNotation:
             "half-width-parens",
         }
 
+    def test_parens_fix_keeps_inline_code_opaque(self) -> None:
+        assert notation.fix_parens_line("設定(`--flag`)を確認") == "設定（`--flag`）を確認"
+        assert notation.fix_parens_line("See (`--flag`) only") == "See (`--flag`) only"
+
+    def test_fix_and_verify_skip_non_utf8_markdown(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        file_path = tmp_path / "broken.md"
+        file_path.write_bytes(b"\xff\xfe\x00")
+
+        assert notation.fix_file(file_path) is False
+        assert notation.verify_file(file_path) == []
+
+        err = capsys.readouterr().err
+        assert err.count("skipped non-UTF-8 file") == 2
+
 
 class TestNormalizeDocs:
     def test_section_scoped_run_on_minimal_corpus(

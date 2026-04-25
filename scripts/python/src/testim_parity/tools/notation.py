@@ -90,58 +90,48 @@ def find_frontmatter(lines: list[str]) -> tuple[int | None, int | None]:
     return None, None
 
 
+def consume_non_processable(line: str, index: int) -> tuple[str, int] | None:
+    if line[index] == "`":
+        end = line.find("`", index + 1)
+        if end != -1:
+            return line[index : end + 1], end + 1
+
+    if index + 1 < len(line) and line[index : index + 2] == "](":
+        end = line.find(")", index + 2)
+        if end != -1:
+            return line[index : end + 1], end + 1
+
+    if (
+        line[index] == "<"
+        and index + 1 < len(line)
+        and (line[index + 1].isalpha() or line[index + 1] == "/")
+    ):
+        end = line.find(">", index + 1)
+        if end != -1:
+            return line[index : end + 1], end + 1
+
+    if line[index : index + 4] == "http":
+        match = re.match(r"https?://\S+", line[index:])
+        if match:
+            url = match.group(0)
+            return url, index + len(url)
+
+    return None
+
+
 def split_processable(line: str) -> list[tuple[str, bool]]:
     segments: list[tuple[str, bool]] = []
     index = 0
 
     while index < len(line):
-        if line[index] == "`":
-            end = line.find("`", index + 1)
-            if end != -1:
-                segments.append((line[index : end + 1], False))
-                index = end + 1
-                continue
-
-        if index + 1 < len(line) and line[index : index + 2] == "](":
-            end = line.find(")", index + 2)
-            if end != -1:
-                segments.append((line[index : end + 1], False))
-                index = end + 1
-                continue
-
-        if (
-            line[index] == "<"
-            and index + 1 < len(line)
-            and (line[index + 1].isalpha() or line[index + 1] == "/")
-        ):
-            end = line.find(">", index + 1)
-            if end != -1:
-                segments.append((line[index : end + 1], False))
-                index = end + 1
-                continue
-
-        if line[index : index + 4] == "http":
-            match = re.match(r"https?://\S+", line[index:])
-            if match:
-                url = match.group(0)
-                segments.append((url, False))
-                index += len(url)
-                continue
+        skipped = consume_non_processable(line, index)
+        if skipped:
+            text, index = skipped
+            segments.append((text, False))
+            continue
 
         end = index + 1
-        while end < len(line):
-            if line[end] == "`":
-                break
-            if end + 1 < len(line) and line[end : end + 2] == "](":
-                break
-            if (
-                line[end] == "<"
-                and end + 1 < len(line)
-                and (line[end + 1].isalpha() or line[end + 1] == "/")
-            ):
-                break
-            if line[end : end + 4] == "http" and re.match(r"https?://", line[end:]):
-                break
+        while end < len(line) and consume_non_processable(line, end) is None:
             end += 1
         segments.append((line[index:end], True))
         index = end
@@ -209,38 +199,11 @@ def fix_parens_line(line: str) -> str:
     index = 0
 
     while index < len(line):
-        if line[index] == "`":
-            end = line.find("`", index + 1)
-            if end != -1:
-                result.append(line[index : end + 1])
-                index = end + 1
-                continue
-
-        if index + 1 < len(line) and line[index : index + 2] == "](":
-            end = line.find(")", index + 2)
-            if end != -1:
-                result.append(line[index : end + 1])
-                index = end + 1
-                continue
-
-        if (
-            line[index] == "<"
-            and index + 1 < len(line)
-            and (line[index + 1].isalpha() or line[index + 1] == "/")
-        ):
-            end = line.find(">", index + 1)
-            if end != -1:
-                result.append(line[index : end + 1])
-                index = end + 1
-                continue
-
-        if line[index : index + 4] == "http":
-            match = re.match(r"https?://\S+", line[index:])
-            if match:
-                url = match.group(0)
-                result.append(url)
-                index += len(url)
-                continue
+        skipped = consume_non_processable(line, index)
+        if skipped:
+            text, index = skipped
+            result.append(text)
+            continue
 
         if line[index] == "(":
             end = find_close_paren(line, index)
@@ -384,9 +347,6 @@ def fix_content(raw: str, file_path: Path) -> str:
             fixed_lines.append(fix_frontmatter_line(line, text_field=True))
         elif line.startswith("  ") and in_frontmatter_text:
             fixed_lines.append(fix_frontmatter_line(line, text_field=True))
-        elif re.match(r"^keywords\s*:", line) or re.match(r"^\s+-\s", line):
-            in_frontmatter_text = False
-            fixed_lines.append(fix_frontmatter_line(line, text_field=False))
         else:
             in_frontmatter_text = False
             fixed_lines.append(fix_frontmatter_line(line, text_field=False))
@@ -394,8 +354,21 @@ def fix_content(raw: str, file_path: Path) -> str:
     return "\n".join(fixed_lines)
 
 
+def read_utf8_text(file_path: Path) -> str | None:
+    try:
+        return file_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as error:
+        print(f"Warning: skipped non-UTF-8 file: {file_path} ({error})", file=sys.stderr)
+        return None
+    except OSError as error:
+        print(f"Warning: skipped unreadable file: {file_path} ({error})", file=sys.stderr)
+        return None
+
+
 def fix_file(file_path: Path) -> bool:
-    raw = file_path.read_text(encoding="utf-8")
+    raw = read_utf8_text(file_path)
+    if raw is None:
+        return False
     fixed = fix_content(raw, file_path)
     if fixed == raw:
         return False
@@ -411,7 +384,9 @@ def strip_non_processable(line: str) -> str:
 
 
 def verify_file(file_path: Path) -> list[Issue]:
-    raw = file_path.read_text(encoding="utf-8")
+    raw = read_utf8_text(file_path)
+    if raw is None:
+        return []
     lines = raw.split("\n")
     code_lines = find_code_blocks(lines)
     frontmatter_start, frontmatter_end = find_frontmatter(lines)

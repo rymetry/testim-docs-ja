@@ -7,6 +7,16 @@ export type DocEntry = CollectionEntry<'docs'>;
 
 const SIDEBAR_ORDERING = getSidebarOrdering();
 
+function getCategoryOrder(groupKey: string, docOrder: number | undefined): number {
+  const preferredIndex = SIDEBAR_ORDERING.categoryIndexByLabel.get(groupKey);
+  if (preferredIndex !== undefined) return preferredIndex;
+
+  const fallbackIndex = FALLBACK_CATEGORY_ORDER.indexOf(groupKey);
+  if (fallbackIndex >= 0) return fallbackIndex;
+
+  return (docOrder ?? 0) + FALLBACK_CATEGORY_ORDER.length;
+}
+
 export function extractSlug(doc: DocEntry): string {
   return doc.id;
 }
@@ -44,14 +54,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
       order: sidebarItemIndex ?? doc.data.order ?? 0,
     };
 
-    const preferredIndex = SIDEBAR_ORDERING.categoryIndexByLabel.get(groupKey);
-    const fallbackIndex = FALLBACK_CATEGORY_ORDER.indexOf(groupKey);
-    const categoryOrder =
-      preferredIndex !== undefined
-        ? preferredIndex
-        : fallbackIndex >= 0
-          ? fallbackIndex
-          : (doc.data.order ?? 0) + FALLBACK_CATEGORY_ORDER.length;
+    const categoryOrder = getCategoryOrder(groupKey, doc.data.order);
 
     if (!groups.has(groupKey)) {
       groups.set(groupKey, {

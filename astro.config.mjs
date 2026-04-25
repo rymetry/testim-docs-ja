@@ -1,7 +1,4 @@
 // @ts-check
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { defineConfig, fontProviders } from 'astro/config';
 import vercel from '@astrojs/vercel';
 
@@ -17,61 +14,15 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import expressiveCode from 'astro-expressive-code';
 import rehypeWrapTable from './src/lib/rehype-wrap-table.ts';
+import { buildLegacyDocRedirects } from './src/lib/legacy-doc-redirects.mjs';
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
 config();
 
-const CONFIG_DIR = path.dirname(fileURLToPath(import.meta.url));
-const DOCS_DIR = path.resolve(CONFIG_DIR, 'src', 'content', 'docs');
-
-/**
- * @param {string} filePath
- * @param {string} docsDir
- */
-function filePathToSlug(filePath, docsDir = DOCS_DIR) {
-  return path.relative(docsDir, filePath).replace(/\.md$/, '');
-}
-
-/**
- * @param {string} docsDir
- * @returns {Record<string, string>}
- */
-function buildLegacyDocRedirects(docsDir = DOCS_DIR) {
-  /** @type {Map<string, string[]>} */
-  const byBasename = new Map();
-
-  /** @param {string} dir */
-  const walk = (dir) => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        walk(fullPath);
-        continue;
-      }
-      if (!entry.isFile() || !entry.name.endsWith('.md')) continue;
-
-      const slug = filePathToSlug(fullPath, docsDir);
-      if (!slug.includes('/')) continue;
-
-      const basename = entry.name.replace(/\.md$/, '');
-      byBasename.set(basename, [...(byBasename.get(basename) ?? []), slug]);
-    }
-  };
-  walk(docsDir);
-
-  /** @type {Record<string, string>} */
-  const redirects = {};
-  for (const [basename, slugs] of byBasename) {
-    if (slugs.length === 1) {
-      redirects[`/docs/${basename}`] = `/docs/${slugs[0]}`;
-    }
-  }
-  return redirects;
-}
-
 // Basic認証が有効な場合はSSR、無効な場合はStatic
 const isAuthEnabled = process.env.BASIC_AUTH_ENABLED === 'true';
+const shouldLogConfigWarnings = process.env.NODE_ENV !== 'production';
 
 if (process.env.NODE_ENV !== 'production') {
   console.log(`[astro] output mode: ${isAuthEnabled ? 'server (SSR)' : 'static'}`);
@@ -85,7 +36,10 @@ export default defineConfig({
   adapter: vercel({}),
 
   redirects: {
-    ...buildLegacyDocRedirects(),
+    ...buildLegacyDocRedirects(undefined, {
+      warnOnAmbiguous: shouldLogConfigWarnings,
+      warnOnMissing: shouldLogConfigWarnings,
+    }),
     '/docs/applitools-integration': '/docs/integrations/visual-validation',
     '/docs/changelog': '/docs/overview/changelog',
   },
@@ -174,23 +128,13 @@ export default defineConfig({
   ],
 
   integrations: [
-    // Phase 7: Expressive Code は react() / sitemap() より **前** に並べる。
-    // EC は Astro の markdown pipeline に rehype processor を注入するため、
-    // 他の integration より先に読み込ませて安定 initialization を保つ (docs の
-    // "Install Expressive Code with Astro" 節に準拠)。
+    // Expressive Code は markdown pipeline に入るため、他 integration より先に初期化する。
     expressiveCode({
-      // 既存サイトの code block は github-dark-dimmed で慣熟しているため
-      // 継続する。EC は Shiki を下位で呼ぶので theme 名は Shiki と同じ。
       themes: ['github-dark-dimmed'],
-      // 旧 ``shikiConfig.wrap: true`` の挙動 (長い code 行を折り返す、
-      // ``white-space: pre-wrap``) を EC に移植する。本設定が無いと EC の
-      // ``<pre>`` は default で ``white-space: pre`` になり、既存の長い
-      // curl コマンド等が横スクロール表示に変わって UX regression になる
-      // (PR #388 review P2 対応)。
+      // 長い CLI 例を既存 UI と同じ折り返し表示にする。
       defaultProps: {
         wrap: true,
       },
-      // 既存の .docs-prose pre 角丸に揃える (CSS 側と整合、rounded-2xl = 1rem)。
       styleOverrides: {
         borderRadius: '1rem',
         borderColor: 'rgb(15 23 42 / 0.1)',
@@ -203,22 +147,10 @@ export default defineConfig({
         },
       },
       frames: {
-        // ``title="..."`` meta がある場合のみ frame を出したい。EC の default
-        // はファイル名推測 on だが、本サイトは title 明示が主流なので off。
+        // 本サイトは title meta 明示時だけ frame を出す。
         extractFileNameFromCode: false,
       },
-      // Shiki が認識しない言語タグを既存言語に alias する。本サイト content
-      // の非標準 lang を Shiki の unknown-lang warning 無しで build 通過
-      // させる方針 (content (EN 原文由来) は parity 契約で触らず、EC 側で
-      // 吸収する):
-      //   - ``curl`` (admin/api-access.md) → ``bash`` 文法で syntax highlight
-      //     (curl command は bash と互換性が高く、token 色分けが有効)
-      //   - ``Text`` (running-tests/...cli.md) → ``text`` として扱う (warning
-      //     を抑制しつつ plain text として描画、syntax highlight は無し。
-      //     現 content は ``--disable-timeout-retry`` 1 行のみで highlight
-      //     の必要性が低いため plain text で十分)
-      // HTML 出力の ``data-language`` 属性は原文の fence 名をそのまま維持する
-      // (EC の仕様)。Phase 7 での build warning ゼロ化対応 (PR #388 review)。
+      // EN 原文由来の非標準 lang は content を触らず renderer 側で吸収する。
       shiki: {
         langAlias: {
           curl: 'bash',
@@ -226,10 +158,6 @@ export default defineConfig({
         },
       },
       useThemedScrollbars: false, // 既存 overflow-x-auto の scroll UX に干渉しないよう off
-      // defaultLocale は未指定 → EC default (``en``) を使う。copy button は
-      // アイコンのみで visible text なし、tooltip / feedback は英語 ("Copy
-      // to clipboard" / "Copied!") で出力される (PR #388 review 指摘で JA
-      // ローカライズを revert)。
     }),
     react(),
     ...(!isAuthEnabled

@@ -9,7 +9,7 @@
 ├── public/              # 静的ファイル（favicon など）
 ├── docs/                # 運用・翻訳・パリティ維持のドキュメント
 ├── scripts/
-│   └── py/              # 同期・検出・保守用 Python tooling
+│   └── python/          # 同期・検出・保守用 Python tooling
 ├── src/
 │   ├── components/      # 再利用可能なコンポーネント
 │   │   ├── navigation/  # ナビゲーション関連
@@ -144,6 +144,13 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 - [SYSTEM_SPEC.md](./docs/SYSTEM_SPEC.md) - Python tooling の現行 gate と環境契約
 - [DOCS_DATE_TRACKING.md](./docs/DOCS_DATE_TRACKING.md) - スナップショット変更検知の仕様
 - [OPS_DESIGN.md](./docs/OPS_DESIGN.md) - 運用設計・レビュー手順
+
+## 📖 利用リソース / クレジット
+
+本プロジェクトでは、一部の機能やプロンプト構成に以下のリソースを利用・参考にしています。
+
+- **Empirical Prompt Tuning** (from [mizchi/skills](https://github.com/mizchi/skills))
+  - Licensed under the MIT License
 
 ## 🏆 ライセンス
 

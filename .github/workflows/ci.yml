@@ -69,11 +69,7 @@ jobs:
       - run: npm run build
 
   python-fast:
-    # Phase 6b cutover: mjs 削除に伴い ``setup-node`` / ``npm ci`` / ``regen_en_source_patches``
-    # step を削除。dual-source-of-truth drift check は en_source_patches を Python dict
-    # に inline 化する follow-up (SYSTEM_SPEC Phase 6 Conformance test migration B) で
-    # 恒久的に retire する計画。本 job は ruff / format / mypy / 単体 + cutover gate +
-    # mjs consumer audit を run する fast-feedback PR gate。
+    # Python tooling の fast-feedback gate。Node 依存は残存 mjs test の job に限定する。
     runs-on: ubuntu-latest
     defaults:
       run:
