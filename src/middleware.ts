@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import type { MiddlewareHandler } from 'astro';
 import { toBool } from './lib/env';
 
@@ -30,6 +31,16 @@ const decodeCredentials = (header: string | null) => {
   }
 };
 
+const safeEqual = (a: string, b: string): boolean => {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) {
+    timingSafeEqual(bufA, bufA);
+    return false;
+  }
+  return timingSafeEqual(bufA, bufB);
+};
+
 const unauthorizedResponse = () =>
   new Response('Unauthorized', {
     status: 401,
@@ -45,14 +56,19 @@ export const onRequest: MiddlewareHandler = async ({ request }, next) => {
   }
 
   // Basic認証が有効な場合は認証チェック + noindex
+  const expectedUser = process.env.BASIC_AUTH_USER;
+  const expectedPass = process.env.BASIC_AUTH_PASS;
+
+  if (!expectedUser || !expectedPass) {
+    return unauthorizedResponse();
+  }
+
   const credentials = decodeCredentials(request.headers.get('authorization'));
-  const expectedUser = process.env.BASIC_AUTH_USER ?? '';
-  const expectedPass = process.env.BASIC_AUTH_PASS ?? '';
 
   if (
     !credentials ||
-    credentials.username !== expectedUser ||
-    credentials.password !== expectedPass
+    !safeEqual(credentials.username, expectedUser) ||
+    !safeEqual(credentials.password, expectedPass)
   ) {
     return unauthorizedResponse();
   }
