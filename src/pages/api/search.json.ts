@@ -1,45 +1,11 @@
 import type { APIRoute } from 'astro';
-import { render } from 'astro:content';
-import { getDocs, extractSlug } from '../../lib/docs';
+import { getDocs } from '../../lib/docs';
+import { buildSearchDocuments } from '../../lib/search-index';
 
 export const GET: APIRoute = async () => {
   try {
     const docs = await getDocs();
-
-    const searchDocs = (
-      await Promise.all(
-        docs.map(async (doc) => {
-          const { headings } = await render(doc);
-          const urlSlug = extractSlug(doc);
-
-          return [
-            {
-              id: doc.id,
-              type: 'page',
-              title: doc.data.title,
-              slug: urlSlug,
-              description: doc.data.description,
-              category: doc.data.category,
-              keywords: doc.data.keywords,
-              parentTitle: '',
-              headingSlug: '',
-            },
-            // h.text に含まれる手動アンカー構文 {#slug} / ${#slug} を除去
-            ...headings.map((h) => ({
-              id: `${doc.id}#${h.slug}`,
-              type: 'heading',
-              title: h.text.replace(/\s*\$?\{#[^}]+\}\s*$/u, ''),
-              slug: urlSlug,
-              description: '',
-              category: doc.data.category,
-              keywords: [] as string[],
-              parentTitle: doc.data.title,
-              headingSlug: h.slug,
-            })),
-          ];
-        })
-      )
-    ).flat();
+    const searchDocs = await buildSearchDocuments(docs);
 
     return new Response(JSON.stringify(searchDocs), {
       status: 200,

@@ -8,13 +8,15 @@ Claude Code の設定・スキル・プロジェクト固有の指示を管理�
 .claude/
 ├── CLAUDE.md              # Claude Code への指示（自動読み込み）
 ├── README.md              # このファイル（人間向けガイド）
-├── settings.local.json    # ローカル設定
 └── skills/
     ├── codex-review/      # Codex CLI によるレビュー
+    ├── empirical-prompt-tuning/
     │   └── SKILL.md
     └── fix-doc-localization-issues/  # GitHub Issue 対応ワークフロー
         └── SKILL.md
 ```
+
+`settings.local.json` と `worktrees/` はローカル生成物として扱い、リポジトリには保持しない。
 
 ## Skills 一覧
 
@@ -70,15 +72,15 @@ codex でこのブランチの変更をレビューして
 
 `CLAUDE.md` は Claude Code が**毎回自動で読み込む**指示ファイル。内容は最小限に保ち、詳細ルールは Authority Sources（`docs/` 配下のガイド）に委譲している。
 
-| 何を知りたいか | 参照先 |
-|---|---|
-| プロジェクト仕様全体 | `docs/SYSTEM_SPEC.md` |
-| コンテンツルール全般 | `docs/WRITING_GUIDE.md` |
-| 翻訳ワークフロー・用語 | `docs/TRANSLATION_GUIDE.md` |
-| 運用フロー・CI・レビュー | `docs/OPS_DESIGN.md` |
-| パリティ維持・gate matrix | `docs/PARITY_GUIDE.md` |
-| ページ一覧・構造 | `docs/SIDEBAR_URLS.md` |
-| EN upstream 欠陥管理 | `docs/UPSTREAM_DEFECTS.md` |
+| 何を知りたいか            | 参照先                      |
+| ------------------------- | --------------------------- |
+| プロジェクト仕様全体      | `docs/SYSTEM_SPEC.md`       |
+| コンテンツルール全般      | `docs/WRITING_GUIDE.md`     |
+| 翻訳ワークフロー・用語    | `docs/TRANSLATION_GUIDE.md` |
+| 運用フロー・CI・レビュー  | `docs/OPS_DESIGN.md`        |
+| パリティ維持・gate matrix | `docs/PARITY_GUIDE.md`      |
+| ページ一覧・構造          | `docs/SIDEBAR_URLS.md`      |
+| EN upstream 欠陥管理      | `docs/UPSTREAM_DEFECTS.md`  |
 
 ## 新しい Skill を追加するとき
 

@@ -7,6 +7,9 @@
 ```text
 /
 ├── public/              # 静的ファイル（favicon など）
+├── docs/                # 運用・翻訳・パリティ維持のドキュメント
+├── scripts/
+│   └── python/          # 同期・検出・保守用 Python tooling
 ├── src/
 │   ├── components/      # 再利用可能なコンポーネント
 │   │   ├── navigation/  # ナビゲーション関連
@@ -35,13 +38,15 @@
   - `remark-directive` + `@microflash/remark-callout-directives` - 情報パネル（:::tip, :::warning など）
   - `rehype-autolink-headings` - 見出しへの自動リンク
 - **型安全性**: TypeScript
+- **運用ツール**: Python 3.14.4 + uv - 原文同期、パリティ確認、正規化、レポート生成
 
 ## 📦 セットアップ
 
 ### 前提条件
 
-- Node.js 22.12.0 以上
-- npm または pnpm
+- Node.js 22 系推奨（`package.json` の `engines` は `>=18 <25`）
+- npm
+- Python 3.14.4 と uv（`scripts/python` の運用コマンドを使う場合）
 
 ### インストール
 
@@ -57,6 +62,10 @@ npm run build
 
 # ビルド結果のプレビュー
 npm run preview
+
+# Python tooling の依存関係
+cd scripts/python
+uv sync --all-extras
 ```
 
 ## 📝 ドキュメントの追加方法
@@ -132,8 +141,16 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 ### 関連ドキュメント
 
 - [scripts/README.md](./scripts/README.md) - スクリプトの詳しい使い方
+- [SYSTEM_SPEC.md](./docs/SYSTEM_SPEC.md) - Python tooling の現行 gate と環境契約
 - [DOCS_DATE_TRACKING.md](./docs/DOCS_DATE_TRACKING.md) - スナップショット変更検知の仕様
 - [OPS_DESIGN.md](./docs/OPS_DESIGN.md) - 運用設計・レビュー手順
+
+## 📖 利用リソース / クレジット
+
+本プロジェクトでは、一部の機能やプロンプト構成に以下のリソースを利用・参考にしています。
+
+- **Empirical Prompt Tuning** (from [mizchi/skills](https://github.com/mizchi/skills))
+  - Licensed under the MIT License
 
 ## 🏆 ライセンス
 

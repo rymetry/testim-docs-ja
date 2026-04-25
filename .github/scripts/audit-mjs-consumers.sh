@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 # Phase 6b cutover audit: detect unexpected mjs / cjs consumer references.
 #
-# Allow-list (4 assets):
-#   - scripts/lib/redirects.mjs              (Astro build graph)
-#   - scripts/__tests__/lib_redirects.test.mjs
+# Allow-list (2 assets):
 #   - .github/scripts/sync-detection-issues.cjs  (Phase 6.1 scope)
 #   - scripts/__tests__/sync_detection_issues.test.mjs
 #
 # The search file-type allow-list is intentionally narrow to keep noise low.
-# docs/*.md is excluded (historical plan docs reference removed mjs paths as
+# docs/*.md is excluded (historical notes reference removed mjs paths as
 # narrative). This audit runs in CI (python-fast job) and should return exit 0
 # when only the allow-listed references remain.
 
@@ -27,7 +25,7 @@ MATCHES=$(grep -rEn \
   package.json .github scripts \
   2>/dev/null \
   | grep -vE \
-    'scripts/lib/redirects\.mjs|scripts/__tests__/lib_redirects\.test\.mjs|sync-detection-issues\.cjs|scripts/__tests__/sync_detection_issues\.test\.mjs|\.github/scripts/audit-mjs-consumers\.sh|\.github/workflows/ci\.yml' \
+    'sync-detection-issues\.cjs|scripts/__tests__/sync_detection_issues\.test\.mjs|\.github/scripts/audit-mjs-consumers\.sh|\.github/workflows/ci\.yml' \
   || true)
 
 if [ -n "$MATCHES" ]; then

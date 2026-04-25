@@ -16,7 +16,7 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 ## アーキテクチャ
 
 - **コンテンツ**: `src/content/docs/` にカテゴリフォルダで整理された Markdown。スキーマは `src/content.config.ts`（Zod）で定義。
-- **ルーティング**: 単一動的ルート `src/pages/docs/[...slug].astro`。レガシー basename URL は `astro.config.mjs` の `buildRedirectMap()` でリダイレクト。
+- **ルーティング**: 単一動的ルート `src/pages/docs/[...slug].astro`。レガシー basename URL は `astro.config.mjs` の `redirects` 設定でリダイレクト。
 - **ナビゲーション**: `src/lib/docs.ts` の `buildNavigation()` で構築 — `category` frontmatter でグループ化、`docs/SIDEBAR_URLS.md` で順序決定。
 - **検索**: `src/components/SearchModal.tsx`（React）でクライアントサイド MiniSearch を実装。データは `/api/search.json` エンドポイントから。
 - **レイアウト**: `src/layouts/DocsLayout.astro` が全ドキュメントページをサイドバー（`NavSidebar.astro`）と目次（`TableOfContents.astro`）で包む。
@@ -24,33 +24,33 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 
 ## スクリプト構成
 
-`scripts/` の運用コードは Python package `scripts/py/src/testim_parity/` が canonical:
+`scripts/` の運用コードは Python package `scripts/python/src/testim_parity/` が canonical:
 
-| ディレクトリ | 責務 |
-| ------------ | ------ |
-| `testim_parity.detection` | パリティチェック、スナップショット取得/差分、変更検出 |
-| `testim_parity.pipeline` | 翻訳パイプライン: EN ソース取得 → プレースホルダー → LLM タスク → 翻訳適用 |
-| `testim_parity.tools` | lint、正規化、frontmatter 同期などのユーティリティ |
-| `testim_parity.*` shared modules | パリティ解析、turndown、MadCap TOC パーサー等 |
+| ディレクトリ                     | 責務                                                                       |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| `testim_parity.detection`        | パリティチェック、スナップショット取得/差分、変更検出                      |
+| `testim_parity.pipeline`         | 翻訳パイプライン: EN ソース取得 → プレースホルダー → LLM タスク → 翻訳適用 |
+| `testim_parity.tools`            | lint、正規化、frontmatter 同期などのユーティリティ                         |
+| `testim_parity.*` shared modules | パリティ解析、turndown、MadCap TOC パーサー等                              |
 
 ## コマンド一覧
 
-| コマンド | 用途 |
-| --------- | ------ |
-| `npm run dev` | 開発サーバー (http://localhost:4321) |
-| `npm run build` | プロダクションビルド (`astro check` + build) |
-| `npm run check` | TypeScript/Astro 型チェックのみ |
-| `npm run lint` | 全 lint (`lint:md` + `lint:docs`) |
-| `npm run lint:docs` | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在） |
-| `npm run lint:fix` | Markdown lint の自動修正 |
-| `npm run format` | Prettier フォーマット (Astro, TS, MD) |
-| `npm run test` | `scripts/__tests__/` のテスト実行 |
-| `npm run check:parity` | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化） |
-| `npm run check:snapshots` | EN HTML スナップショット取得 + diff（変更検出） |
-| `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ |
-| `npm run check:snapshots:diff` | コミット済み vs ワーキングツリーのスナップショット diff のみ |
-| `npm run docs:sync-sidebar` | MadCap Flare TOC データから SIDEBAR_URLS.md を更新 |
-| `npm run docs:pipeline` | フルドキュメント同期パイプライン実行（取得、翻訳等） |
+| コマンド                        | 用途                                                                         |
+| ------------------------------- | ---------------------------------------------------------------------------- |
+| `npm run dev`                   | 開発サーバー (http://localhost:4321)                                         |
+| `npm run build`                 | プロダクションビルド (`astro check` + build)                                 |
+| `npm run check`                 | TypeScript/Astro 型チェックのみ                                              |
+| `npm run lint`                  | 全 lint (`lint:md` + `lint:docs`)                                            |
+| `npm run lint:docs`             | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在） |
+| `npm run lint:fix`              | Markdown lint の自動修正                                                     |
+| `npm run format`                | Prettier フォーマット (Astro, TS, MD)                                        |
+| `npm run test`                  | `scripts/__tests__/` のテスト実行                                            |
+| `npm run check:parity`          | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化）         |
+| `npm run check:snapshots`       | EN HTML スナップショット取得 + diff（変更検出）                              |
+| `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ                                             |
+| `npm run check:snapshots:diff`  | コミット済み vs ワーキングツリーのスナップショット diff のみ                 |
+| `npm run docs:sync-sidebar`     | MadCap Flare TOC データから SIDEBAR_URLS.md を更新                           |
+| `npm run docs:pipeline`         | フルドキュメント同期パイプライン実行（取得、翻訳等）                         |
 
 **単一ページコマンド:**
 
@@ -99,17 +99,17 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 コンテンツルールやプロジェクト仕様はここでは重複させない。以下を参照:
 
-| ドキュメント | 内容 |
-| ------------ | ------ |
-| `docs/SYSTEM_SPEC.md` | プロジェクト仕様: アーキテクチャ、検出システム、不変量 |
-| `docs/WRITING_GUIDE.md` | コンテンツフォーマット: frontmatter、リンク、callout、source-first 構造契約 |
-| `docs/TRANSLATION_GUIDE.md` | 翻訳ワークフロー、自然な日本語ガイドライン、NG/OK パターン、用語テーブル |
-| `docs/OPS_DESIGN.md` | 運用設計: sync/diff/translate/QA フロー |
-| `docs/PARITY_GUIDE.md` | パリティ維持: 2-mechanism suppression 設計、gate マトリクス |
-| `docs/DOCS_DATE_TRACKING.md` | スナップショットベース変更検出 |
-| `docs/SIDEBAR_URLS.md` | 全ドキュメント URL・カテゴリ・順序のマスターリスト |
-| `docs/UPSTREAM_DEFECTS.md` | 上流 EN 欠陥レジストリ |
-| `scripts/README.md` | 全スクリプト・コマンドの完全リファレンス |
+| ドキュメント                 | 内容                                                                        |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| `docs/SYSTEM_SPEC.md`        | プロジェクト仕様: アーキテクチャ、検出システム、不変量                      |
+| `docs/WRITING_GUIDE.md`      | コンテンツフォーマット: frontmatter、リンク、callout、source-first 構造契約 |
+| `docs/TRANSLATION_GUIDE.md`  | 翻訳ワークフロー、自然な日本語ガイドライン、NG/OK パターン、用語テーブル    |
+| `docs/OPS_DESIGN.md`         | 運用設計: sync/diff/translate/QA フロー                                     |
+| `docs/PARITY_GUIDE.md`       | パリティ維持: 2-mechanism suppression 設計、gate マトリクス                 |
+| `docs/DOCS_DATE_TRACKING.md` | スナップショットベース変更検出                                              |
+| `docs/SIDEBAR_URLS.md`       | 全ドキュメント URL・カテゴリ・順序のマスターリスト                          |
+| `docs/UPSTREAM_DEFECTS.md`   | 上流 EN 欠陥レジストリ                                                      |
+| `scripts/README.md`          | 全スクリプト・コマンドの完全リファレンス                                    |
 
 ## UI / UX 制約
 

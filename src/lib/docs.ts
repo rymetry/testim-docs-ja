@@ -1,144 +1,21 @@
 import type { NavItem } from '../types/navigation';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
-import fs from 'node:fs';
-import path from 'node:path';
+import { FALLBACK_CATEGORY_ORDER, getSidebarOrdering } from './sidebar-ordering';
 
 export type DocEntry = CollectionEntry<'docs'>;
 
-type SidebarOrdering = {
-  categoryIndexByLabel: Map<string, number>;
-  itemIndexBySlug: Map<string, number>;
-};
-
-const FALLBACK_CATEGORY_ORDER: string[] = [
-  'Changelog',
-  '概要',
-  'はじめに',
-  'テストの記録',
-  'テスト編集',
-  '高度な編集',
-  'テスト実行',
-  'テスト結果',
-  'デバッグ',
-  'テスト管理',
-  'モバイルアプリ',
-  'デバイス管理',
-  '統合',
-  '設定',
-  '管理者機能',
-  'TestOps',
-  'Salesforceテスト',
-  'Testim拡張機能',
-  'セキュリティ',
-  'ガイド',
-  'Testim Labs',
-];
-
-function extractJapaneseLabel(sectionTitle: string): string {
-  const m = sectionTitle.match(/[（(]([^）)]+)[）)]/);
-  return (m ? m[1] : sectionTitle).trim();
-}
-
-/**
- * Tricentis URL からパスベース slug を抽出する。
- * `/content/overview/testim-overview/index.htm` → `overview/testim-overview`
- * `/content/overview/testim-automate.htm`       → `overview/testim-automate`
- *
- * 注: scripts/lib/madcap_toc.mjs extractSlug() と同一ロジック。
- * Astro ビルド層から scripts/ を import できないため複製。
- */
-function extractSlugFromUrl(url: string): string | null {
-  const m = url.match(/\/content\/(.+?)(?:\/index)?\.htm$/i);
-  return m ? m[1].toLowerCase() : null;
-}
-
-function getSidebarOrdering(): SidebarOrdering {
-  const candidatePaths = [
-    path.join(process.cwd(), 'docs', 'SIDEBAR_URLS.md'),
-    new URL('../../docs/SIDEBAR_URLS.md', import.meta.url),
-  ];
-
-  try {
-    const sidebarPath = candidatePaths.find((candidate) => fs.existsSync(candidate));
-    if (!sidebarPath) {
-      return {
-        categoryIndexByLabel: new Map(FALLBACK_CATEGORY_ORDER.map((c, i) => [c, i])),
-        itemIndexBySlug: new Map(),
-      };
-    }
-
-    const text = fs.readFileSync(sidebarPath, 'utf8');
-    const lines = text.split(/\r?\n/);
-
-    const sectionRe = /^##\s+(.+?)\s*$/;
-    // ✅🔍 を先に置く。regex の alternation は順序依存のため。
-    const urlLineRe =
-      /^-\s+(?:✅🔍|✅|⏳)\s+(https:\/\/docs\.tricentis\.com\/testim\/content\/[^\s]+\.htm)\s*$/;
-
-    const categoryIndexByLabel = new Map<string, number>();
-    const itemIndexBySlug = new Map<string, number>();
-
-    let currentCategory: string | null = null;
-    let globalItemIndex = 0;
-    let nullSlugCount = 0;
-
-    for (const line of lines) {
-      const sm = line.match(sectionRe);
-      if (sm) {
-        const raw = sm[1].trim();
-        if (raw === '翻訳ステータス' || raw === '検証ステータス' || raw === 'URL抽出方法') {
-          currentCategory = null;
-          continue;
-        }
-        const label = extractJapaneseLabel(raw);
-        if (label === 'Home') {
-          currentCategory = null;
-          continue;
-        }
-        currentCategory = label;
-        if (!categoryIndexByLabel.has(currentCategory)) {
-          categoryIndexByLabel.set(currentCategory, categoryIndexByLabel.size);
-        }
-        continue;
-      }
-
-      const um = line.match(urlLineRe);
-      if (um && currentCategory) {
-        const slug = extractSlugFromUrl(um[1]);
-        if (!slug) {
-          nullSlugCount++;
-          continue;
-        }
-        if (!itemIndexBySlug.has(slug)) {
-          itemIndexBySlug.set(slug, globalItemIndex++);
-        }
-      }
-    }
-
-    if (nullSlugCount > 0) {
-      console.warn(
-        `[docs] getSidebarOrdering: ${nullSlugCount} URL(s) in SIDEBAR_URLS.md failed slug extraction`
-      );
-    }
-
-    if (categoryIndexByLabel.size > 0 && itemIndexBySlug.size > 0) {
-      return { categoryIndexByLabel, itemIndexBySlug };
-    }
-  } catch (err) {
-    console.warn(
-      '[docs] getSidebarOrdering: failed to parse SIDEBAR_URLS.md, using fallback order.',
-      err instanceof Error ? err.message : err
-    );
-  }
-
-  return {
-    categoryIndexByLabel: new Map(FALLBACK_CATEGORY_ORDER.map((c, i) => [c, i])),
-    itemIndexBySlug: new Map(),
-  };
-}
-
 const SIDEBAR_ORDERING = getSidebarOrdering();
+
+function getCategoryOrder(groupKey: string, docOrder: number | undefined): number {
+  const preferredIndex = SIDEBAR_ORDERING.categoryIndexByLabel.get(groupKey);
+  if (preferredIndex !== undefined) return preferredIndex;
+
+  const fallbackIndex = FALLBACK_CATEGORY_ORDER.indexOf(groupKey);
+  if (fallbackIndex >= 0) return fallbackIndex;
+
+  return (docOrder ?? 0) + FALLBACK_CATEGORY_ORDER.length;
+}
 
 export function extractSlug(doc: DocEntry): string {
   return doc.id;
@@ -177,14 +54,7 @@ export function buildNavigation(docs: DocEntry[]): NavItem[] {
       order: sidebarItemIndex ?? doc.data.order ?? 0,
     };
 
-    const preferredIndex = SIDEBAR_ORDERING.categoryIndexByLabel.get(groupKey);
-    const fallbackIndex = FALLBACK_CATEGORY_ORDER.indexOf(groupKey);
-    const categoryOrder =
-      preferredIndex !== undefined
-        ? preferredIndex
-        : fallbackIndex >= 0
-          ? fallbackIndex
-          : (doc.data.order ?? 0) + FALLBACK_CATEGORY_ORDER.length;
+    const categoryOrder = getCategoryOrder(groupKey, doc.data.order);
 
     if (!groups.has(groupKey)) {
       groups.set(groupKey, {

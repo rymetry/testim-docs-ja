@@ -4,7 +4,7 @@
 
 - **Status**: Active (v2, 2026-04-20 — Reserved IDs table added, proposal B')
 - **Owner**: Testim JA Docs parity subsystem
-- **Related**: `scripts/py/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
+- **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
 ## Reserved IDs (proposal B', Codex Round-3 approved)
 
@@ -38,13 +38,13 @@ Prior to v2, PR C and PR D both attempted to allocate `UD-005` concurrently for 
 
 ### Scope of B' (intentionally narrow)
 
-Already-merged IDs (`UD-001`..`UD-004`) are **not renumbered**. Codex Round-3 explicitly flagged that renumbering `UD-004 → UD-009` would churn the patch registry, tracker, tests, and plan docs without corresponding benefit. The table above simply **reserves future IDs** and establishes allocation protocol going forward.
+Already-merged IDs (`UD-001`..`UD-004`) are **not renumbered**. Codex Round-3 explicitly flagged that renumbering `UD-004 → UD-009` would churn the patch registry, tracker, tests, and SYSTEM_SPEC without corresponding benefit. The table above simply **reserves future IDs** and establishes allocation protocol going forward.
 
 ## Purpose
 
 MadCap Flare で生成された EN HTML snapshot に含まれる **broken upstream defect** を集中管理する。各 defect は:
 
-1. `en_source_patches` registry (`scripts/py/src/testim_parity/_en_source_patches_data.json`) の `id` と 1:1 で対応する anchor を持つ
+1. `en_source_patches` registry (`scripts/python/src/testim_parity/_en_source_patches_data.json`) の `id` と 1:1 で対応する anchor を持つ
 2. Tricentis への上流報告 status を記録する
 3. Upstream 修正確認時の patch removal 条件 (SOP) を持つ
 
@@ -84,7 +84,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**: Tricentis が該当 HTML を修正して MadCap rebuild、`docs.tricentis.com/testim` に反映されたら:
   1. `snapshots/en/content/salesforce-testing/salesforce-steps/sfdc-step-{create,edit,quickactions,relatedlistaction,validate}.html` を再取得
   2. `grep '-this action verifies'` が 0 hit になったことを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-001A / UD-001B entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-001A / UD-001B entry を削除
   4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ### UD-002: Salesforce Steps "Log out" href miswire
@@ -102,7 +102,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/salesforce-testing/salesforce-steps.html` を再取得
   2. `grep '<a href="sfdc-step-launchapp.htm">Log out</a>'` が 0 hit になったことを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-002 entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-002 entry を削除
   4. baseline 再生成
 
 ### UD-003: broken-table-row-as-paragraph in predefined-properties-in-config-file-hooks
@@ -123,7 +123,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after patch applied and upstream fix confirmed):
   1. `snapshots/en/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.html` を再取得
   2. `grep '| globalParameters | | |'` が 0 hit になったことを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-003 entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-003 entry を削除
   4. baseline 再生成
 
 ### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
@@ -152,7 +152,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after upstream fix confirmed):
   1. `snapshots/en/content/running-tests/scheduler.html` と `scheduler-mobile.html` を再取得済み
   2. `grep 'help.testim.io'` が 0 hit であることを確認済み
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-004A / UD-004C entry を削除済み
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-004A / UD-004C entry を削除済み
   4. baseline 新規 entry 追加なし。`npm run check:parity -- --json` で 5-counter 0 を確認する
 
 ### UD-005: legacy `help.testim.io/docs/<basename>` display-text / `index.htm` self-link in hooks & parameters pages
@@ -181,7 +181,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after upstream fix confirmed):
   1. `snapshots/en/content/advanced-editing/hooks.html`, `.../parameters.html`, `.../parameters/parameter-override-rules.html` を再取得
   2. `grep 'help.testim.io/docs/'` および `grep 'doc:https'` および `grep '"index\.htm"'` が 0 hit であることを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-005A-F entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-005A-F entry を削除
   4. baseline 再生成
 
 ### UD-006: `-variable` typo in editing-tests/search-within-a-test Search limitations list
@@ -198,7 +198,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/editing-tests/search-within-a-test.html` を再取得
   2. `grep '-variable name'` が 0 hit になったことを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-006 entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-006 entry を削除
   4. baseline 再生成
 
 ### UD-007: `step.This` typo in guides/generate-random-data-with-js
@@ -215,7 +215,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/guides/generate-random-data-with-js.html` を再取得
   2. `grep 'step\.This'` が 0 hit になったことを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-007 entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-007 entry を削除
   4. baseline 再生成
 
 ### UD-008: `index.htm` CLI self-link in running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone
@@ -233,7 +233,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP**:
   1. `snapshots/en/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.html` を再取得
   2. `grep '<a href="index.htm">CLI command</a>'` が 0 hit になったことを確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-008 entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-008 entry を削除
   4. baseline 再生成
 
 ### UD-009: `index.htm` self-link miswire in grid-management child pages
@@ -260,7 +260,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Removal SOP** (after upstream fix confirmed):
   1. 5 slug の EN HTML snapshot を再取得
   2. `grep 'href="index.htm#adding-a-grid"'` が全 5 file で 0 hit を確認
-  3. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-009 entry を削除
+  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-009 entry を削除
   4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
@@ -297,7 +297,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   2. UD-010A: `grep '<p>\u200b## Run with external'` が 0 hit になったことを確認
   3. UD-010B: `grep '<p>\u200b5. Enter a value'` が 0 hit になったことを確認
   4. UD-010C/D: `grep -E '<p>\u200b[23]\. (Create|Select)'` が 0 hit になったことを確認
-  5. `scripts/py/src/testim_parity/_en_source_patches_data.json` から UD-010A/B/C/D entry を削除
+  5. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-010A/B/C/D entry を削除
   6. JA 側 vsts-and-tfs-integration の orphan paragraph も `​N. ` prefix を再度付与するか、EN upstream が正規 `<li>` に戻れば JA も正規番号リストに統合するか、reviewer 判断
   7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
   8. `npm run generate:parity-baseline -- --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
@@ -311,7 +311,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 3. **Idempotency check**: `replace` が `find` を部分文字列として含まない (test で自動検証)
 4. **Slug scope**: 影響する slug を列挙し、`slugs` array に登録
 5. **Linked defect anchor**: 本ファイルに `## UD-NNN: <summary>` セクションを追加し、`linkedDefect: 'docs/UPSTREAM_DEFECTS.md#UD-NNN'` で refer
-6. **Tests**: `scripts/py/tests/test_en_source_patches.py` に application test と mismatch test を追加
+6. **Tests**: `scripts/python/tests/test_en_source_patches.py` に application test と mismatch test を追加
 7. **Baseline regen**: `npm run generate:parity-baseline -- --regenerate --rationale="add UD-NNN patch"`、新規追加 0 を確認
 8. **Upstream report**: Tricentis への報告 ticket 起票、本ファイルの "Tricentis upstream report status" を更新
 
