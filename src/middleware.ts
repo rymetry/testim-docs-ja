@@ -14,14 +14,12 @@ const UNAUTHORIZED_HEADERS = {
   'X-Robots-Tag': 'noindex, nofollow',
 };
 
-// Edge Runtime対応: atob (Web標準API) を使用
 const decodeCredentials = (header: string | null) => {
   if (!header?.startsWith('Basic ')) {
     return null;
   }
 
   try {
-    // Base64デコード (Edge Runtime互換)
     const decoded = atob(header.slice(6));
     const separatorIndex = decoded.indexOf(':');
 
