@@ -158,7 +158,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 
 **acknowledgements**: `parity-acknowledgements.json` で issue に acknowledgement を付与可能。slug + issueType + (detailIncludes or detailRegex) で一致。**issue を結果から削除せず**、`acknowledged: true` タグを付けて非 blocking 化する。`sourceFingerprint` と `reviewAfter` による自動失効あり。
 
-`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`scripts/py/tests/test_source_parity_usability_ack_integration.py` が detector→matcher round-trip を保証する。
+`source-unusable` / `snapshot-incomplete` を ack する場合は `detailIncludes: "[reason=<token>]"` 形式を使う(`token` は `escaped-details-residue` / `shallow-snapshot` / `extractor-empty`)。emitter が `detail` 末尾に埋め込む reason token で狙い撃つ契約で、`scripts/python/tests/test_source_parity_usability_ack_integration.py` が detector→matcher round-trip を保証する。
 
 acknowledgement の対象外:
 
@@ -167,9 +167,9 @@ acknowledgement の対象外:
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
-**`--types` 契約**: `uv run python -m testim_parity.detection.generate_parity_baseline --types=<csv>` は structure/source-unusable 系の partial migration 用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validate_types_arg` が fail-fast する。`scripts/py/tests/test_generate_parity_baseline.py` の `validate_types_arg` suite が契約を固定している。
+**`--types` 契約**: `uv run python -m testim_parity.detection.generate_parity_baseline --types=<csv>` は structure/source-unusable 系の partial migration 用で、`TYPES_ARG_ALLOWLIST` (`section-structure-mismatch` / `segment-order-mismatch` / `snapshot-incomplete` / `source-unusable` の 4 type) のみを受理する。空文字 (`--types=`) や typo、既存 `segment-*` type を渡すと `validate_types_arg` が fail-fast する。`scripts/python/tests/test_generate_parity_baseline.py` の `validate_types_arg` suite が契約を固定している。
 
-**Orphan baseline entry の検出**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/py/tests/test_source_parity_orphan_integration.py` が固定している (temp dir 上の copy を使った isolated test)。
+**Orphan baseline entry の検出**: detector / extractor / preprocessor の仕様変更で runtime が emit しなくなった baseline entry は `check:parity` の summary (`orphanBaselineEntries` / `orphanBaselineByType`) に集計され、CLI と followup report で可視化される。`--slug=<slug>` で該当 slug を再生成すると orphan は purge される。E2E は `scripts/python/tests/test_source_parity_orphan_integration.py` が固定している (temp dir 上の copy を使った isolated test)。
 
 **出力**: `parity-check-status.json`。
 
@@ -180,13 +180,13 @@ acknowledgement の対象外:
 - `testim_parity.glossary_mask` (旧 `scripts/lib/parity_glossary_mask.mjs`): `docs/GLOSSARY.md` と `docs/INVARIANT_TOKENS.md` を読み、segment text を Testim 用語 + invariant pattern でマスクする
 - `testim_parity.normalize` (旧 `scripts/lib/parity_normalize.mjs`): URL rewrite (`help.testim.io/docs/X` ↔ `/docs/X`, `docs.tricentis.com/testim/content/...htm` → `/docs/...`) を適用する
 - `testim_parity.detection.check_source_parity` は mask 結果を `parity-check-status.json` の `debug.maskCoverage` に出力する（**gate / baseline / ack は debug.\* を読まない**契約）
-- 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/py/tests/test_glossary_mask.py` に追加する
+- 新しい Testim 用語を追加する場合は `docs/GLOSSARY.md`、新しい invariant pattern を追加する場合は `docs/INVARIANT_TOKENS.md` を編集し、対応する test を `scripts/python/tests/test_glossary_mask.py` に追加する
 
 ---
 
 ### EN source patches (Route W, 2026-04-17 以降)
 
-- `testim_parity.en_source_patches` (旧 `scripts/lib/en_source_patches.mjs`): broken EN HTML snapshot を `preprocess_en_html` 境界で修復する slug-scope literal find→replace patch 層。定義データは `scripts/py/src/testim_parity/_en_source_patches_data.json` に JSON で authoritative に保持
+- `testim_parity.en_source_patches` (旧 `scripts/lib/en_source_patches.mjs`): broken EN HTML snapshot を `preprocess_en_html` 境界で修復する slug-scope literal find→replace patch 層。定義データは `scripts/python/src/testim_parity/_en_source_patches_data.json` に JSON で authoritative に保持
 - `preprocess_en_html(html, slug=..., patch_coverage=...)` が optional 引数で patch application + coverage 集計を driver。slug 未指定時は no-op (backward-compat)
 - `testim_parity.detection.check_source_parity` は run 単位で `create_en_source_patch_coverage()` を集計し、`parity-check-status.json.debug.patchCoverage` に `{ registryEntries, matchedHits, byPatchId, bySlug, mismatches }` を出力 (debug なので gate は読まない)
 - 4 enum (`typo` / `href-miswire` / `madcap-artifact` / `stale-reference`) 以外は登録不可、各 entry は `docs/UPSTREAM_DEFECTS.md#UD-NNN` の anchor へ結線必須
@@ -215,7 +215,7 @@ npm run check:untranslated -- --limit=5                             # 先頭 N �
 - `0` — 正常終了（0 件も含む）
 - `2` — `--slug` 明示指定で対象ファイル不在 / path-traversal 違反 (T8 / T17 / plan §3.2)
 
-**内部構造**: `split_markdown_blocks(markdown)` → `find_untranslated_blocks(blocks)` → `print_findings(slug, file_path, findings)` の 3 関数。test は `scripts/py/tests/test_find_untranslated.py` を参照。
+**内部構造**: `split_markdown_blocks(markdown)` → `find_untranslated_blocks(blocks)` → `print_findings(slug, file_path, findings)` の 3 関数。test は `scripts/python/tests/test_find_untranslated.py` を参照。
 
 ---
 
@@ -476,7 +476,7 @@ Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移
 - **EN extractor**: `testim_parity.segments_en` — MadCap Flare HTML を直接 tokenize → tree → walk して segment を生成する。turndown の markdown 変換層を経由しない。
 - **JA extractor**: `testim_parity.segments_ja` — JA markdown を line-by-line で分類し、pipe table / HTML table / callout / details / image / list を segment にマップする。
 - **共通**: `testim_parity.segments_shared` — `Segment` 型、`normalize_segment_text`, `compute_segment_fingerprint`, `push_heading` / `build_section_path`, `create_segment` factory。
-- **境界安定性ベンチマーク**: `scripts/py/tests/test_segments_boundary.py` が代表 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。
+- **境界安定性ベンチマーク**: `scripts/python/tests/test_segments_boundary.py` が代表 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。
 
 ##### Section-anchored exact diff engine
 
@@ -526,9 +526,9 @@ Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移
 
 `testim_parity.detection.check_source_parity` は `align_segments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compare_snapshot_structure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-\* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
 
-runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`scripts/py/tests/test_source_parity_align_runtime.py` が facade re-export、`parity_diffs_to_issues` の shape、`summarize_parity_results` の primary-gate / baseline 集計、`npm run check:parity -- --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
+runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`scripts/python/tests/test_align.py`、`scripts/python/tests/test_check_source_parity.py`、`scripts/python/tests/test_detection_reports.py` が facade re-export、`parity_diffs_to_issues` の shape、`summarize_parity_results` の primary-gate / baseline 集計、`npm run check:parity -- --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
 
-**Recall ベンチマーク**: `scripts/py/tests/test_recall.py` が代表 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る (Phase 6b cutover で `recall` marker が required step に昇格)。
+**Recall ベンチマーク**: `scripts/python/tests/test_recall.py` が代表 10 ページに対し、`mutation_corpus` の 10 種の mutation を全部適用し、検出率を測る (Phase 6b cutover で `recall` marker が required step に昇格)。
 
 検出は **section-scoped + signature-aware**:
 
@@ -767,11 +767,11 @@ Phase 6b atomic cutover (2026-04-24/25) で detection / pipeline / lib / tools �
 npm run test:mjs                                      # 残存 2 mjs tests
 npm run test:py                                       # Python 全 test (default addopts)
 npm run test:py:quick                                 # fast gate only
-(cd scripts/py && uv run pytest -m corpus -n auto)    # 864 corpus matrix (20s)
-(cd scripts/py && uv run pytest -m 'recall or boundary or real_repo' -o addopts=)
+(cd scripts/python && uv run pytest -m corpus -n auto)    # 864 corpus matrix (20s)
+(cd scripts/python && uv run pytest -m 'recall or boundary or real_repo' -o addopts=)
 ```
 
-### Python テスト構成 (`scripts/py/tests/`)
+### Python テスト構成 (`scripts/python/tests/`)
 
 | ファイル                                                                             | 対象                                           |
 | ------------------------------------------------------------------------------------ | ---------------------------------------------- |
@@ -826,7 +826,7 @@ npm run test:py:quick                                 # fast gate only
 | `docs:prepare-llm`            | `python -m testim_parity.pipeline.prepare_llm_tasks`                  | LLM タスク準備                   |
 | `docs:apply-llm`              | `python -m testim_parity.pipeline.apply_llm_translations`             | LLM 翻訳適用                     |
 | `docs:report-categories`      | `python -m testim_parity.tools.report_frontmatter_categories`         | カテゴリ集計                     |
-| `test:py`                     | `cd scripts/py && uv run pytest`                                      | Python 全 test (default addopts) |
+| `test:py`                     | `cd scripts/python && uv run pytest`                                  | Python 全 test (default addopts) |
 | `test:py:quick`               | marker filter 付き fast gate                                          | CI fast 相当                     |
 | `test:py:corpus`              | `pytest -m corpus -n auto --dist load`                                | 288×3 matrix 並列                |
 | `test:py:corpus:regen`        | `uv run python -m testim_parity.tools.emit_corpus_oracle`             | committed golden 再生成          |

@@ -6,7 +6,7 @@
 #   - scripts/__tests__/sync_detection_issues.test.mjs
 #
 # The search file-type allow-list is intentionally narrow to keep noise low.
-# docs/*.md is excluded (historical plan docs reference removed mjs paths as
+# docs/*.md is excluded (historical notes reference removed mjs paths as
 # narrative). This audit runs in CI (python-fast job) and should return exit 0
 # when only the allow-listed references remain.
 

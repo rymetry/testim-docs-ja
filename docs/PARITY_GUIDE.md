@@ -89,7 +89,7 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 2. **自動検知**:
    - `npm run check:upstream-recovery` が毎 run で `upstream-recovery-status.json` を derive
    - 各 entry に `statusA` (`active` / `stale` / `unknown`) と `statusB` (`current` / `overdue`) が付与される
-   - `scripts/py/tests/test_en_source_patches_integration.py` は全 patches を slug-driven で scan
+   - `scripts/python/tests/test_en_source_patches_integration.py` は全 patches を slug-driven で scan
 3. **上流修正後の surfacing** (non-blocking):
    - PR trigger: `.github/workflows/ci.yml` の sticky comment が hidden marker `<!-- upstream-recovery: sticky -->` で idempotent upsert
    - Weekly trigger: `.github/workflows/scheduled-actionable.yml` が `upstream-recovery-status.json` を artifact upload し、`testim_parity.detection_reports` が `sourceSyncHealth` family 内の `enPatchRecovery` / `sourceSyncRecovery` section で managed issue に surface
@@ -131,7 +131,7 @@ Issue #368 以降、JA parser は EN `collectInlineText` と対称になるよ�
 
 ## EN source patches layer
 
-`testim_parity.en_source_patches` は **broken upstream defect の HTML 境界 patch 層**。定義データは `scripts/py/src/testim_parity/_en_source_patches_data.json` が authoritative。`preprocess_en_html` が canonical EN HTML を生成する際に slug-scope で literal `find → replace` を適用する。JA markdown 側で workaround を埋め込むことは禁止。
+`testim_parity.en_source_patches` は **broken upstream defect の HTML 境界 patch 層**。定義データは `scripts/python/src/testim_parity/_en_source_patches_data.json` が authoritative。`preprocess_en_html` が canonical EN HTML を生成する際に slug-scope で literal `find → replace` を適用する。JA markdown 側で workaround を埋め込むことは禁止。
 
 **特徴**:
 
@@ -264,7 +264,7 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
 - **翻訳ガイドライン**: `docs/TRANSLATION_GUIDE.md` のルール（Testim 用語英語維持、ですます調、NG/OK パターン）を必ずエージェントに送ること
 - **PR 分離**: 検知コードの修正とドキュメント修正は別 PR にする
 - **EN ゴミ混入禁止**: EN のアーティファクト（`</Image>` 等）を JA に含めない
-- **テスト確認**: リスト項目数を変更したら `scripts/py/tests/test_segments_boundary.py` と `npm run lint` の structure signature を確認
+- **テスト確認**: リスト項目数を変更したら `scripts/python/tests/test_segments_boundary.py` と `npm run lint` の structure signature を確認
 - **Prettier 注意**: `npm run format` はリポジトリ全体を変更する。PR 対象ファイルのみに限定する
 - **新 pattern の提案手順**: エージェントが未知 pattern の mechanism-pending residual を発見した場合、PR description / コミット message に `[PENDING REVIEWER APPROVAL]` マーカーを付与して提案する。reviewer gate の承認を経て初めて登録する
 
@@ -296,20 +296,18 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
    | plan-fidelity          | plan/spec 文言整合 / marker protocol 遵守 / 未登録 carve-out 検知 |
 
 4. **Test pins (must pass)** (Phase 5 で pytest に移植済):
-   - `scripts/py/tests/test_clean_page_fixtures.py` (sentinel slug の totalIssues=0。意図的 drift は `_PY_XFAIL_SLUGS` で隔離、Phase 6 cutover 前に empty 化)
-   - `scripts/py/tests/test_en_source_patches.py` + `test_en_source_patches_integration.py` (patch-registry invariants + dual-source-of-truth drift)
-   - `scripts/py/tests/test_generate_parity_baseline.py` (pre-regen gate) + `tests/conformance/test_generate_parity_baseline_e2e.py` (mjs byte-parity)
+   - `scripts/python/tests/test_clean_page_fixtures.py` (sentinel slug の totalIssues=0。意図的 drift は `_PY_XFAIL_SLUGS` で隔離、Phase 6 cutover 前に empty 化)
+   - `scripts/python/tests/test_en_source_patches.py` + `test_en_source_patches_integration.py` (patch-registry invariants + dual-source-of-truth drift)
+   - `scripts/python/tests/test_generate_parity_baseline.py` (pre-regen gate / baseline merge contract)
    - 各 regression guard (`test_recall.py` 9/9 mutation recall / `test_baseline_recall.py` / `test_segments_boundary.py`)
    - **Phase 5 で新設された pin (PR #384)**:
-     - `scripts/py/tests/test_mutation_corpus.py` (9/9 mutation recall を slug × mutation-kind matrix で枝分岐検証、recall drift の早期検知)
-     - `scripts/py/tests/test_detection_reports.py` (parity-check-status.json schema / 5-counter accounting / baseline-ack 順序 / sink fan-out の representative contract。共有 factory `_empty_snapshot()` / `_empty_parity()` で cross-test mutation を防止)
-     - `scripts/py/tests/test_check_source_parity.py::test_mask_coverage_records_non_empty_masks_from_ja_body` (mask_coverage kwarg bug regression guard)
-     - `scripts/py/tests/test_cutover_gate.py` (`@pytest.mark.cutover` self-enforcing gate、`_PY_*_SLUGS` frozenset を Phase 6 で全 empty 化する契約。`test_exclusion_registry_matches_plan_doc` が plan doc table を parse して `(module, attribute)` tuple を cross-reference pin)
-     - `scripts/py/tests/test_lint_docs.py::TestCalloutDirective` (`callout-in-list-item` / `callout-unknown-type` lint rule + code fence skip 契約)
-     - `scripts/py/tests/test_summary.py` (`structureMismatch*` / `snapshotUnusable*` / `auditSignal*` counter routing を 8 test で pin、Phase 6 以降 mjs 無しで counter 分類 regression を検知)
-     - `scripts/py/tests/test_summary_format.py` (field 混同 regression guard: `structureMismatch*` が `snapshotUnusable*` に leak しない契約)
-   - **Phase 5 coexistence 限定 Node-side guard (PR #384)**:
-     - `scripts/__tests__/lint_docs_contract.test.mjs` — `lint:docs` が Phase 6 cutover まで Node 実装を使う間、`callout-*` rule を Node 側で最低限 pin する回帰テスト。Phase 6 cutover 時に lint:docs が Python 化し次第 **削除** する
+     - `scripts/python/tests/test_mutation_corpus.py` (9/9 mutation recall を slug × mutation-kind matrix で枝分岐検証、recall drift の早期検知)
+     - `scripts/python/tests/test_detection_reports.py` (parity-check-status.json schema / 5-counter accounting / baseline-ack 順序 / sink fan-out の representative contract。共有 factory `_empty_snapshot()` / `_empty_parity()` で cross-test mutation を防止)
+     - `scripts/python/tests/test_check_source_parity.py::test_mask_coverage_records_non_empty_masks_from_ja_body` (mask_coverage kwarg bug regression guard)
+     - `scripts/python/tests/test_cutover_gate.py` (`@pytest.mark.cutover` self-enforcing gate、`_PY_*_SLUGS` frozenset を Phase 6 で全 empty 化する契約。`test_exclusion_registry_matches_system_spec` が SYSTEM_SPEC table を parse して `(module, attribute)` tuple を cross-reference pin)
+     - `scripts/python/tests/test_lint_docs.py::TestCalloutDirective` (`callout-in-list-item` / `callout-unknown-type` lint rule + code fence skip 契約)
+     - `scripts/python/tests/test_summary.py` (`structureMismatch*` / `snapshotUnusable*` / `auditSignal*` counter routing を 8 test で pin、Phase 6 以降 mjs 無しで counter 分類 regression を検知)
+     - `scripts/python/tests/test_summary_format.py` (field 混同 regression guard: `structureMismatch*` が `snapshotUnusable*` に leak しない契約)
    - 残る mjs test: `scripts/__tests__/sync_detection_issues.test.mjs`。GitHub Actions 側の issue 同期 tooling を保護する。
 
 5. **Baseline regen cycle**: PR merge 後の full `--regenerate` は必ず pre-regen fail-closed gate を pass。CI run log に `baseline-regen-gate: pass` を明示。

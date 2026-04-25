@@ -24,7 +24,7 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 
 ## スクリプト構成
 
-`scripts/` の運用コードは Python package `scripts/py/src/testim_parity/` が canonical:
+`scripts/` の運用コードは Python package `scripts/python/src/testim_parity/` が canonical:
 
 | ディレクトリ                     | 責務                                                                       |
 | -------------------------------- | -------------------------------------------------------------------------- |

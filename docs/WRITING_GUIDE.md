@@ -38,7 +38,7 @@
 
 > **最終ゴール**: `parity-baseline.json` の entries = 0 / `npm run check:parity` の全 counter = 0 / `snapshot-diff-status.json.summary.{changed, added, removed} = 0`。schema v2 (2026-04-20 cutover) 以降、baseline は期限概念なしの **明示的 paydown が必須な一時的凍結** として運用する (`priority` enum + 明示 PR による解消のみ、`reviewAfter` 期限超過による自動 refire は廃止)。
 > このゴールを達成するため、本ガイドは baseline を増やす方向の変更（JA 独自構造追加 / callout 改変 / Testim 用語翻訳）を全面禁止する。
-> EN 原文が壊れている場合の退避は `testim_parity.sync_exclusions` (page-level、旧 `scripts/lib/source_sync_exclusions.mjs`) と `testim_parity.en_source_patches` + `scripts/py/src/testim_parity/_en_source_patches_data.json` (segment-level、旧 `scripts/lib/en_source_patches.mjs`) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
+> EN 原文が壊れている場合の退避は `testim_parity.sync_exclusions` (page-level、旧 `scripts/lib/source_sync_exclusions.mjs`) と `testim_parity.en_source_patches` + `scripts/python/src/testim_parity/_en_source_patches_data.json` (segment-level、旧 `scripts/lib/en_source_patches.mjs`) の **2 機構のみ** に限定する (`docs/PARITY_GUIDE.md §許容機構` 参照)。第 3 の許容機構を追加する提案は reviewer gate で reject される。
 >
 > **Source-first 例外の canonical registry**:
 >
@@ -186,7 +186,7 @@ EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::`
 - 原文にしかない重要な UI ラベル、確認メッセージ、遷移先画面は本文に明記する
 - **原文にない段落・callout・リスト項目・見出し・補足説明は一切追加しない**（JA 独自構造の禁止）
 - 段落境界・リスト境界・見出し境界は原文に完全に一致させる（1 段落→2 段落分割、1 callout→2 callout 分割等は禁止）
-- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `testim_parity.en_source_patches` + `scripts/py/src/testim_parity/_en_source_patches_data.json` の slug-scope patch layer (literal find→replace at `preprocess_en_html` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
+- **`<!-- parity: ... -->` のような parity 対策用 HTML コメントを JA markdown に埋め込むことは禁止**。broken upstream EN defect は `testim_parity.en_source_patches` + `scripts/python/src/testim_parity/_en_source_patches_data.json` の slug-scope patch layer (literal find→replace at `preprocess_en_html` 境界) で処理する。運用は [`docs/PARITY_GUIDE.md` の EN source patches layer セクション](./PARITY_GUIDE.md#en-source-patches-layer) と [`docs/UPSTREAM_DEFECTS.md`](./UPSTREAM_DEFECTS.md) を参照
 
 ### 唯一の許容差分（HEREだけ）
 

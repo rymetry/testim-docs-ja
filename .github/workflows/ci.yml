@@ -30,14 +30,14 @@ jobs:
       - run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version-file: scripts/py/.python-version
+          python-version-file: scripts/python/.python-version
       - uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
         with:
           version: '0.11.7'
           enable-cache: true
-          cache-dependency-glob: 'scripts/py/uv.lock'
+          cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
-        working-directory: scripts/py
+        working-directory: scripts/python
         run: uv sync --all-extras
       - run: npm run lint
 
@@ -71,24 +71,24 @@ jobs:
   python-fast:
     # Phase 6b cutover: mjs 削除に伴い ``setup-node`` / ``npm ci`` / ``regen_en_source_patches``
     # step を削除。dual-source-of-truth drift check は en_source_patches を Python dict
-    # に inline 化する follow-up (plan doc Phase 6 Conformance test migration B) で
+    # に inline 化する follow-up (SYSTEM_SPEC Phase 6 Conformance test migration B) で
     # 恒久的に retire する計画。本 job は ruff / format / mypy / 単体 + cutover gate +
     # mjs consumer audit を run する fast-feedback PR gate。
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: scripts/py
+        working-directory: scripts/python
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version-file: scripts/py/.python-version
+          python-version-file: scripts/python/.python-version
       - name: Install uv
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
         with:
           version: '0.11.7'
           enable-cache: true
-          cache-dependency-glob: 'scripts/py/uv.lock'
+          cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: Ruff lint
@@ -136,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: python-coverage
-          path: scripts/py/.coverage
+          path: scripts/python/.coverage
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
@@ -151,18 +151,18 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: scripts/py
+        working-directory: scripts/python
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version-file: scripts/py/.python-version
+          python-version-file: scripts/python/.python-version
       - name: Install uv
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6
         with:
           version: '0.11.7'
           enable-cache: true
-          cache-dependency-glob: 'scripts/py/uv.lock'
+          cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
         run: uv sync --all-extras
       - name: Oracle sha256 TSV drift check
@@ -186,7 +186,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: corpus-junit
-          path: scripts/py/corpus-junit.xml
+          path: scripts/python/corpus-junit.xml
           if-no-files-found: ignore
           retention-days: 7
 
@@ -207,11 +207,11 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version-file: scripts/py/.python-version
+          python-version-file: scripts/python/.python-version
       - name: Install uv
         run: pip install 'uv==0.11.7'
       - name: Sync Python deps
-        working-directory: scripts/py
+        working-directory: scripts/python
         run: uv sync --all-extras
       - name: Check source parity
         run: npm run check:parity
@@ -242,7 +242,7 @@ jobs:
           always() && github.event_name == 'pull_request'
           && hashFiles('upstream-recovery-status.json') != ''
         continue-on-error: true
-        working-directory: scripts/py
+        working-directory: scripts/python
         run: |
           uv run python -m testim_parity.detection.render_upstream_recovery_comment >> "$GITHUB_OUTPUT"
 
