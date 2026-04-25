@@ -236,7 +236,7 @@ sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstrea
 | Markdown記法・callout・リンク形式のルール    | `docs/WRITING_GUIDE.md`                                   |
 | ツールの使い方（Codex CLI フラグ等）         | `.claude/skills/` 配下の該当 SKILL.md                     |
 | 運用フロー・CI設定の変更                     | `docs/OPS_DESIGN.md`                                      |
-| Claude Code の動作ガイダンス                 | `.claude/CLAUDE.md`                                       |
+| Claude Code の動作ガイダンス                 | `CLAUDE.md`                                               |
 
 3. ガイド更新を main にコミットする（`.claude/` 配下は git 管理外のためコミット不要）
 

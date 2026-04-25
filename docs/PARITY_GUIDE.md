@@ -321,7 +321,7 @@ content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath parag
 ### Source contract
 
 - `docs/SYSTEM_SPEC.md` §システム不変量 (suppression-lane contract, baseline 単調非増加原則)
-- `.claude/CLAUDE.md` §Core Invariants (仕様変更ポリシー、5-counter DoD、2-mechanism 契約)
+- `CLAUDE.md` §Core Invariants (仕様変更ポリシー、5-counter DoD、2-mechanism 契約)
 
 ## EN ソース side の既知 artifact
 
