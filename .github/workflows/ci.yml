@@ -14,9 +14,7 @@ concurrency:
 
 jobs:
   lint:
-    # Phase 6b cutover: ``npm run lint`` は ``lint:md`` (markdownlint-cli, Node) +
-    # ``lint:docs`` (``testim_parity.tools.lint_docs`` via ``uv run``) を連結する
-    # ため、Node と Python 両方のセットアップが必要。
+    # lint:md (Node) + lint:docs (Python) を連結するため Node と Python の両方が必要。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -42,11 +40,8 @@ jobs:
       - run: npm run lint
 
   test:
-    # ``scripts/__tests__/`` に残る mjs test は GitHub Actions 側 tooling の
-    # sync_detection_issues.test.mjs のみ。Astro redirect は astro.config.mjs
-    # の標準 redirects 設定に統合済み。
-    # ``test:py`` は ``python-fast`` / ``python-corpus`` で独立に run するため、
-    # 本 job は Node-only の regression guard として軽量に保つ。
+    # scripts/__tests__/*.test.mjs を glob で実行する Node-only regression guard。
+    # Python テストは python-fast / python-corpus で独立に実行する。
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4

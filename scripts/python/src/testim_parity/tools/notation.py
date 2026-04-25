@@ -372,7 +372,11 @@ def fix_file(file_path: Path) -> bool:
     fixed = fix_content(raw, file_path)
     if fixed == raw:
         return False
-    file_path.write_text(fixed, encoding="utf-8")
+    try:
+        file_path.write_text(fixed, encoding="utf-8")
+    except OSError as error:
+        print(f"Warning: failed to write {file_path} ({error})", file=sys.stderr)
+        return False
     return True
 
 
@@ -386,7 +390,11 @@ def strip_non_processable(line: str) -> str:
 def verify_file(file_path: Path) -> list[Issue]:
     raw = read_utf8_text(file_path)
     if raw is None:
-        return []
+        try:
+            relative = str(file_path.relative_to(DOCS_DIR))
+        except ValueError:
+            relative = file_path.name
+        return [Issue(relative, 0, "unreadable-file", f"Could not read: {file_path}")]
     lines = raw.split("\n")
     code_lines = find_code_blocks(lines)
     frontmatter_start, frontmatter_end = find_frontmatter(lines)

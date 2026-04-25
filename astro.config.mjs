@@ -47,7 +47,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  // #178: コーデック別画像最適化デフォルト（Astro 6.1）
+  // 日本語コンテンツ向け画像最適化
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp',
@@ -59,7 +59,7 @@ export default defineConfig({
   },
 
   markdown: {
-    // #177: 日本語では curly quotes / ellipses 変換が不要なため無効化
+    // 日本語では curly quotes / ellipses 変換が不要
     smartypants: false,
     remarkPlugins: [
       remarkGfm, // GitHub Flavored Markdown (テーブル、タスクリスト、脚注など)
@@ -109,12 +109,7 @@ export default defineConfig({
       ],
       rehypeWrapTable,
     ],
-    // Phase 7: astro-expressive-code がすべての fenced code block を
-    // 独自に rendering するため、Astro の ``markdown.shikiConfig`` は EC には
-    // **効かない**。theme / wrap は integrations 側の ``expressiveCode({...})``
-    // へ移した (``themes: ['github-dark-dimmed']`` / ``defaultProps.wrap``)。
-    // shikiConfig を残すと「設定が効いている」と誤解される + dead config が
-    // 残るだけなので削除した。EC を外す reversion 時のみ復活させる契約。
+    // shikiConfig は astro-expressive-code が上書きするため不要（削除済み）。
   },
 
   fonts: [

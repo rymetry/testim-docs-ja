@@ -171,7 +171,10 @@ class TestNotation:
         file_path.write_bytes(b"\xff\xfe\x00")
 
         assert notation.fix_file(file_path) is False
-        assert notation.verify_file(file_path) == []
+
+        issues = notation.verify_file(file_path)
+        assert len(issues) == 1
+        assert issues[0].kind == "unreadable-file"
 
         err = capsys.readouterr().err
         assert err.count("skipped non-UTF-8 file") == 2

@@ -30,7 +30,11 @@ function formatError(error) {
 export function buildLegacyDocRedirects(docsDir = DEFAULT_DOCS_DIR, options = {}) {
   const { warnOnAmbiguous = false, warnOnMissing = false } = options;
   if (!fs.existsSync(docsDir)) {
-    if (warnOnMissing) {
+    if (docsDir === DEFAULT_DOCS_DIR) {
+      console.error(
+        `[redirects] Default docs directory not found: ${docsDir}. Legacy redirects will be missing.`
+      );
+    } else if (warnOnMissing) {
       console.warn(`[redirects] Docs directory not found: ${docsDir}. Legacy redirects skipped.`);
     }
     return {};
@@ -71,6 +75,7 @@ export function buildLegacyDocRedirects(docsDir = DEFAULT_DOCS_DIR, options = {}
     }
 
     for (const entry of entries) {
+      if (entry.isSymbolicLink()) continue;
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath);
