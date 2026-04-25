@@ -372,11 +372,7 @@ def fix_file(file_path: Path) -> bool:
     fixed = fix_content(raw, file_path)
     if fixed == raw:
         return False
-    try:
-        file_path.write_text(fixed, encoding="utf-8")
-    except OSError as error:
-        print(f"Warning: failed to write {file_path} ({error})", file=sys.stderr)
-        return False
+    file_path.write_text(fixed, encoding="utf-8")
     return True
 
 
@@ -472,13 +468,22 @@ def run_fix(docs_dir: Path = DOCS_DIR) -> int:
         return 1
 
     changed = 0
+    errors: list[str] = []
     files = iter_doc_files(docs_dir)
     for file_path in files:
-        if fix_file(file_path):
-            changed += 1
-            print(f"  Modified: {file_path.relative_to(docs_dir)}")
+        try:
+            if fix_file(file_path):
+                changed += 1
+                print(f"  Modified: {file_path.relative_to(docs_dir)}")
+        except OSError as error:
+            errors.append(f"  {file_path.relative_to(docs_dir)}: {error}")
 
     print(f"Done: {len(files)} files scanned, {changed} modified")
+    if errors:
+        print(f"\nFailed to write {len(errors)} file(s):", file=sys.stderr)
+        for msg in errors:
+            print(msg, file=sys.stderr)
+        return 1
     return 0
 
 
