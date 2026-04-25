@@ -1,22 +1,28 @@
-                                        <h1>Pull Requests</h1>
+
+                                        <h1>Pull requests</h1>
                                         <p>Pull requests notify reviewers on changes introduced to a test. Once a pull request is opened, you can discuss and review the potential changes with collaborators before your changes are merged into the Master branch or to any other branch. You can add comments to pull requests. A pull request reviewer can also add their comments to the pull request. Pull requests are an essential part of the "code review" practice, which minimizes testers/devs breaking others' work.</p>
-                                        <div class="warning">
-                                            <p>Before using pull requests you need to enable and configure the pull request settings in the <strong>Project settings</strong>. For more information, see <a href="../../administration/project-settings.htm#pull-request-settings">Project settings</a>.</p>
+                                        <div class="note">
+                                            <p>Before using pull requests you need to enable and configure the pull request settings in the <strong>Project settings</strong>. For more information, see <a href="../../administration/project-settings.htm#pull-request-settings" class="MCXref xref">Pull Request Settings</a>.</p>
                                         </div>
                                         <div class="note">
-                                            <p>This is a PRO feature. This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/pricing/">here</a>.</p>
+                                            <p><strong>PRO Feature:</strong> This feature is only open to projects on our professional plan. To learn more about our professional plan, see <a href="https://www.testim.io/pricing/">here</a>.</p>
                                         </div>
-                                        <h2><a name="creating-a-pull-request"></a>Creating a Pull Request</h2>
+                                        <h2>Creating a Pull Request</h2>
                                         <p>A pull request (PR) represents the (current) difference between a source branch and the target branch, so the change can be reviewed and approved by an authorized reviewer. Like in Github, the PR itself does not hold any state, and no changes/conflict resolutions can be performed as part of the PR itself. For this reason, it is important to resolve conflicts before submitting the PR.</p>
                                         <p>The best practice for updating tests in the target branch is: Create a source branch → make the required changes → merge the target branch to your source branch (to resolve conflicts) → issue a Pull Request.</p>
-                                        <h3><a name="resolving-conflicts-before-pr"></a>Resolving conflicts before PR</h3>
-                                        <p>To resolve conflicts before submitting the PR, pull from target to your source branch, perform the changes on the branch, and then submit the pull request as instructed below. As part of the conflict resolution, you can view the comparison between the source and the target branches. The comparison will show you the current state of the merge for this test in read-only mode. To learn more about resolving conflicts, see <a href="merging-branches.htm#section-resolving-conflicts">Resolving Conflicts</a>.</p>
-                                        <h3><a name="issuing-a-pull-request"></a>Issuing a Pull Request</h3>
-                                        <p>→ <strong>To create a pull request:</strong></p>
-                                        <img src="https://files.readme.io/99a18df-Open.gif" title="Open.gif" class="ScreenshotFullsize" />
+                                        <h3>Resolving conflicts before PR</h3>
+                                        <p>To resolve conflicts before submitting the PR, pull from target to your source branch, perform the changes on the branch, and then submit the pull request as instructed below. As part of the conflict resolution, you can view the comparison between the source and the target branches. The comparison will show you the current state of the merge for this test in read-only mode.</p>
+                                        <p>To learn more about resolving conflicts, see <a href="merging-branches.htm#section-resolving-conflicts" class="MCXref xref">Merging Branches</a>.</p>
+                                        <h3>Issuing a Pull Request</h3>
+                                        <p>
+                                            <img src="https://files.readme.io/99a18df-Open.gif" style="width: 640px;" />
+                                        </p>
+                                        <p class="task-heading"><strong>To create a pull request:</strong>
+                                        </p>
                                         <ol>
                                             <li value="1">
-                                                <p>After making the changes to your branch, select from the branches drop-down menu the branch that you would like to merge and click the <strong>Merge</strong> icon. The <strong>Open Pull Request</strong> dialog is displayed showing the tests and folders that would be merged into the target branch if approved.</p>
+                                                <p>After making the changes to your branch, select from the branches drop-down menu the branch that you would like to merge and click the <strong>Merge</strong> icon.</p>
+                                                <p>The <strong>Open Pull Request</strong> dialog is displayed showing the tests and folders that would be merged into the target branch if approved.</p>
                                             </li>
                                             <li value="2">
                                                 <p>Click <strong>Next</strong>.</p>
@@ -25,67 +31,77 @@
                                                 <p>Enter a <strong>Title</strong> and <strong>Comment</strong> for the pull request and click <strong>Submit</strong>.</p>
                                             </li>
                                         </ol>
-                                        <h2><a name="reviewing-a-pull-request"></a>Reviewing a Pull Request</h2>
+                                        <h2>Reviewing a Pull Request</h2>
                                         <p>Reviewers are notified via email when there is a new PR with a direct link to the PR itself. Reviewers can also go directly to the PR list, and select the relevant PR from the list. When viewing the list, reviewers can click on the comments icon of a PR to view the comments history.</p>
-                                        <p>→ <strong>To view all PRs for the project:</strong></p>
-                                        <img src="https://files.readme.io/be05e3d-prreview2.gif" title="prreview2.gif" class="ScreenshotFullsize" />
+                                        <p>
+                                            <img src="https://files.readme.io/be05e3d-prreview2.gif" style="width: 1920px;" />
+                                        </p>
+                                        <p class="task-heading"><strong>To view all PRs for the project:</strong>
+                                        </p>
                                         <ol>
                                             <li value="1">
-                                                <p>Click the <strong>PR</strong> button, which is located next to the branches drop-down menu. A list of open PRs is presented with the following information:</p>
+                                                <p>Click the <strong>PR</strong> button, which is located next to the branches drop-down menu.</p>
+                                                <p>A list of open PRs is presented with the following information:</p>
+                                                <ul>
+                                                    <li><strong>Source Branch</strong> – the name of the source branch.</li>
+                                                    <li><strong>Target Branch</strong> – the name of the target branch.</li>
+                                                    <li><strong>Details</strong> - the name of the PR, who created it, and when.</li>
+                                                    <li>
+                                                        <p><strong>Status</strong> - the following statuses can be displayed:</p>
+                                                        <ul>
+                                                            <li><strong>Review required</strong> - the PR was submitted but has not been reviewed yet.</li>
+                                                            <li><strong>Changes requested</strong> - the reviewer asked for changes.</li>
+                                                            <li><strong>Approved</strong> - the PR was approved. It is possible to merge to target.</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <p><strong>Comments</strong> – click the comments icon to view the comment history. </p>
+                                                        <p>You can filter the results by clicking the <strong>Filter</strong> icon. The PRs can be filtered by <i>branch name</i>, <i>submitter</i>, and <i>status</i>.</p>
+                                                        <p>Closed PRs can be viewed directly in the <a href="../audit-log.htm" class="MCXref xref">Audit Log</a>. When deleting a branch, the PR will automatically be closed.</p>
+                                                    </li>
+                                                </ul>
                                             </li>
-                                            <ul>
-                                                <li>
-                                                    <p><strong>Source Branch</strong> – the name of the source branch.</p>
-                                                </li>
-                                                <li>
-                                                    <p><strong>Target Branch</strong> – the name of the target branch.</p>
-                                                </li>
-                                                <li>
-                                                    <p><strong>Details</strong> - the name of the PR, who created it, and when.</p>
-                                                </li>
-                                                <li>
-                                                    <p><strong>Status</strong> - the following statuses can be displayed:</p>
-                                                </li>
-                                                <li><p><strong>Review required</strong> - the PR was submitted but has not been reviewed yet.</p></li>
-                                                <li><p><strong>Changes requested</strong> - the reviewer asked for changes.</p></li>
-                                                <li><p><strong>Approved</strong> - the PR was approved. It is possible to merge to target.</p></li>
-                                                <li>
-                                                    <p><strong>Comments</strong> – click the comments icon to view the comment history. You can filter the results by clicking the <strong>Filter</strong> icon. The PRs can be filtered by <em>branch name</em>, <em>submitter</em>, and <em>status</em>. Closed PRs can be viewed directly in the <a href="../audit-log.htm">audit log</a>. When deleting a branch, the PR will automatically be closed.</p>
-                                                </li>
-                                            </ul>
                                             <li value="2">
                                                 <p>Open the PR you would like to review.</p>
                                             </li>
                                             <li value="3">
                                                 <p>If the PR is marked as "Require approving reviewer" the following information is shown:</p>
+                                                <p>
+                                                    <img src="https://files.readme.io/876fb0e-Testim_621.png" style="width: 429px;" />
+                                                </p>
+                                                <ul>
+                                                    <li>Source branch name and pull request title</li>
+                                                    <li>Merge result – the number of conflicts (if any)</li>
+                                                    <li>Details of the changes</li>
+                                                </ul>
                                             </li>
-                                            <img src="https://files.readme.io/876fb0e-Testim_621.png" title="Testim 621.png" class="ScreenshotFullsize" />
-                                            <ul>
-                                                <li><p>Source branch name and pull request title</p></li>
-                                                <li><p>Merge result – the number of conflicts (if any)</p></li>
-                                                <li><p>Details of the changes</p></li>
-                                            </ul>
                                             <li value="4">
                                                 <p>To view the changes click on the relevant drop-down menu.</p>
                                             </li>
                                             <li value="5">
                                                 <p>Decide whether to approve the PR or ask for changes.</p>
+                                                <ul>
+                                                    <li>Click <strong>Approve</strong> to approve the PR. The status will be modified to <strong>Approved</strong>.</li>
+                                                    <li>If there are changes in the PR that require additional changes or input by the requester, click <strong>Request Changes</strong>. You can add your comments to the PR and send it back to be resolved. </li>
+                                                </ul>
                                             </li>
-                                            <ul>
-                                                <li><p>Click <strong>Approve</strong> to approve the PR. The status will be modified to <strong>Approved</strong>.</p></li>
-                                                <li><p>If there are changes in the PR that require additional changes or input by the requester, click <strong>Request Changes</strong>. You can add your comments to the PR and send it back to be resolved.</p></li>
-                                            </ul>
                                         </ol>
-                                        <h2><a name="resubmitting-a-pull-request"></a>Resubmitting a Pull Request</h2>
-                                        <p>If the reviewer sent back the PR, you can respond to the request and resubmit the PR. If the reviewer sent back the PR due to conflicts, you can review and resolve the conflicts as described in <a href="merging-branches.htm#section-resolving-conflicts">Resolving Conflicts</a>. When done, resubmit the pull request as described below.</p>
-                                        <p>→ <strong>To resubmit a pull request:</strong></p>
-                                        <img src="https://files.readme.io/7035af3-PR3.gif" title="PR3.gif" class="ScreenshotFullsize" />
+                                        <h2>Resubmitting a Pull Request</h2>
+                                        <p>If the reviewer sent back the PR, you can respond to the request and resubmit the PR. If the reviewer sent back the PR due to conflicts, you can review and resolve the conflicts as described in <a href="merging-branches.htm#merge-cherry-pick" class="MCXref xref">Merge cherry-pick</a>. When done, resubmit the pull request as described below.</p>
+                                        <p>
+                                            <img src="https://files.readme.io/7035af3-PR3.gif" style="width: 640px;" />
+                                        </p>
+                                        <p class="task-heading"><strong>To resubmit a pull request:</strong>
+                                        </p>
                                         <ol>
                                             <li value="1">
                                                 <p>After making the changes requested by the reviewer, open the pull request and click <strong>Re-Submit</strong>. (If you want to close the pull request click <strong>Close PR</strong>.)</p>
+                                                <p>
+                                                    <img src="https://files.readme.io/325f07e-Testim_613_r.png" style="width: 400px;" />
+                                                </p>
                                             </li>
-                                            <img src="https://files.readme.io/325f07e-Testim_613_r.png" title="Testim 613_r.png" class="ScreenshotFullsize" />
                                             <li value="2">
                                                 <p>Enter a <strong>Comment</strong> for the resubmission and click <strong>Re-Submit</strong>.</p>
                                             </li>
                                         </ol>
+                                    
