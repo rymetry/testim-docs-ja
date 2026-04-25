@@ -427,10 +427,10 @@
   }
 
   .docs-prose .callout-note {
-    @apply border-cyan-200 bg-cyan-50/70 text-cyan-900;
+    @apply border-blue-200 bg-blue-50/70 text-blue-900;
   }
   .docs-prose .callout-note .callout-hint {
-    @apply text-cyan-600;
+    @apply text-blue-600;
   }
 
   .docs-prose .callout-info {
