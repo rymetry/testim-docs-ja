@@ -389,11 +389,7 @@ def _is_list_continuation_sensitive(kinds: list[str], index: int) -> bool:
     kind = kinds[index]
     if kind in _LIST_ITEM_KINDS:
         return True
-    return (
-        kind in _LIST_CONTINUATION_KINDS
-        and index > 0
-        and kinds[index - 1] in _LIST_ITEM_KINDS
-    )
+    return kind in _LIST_CONTINUATION_KINDS and index > 0 and kinds[index - 1] in _LIST_ITEM_KINDS
 
 
 def _structure_kind_diffs(
@@ -411,7 +407,9 @@ def _structure_kind_diffs(
         ]
 
     diffs: list[dict[str, Any]] = []
-    for section_index, (en_kinds, ja_kinds) in enumerate(zip(en_sections, ja_sections)):
+    for section_index, (en_kinds, ja_kinds) in enumerate(
+        zip(en_sections, ja_sections, strict=False)
+    ):
         unmatched_en, unmatched_ja = _kind_lcs_unmatched(en_kinds, ja_kinds)
         for index in sorted(unmatched_en):
             if _is_list_continuation_sensitive(en_kinds, index):
@@ -484,8 +482,7 @@ def check_structure_signature(
 
     reporter.err(
         "structure-signature-mismatch",
-        "EN/JA structure signature differs: "
-        f"{_format_structure_diffs(structure_diffs)}",
+        f"EN/JA structure signature differs: {_format_structure_diffs(structure_diffs)}",
         1,
     )
 

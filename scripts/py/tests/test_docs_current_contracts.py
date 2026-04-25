@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 ROOT_DIR = Path(__file__).resolve().parents[3]
 
 CURRENT_CONTRACT_PATHS = (
@@ -88,8 +87,11 @@ def test_agent_guides_do_not_present_removed_mjs_as_canonical() -> None:
 
 
 def test_current_docs_reference_existing_normalize_module() -> None:
-    assert _matches(
-        CURRENT_OPS_PATHS,
-        "testim_parity.detection.parity_normalize",
-    ) == []
+    assert (
+        _matches(
+            CURRENT_OPS_PATHS,
+            "testim_parity.detection.parity_normalize",
+        )
+        == []
+    )
     assert (ROOT_DIR / "scripts/py/src/testim_parity/normalize.py").is_file()
