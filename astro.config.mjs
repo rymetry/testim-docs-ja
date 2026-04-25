@@ -1,4 +1,7 @@
 // @ts-check
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig, fontProviders } from 'astro/config';
 import vercel from '@astrojs/vercel';
 
@@ -13,12 +16,59 @@ import remarkCalloutDirectives from '@microflash/remark-callout-directives';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import expressiveCode from 'astro-expressive-code';
-import { buildRedirectMap } from './scripts/lib/redirects.mjs';
 import rehypeWrapTable from './src/lib/rehype-wrap-table.ts';
 
 // .envファイルを手動で読み込む
 import { config } from 'dotenv';
 config();
+
+const CONFIG_DIR = path.dirname(fileURLToPath(import.meta.url));
+const DOCS_DIR = path.resolve(CONFIG_DIR, 'src', 'content', 'docs');
+
+/**
+ * @param {string} filePath
+ * @param {string} docsDir
+ */
+function filePathToSlug(filePath, docsDir = DOCS_DIR) {
+  return path.relative(docsDir, filePath).replace(/\.md$/, '');
+}
+
+/**
+ * @param {string} docsDir
+ * @returns {Record<string, string>}
+ */
+function buildLegacyDocRedirects(docsDir = DOCS_DIR) {
+  /** @type {Map<string, string[]>} */
+  const byBasename = new Map();
+
+  /** @param {string} dir */
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith('.md')) continue;
+
+      const slug = filePathToSlug(fullPath, docsDir);
+      if (!slug.includes('/')) continue;
+
+      const basename = entry.name.replace(/\.md$/, '');
+      byBasename.set(basename, [...(byBasename.get(basename) ?? []), slug]);
+    }
+  };
+  walk(docsDir);
+
+  /** @type {Record<string, string>} */
+  const redirects = {};
+  for (const [basename, slugs] of byBasename) {
+    if (slugs.length === 1) {
+      redirects[`/docs/${basename}`] = `/docs/${slugs[0]}`;
+    }
+  }
+  return redirects;
+}
 
 // Basic認証が有効な場合はSSR、無効な場合はStatic
 const isAuthEnabled = process.env.BASIC_AUTH_ENABLED === 'true';
@@ -35,7 +85,7 @@ export default defineConfig({
   adapter: vercel({}),
 
   redirects: {
-    ...buildRedirectMap(),
+    ...buildLegacyDocRedirects(),
     '/docs/applitools-integration': '/docs/integrations/visual-validation',
     '/docs/changelog': '/docs/overview/changelog',
   },

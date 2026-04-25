@@ -8,22 +8,22 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 
 ## コマンド一覧
 
-| コマンド | 用途 |
-| -------- | ---- |
-| `npm run dev` | 開発サーバー (http://localhost:4321) |
-| `npm run build` | プロダクションビルド (`astro check` + build) |
-| `npm run check` | TypeScript/Astro 型チェックのみ |
-| `npm run lint` | 全 lint (`lint:md` + `lint:docs`) |
-| `npm run lint:docs` | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在、EN/JA structure signature） |
-| `npm run lint:fix` | Markdown lint の自動修正 |
-| `npm run format` | Prettier フォーマット (Astro, TS, MD) |
-| `npm run test` | mjs bridge tests と Python pytest の実行 |
-| `npm run check:parity` | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化） |
-| `npm run check:snapshots` | EN HTML スナップショット取得 + diff（変更検出） |
-| `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ |
-| `npm run check:snapshots:diff` | コミット済み vs ワーキングツリーのスナップショット diff のみ |
-| `npm run docs:sync-sidebar` | MadCap Flare TOC データから SIDEBAR_URLS.md を更新 |
-| `npm run docs:pipeline` | フルドキュメント同期パイプライン実行（取得、翻訳等） |
+| コマンド                        | 用途                                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                   | 開発サーバー (http://localhost:4321)                                                                    |
+| `npm run build`                 | プロダクションビルド (`astro check` + build)                                                            |
+| `npm run check`                 | TypeScript/Astro 型チェックのみ                                                                         |
+| `npm run lint`                  | 全 lint (`lint:md` + `lint:docs`)                                                                       |
+| `npm run lint:docs`             | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在、EN/JA structure signature） |
+| `npm run lint:fix`              | Markdown lint の自動修正                                                                                |
+| `npm run format`                | Prettier フォーマット (Astro, TS, MD)                                                                   |
+| `npm run test`                  | mjs bridge tests と Python pytest の実行                                                                |
+| `npm run check:parity`          | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化）                                    |
+| `npm run check:snapshots`       | EN HTML スナップショット取得 + diff（変更検出）                                                         |
+| `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ                                                                        |
+| `npm run check:snapshots:diff`  | コミット済み vs ワーキングツリーのスナップショット diff のみ                                            |
+| `npm run docs:sync-sidebar`     | MadCap Flare TOC データから SIDEBAR_URLS.md を更新                                                      |
+| `npm run docs:pipeline`         | フルドキュメント同期パイプライン実行（取得、翻訳等）                                                    |
 
 **単一ページコマンド:**
 
@@ -38,7 +38,7 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 ## アーキテクチャ
 
 - **コンテンツ**: `src/content/docs/` にカテゴリフォルダで整理された Markdown ファイル。スキーマは `src/content.config.ts`（Zod バリデーション）で定義。
-- **ルーティング**: 単一動的ルート `src/pages/docs/[...slug].astro` — slug は `src/content/docs/` からの相対パス（例: `overview/testim-overview.md` → `/docs/overview/testim-overview`）。レガシー basename URL は `astro.config.mjs` の `buildRedirectMap()` でリダイレクト。
+- **ルーティング**: 単一動的ルート `src/pages/docs/[...slug].astro` — slug は `src/content/docs/` からの相対パス（例: `overview/testim-overview.md` → `/docs/overview/testim-overview`）。レガシー basename URL は `astro.config.mjs` の `redirects` 設定でリダイレクト。
 - **ナビゲーション**: `src/lib/docs.ts` の `buildNavigation()` で構築 — `category` frontmatter でグループ化、`docs/SIDEBAR_URLS.md` で順序決定。
 - **検索**: `src/components/SearchModal.tsx`（React）でクライアントサイド MiniSearch を実装。データは `/api/search.json` から。
 - **レイアウト**: `src/layouts/DocsLayout.astro` が全ドキュメントページをサイドバー（`src/components/navigation/NavSidebar.astro`）と目次（`TableOfContents.astro`）で包む。

@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SearchResultList } from './search/SearchResultList';
+import { groupSearchResults } from './search/groupResults';
 import { useKeyboardNavigation } from './search/useKeyboardNavigation';
 import { useModalBehavior } from './search/useModalBehavior';
 import { useSearchIndex } from './search/useSearchIndex';
 import { useSearchResults } from './search/useSearchResults';
-import type { ResultGroup } from './search/types';
 
 export default function SearchModal() {
   const [query, setQuery] = useState('');
@@ -33,28 +33,7 @@ export default function SearchModal() {
     selectedCategory,
   });
 
-  const { groups, flatResults } = useMemo(() => {
-    const slugOrder: string[] = [];
-    const seenSlugs = new Set<string>();
-
-    for (const result of results) {
-      if (!seenSlugs.has(result.slug)) {
-        seenSlugs.add(result.slug);
-        slugOrder.push(result.slug);
-      }
-    }
-
-    const nextGroups: ResultGroup[] = slugOrder.map((slug) => ({
-      slug,
-      page: results.find((result) => result.slug === slug && result.type === 'page'),
-      headings: results.filter((result) => result.slug === slug && result.type === 'heading'),
-    }));
-    const nextFlatResults = nextGroups.flatMap((group) =>
-      group.page ? [group.page, ...group.headings] : group.headings
-    );
-
-    return { groups: nextGroups, flatResults: nextFlatResults };
-  }, [results]);
+  const { groups, flatResults } = useMemo(() => groupSearchResults(results), [results]);
 
   const navigateTo = useCallback((href: string) => {
     window.location.href = href;

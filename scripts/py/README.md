@@ -1,6 +1,6 @@
-# testim-parity (Python port)
+# testim-parity
 
-Python re-implementation of the `scripts/` toolchain that powers parity/sync checks for `testim-docs-ja`. Ports are phased; see `docs/PYTHON_MIGRATION_PLAN.md`.
+`testim-docs-ja` のパリティ確認、英語原文同期、翻訳パイプライン、保守ツールを提供する Python package。
 
 ## Setup
 
@@ -9,7 +9,7 @@ cd scripts/py
 uv sync --all-extras
 ```
 
-Requires Python 3.12+ (pinned via `.python-version`) and [`uv`](https://github.com/astral-sh/uv).
+Python は `.python-version` で 3.12 に固定し、依存関係は `uv.lock` を正とする。`.venv/` は `uv` が作るローカル生成物で、リポジトリには保持しない。
 
 ## Commands
 
@@ -18,6 +18,7 @@ uv run pytest                 # run test suite
 uv run pytest --cov           # with coverage
 uv run ruff check src tests   # lint
 uv run ruff format src tests  # format
+uv run mypy src               # type check
 ```
 
 ## Layout
@@ -30,5 +31,3 @@ scripts/py/
   src/testim_parity/          # importable package
   tests/                      # pytest tests
 ```
-
-During the Node → Python migration both runtimes coexist. Node tests live at `scripts/__tests__/`. When a leaf module is ported to Python, its mjs counterpart and matching mjs tests are removed in the same PR.

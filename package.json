@@ -28,7 +28,7 @@
     "lint:md:repo": "markdownlint 'docs/**/*.md' 'scripts/**/*.md' '.github/**/*.md' '*.md' --config .markdownlint.json",
     "lint:fix": "markdownlint 'src/content/docs/**/*.md' --config .markdownlint-docs.json --fix && markdownlint 'docs/**/*.md' 'scripts/**/*.md' '.github/**/*.md' '*.md' --config .markdownlint.json --fix",
     "test": "npm run test:mjs && npm run test:py",
-    "test:mjs": "node --test scripts/__tests__/lib_redirects.test.mjs scripts/__tests__/sync_detection_issues.test.mjs",
+    "test:mjs": "node --test scripts/__tests__/sync_detection_issues.test.mjs",
     "test:py": "cd scripts/py && uv run pytest",
     "test:py:cov": "cd scripts/py && uv run pytest --cov=testim_parity --cov-report=term-missing",
     "test:py:quick": "cd scripts/py && uv run pytest -m 'not corpus and not cutover and not parity_smoke and not recall and not boundary and not real_repo'",

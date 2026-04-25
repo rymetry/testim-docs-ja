@@ -147,14 +147,14 @@ keywords:
 
 EN 原文の callout (blockquote または `<div class="...">`) を JA の `:::` callout に変換する際は、以下のマッピングに従ってください：
 
-| EN 原文パターン | JA callout タイプ | 備考 |
-| --- | --- | --- |
-| `📘` / `<div class="note">` | `:::note` | 情報提供 |
-| `🚧` / `<div class="warning">` | `:::warning` | 注意喚起 |
-| `<div class="caution">` + 警告 | `:::caution` | MadCap Flare の caution。当面は `:::warning` と同じ見た目（CSS alias、Phase 0） |
-| `💡` / `<div class="tip">` | `:::tip` | 便利情報 |
-| `❗` / `⚠️` / `<div class="danger">` | `:::danger` | 重大な警告 |
-| `ℹ️` / `<div class="info">` | `:::info` | 補足 |
+| EN 原文パターン                      | JA callout タイプ | 備考                                                                            |
+| ------------------------------------ | ----------------- | ------------------------------------------------------------------------------- |
+| `📘` / `<div class="note">`          | `:::note`         | 情報提供                                                                        |
+| `🚧` / `<div class="warning">`       | `:::warning`      | 注意喚起                                                                        |
+| `<div class="caution">` + 警告       | `:::caution`      | MadCap Flare の caution。当面は `:::warning` と同じ見た目（CSS alias、Phase 0） |
+| `💡` / `<div class="tip">`           | `:::tip`          | 便利情報                                                                        |
+| `❗` / `⚠️` / `<div class="danger">` | `:::danger`       | 重大な警告                                                                      |
+| `ℹ️` / `<div class="info">`          | `:::info`         | 補足                                                                            |
 
 注意: JA タイトルが「注意」の場合は、EN 原文の絵文字に関わらず `:::warning{title="注意"}` を使用する。「注意」という日本語表現は警告の意味合いが強いため、`:::warning` が適切。
 
@@ -346,7 +346,7 @@ top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約�
 
 - `1. item\n\n   continuation` → 1 segment "item continuation"
 - `1. item\n   ![alt](img)` → 1 segment "item" (image は space 1 個に縮退)
-- ``1. step\n\n   ```js\n   var x;\n   ``` `` → 1 segment "step var x;" (fence inner を text flatten)
+- `1. step\n\n   ```js\n   var x;\n   ``` ` → 1 segment "step var x;" (fence inner を text flatten)
 
 ### テーブル
 
@@ -456,13 +456,13 @@ Testim 固有名詞に加えて、**日本のエンジニアリング現場で�
 
 **許容されない例 (普通に JA 訳)**:
 
-| 例                    | 理由                                                |
-| --------------------- | --------------------------------------------------- |
-| `button` → ボタン     | 一般英語、曖昧化なし、JA 自然                       |
-| `page` → ページ       | 同上                                                |
-| `menu` → メニュー     | 同上                                                |
-| `click` → クリック    | カタカナ定着                                        |
-| `save` → 保存         | 自然な JA、UI label でない限り翻訳                  |
+| 例                 | 理由                               |
+| ------------------ | ---------------------------------- |
+| `button` → ボタン  | 一般英語、曖昧化なし、JA 自然      |
+| `page` → ページ    | 同上                               |
+| `menu` → メニュー  | 同上                               |
+| `click` → クリック | カタカナ定着                       |
+| `save` → 保存      | 自然な JA、UI label でない限り翻訳 |
 
 ### JA 文中での埋め込み方 (recommended pattern)
 
@@ -470,9 +470,11 @@ classifier を silent にしつつ自然な JA を実現する書き方:
 
 ```markdown
 # ❌ 避ける: 英語のみ列挙 (classifier が untranslated と誤検知)
+
 オプション: Critical、Serious、Moderate、Minor。デフォルト = Minor。
 
 # ✅ 推奨: JA 文脈で英語 term を囲む
+
 Critical / Serious / Moderate / Minor の 4 段階から最小失敗レベルを選択します
 （それぞれ重大、深刻、中程度、軽微 に相当）。デフォルト値は Minor です。
 ```
@@ -568,24 +570,22 @@ callout タイトルでの PRO 機能表記は `PRO機能` に統一:
 
 ### 表記揺れの検出と修正
 
-大量の表記揺れを修正する場合は `scripts/tools/fix_notation.py` と `scripts/tools/verify_notation.py` を使用する。
+大量の frontmatter・用語表記を正規化する場合は Python native tooling の npm scripts を使用する。
 
 ```bash
-# 修正実行
-python3 scripts/tools/fix_notation.py
+# 正規化を実行
+npm run docs:normalize
 
-# 修正結果を検証
-python3 scripts/tools/verify_notation.py
+# 構文・frontmatter・リンク・callout を検証
+npm run lint:docs
 ```
 
 注意点:
 
-- **frontmatter の全フィールド**（title, description, keywords）が処理対象。sourceUrl, updated, order, category はスキップされる
-- description の YAML 折り返し継続行（`>-` 記法）も処理対象
-- コードブロック・インラインコード・URL・HTML タグ内は**全変換で**自動スキップされる（トークン化ベース除外）
-- `PRO機能` は英日スペースルールの例外として、スペースなしで維持される
-- スクリプトは冪等性があり、再実行しても二重変換されない
-- スペース挿入はひらがな・カタカナ・漢字のみが対象。日本語句読点（「」、。）の周囲にはスペースは入らない
+- `docs:normalize` は frontmatter の順序、description fallback、既知の Testim 用語表記を正規化する
+- `lint:docs` は frontmatter、内部リンク、feature name、code fence、callout、画像参照を検証する
+- コードブロック・インラインコード・URL・HTML タグ内の表記修正は、個別修正時も変換対象から除外する
+- `PRO機能` は英日スペースルールの例外として、スペースなしで維持する
 
 ---
 
@@ -1028,14 +1028,14 @@ src/content/docs/
 
 ### 🎨 情報パネルの使い分け
 
-| タイプ | 用途 | 例 |
-| --- | --- | --- |
-| `tip` | 便利な情報、ヒント | 「時間を節約するには...」 |
-| `warning` | 注意事項、制限 | 「この機能は Enterprise プランのみ」 |
+| タイプ    | 用途                    | 例                                                     |
+| --------- | ----------------------- | ------------------------------------------------------ |
+| `tip`     | 便利な情報、ヒント      | 「時間を節約するには...」                              |
+| `warning` | 注意事項、制限          | 「この機能は Enterprise プランのみ」                   |
 | `caution` | MadCap Flare 由来の警告 | EN 原文の `<div class="caution">` を変換する場合に使用 |
-| `danger` | エラー、失敗例 | 「この方法は避けてください」 |
-| `note` | 補足情報 | 「関連する機能について」 |
-| `info` | 参考情報、リンク | 「公式ドキュメントも参照」 |
+| `danger`  | エラー、失敗例          | 「この方法は避けてください」                           |
+| `note`    | 補足情報                | 「関連する機能について」                               |
+| `info`    | 参考情報、リンク        | 「公式ドキュメントも参照」                             |
 
 ---
 

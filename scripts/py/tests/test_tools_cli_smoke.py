@@ -21,6 +21,7 @@ from testim_parity.tools import (
     check_glossary_duplicates,
     fix_alt_all,
     normalize_docs,
+    notation,
     report_frontmatter_categories,
     sync_frontmatter_from_sidebar,
 )
@@ -121,6 +122,43 @@ class TestFixAltAll:
         assert "```\n![](x)\n```" in result
         # outside fence gets alt injected
         assert "![" in result
+
+
+class TestNotation:
+    def test_fix_content_preserves_code_and_urls(self, tmp_path: Path) -> None:
+        docs = _minimal_content_dir(tmp_path)
+        file_path = docs / "overview" / "notation.md"
+        file_path.write_text(
+            "---\ntitle: パラメータ(設定)\ncategory: overview\nupdated: 2026-01-01\n"
+            "sourceUrl: https://docs.tricentis.com/testim/content/overview/a.htm\n---\n\n"
+            "たとえばTestim拡張機能(設定)を使います。\n\n"
+            "```\nパラメータ(設定)\n```\n\n"
+            "https://example.com/パラメータ\n",
+            encoding="utf-8",
+        )
+
+        assert notation.fix_file(file_path) is True
+        fixed = file_path.read_text(encoding="utf-8")
+        assert "例えば Testim 拡張機能（設定）を使います。" in fixed
+        assert "```\nパラメータ(設定)\n```" in fixed
+        assert "https://example.com/パラメータ" in fixed
+
+    def test_verify_file_reports_remaining_notation_issues(self, tmp_path: Path) -> None:
+        docs = _minimal_content_dir(tmp_path)
+        file_path = docs / "overview" / "notation-verify.md"
+        file_path.write_text(
+            "---\ntitle: A\ncategory: overview\nupdated: 2026-01-01\n"
+            "sourceUrl: https://docs.tricentis.com/testim/content/overview/a.htm\n---\n\n"
+            "たとえばTestim拡張機能(設定)です。\n",
+            encoding="utf-8",
+        )
+
+        issues = notation.verify_file(file_path)
+        assert {issue.kind for issue in issues} >= {
+            "たとえば→例えば",
+            "spacing-missing",
+            "half-width-parens",
+        }
 
 
 class TestNormalizeDocs:

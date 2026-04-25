@@ -42,9 +42,9 @@ jobs:
       - run: npm run lint
 
   test:
-    # Phase 6b cutover: ``scripts/__tests__/`` に残る mjs test は以下 2 file のみ:
-    #   - lib_redirects.test.mjs (redirects.mjs は Astro build graph から使われる)
-    #   - sync_detection_issues.test.mjs (Phase 6.1 で扱う scope 外 asset)
+    # ``scripts/__tests__/`` に残る mjs test は GitHub Actions 側 tooling の
+    # sync_detection_issues.test.mjs のみ。Astro redirect は astro.config.mjs
+    # の標準 redirects 設定に統合済み。
     # ``test:py`` は ``python-fast`` / ``python-corpus`` で独立に run するため、
     # 本 job は Node-only の regression guard として軽量に保つ。
     runs-on: ubuntu-latest
@@ -124,11 +124,9 @@ jobs:
         # CI で catch する。production JSON 34 patches の validation が 0.1s 弱。
         run: uv run python -m testim_parity.tools.validate_en_source_patches
       - name: mjs consumer audit
-        # Phase 6b cutover required step: 許可 4 asset 以外の mjs / cjs 参照が
+        # 許可 2 asset 以外の mjs / cjs 参照が
         # package.json / .github / scripts 配下に残っていないことを assert する
-        # (Codex review #5 対応)。allow-list:
-        #   - scripts/lib/redirects.mjs         (Astro build graph)
-        #   - scripts/__tests__/lib_redirects.test.mjs
+        # allow-list:
         #   - .github/scripts/sync-detection-issues.cjs  (Phase 6.1 scope)
         #   - scripts/__tests__/sync_detection_issues.test.mjs
         working-directory: ${{ github.workspace }}
