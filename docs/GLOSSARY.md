@@ -2506,6 +2506,11 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | Reusable Test Data | 再利用可能テストデータ（大文字バリアント） |
 | reuse | プログラミング概念 (通常英語維持、JA 文内) |
 | Review required | プルリクエストレビュー必須ステータス |
+| Changes requested | プルリクエスト変更要求ステータス |
+| Source Branch | プルリクエストリストのソースブランチ列ヘッダー |
+| Target Branch | プルリクエストリストのターゲットブランチ列ヘッダー |
+| Details | プルリクエストリストの詳細列ヘッダー |
+| Filter | UI フィルターアイコン/操作ラベル |
 | Revision History | テストのリビジョン履歴パネル名 |
 | rich text editor | リッチテキストエディター要素（小文字バリアント） |
 | Rich Text Editor | リッチテキストエディター要素 |
