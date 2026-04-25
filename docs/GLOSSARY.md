@@ -2507,6 +2507,8 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 | reuse | プログラミング概念 (通常英語維持、JA 文内) |
 | Review required | プルリクエストレビュー必須ステータス |
 | Changes requested | プルリクエスト変更要求ステータス |
+| cherry-pick | Git cherry-pick 操作名 |
+| Merge cherry-pick | マージの cherry-pick 機能名 |
 | Source Branch | プルリクエストリストのソースブランチ列ヘッダー |
 | Target Branch | プルリクエストリストのターゲットブランチ列ヘッダー |
 | Details | プルリクエストリストの詳細列ヘッダー |
