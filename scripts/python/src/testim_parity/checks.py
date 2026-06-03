@@ -484,12 +484,14 @@ _EN_IMAGE_SRC_RE = re.compile(
 )
 # markdown ``![alt](src)`` / HTML ``<img src>`` / Astro ``<Image src>`` の 3 形式。
 # HTML 形式はクォート ``"`` / ``'`` 両対応 (backref ``\2``)、``(?<![\w:-])`` の
-# 属性境界で ``data-src`` 等の誤一致を排除する。``[^>]*?`` は ``>`` まで (行内
-# 1 タグ) で bound され、属性列に生の ``>`` を含まない前提。
+# 属性境界で ``data-src`` 等の誤一致を排除する。属性走査は ``[^<>]*?`` で次の
+# ``<`` / ``>`` (= タグ境界) までに bound する。``[^>]*?`` だと閉じ ``>`` の無い
+# 不正な ``<img`` 連続で各開始位置が EOL まで走査し O(n^2) になるため、``<`` も
+# 境界に含めて線形性を保証する。
 # 既知の制限: markdown の山括弧 destination (``![](<path>)``) は対象外 (JA 未使用)。
 _JA_IMAGE_RE = re.compile(
     r"!\[[^\]]*\]\(\s*([^)\s]+)"
-    r"|<(?:img|image)\b[^>]*?(?<![\w:-])src\s*=\s*([\"'])([^\"']+)\2",
+    r"|<(?:img|image)\b[^<>]*?(?<![\w:-])src\s*=\s*([\"'])([^\"']+)\2",
     re.IGNORECASE,
 )
 _IMAGE_EXT_SUFFIX_RE = re.compile(r"\." + _IMAGE_EXT_GROUP + r"$", re.IGNORECASE)
