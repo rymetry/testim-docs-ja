@@ -1,16 +1,21 @@
 """EN / JA body の count・shape・heuristics 比較 (``source_parity_checks.mjs`` port)。
 
-Phase 3 M3 の後半。``extract.py`` の 13 関数を消費して section 別 count /
-table structure / image / heading 列を比較し、coarse audit signal 系 issue
+Phase 3 M3 の後半。``extract.py`` の関数を消費して section 別 count /
+table structure / heading 列を比較し、coarse audit signal 系 issue
 (bullet-count / paragraph-count / section-count / heading-mismatch /
-table-* / image-order / callout-nesting 等) を emit する。
+table-* / callout-nesting 等) を emit する。``compare_snapshot_structure`` の
+issue 列は mjs と byte-identical な契約。
 
-mjs と byte-identical な issue 列を返す契約。
+なお ``image_parity_issues`` は mjs port 完了後に追加した **Python-only** の
+画像パリティ検出器 (image-mismatch / image-order-mismatch) で、byte-parity
+契約の対象外。EN を生 HTML から抽出する点が ``compare_snapshot_structure``
+(turndown markdown 入力) と異なる。
 """
 
 from __future__ import annotations
 
 import re
+from collections import Counter
 from collections.abc import Iterable, Mapping
 from typing import Any
 
@@ -19,7 +24,6 @@ from .extract import (
     extract_bullet_counts,
     extract_callout_positions,
     extract_heading_sequence,
-    extract_image_sequence,
     extract_invariant_tokens,
     extract_paragraph_counts,
     extract_step_counts,
@@ -43,6 +47,7 @@ from .types import (
 
 __all__ = [
     "compare_snapshot_structure",
+    "image_parity_issues",
     "is_english_only_line",
     "load_sidebar_slugs",
     "load_sidebar_slugs_ordered",
@@ -452,49 +457,133 @@ def _count_section_headings(body: str) -> int:
     return count
 
 
-def _image_order_issues(en_body: str, ja_body: str) -> list[dict[str, Any]]:
-    """画像順序 inversion を検出する (mjs 等価)。"""
+# ---------------------------------------------------------------------------
+# image_parity_issues — EN 基準の画像 枚数 / 重複 / 順序 比較
+#
+# EN を en_body (turndown markdown) から抽出すると ``![alt](src "title")`` の
+# title が basename に混入し、title を持たない JA md と不一致になる。そのため
+# EN は生 HTML (`en_html`) の ``src`` / ``href`` から直接抽出し、JA md と対称な
+# basename 列を得る (この title 混入が原因で旧 ``_image_order_issues`` は事実上
+# 機能しなかったため、本関数に統合・置換した)。
+#
+# 判定はすべて **EN を基準** とする multiset / 順序比較:
+#   - EN に元々ある重複・順序は「正」とみなし、JA がそれを忠実にミラーすれば
+#     一致 = 検知しない (誤検知を出さない)
+#   - JA に EN へ無い余剰/不足/順序差があるときだけ issue を emit する
+# ---------------------------------------------------------------------------
+
+_IMAGE_EXT_GROUP = r"(?:png|jpe?g|gif|svg|webp)"
+_EN_IMAGE_SRC_RE = re.compile(
+    r'(?:src|href)\s*=\s*"([^"]+\.' + _IMAGE_EXT_GROUP + r')"',
+    re.IGNORECASE,
+)
+# markdown ``![alt](src)`` / HTML ``<img src>`` / Astro ``<Image src>`` の 3 形式。
+# ``[^>]+`` は属性列に生の ``>`` を含まない前提 (content snapshot では ``>`` は
+# 実体参照される)。万一含む場合は当該画像を取りこぼす方向 = 検知漏れに倒れ、
+# 誤検知 (false positive) は出さない。
+_JA_IMAGE_RE = re.compile(
+    r"!\[[^\]]*\]\(\s*([^)\s]+)"
+    r'|<img[^>]+src\s*=\s*"([^"]+)"'
+    r'|<Image[^>]+src\s*=\s*"([^"]+)"',
+    re.IGNORECASE,
+)
+_IMAGE_EXT_SUFFIX_RE = re.compile(r"\." + _IMAGE_EXT_GROUP + r"$", re.IGNORECASE)
+_IMAGE_HASH_PREFIX_RE = re.compile(r"^([0-9a-f]{6,})-", re.IGNORECASE)
+
+
+def _normalize_image_token(src: str) -> str:
+    """画像参照を比較用の canonical token に正規化する。
+
+    - basename のみ採用 (クエリ / フラグメントは除去)
+    - 拡張子を落とし、小文字化
+    - 先頭ハッシュ prefix は 7 文字に揃える (EN snapshot の 7 桁 prefix と
+      JA 側のフル SHA prefix を同一視。例: ``abc1234-foo`` ==
+      ``abc1234ef..-foo``)
+    """
+    base = src.split("?", 1)[0].split("#", 1)[0].rstrip("/").rsplit("/", 1)[-1].lower()
+    base = _IMAGE_EXT_SUFFIX_RE.sub("", base)
+    match = _IMAGE_HASH_PREFIX_RE.match(base)
+    if match:
+        base = match.group(1)[:7] + "-" + base[match.end() :]
+    return base
+
+
+def _en_image_tokens(en_html: str) -> list[str]:
+    """EN 生 HTML から画像 (``src`` / ``href`` の image URL) を出現順に抽出する。"""
+    return [_normalize_image_token(src) for src in _EN_IMAGE_SRC_RE.findall(en_html)]
+
+
+def _ja_image_tokens(ja_body: str) -> list[str]:
+    """JA markdown から画像 (``![](...)`` / ``<img src>`` / ``<Image src>``) を出現順に抽出する。
+
+    code fence 内は除外し、markdown の title (``"..."``) は drop する。
+    """
+    tokens: list[str] = []
+    in_code_block = False
+    for line in ja_body.split("\n"):
+        if FENCE_LINE_RE.match(line):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block:
+            continue
+        for md_src, img_src, image_src in _JA_IMAGE_RE.findall(line):
+            src = md_src or img_src or image_src
+            cleaned = src.split("?", 1)[0].split("#", 1)[0]
+            if _IMAGE_EXT_SUFFIX_RE.search(cleaned):
+                tokens.append(_normalize_image_token(src))
+    return tokens
+
+
+def image_parity_issues(en_html: str, ja_body: str) -> list[dict[str, Any]]:
+    """EN (生 HTML) 基準で JA 画像の 枚数 / 重複 / 順序 を検証する。
+
+    - multiset 不一致 (余剰 / 不足 / 重複) → ``image-mismatch``
+    - multiset 一致だが順序が EN と相違 → ``image-order-mismatch``
+
+    EN 側に元々ある重複・順序は正とみなすため、JA がそれを忠実にミラーする
+    限り issue は出ない (EN-relative)。
+    """
     issues: list[dict[str, Any]] = []
-    en_images = extract_image_sequence(en_body)
-    ja_images = extract_image_sequence(ja_body)
+    en_tokens = _en_image_tokens(en_html)
+    ja_tokens = _ja_image_tokens(ja_body)
 
-    if len(en_images) == 0 or len(ja_images) == 0:
+    en_counts = Counter(en_tokens)
+    ja_counts = Counter(ja_tokens)
+    if en_counts != ja_counts:
+        extra = ja_counts - en_counts  # EN に無い JA 余剰
+        missing = en_counts - ja_counts  # JA に不足している EN 画像
+        parts: list[str] = []
+        if extra:
+            parts.append(
+                "JA 余剰: " + ", ".join(f"{name}×{count}" for name, count in sorted(extra.items()))
+            )
+        if missing:
+            parts.append(
+                "JA 不足: "
+                + ", ".join(f"{name}×{count}" for name, count in sorted(missing.items()))
+            )
+        issues.append(
+            _with_severity(
+                {
+                    "type": "image-mismatch",
+                    "detail": "画像が原文と一致しません (" + "; ".join(parts) + ")",
+                }
+            )
+        )
         return issues
 
-    en_files = [img["file"] for img in en_images]
-    ja_files = [img["file"] for img in ja_images]
-    unique_en: list[str] = []
-    seen_en: set[str] = set()
-    for f in en_files:
-        if f in ja_files and f not in seen_en:
-            unique_en.append(f)
-            seen_en.add(f)
-    unique_ja: list[str] = []
-    seen_ja: set[str] = set()
-    for f in ja_files:
-        if f in en_files and f not in seen_ja:
-            unique_ja.append(f)
-            seen_ja.add(f)
-
-    if len(unique_en) < 2 or len(unique_en) != len(unique_ja):
-        return issues
-
-    ja_index = {f: i for i, f in enumerate(unique_ja)}
-    inversions: list[tuple[str, str]] = []
-    for left in range(len(unique_en)):
-        for right in range(left + 1, len(unique_en)):
-            first = unique_en[left]
-            second = unique_en[right]
-            if first in ja_index and second in ja_index and ja_index[first] > ja_index[second]:
-                inversions.append((first, second))
-
-    if inversions:
-        examples = "; ".join(f"{a} / {b}" for a, b in inversions[:3])
+    if en_tokens != ja_tokens:
+        first = next(
+            index for index in range(len(en_tokens)) if en_tokens[index] != ja_tokens[index]
+        )
         issues.append(
             _with_severity(
                 {
                     "type": "image-order-mismatch",
-                    "detail": f"画像の順序が原文と異なります ({len(inversions)} 箇所): {examples}",
+                    "detail": (
+                        f"画像の順序が原文と異なります (位置 {first + 1}: "
+                        f"原文={en_tokens[first]} / 翻訳={ja_tokens[first]})"
+                    ),
                 }
             )
         )
@@ -573,7 +662,6 @@ def compare_snapshot_structure(en_body: str, ja_body: str) -> list[dict[str, Any
 
     発火する issue type:
 
-    - ``image-order-mismatch`` (画像順 inversion)
     - ``callout-nesting-mismatch`` (callout 深さ差)
     - ``table-shape-mismatch`` / ``table-cell-*`` (テーブル形状と中身)
     - ``section-count-mismatch`` (H2-H4 見出し数)
@@ -581,13 +669,14 @@ def compare_snapshot_structure(en_body: str, ja_body: str) -> list[dict[str, Any
     - ``step-count-mismatch`` / ``bullet-count-mismatch`` /
       ``paragraph-count-mismatch`` (section 別 count)
 
+    画像の枚数 / 重複 / 順序は ``image_parity_issues`` (EN 生 HTML 基準) が担当する。
+
     EN artifact (`<details>` 使用 / code-fence-wrapped) が検出されたら全 issue
     に ``artifacts`` field を付与する。
     """
     issues: list[dict[str, Any]] = []
     en_artifacts = detect_en_artifacts(en_body)
 
-    issues.extend(_image_order_issues(en_body, ja_body))
     issues.extend(_callout_nesting_issues(en_body, ja_body))
     issues.extend(_compare_table_structure(en_body, ja_body))
 

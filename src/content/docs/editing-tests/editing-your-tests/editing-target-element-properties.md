@@ -88,25 +88,23 @@ Testim は AUT ブラウザウィンドウでターゲット要素をハイラ�
 
 1. 再割り当てしたいステップの上にマウスを移動し、**Show Properties** ボタンをクリックします。
 
-![プロパティボタン](/images/steps-editing-tests/editing-target-element-properties/4934439-properties.png)
-
-![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties/a45b094-propertiespanel.png)
+![クリック可能な要素](/images/steps-editing-tests/editing-target-element-properties/765e00b-small-clicklogin.png)
 
 プロパティパネルが右側に開きます。
 
-![クリック可能な要素](/images/steps-editing-tests/editing-target-element-properties/765e00b-small-clicklogin.png)
+![プロパティパネル](/images/steps-editing-tests/editing-target-element-properties/a45b094-propertiespanel.png)
 
 2. ターゲット要素のサムネイルの上にマウスを移動し、**Improve** リンクをクリックします。
+
+![改善された要素](/images/steps-editing-tests/editing-target-element-properties/543c4f1-small-improve.png)
 
 3. AUT ブラウザウィンドウで Base URL がまだ開かれていない場合、Testim は通知を表示します。通知の **Open base URL** リンクまたは **Run test to relevant step** ボタンをクリックして、ターゲット要素の改善を試みてください。
 
 ![Base URL を開く](/images/steps-editing-tests/editing-target-element-properties/f1464de-baseurl.png)
 
-![改善された要素](/images/steps-editing-tests/editing-target-element-properties/543c4f1-small-improve.png)
+4. Testim はスタンバイモードになります。AUT ブラウザで、ターゲット要素の上にマウスを移動し、クリックして選択します。
 
 ![改善対象のボタン](/images/steps-editing-tests/editing-target-element-properties/43cfd47-small-login.png)
-
-4. Testim はスタンバイモードになります。AUT ブラウザで、ターゲット要素の上にマウスを移動し、クリックして選択します。
 
 プロパティパネルの Target element ボックスでターゲット要素が更新されます。
 
@@ -146,13 +144,13 @@ Smart Locators の属性を編集することは一般的に推奨されませ�
 
    ![ロケーターパネル](/images/steps-editing-tests/editing-target-element-properties/827a8f3-Testim_Editing_Tests_030_r.png)
 
-   ![ロケーターパネルの別表示](/images/steps-editing-tests/editing-target-element-properties/c693307-Testim_Editing_Tests_034a_r.png)
-
    テストを実行した後、ロケーターパネルを開くと、星の重み付けに加えて、実行結果に基づくパーセンテージスコアが表示されます。
 
    ![実行後のロケーター](/images/steps-editing-tests/editing-target-element-properties/1f09ed4-Testim_Editing_Tests_033_r.png)
 
 4. 要素を表示している間、表示したい要素の上にマウスを移動し、ターゲットアイコンをクリックすることで、要素を視覚的に識別できます。
+
+![ロケーターパネルの別表示](/images/steps-editing-tests/editing-target-element-properties/c693307-Testim_Editing_Tests_034a_r.png)
 
 選択した要素が一時的にハイライトされた状態で AUT ブラウザが開きます。
 
