@@ -217,3 +217,33 @@ def test_compare_snapshot_no_longer_emits_image_order():
     ja = "![b](/img/bbb2222-b.png)\n\n![a](/img/aaa1111-a.png)"
     issues = compare_snapshot_structure(en, ja)
     assert all(issue["type"] != "image-order-mismatch" for issue in issues)
+
+
+def test_image_parity_en_query_string_counted():
+    # EN の画像 URL に query/fragment が付いても EN/JA で同一画像として扱う。
+    # (旧 regex は ``.ext"`` 末尾固定で query 付きを取りこぼし、JA 余剰の誤検知を出した)
+    en_html = '<img src="images/aaa1111-foo.png?width=800" />'
+    ja = "![foo](/images/x/aaa1111-foo.png?width=800)"
+    assert image_parity_issues(en_html, ja) == []
+
+
+def test_image_parity_en_data_src_not_double_counted():
+    # EN の lazy-load ``data-src`` は ``src`` と二重計上しない (属性境界)。
+    # (旧 regex は data-src の ``src`` 部にも一致し EN で 2 枚計上 → JA 不足の誤検知)
+    en_html = '<img data-src="images/aaa1111-foo.png" src="images/aaa1111-foo.png" />'
+    ja = "![foo](/images/x/aaa1111-foo.png)"
+    assert image_parity_issues(en_html, ja) == []
+
+
+def test_image_parity_ja_single_quoted_img_counted():
+    # JA の単引用符 <img src='...'> も拾う (両クォート対応)。
+    en_html = '<img src="images/aaa1111-foo.png" />'
+    ja = "<img src='/images/x/aaa1111-foo.png' alt='foo' />"
+    assert image_parity_issues(en_html, ja) == []
+
+
+def test_image_parity_ja_data_src_not_double_counted():
+    # JA の lazy-load ``data-src`` も ``src`` と二重計上しない (属性境界)。
+    en_html = '<img src="images/aaa1111-foo.png" />'
+    ja = '<img data-src="/images/x/aaa1111-foo.png" src="/images/x/aaa1111-foo.png" />'
+    assert image_parity_issues(en_html, ja) == []

@@ -473,18 +473,23 @@ def _count_section_headings(body: str) -> int:
 # ---------------------------------------------------------------------------
 
 _IMAGE_EXT_GROUP = r"(?:png|jpe?g|gif|svg|webp)"
+# ``(?<![\w:-])`` の属性境界で ``data-src`` / ``xlink:href`` 等の誤一致を防ぐ。
+# クォートは ``"`` / ``'`` 両対応 (backref ``\1``)、拡張子の後ろの query /
+# fragment (``?...`` / ``#...``) も許容して JA 側の basename 正規化と対称化する
+# (group 1 = quote, group 2 = URL)。
 _EN_IMAGE_SRC_RE = re.compile(
-    r'(?:src|href)\s*=\s*"([^"]+\.' + _IMAGE_EXT_GROUP + r')"',
+    r"(?<![\w:-])(?:src|href)\b\s*=\s*([\"'])"
+    r"([^\"']+\." + _IMAGE_EXT_GROUP + r"(?:[?#][^\"']*)?)\1",
     re.IGNORECASE,
 )
 # markdown ``![alt](src)`` / HTML ``<img src>`` / Astro ``<Image src>`` の 3 形式。
-# ``[^>]+`` は属性列に生の ``>`` を含まない前提 (content snapshot では ``>`` は
-# 実体参照される)。万一含む場合は当該画像を取りこぼす方向 = 検知漏れに倒れ、
-# 誤検知 (false positive) は出さない。
+# HTML 形式はクォート ``"`` / ``'`` 両対応 (backref ``\2``)、``(?<![\w:-])`` の
+# 属性境界で ``data-src`` 等の誤一致を排除する。``[^>]*?`` は ``>`` まで (行内
+# 1 タグ) で bound され、属性列に生の ``>`` を含まない前提。
+# 既知の制限: markdown の山括弧 destination (``![](<path>)``) は対象外 (JA 未使用)。
 _JA_IMAGE_RE = re.compile(
     r"!\[[^\]]*\]\(\s*([^)\s]+)"
-    r'|<img[^>]+src\s*=\s*"([^"]+)"'
-    r'|<Image[^>]+src\s*=\s*"([^"]+)"',
+    r"|<(?:img|image)\b[^>]*?(?<![\w:-])src\s*=\s*([\"'])([^\"']+)\2",
     re.IGNORECASE,
 )
 _IMAGE_EXT_SUFFIX_RE = re.compile(r"\." + _IMAGE_EXT_GROUP + r"$", re.IGNORECASE)
@@ -510,7 +515,7 @@ def _normalize_image_token(src: str) -> str:
 
 def _en_image_tokens(en_html: str) -> list[str]:
     """EN 生 HTML から画像 (``src`` / ``href`` の image URL) を出現順に抽出する。"""
-    return [_normalize_image_token(src) for src in _EN_IMAGE_SRC_RE.findall(en_html)]
+    return [_normalize_image_token(url) for _quote, url in _EN_IMAGE_SRC_RE.findall(en_html)]
 
 
 def _ja_image_tokens(ja_body: str) -> list[str]:
@@ -526,8 +531,8 @@ def _ja_image_tokens(ja_body: str) -> list[str]:
             continue
         if in_code_block:
             continue
-        for md_src, img_src, image_src in _JA_IMAGE_RE.findall(line):
-            src = md_src or img_src or image_src
+        for md_src, _quote, tag_src in _JA_IMAGE_RE.findall(line):
+            src = md_src or tag_src
             cleaned = src.split("?", 1)[0].split("#", 1)[0]
             if _IMAGE_EXT_SUFFIX_RE.search(cleaned):
                 tokens.append(_normalize_image_token(src))
