@@ -48,6 +48,7 @@ from ..baseline import (
 )
 from ..checks import (
     compare_snapshot_structure,
+    image_parity_issues,
     load_sidebar_slugs,
     load_sidebar_slugs_ordered,
     local_check,
@@ -593,6 +594,12 @@ def check_source_parity(
                         else:
                             issues.extend(segment_issues)
                             issues.extend(compare_snapshot_structure(en_body, doc["body"]))
+
+                if not usability_issue:
+                    # EN 基準の画像 枚数 / 重複 / 順序 検証。compare_snapshot_structure と
+                    # 同じ非 usability ケースで実行する。EN は en_html (生 HTML) の
+                    # src / href から抽出し、turndown の title 混入を回避する。
+                    issues.extend(image_parity_issues(en_html, doc["body"]))
 
         issues = tag_issues_with_acknowledgements(
             file_slug, issues, ack_data["entries"], snapshot_fingerprint, today
