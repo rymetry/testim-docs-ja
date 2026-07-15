@@ -409,6 +409,7 @@ def main(argv: list[str] | None = None) -> int:
     snapshot_files = _find_html_files(_CONTENT_DIR)
     changes: list[dict[str, Any]] = []
     unchanged = 0
+    scoped_total = 0
 
     for rel in snapshot_files:
         # rel は POSIX 区切りか OS 区切り。snapshot は常に POSIX-like で扱う。
@@ -417,6 +418,7 @@ def main(argv: list[str] | None = None) -> int:
             continue
         if not resolved_slug and args["section"] and slug not in source_urls:
             continue
+        scoped_total += 1
 
         snapshot_path = _CONTENT_DIR / rel
         current_content = snapshot_path.read_text(encoding="utf-8")
@@ -481,8 +483,6 @@ def main(argv: list[str] | None = None) -> int:
         if resolved_slug
         else _diff_sidebar()
     )
-
-    scoped_total = 1 if resolved_slug else len(snapshot_files)
 
     checked_at = _checked_at()
     source_sync_payload = _read_source_sync_payload()
