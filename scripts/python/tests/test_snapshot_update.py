@@ -777,6 +777,7 @@ def test_main_writes_source_sync_status_on_sidebar_only_empty_targets(
         run_seed="deterministic",
     )
     assert result["fetched"] == 0
+    assert result["errors"] == 1
     status_path = tmp_path / "source-sync-status.json"
     assert status_path.exists()
     status = json.loads(status_path.read_text(encoding="utf-8"))

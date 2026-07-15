@@ -130,11 +130,11 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 ## 開発ワークフロー
 
-1. 初回セットアップ: `npm install`
+1. 初回セットアップ: `npm install` + `cd scripts/python && uv sync --locked --all-extras`
 2. 開発サーバー: `npm run dev`
 3. 本番ビルド: `npm run build`
-4. Lint: markdownlint（Markdown）+ `lint:docs`（WRITING_GUIDE 準拠）
-5. フォーマット: Prettier（Astro/TypeScript/Markdown）
+4. 品質ゲート: `npm run lint`（Markdown / docs / Ruff / Python format / mypy）
+5. フォーマット: `npm run format`（Astro/TypeScript/Markdown）+ `npm run format:py`（Python）
 6. テスト: `npm run test`（Node mjs + Python pytest）
 7. パリティ検証: `npm run check:parity && npm run check:snapshots:diff`
 

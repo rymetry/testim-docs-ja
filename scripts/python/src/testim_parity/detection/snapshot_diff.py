@@ -516,6 +516,10 @@ def main(argv: list[str] | None = None) -> int:
         "changes": changes,
         "sidebar": sidebar,
     }
+    sidebar_error = bool(sidebar.get("parseError"))
+    if sidebar_error:
+        report["error"] = True
+        report["errorDetail"] = "Sidebar diff failed because Git data or JSON was unavailable."
 
     _OUTPUT_PATH.write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
@@ -553,7 +557,7 @@ def main(argv: list[str] | None = None) -> int:
                 elif change["type"] == "page-removed":
                     print(f"  REMOVED  {change['slug']}")
 
-    return 0
+    return 1 if sidebar_error else 0
 
 
 if __name__ == "__main__":

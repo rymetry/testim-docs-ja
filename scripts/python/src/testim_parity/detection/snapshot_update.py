@@ -595,7 +595,7 @@ def main(
         return {
             "fetched": 0,
             "notFound": 0,
-            "errors": 1 if args.slug else 0,
+            "errors": 1,
             "excluded": 0,
             "skipped": 0,
             "sidebarVerified": False,

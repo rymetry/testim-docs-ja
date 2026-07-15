@@ -10,7 +10,7 @@ from typing import Any
 
 import pytest
 
-from testim_parity.detection import snapshot_check
+from testim_parity.detection import snapshot_check, snapshot_update
 from testim_parity.detection_reports import (
     validate_snapshot_diff_status,
     validate_source_sync_status,
@@ -330,3 +330,35 @@ def test_main_diff_failure_uses_resolved_source_scope_for_linkage(tmp_path: Path
     source, diff_status = _read_and_validate_artifacts(tmp_path)
     assert source["runScope"] == resolved_scope
     assert diff_status["runScope"] == resolved_scope
+
+
+def test_main_section_without_targets_generates_artifacts_and_nonzero(tmp_path: Path) -> None:
+    def fetch(args: list[str]) -> dict[str, Any]:
+        return snapshot_update.main(
+            args,
+            root_dir=tmp_path,
+            fetch_html_fn=lambda _url: {"html": None, "status": 500},
+            fetch_toc_fn=lambda: {"sections": []},
+            sleep_fn=lambda _seconds: None,
+            stdout=io.StringIO(),
+            stderr=io.StringIO(),
+            now=datetime.datetime(2026, 7, 16, tzinfo=datetime.UTC),
+            run_seed="section-miss",
+        )
+
+    def diff(_args: list[str]) -> int:
+        _write_clean_diff_status(tmp_path)
+        return 0
+
+    assert (
+        snapshot_check.main(
+            ["--section=typo-section"],
+            fetch_main=fetch,
+            diff_main=diff,
+            root_dir=tmp_path,
+        )
+        == 1
+    )
+    source, _diff_status = _read_and_validate_artifacts(tmp_path)
+    assert source["freshnessState"] == "broken"
+    assert source["runScope"]["filters"]["section"] == "typo-section"
