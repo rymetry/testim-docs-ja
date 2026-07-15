@@ -27,6 +27,10 @@ npm run check:snapshots:fetch  # スナップショット取得のみ
 npm run check:snapshots:diff   # コミット済み vs 最新の差分比較
 
 # 品質チェック
+npm run check:quality          # Markdown・docs・Ruff・Python format・mypy
+npm run lint:py                # Python Ruff lint
+npm run format:py:check        # Python Ruff format check
+npm run typecheck:py           # Python mypy
 npm run lint:docs              # Markdown 構文・frontmatter 検証
 npm run check:parity           # 未翻訳テキスト・レガシー callout 検出
 npm run check:summary          # summary / audit manifest 生成
@@ -810,11 +814,17 @@ npm run test:py:quick                                 # fast gate only
 
 | npm コマンド                  | 実体                                                                  | 用途                             |
 | ----------------------------- | --------------------------------------------------------------------- | -------------------------------- |
-| `lint`                        | `lint:md && lint:docs`                                                | 全 lint 実行                     |
+| `check:quality`               | `lint:md && lint:docs && check:py:static`                             | local / CI 共通の正規品質ゲート  |
+| `lint`                        | `check:quality`                                                       | 正規品質ゲートの互換エイリアス   |
 | `lint:md`                     | `lint:md:content && lint:md:repo`                                     | markdownlint 実行                |
 | `lint:md:content`             | markdownlint (docs content)                                           | コンテンツ MD lint (MD001 無効)  |
 | `lint:md:repo`                | markdownlint (repo docs, .github)                                     | リポジトリ MD lint               |
 | `lint:docs`                   | `uv run python -m testim_parity.tools.lint_docs`                      | 構文・frontmatter 検証           |
+| `check:py:static`             | `lint:py && format:py:check && typecheck:py`                          | Python 静的検査の集約            |
+| `lint:py`                     | `uv run --locked ruff check src tests`                                | Python Ruff lint                 |
+| `format:py`                   | `uv run --locked ruff format src tests`                               | Python Ruff formatter            |
+| `format:py:check`             | `uv run --locked ruff format --check src tests`                       | Python Ruff format check         |
+| `typecheck:py`                | `uv run --locked mypy src`                                            | Python mypy                      |
 | `lint:glossary`               | `uv run python -m testim_parity.tools.check_glossary_duplicates`      | glossary 重複検知                |
 | `check:snapshots`             | snapshot fetch + diff (Python)                                        | スナップショット取得→比較        |
 | `check:snapshots:fetch`       | `uv run python -m testim_parity.detection.snapshot_update`            | スナップショット取得             |

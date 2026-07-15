@@ -177,10 +177,9 @@ def extract_main_content(html: str) -> str | None:
 def is_logical_not_found_url(url: str) -> bool:
     """Tricentis の HTTP 200 PageNotFound リダイレクトを識別する。"""
     parsed = urlsplit(url)
-    return (
-        parsed.path.rstrip("/") == _PAGE_NOT_FOUND_PATH
-        and "PageNotFound" in parse_qs(parsed.query).get("type", [])
-    )
+    return parsed.path.rstrip("/") == _PAGE_NOT_FOUND_PATH and "PageNotFound" in parse_qs(
+        parsed.query
+    ).get("type", [])
 
 
 def _default_fetch_html(url: str) -> FetchResult:

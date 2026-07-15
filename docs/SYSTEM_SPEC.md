@@ -126,7 +126,7 @@ EN snapshot fetch の健全性を freshness state で表す。
 以下を現行の主要 gate とする。
 
 ```bash
-npm run lint
+npm run check:quality
 npm run test:mjs
 npm run test:py:quick
 cd scripts/python && uv run pytest -o addopts= -m 'recall or boundary or real_repo' --tb=short
@@ -157,17 +157,21 @@ npm run build
 
 ```bash
 cd scripts/python
-uv sync --all-extras
+uv sync --locked --all-extras
 ```
 
 通常の実行:
 
 ```bash
 uv run pytest
-uv run ruff check src tests
-uv run ruff format --check src tests
-uv run mypy src
+cd ../..
+npm run lint:py
+npm run format:py:check
+npm run typecheck:py
 ```
+
+`npm run check:quality` を local / CI 共通の正規品質ゲートとし、
+`npm run lint` は後方互換エイリアスとして同じゲートを実行する。
 
 `uv` が作る `.venv/`、pytest/ruff/mypy の cache、coverage artifact はローカル生成物として扱う。
 
@@ -234,8 +238,12 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 | `npm run dev` | 開発サーバー (localhost:4321) |
 | `npm run build` | 本番ビルド (`astro check` + build) |
 | `npm run check` | TypeScript/Astro 型チェック |
-| `npm run lint` | 全 lint (`lint:md` + `lint:docs`) |
+| `npm run check:quality` | 正規品質ゲート (Markdown / docs / Ruff / Python format / mypy) |
+| `npm run lint` | `check:quality` の後方互換エイリアス |
 | `npm run lint:docs` | WRITING_GUIDE 準拠チェック |
+| `npm run lint:py` | Python Ruff lint |
+| `npm run format:py:check` | Python Ruff format check |
+| `npm run typecheck:py` | Python mypy |
 | `npm run test` | テスト実行 (`scripts/__tests__/`) |
 | `npm run check:parity` | パリティチェック (構造・token・baseline) |
 | `npm run check:snapshots` | EN スナップショット取得 + diff |

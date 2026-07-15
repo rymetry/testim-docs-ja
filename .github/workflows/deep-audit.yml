@@ -57,7 +57,7 @@ jobs:
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
         working-directory: scripts/python
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
 
       - name: Refresh sidebar seed
         run: npm run docs:sync-sidebar
