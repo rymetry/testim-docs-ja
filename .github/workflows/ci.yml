@@ -14,7 +14,8 @@ concurrency:
 
 jobs:
   lint:
-    # lint:md (Node) + lint:docs (Python) を連結するため Node と Python の両方が必要。
+    # Markdown / docs / Ruff / Python format / mypy を連結するため
+    # Node と Python の両方が必要。
     runs-on: ubuntu-latest
     defaults:
       run:

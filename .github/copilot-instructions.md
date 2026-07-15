@@ -48,7 +48,7 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 | `npm run lint:fix`              | Markdown lint の自動修正                                                     |
 | `npm run format`                | Prettier フォーマット (Astro, TS, MD)                                        |
 | `npm run format:py`             | Python Ruff formatter                                                        |
-| `npm run test`                  | `scripts/__tests__/` のテスト実行                                            |
+| `npm run test`                  | Node mjs + Python pytest の全テスト実行                                      |
 | `npm run check:parity`          | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化）         |
 | `npm run check:snapshots`       | EN HTML スナップショット取得 + diff（変更検出）                              |
 | `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ                                             |
@@ -135,7 +135,7 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 3. 本番ビルド: `npm run build`
 4. Lint: markdownlint（Markdown）+ `lint:docs`（WRITING_GUIDE 準拠）
 5. フォーマット: Prettier（Astro/TypeScript/Markdown）
-6. テスト: `npm run test`（`scripts/__tests__/`）
+6. テスト: `npm run test`（Node mjs + Python pytest）
 7. パリティ検証: `npm run check:parity && npm run check:snapshots:diff`
 
 ## AI アシスタント出力ポリシー

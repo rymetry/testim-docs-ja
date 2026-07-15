@@ -2397,6 +2397,23 @@ def test_validate_detection_inputs_reports_parity_error() -> None:
     assert result["errors"][0].startswith("parity:")
 
 
+def test_validate_detection_inputs_rejects_failed_snapshot_stage() -> None:
+    failed_snapshot = {
+        **valid_snapshot(),
+        "error": True,
+        "errorDetail": "git show failed",
+    }
+    result = validate_detection_inputs(
+        {
+            "snapshot": failed_snapshot,
+            "parity": valid_parity_status(),
+            "sourceSync": valid_source_sync_status(),
+        }
+    )
+    assert result["ok"] is False
+    assert any("failed diff stage" in error for error in result["errors"])
+
+
 def test_validate_detection_inputs_reports_source_sync_error() -> None:
     result = validate_detection_inputs(
         {

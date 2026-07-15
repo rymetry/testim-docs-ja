@@ -78,8 +78,8 @@ npm run check:snapshots:fetch -- --dry-run
 ### CI 定期チェック（3日ごと）
 
 1. `git checkout`（clean）→ snapshots = コミット済み（翻訳済みベースライン）
-2. `npm run check:snapshots:fetch` → snapshots を最新英語で上書き
-3. `npm run check:snapshots:diff` → committed vs working tree を比較
+2. `npm run check:snapshots` → snapshots を最新英語で上書きし、fetch が部分失敗しても committed vs working tree の diff を実行
+3. `source-sync-status.json` と `snapshot-diff-status.json` を常に生成し、どちらかの stage が失敗した場合は非0で終了
 4. 差分あり → レポート生成 → GitHub Issue 作成/更新
 5. CI は snapshots をコミットしない → 翻訳するまで毎回同じ差分が検出され続ける
 
@@ -93,7 +93,7 @@ npm run check:snapshots:fetch -- --dry-run
 
 ### スナップショットから翻訳入力に再利用
 
-`fetch_translate_images.mjs` はスナップショットから自動的に読み込みます（HTML → turndown で Markdown 変換）:
+`testim_parity.pipeline.fetch_translate_images` はスナップショットから自動的に読み込みます（HTML → Markdown 変換）:
 
 ```bash
 npm run docs:fetch -- --mode=full

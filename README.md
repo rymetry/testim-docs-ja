@@ -46,7 +46,7 @@
 
 - Node.js 22 系推奨（`package.json` の `engines` は `>=18 <25`）
 - npm
-- Python 3.14.4 と uv（`scripts/python` の運用コマンドを使う場合）
+- Python 3.14.4 と uv（`npm run lint`、原文同期、パリティ確認に必要）
 
 ### インストール
 
@@ -65,7 +65,7 @@ npm run preview
 
 # Python tooling の依存関係
 cd scripts/python
-uv sync --all-extras
+uv sync --locked --all-extras
 ```
 
 ## 📝 ドキュメントの追加方法

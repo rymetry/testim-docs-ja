@@ -67,6 +67,8 @@ npm run check:snapshots
 
 - Node.js 18.x 以上
 - npm または pnpm
+- Python 3.14.4
+- [uv](https://docs.astral.sh/uv/)
 - Git
 
 ### セットアップ手順
@@ -81,6 +83,9 @@ cd testim-docs-ja
 
 # 3. 依存関係をインストール
 npm install
+cd scripts/python
+uv sync --locked --all-extras
+cd ../..
 
 # 4. 開発サーバーを起動
 npm run dev

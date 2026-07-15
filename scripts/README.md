@@ -818,7 +818,7 @@ npm run test:py:quick                                 # fast gate only
 | `lint:md`                     | `lint:md:content && lint:md:repo`                                     | markdownlint 実行                |
 | `lint:md:content`             | markdownlint (docs content)                                           | コンテンツ MD lint (MD001 無効)  |
 | `lint:md:repo`                | markdownlint (repo docs, .github)                                     | リポジトリ MD lint               |
-| `lint:docs`                   | `uv run python -m testim_parity.tools.lint_docs`                      | 構文・frontmatter 検証           |
+| `lint:docs`                   | `uv run --locked python -m testim_parity.tools.lint_docs`             | 構文・frontmatter 検証           |
 | `check:py:static`             | `lint:py && format:py:check && typecheck:py`                          | Python 静的検査の集約            |
 | `lint:py`                     | `uv run --locked ruff check src tests`                                | Python Ruff lint                 |
 | `format:py`                   | `uv run --locked ruff format src tests`                               | Python Ruff formatter            |
@@ -848,9 +848,8 @@ npm run test:py:quick                                 # fast gate only
 | `test:py:corpus`              | `pytest -m corpus -n auto --dist load`                                | 288×3 matrix 並列                |
 | `test:py:corpus:regen`        | `uv run python -m testim_parity.tools.emit_corpus_oracle`             | committed golden 再生成          |
 | `test:py:corpus:drift`        | drift check (committed vs live Python)                                | 暫定 drift gate                  |
-| `test:mjs`                    | `node --test sync_detection_issues.test.mjs`                          | 残存 mjs test                    |
+| `test:mjs`                    | `node --test scripts/__tests__/*.test.mjs`                            | Node 回帰テスト                  |
 | `format`                      | `prettier --write`                                                    | コードフォーマット               |
-| `format:check`                | `prettier --check`                                                    | フォーマットチェック (CI 用)     |
 
 ---
 
@@ -864,7 +863,7 @@ npm run check:parity -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 # 全文チェック
-npm run lint:docs && npm run check:parity && npm test && npm run build
+npm run lint && npm run check:parity && npm test && npm run build
 ```
 
 ### CI 連携
