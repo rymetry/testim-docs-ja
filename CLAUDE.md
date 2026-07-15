@@ -13,10 +13,14 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 | `npm run dev`                   | 開発サーバー (http://localhost:4321)                                                                    |
 | `npm run build`                 | プロダクションビルド (`astro check` + build)                                                            |
 | `npm run check`                 | TypeScript/Astro 型チェックのみ                                                                         |
-| `npm run lint`                  | 全 lint (`lint:md` + `lint:docs`)                                                                       |
+| `npm run lint`                  | 正規品質ゲート（Markdown・docs・Ruff・Python format・mypy）                                             |
+| `npm run lint:py`               | Python Ruff lint                                                                                        |
+| `npm run format:py:check`       | Python Ruff format check                                                                                |
+| `npm run typecheck:py`          | Python mypy                                                                                             |
 | `npm run lint:docs`             | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在、EN/JA structure signature） |
 | `npm run lint:fix`              | Markdown lint の自動修正                                                                                |
 | `npm run format`                | Prettier フォーマット (Astro, TS, MD)                                                                   |
+| `npm run format:py`             | Python Ruff formatter                                                                                   |
 | `npm run test`                  | mjs bridge tests と Python pytest の実行                                                                |
 | `npm run check:parity`          | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化）                                    |
 | `npm run check:snapshots`       | EN HTML スナップショット取得 + diff（変更検出）                                                         |

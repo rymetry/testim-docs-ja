@@ -27,7 +27,7 @@ npm run check:snapshots:fetch  # スナップショット取得のみ
 npm run check:snapshots:diff   # コミット済み vs 最新の差分比較
 
 # 品質チェック
-npm run check:quality          # Markdown・docs・Ruff・Python format・mypy
+npm run lint                   # Markdown・docs・Ruff・Python format・mypy
 npm run lint:py                # Python Ruff lint
 npm run format:py:check        # Python Ruff format check
 npm run typecheck:py           # Python mypy
@@ -814,8 +814,7 @@ npm run test:py:quick                                 # fast gate only
 
 | npm コマンド                  | 実体                                                                  | 用途                             |
 | ----------------------------- | --------------------------------------------------------------------- | -------------------------------- |
-| `check:quality`               | `lint:md && lint:docs && check:py:static`                             | local / CI 共通の正規品質ゲート  |
-| `lint`                        | `check:quality`                                                       | 正規品質ゲートの互換エイリアス   |
+| `lint`                        | `lint:md && lint:docs && check:py:static`                             | local / CI 共通の正規品質ゲート  |
 | `lint:md`                     | `lint:md:content && lint:md:repo`                                     | markdownlint 実行                |
 | `lint:md:content`             | markdownlint (docs content)                                           | コンテンツ MD lint (MD001 無効)  |
 | `lint:md:repo`                | markdownlint (repo docs, .github)                                     | リポジトリ MD lint               |

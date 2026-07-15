@@ -100,7 +100,7 @@ npm run dev
 npm run build
 
 # 品質チェック（Markdown・ドキュメント・Python静的検査）
-npm run check:quality
+npm run lint
 
 # Astro・TypeScript・Markdownのフォーマット
 npm run format
@@ -181,7 +181,7 @@ git commit -m "docs: TRANSLATION_GUIDEに画像取得手順を追加"
 
 ### PR作成前のチェックリスト
 
-- [ ] `npm run check:quality` が通る（`npm run lint`でも同じゲートを実行）
+- [ ] `npm run lint` が通る
 - [ ] `npm run build` が成功する
 - [ ] ローカルで表示を確認済み
 - [ ] コミットメッセージが明確

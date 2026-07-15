@@ -37,7 +37,7 @@ jobs:
       - name: Sync Python deps
         working-directory: scripts/python
         run: uv sync --locked --all-extras
-      - run: npm run check:quality
+      - run: npm run lint
 
   test:
     # scripts/__tests__/*.test.mjs を glob で実行する Node-only regression guard。
@@ -65,7 +65,7 @@ jobs:
 
   python-fast:
     # Python test の fast-feedback gate。Ruff / format / mypy は lint job の
-    # ``npm run check:quality`` に集約し、local と CI で同じ command を使う。
+    # ``npm run lint`` に集約し、local と CI で同じ command を使う。
     runs-on: ubuntu-latest
     defaults:
       run:

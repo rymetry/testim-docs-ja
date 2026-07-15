@@ -40,8 +40,7 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 | `npm run dev`                   | 開発サーバー (http://localhost:4321)                                         |
 | `npm run build`                 | プロダクションビルド (`astro check` + build)                                 |
 | `npm run check`                 | TypeScript/Astro 型チェックのみ                                              |
-| `npm run check:quality`         | 正規品質ゲート（Markdown・docs・Ruff・Python format・mypy）                  |
-| `npm run lint`                  | `check:quality` の後方互換エイリアス                                         |
+| `npm run lint`                  | 正規品質ゲート（Markdown・docs・Ruff・Python format・mypy）                  |
 | `npm run lint:docs`             | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在） |
 | `npm run lint:py`               | Python Ruff lint                                                             |
 | `npm run format:py:check`       | Python Ruff format check                                                     |
