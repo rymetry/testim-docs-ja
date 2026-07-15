@@ -92,10 +92,10 @@ Grid の編集または削除を行うには、Grid 設定ボックスにカー�
 - [Tricentis Device Cloud (mobile)](/docs/integrations/grid-management/tricentis-device-cloud)
 - [Custom Grid (web only)](/docs/integrations/grid-management/custom-grid)
 - [SauceLabs integration (mobile and web)](/docs/integrations/grid-management/saucelabs-integration)
-- [BrowserStack integration (mobile and web)](/docs/integrations/grid-management/browserstack-integration-1)
+- [BrowserStack integration (mobile and web)](/docs/integrations/grid-management/browserstack-integration)
 - [CLI での SauceLabs と BrowserStack のテスト capability (mobile と web)](/docs/integrations/grid-management/saucelabs-browserstack-options)
 - [HeadSpin integration (mobile)](/docs/integrations/grid-management/headspin-integration)
-- [LambdaTest integration (web only)](/docs/integrations/grid-management/browserstack-integration-copy)
+- [LambdaTest integration (web only)](/docs/integrations/grid-management/lambdatest-integration)
 
 ## Grid で実行する方法
 

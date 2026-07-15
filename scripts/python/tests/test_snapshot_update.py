@@ -11,6 +11,7 @@ import datetime
 import io
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -76,6 +77,69 @@ def test_extract_main_content_unmatched_returns_none() -> None:
 # ----------------------------------------------------------------------
 # fetch_html_with_retry — 522 / network error の retry 挙動
 # ----------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        (
+            "https://docs.tricentis.com/secure/testim/alert?type=PageNotFound",
+            True,
+        ),
+        (
+            "https://docs.tricentis.com/secure/testim/alert/?lang=en&type=PageNotFound",
+            True,
+        ),
+        (
+            "https://docs.tricentis.com/secure/testim/alert?type=Other",
+            False,
+        ),
+        (
+            "https://docs.tricentis.com/testim/content/overview/page.htm",
+            False,
+        ),
+    ],
+)
+def test_is_logical_not_found_url(url: str, expected: bool) -> None:
+    assert su.is_logical_not_found_url(url) is expected
+
+
+def test_default_fetch_html_maps_page_not_found_redirect_to_404(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    response = SimpleNamespace(
+        status_code=200,
+        url="https://docs.tricentis.com/secure/testim/alert?type=PageNotFound",
+        text="<html><body>Page not found</body></html>",
+    )
+    monkeypatch.setattr(su.httpx, "get", lambda *_args, **_kwargs: response)
+
+    assert su._default_fetch_html("https://example.com/old.htm") == {
+        "html": None,
+        "status": 404,
+    }
+
+
+@pytest.mark.parametrize(
+    ("status", "expected"),
+    [
+        (200, {"html": "<html>ok</html>", "status": 200}),
+        (404, {"html": None, "status": 404}),
+    ],
+)
+def test_default_fetch_html_preserves_regular_http_status(
+    monkeypatch: pytest.MonkeyPatch,
+    status: int,
+    expected: dict[str, Any],
+) -> None:
+    response = SimpleNamespace(
+        status_code=status,
+        url="https://docs.tricentis.com/testim/content/overview/page.htm",
+        text="<html>ok</html>",
+    )
+    monkeypatch.setattr(su.httpx, "get", lambda *_args, **_kwargs: response)
+
+    assert su._default_fetch_html("https://example.com/page.htm") == expected
 
 
 def test_fetch_html_with_retry_ok_first_try() -> None:

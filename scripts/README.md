@@ -63,6 +63,14 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
 
+`check:snapshots` は fetch と diff を非短絡で実行する。fetch が部分失敗しても
+取得済みページの diff と `snapshot-diff-status.json` を生成し、fetch 側の
+`source-sync-status.json` も保持する。集約終了コードはどちらか一方でも失敗すれば
+非0となる。Tricentis が旧URLを
+`/secure/testim/alert?type=PageNotFound` へリダイレクトしてHTTP 200を返した場合は
+論理404として扱うが、通常の200ページで `#mc-main-content` が欠落した場合は
+構造変更の可能性があるため取得エラーとして扱う。
+
 **Source-side debt の除外運用**: `testim_parity.sync_exclusions` (旧 `scripts/lib/source_sync_exclusions.mjs`) の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
 
 - snapshot HTML file を上書きしない (hand-authored snapshot を凍結参照として温存)

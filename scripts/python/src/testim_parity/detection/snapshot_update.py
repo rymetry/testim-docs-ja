@@ -35,6 +35,7 @@ import time
 from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 from typing import Any, TypedDict
+from urllib.parse import parse_qs, urlsplit
 
 import httpx
 
@@ -67,6 +68,7 @@ __all__ = [
     "MARKER_404",
     "DEFAULT_USER_AGENT",
     "extract_main_content",
+    "is_logical_not_found_url",
     "fetch_html_with_retry",
     "fetch_html_content",
     "run_recovery_probe",
@@ -80,6 +82,7 @@ THROTTLE_MS = 100
 MAX_RETRIES = 3
 RETRY_BASE_MS = 1000
 FETCH_TIMEOUT_S = 30.0
+_PAGE_NOT_FOUND_PATH = "/secure/testim/alert"
 
 
 def MARKER_404(url: str) -> str:  # noqa: N802 — mjs ``MARKER_404`` と同名
@@ -171,6 +174,15 @@ def extract_main_content(html: str) -> str | None:
 # ---------------------------------------------------------------------------
 
 
+def is_logical_not_found_url(url: str) -> bool:
+    """Tricentis の HTTP 200 PageNotFound リダイレクトを識別する。"""
+    parsed = urlsplit(url)
+    return (
+        parsed.path.rstrip("/") == _PAGE_NOT_FOUND_PATH
+        and "PageNotFound" in parse_qs(parsed.query).get("type", [])
+    )
+
+
 def _default_fetch_html(url: str) -> FetchResult:
     """httpx ベースの default fetcher。mjs ``fetch`` + timeout 等価。"""
     try:
@@ -184,6 +196,8 @@ def _default_fetch_html(url: str) -> FetchResult:
             follow_redirects=True,
         )
         status = response.status_code
+        if is_logical_not_found_url(str(response.url)):
+            return {"html": None, "status": 404}
         if 200 <= status < 300:
             return {"html": response.text, "status": status}
         return {"html": None, "status": status}

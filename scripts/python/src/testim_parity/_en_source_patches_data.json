@@ -168,8 +168,8 @@
     {
       "id": "UD-009-grid-management-index-self-link",
       "slugs": [
-        "integrations/grid-management/browserstack-integration-1",
-        "integrations/grid-management/browserstack-integration-copy",
+        "integrations/grid-management/browserstack-integration",
+        "integrations/grid-management/lambdatest-integration",
         "integrations/grid-management/custom-grid",
         "integrations/grid-management/headspin-integration",
         "integrations/grid-management/saucelabs-integration"

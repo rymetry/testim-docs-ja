@@ -161,7 +161,7 @@ Testim のテストリストから 1 つ以上のテストを実行できます�
 
 - **Testim クラウド グリッド** - Testim は必要な数のブラウザとブラウザ タイプでグリッドをセットアップできます。 既にお持ちでない場合は、お客様に適したオプションを確認するためにお問い合わせください。
 - **ローカル グリッド** - Selenium グリッドがある場合、統合できます。
-- **サードパーティグリッド** - Testim は [Saucelabs](/docs/integrations/grid-management/saucelabs-integration) および [Browserstack](/docs/integrations/grid-management/browserstack-integration-1) などのサードパーティグリッドと統合できます。
+- **サードパーティグリッド** - Testim は [Saucelabs](/docs/integrations/grid-management/saucelabs-integration) および [Browserstack](/docs/integrations/grid-management/browserstack-integration) などのサードパーティグリッドと統合できます。
 
 **CLI を通じてリモート Web テストを実行するには:**
 

@@ -249,8 +249,8 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/virtual-mobile-grid.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/custom-grid.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-integration.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-1.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-copy.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/lambdatest-integration.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/custom-capabilities.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-browserstack-options.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/headspin-integration.htm

@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12028
 updated: '2025-09-22'
-sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-copy.htm'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/lambdatest-integration.htm'
 keywords:
   - LambdaTest
   - Grid
@@ -35,7 +35,7 @@ LambdaTest integration では、Testim は現在 [selenium testing](https://www.
 - **Username**: LambdaTest の user name
 - **Password/access key**: 接続に使用する LambdaTest access key または password
 
-![LambdaTest Grid の接続情報を設定する画面](/images/grid-management/browserstack-integration-copy/9301458-gridmanagement.gif)
+![LambdaTest Grid の接続情報を設定する画面](/images/grid-management/lambdatest-integration/9301458-gridmanagement.gif)
 
 ## Grid で実行する方法
 
@@ -62,7 +62,7 @@ Test Editor から直接 Grid 上でテストを実行できます。
 
 その実行で構成 / Grid / ベース URL を変更したい場合は **Edit** をクリックします。
 
-![Test Editor から LambdaTest Grid を選んで実行する画面](/images/grid-management/browserstack-integration-copy/2b9a380-lambdagrid.gif)
+![Test Editor から LambdaTest Grid を選んで実行する画面](/images/grid-management/lambdatest-integration/2b9a380-lambdagrid.gif)
 
 :::info
 `--grid` パラメーターは、旧来の host / port パラメーターを置き換えます。

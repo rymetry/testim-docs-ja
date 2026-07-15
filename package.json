@@ -66,7 +66,7 @@
     "generate:parity-baseline": "cd scripts/python && uv run python -m testim_parity.detection.generate_parity_baseline",
     "check:snapshots:fetch": "cd scripts/python && uv run python -m testim_parity.detection.snapshot_update",
     "check:snapshots:diff": "cd scripts/python && uv run python -m testim_parity.detection.snapshot_diff",
-    "check:snapshots": "npm run check:snapshots:fetch && npm run check:snapshots:diff",
+    "check:snapshots": "cd scripts/python && uv run python -m testim_parity.detection.snapshot_check",
     "check:snapshots:fetch:dry-run": "cd scripts/python && uv run python -m testim_parity.detection.snapshot_update --dry-run"
   },
   "dependencies": {

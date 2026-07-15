@@ -6,7 +6,7 @@ description: >-
 category: 統合
 order: 12027
 updated: '2025-09-22'
-sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-1.htm'
+sourceUrl: 'https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration.htm'
 keywords:
   - BrowserStack
   - Grid
@@ -31,7 +31,7 @@ keywords:
 - **Username**: BrowserStack の user name
 - **Password/access key**: 接続に使用する BrowserStack access key または password
 
-![BrowserStack Grid の接続情報を設定する画面](/images/grid-management/browserstack-integration-1/be4fb2b-Jul-24-2021_08-13-41.gif)
+![BrowserStack Grid の接続情報を設定する画面](/images/grid-management/browserstack-integration/be4fb2b-Jul-24-2021_08-13-41.gif)
 
 ## Grid で実行する方法
 
@@ -58,7 +58,7 @@ Test Editor から直接 Grid 上でテストを実行できます。
 
 その実行で構成 / Grid / ベース URL を変更したい場合は **Edit** をクリックします。
 
-![Test Editor から BrowserStack Grid を選んで実行する画面](/images/grid-management/browserstack-integration-1/0ca9bb7-Jul-21-2021_13-11-22.gif)
+![Test Editor から BrowserStack Grid を選んで実行する画面](/images/grid-management/browserstack-integration/0ca9bb7-Jul-21-2021_13-11-22.gif)
 
 テスト実行に追加オプションを渡したい場合は、[SauceLabs と BrowserStack の CLI 用テスト capabilities](/docs/integrations/grid-management/saucelabs-browserstack-options) を参照してください。
 

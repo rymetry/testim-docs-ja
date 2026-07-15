@@ -53,6 +53,10 @@ npm run check:snapshots:diff
 npm run check:snapshots
 ```
 
+`check:snapshots` は fetch が一部失敗しても diff を実行し、`source-sync-status.json` と
+`snapshot-diff-status.json` の両方を残します。終了コードは fetch または diff の
+どちらかが失敗すれば非0となるため、観測できた差分を報告しつつ同期劣化も隠しません。
+
 ### オプション
 
 ```bash
@@ -103,9 +107,14 @@ npm run docs:fetch -- --mode=full
 
 ### ページ削除時
 
-1. `snapshot_update` が 404 マーカー（`<!-- 404: ... -->`）を書き込む
+1. `snapshot_update` が HTTP 404、または
+   `/secure/testim/alert?type=PageNotFound` へのリダイレクトを論理404として判定し、
+   404マーカー（`<!-- 404: ... -->`）を書き込む
 2. `snapshot_diff` が `page-removed` として検出
 3. 対応: 日本語ドキュメントの扱いを判断（削除 or アーカイブ）
+
+通常のHTTP 200ページで `#mc-main-content` が見つからない場合は404へ読み替えず、
+ページ構造変更または取得異常として `errorPages` に計上します。
 
 ### Source-side debt（broken upstream）の隔離
 
