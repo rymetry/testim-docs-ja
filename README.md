@@ -28,7 +28,7 @@
 
 ## 🛠️ 技術スタック
 
-- **フレームワーク**: [Astro 6](https://astro.build/) - 高速な静的サイト生成（Content Layer API、Built-in Fonts API）
+- **フレームワーク**: [Astro 7](https://astro.build/) - 高速な静的サイト生成（Content Layer API、Built-in Fonts API）
 - **スタイリング**: [Tailwind CSS v4](https://tailwindcss.com/) - ユーティリティファーストCSS
 - **コンテンツ管理**: Markdown (.md) - シンプルで書きやすい
 - **検索機能**: [MiniSearch](https://github.com/lucaong/minisearch) - クライアントサイド全文検索
@@ -44,7 +44,7 @@
 
 ### 前提条件
 
-- Node.js 22 系推奨（`package.json` の `engines` は `>=18 <25`）
+- Node.js 22.12 以上、25 未満（`package.json` の `engines` は `>=22.12.0 <25`）
 - npm
 - Python 3.14.4 と uv（`npm run lint`、原文同期、パリティ確認に必要）
 

@@ -6,7 +6,7 @@ Testim Help Documentation (docs.tricentis.com/testim) の日本語ローカラ�
 
 | 項目 | 値 |
 | --- | --- |
-| フレームワーク | Astro 6, Tailwind CSS v4, TypeScript, React (検索 UI のみ) |
+| フレームワーク | Astro 7, Tailwind CSS v4, TypeScript, React (検索 UI のみ) |
 | デプロイ | Vercel (static / SSR+auth 切替: `BASIC_AUTH_ENABLED`) |
 | コンテンツ | `src/content/docs/` 配下の Markdown (20 カテゴリフォルダー) |
 | スキーマ | `src/content.config.ts` (Zod validation) |
