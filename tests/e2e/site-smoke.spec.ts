@@ -2,29 +2,68 @@ import { readFile } from 'node:fs/promises';
 
 import { expect, test, type Page } from '@playwright/test';
 
-const runtimeIssues = new WeakMap<Page, string[]>();
-const checkedResourceTypes = new Set(['script', 'stylesheet', 'font']);
+type RuntimeIssue = { message: string; url?: string };
+
+const runtimeIssues = new WeakMap<Page, RuntimeIssue[]>();
+const checkedResourceTypes = new Set(['script', 'stylesheet', 'font', 'image']);
+const isRemoteTarget = Boolean(process.env.PLAYWRIGHT_BASE_URL);
+const expectedDocument404ConsoleErrorPattern =
+  /^console\.error: Failed to load resource: the server responded with a status of 404 \((?:Not Found)?\)$/;
+const visualViewports = [
+  { name: 'desktop-1440x900', width: 1440, height: 900 },
+  { name: 'mobile-390x844', width: 390, height: 844 },
+];
+
+async function expectNoHorizontalOverflow(page: Page) {
+  const dimensions = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+}
+
+function acknowledgeExpectedDocument404(page: Page) {
+  const issues = runtimeIssues.get(page) ?? [];
+  const matchingIndexes = issues.flatMap((issue, index) =>
+    expectedDocument404ConsoleErrorPattern.test(issue.message) && issue.url === page.url()
+      ? [index]
+      : []
+  );
+  expect(
+    matchingIndexes.length,
+    '404ドキュメントに付随する既知のconsole error数'
+  ).toBeLessThanOrEqual(1);
+
+  if (matchingIndexes.length === 1) {
+    issues.splice(matchingIndexes[0], 1);
+  }
+}
 
 test.beforeEach(async ({ page }) => {
-  const issues: string[] = [];
+  const issues: RuntimeIssue[] = [];
   runtimeIssues.set(page, issues);
 
   page.on('pageerror', (error) => {
-    issues.push(`pageerror: ${error.message}`);
+    issues.push({ message: `pageerror: ${error.message}` });
   });
   page.on('console', (message) => {
     if (message.type() === 'error') {
-      issues.push(`console.error: ${message.text()}`);
+      issues.push({
+        message: `console.error: ${message.text()}`,
+        url: message.location().url,
+      });
     }
   });
   page.on('requestfailed', (request) => {
     if (checkedResourceTypes.has(request.resourceType())) {
-      issues.push(`requestfailed: ${request.url()} (${request.failure()?.errorText ?? 'unknown'})`);
+      issues.push({
+        message: `requestfailed: ${request.url()} (${request.failure()?.errorText ?? 'unknown'})`,
+      });
     }
   });
   page.on('response', (response) => {
     if (checkedResourceTypes.has(response.request().resourceType()) && response.status() >= 400) {
-      issues.push(`response: ${response.status()} ${response.url()}`);
+      issues.push({ message: `response: ${response.status()} ${response.url()}` });
     }
   });
 });
@@ -34,8 +73,10 @@ test.afterEach(async ({ page }) => {
 });
 
 test('トップページから代表ドキュメントへ遷移できる', async ({ page }) => {
-  await page.goto('/');
+  const response = await page.goto('/');
 
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveTitle(/Tricentis Testim.*\| Tricentis Testim/);
   await expect(
     page.getByRole('heading', { name: /Tricentis Testim.*ユーザー制作日本語翻訳ドキュメント/ })
   ).toBeVisible();
@@ -44,7 +85,18 @@ test('トップページから代表ドキュメントへ遷移できる', async
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });
 
-test('既存のMarkdown拡張が本番ビルドで描画される', async ({ page }) => {
+test('デスクトップのサイドバーからドキュメントへ遷移できる', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/docs/overview/testim-overview');
+
+  const navigation = page.getByRole('navigation', { name: 'ドキュメントナビゲーション' });
+  await expect(navigation).toBeVisible();
+  await navigation.getByRole('link', { name: 'Web とモバイルテスト', exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/overview\/testim-overview\/testim-automate\/?$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Web とモバイルテスト' })).toBeVisible();
+});
+
+test('APIドキュメントのMarkdown拡張と主要画像が本番ビルドで描画される', async ({ page }) => {
   await page.goto('/docs/administration/api-access');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Testim REST API' })).toBeVisible();
@@ -52,9 +104,28 @@ test('既存のMarkdown拡張が本番ビルドで描画される', async ({ pag
   await expect(page.locator('.expressive-code').first()).toBeVisible();
   await expect(page.locator('.heading-link').first()).toBeVisible();
 
+  const contentImage = page.getByRole('img', {
+    name: 'API 設定ページと Generate API Key ボタン',
+  });
+  await expect(contentImage).toBeVisible();
+  await expect(contentImage).toHaveJSProperty('complete', true);
+  expect(
+    await contentImage.evaluate((image: HTMLImageElement) => image.naturalWidth)
+  ).toBeGreaterThan(0);
+});
+
+test('記録ドキュメントの表と主要画像が本番ビルドで描画される', async ({ page }) => {
   await page.goto('/docs/recording-tests/how-to-record-a-test');
+
   await expect(page.getByRole('heading', { level: 1, name: 'Web テストの記録方法' })).toBeVisible();
   await expect(page.locator('.overflow-x-auto > table').first()).toBeVisible();
+
+  const contentImage = page.getByRole('img', { name: 'New Test の作成' });
+  await expect(contentImage).toBeVisible();
+  await expect(contentImage).toHaveJSProperty('complete', true);
+  expect(
+    await contentImage.evaluate((image: HTMLImageElement) => image.naturalWidth)
+  ).toBeGreaterThan(0);
 });
 
 test('検索インデックスとキーボード操作が機能する', async ({ page }) => {
@@ -84,20 +155,49 @@ test('検索インデックスとキーボード操作が機能する', async ({
   await expect(page).toHaveURL(/\/docs\/administration\/api-access\/?$/);
 });
 
-test('リダイレクト、404、robots、sitemapが有効である', async ({ request }) => {
-  const deploymentConfig = JSON.parse(await readFile('.vercel/output/config.json', 'utf8')) as {
-    routes: Array<{ src?: string; status?: number; headers?: Record<string, string> }>;
-  };
-  expect(deploymentConfig.routes).toContainEqual(
-    expect.objectContaining({
-      src: '^/docs/applitools-integration$',
-      status: 301,
-      headers: { Location: '/docs/integrations/visual-validation' },
-    })
-  );
+test('モバイルのカテゴリナビゲーションからドキュメントへ遷移できる', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/docs/overview/testim-overview');
 
-  const notFound = await request.get('/this-page-does-not-exist');
-  expect(notFound.status()).toBe(404);
+  await expect(page.getByRole('navigation', { name: 'ドキュメントナビゲーション' })).toBeHidden();
+  const navigation = page.getByRole('combobox', { name: 'カテゴリナビゲーション' });
+  await expect(navigation).toBeVisible();
+  await navigation.selectOption('/docs/administration/api-access');
+  await expect(page).toHaveURL(/\/docs\/administration\/api-access\/?$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Testim REST API' })).toBeVisible();
+});
+
+test('404ページが期待どおり表示される', async ({ page }) => {
+  const response = await page.goto('/this-page-does-not-exist');
+
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole('heading', { level: 1, name: '404' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'ページが見つかりません' })
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'トップページへ戻る' })).toHaveAttribute('href', '/');
+  acknowledgeExpectedDocument404(page);
+});
+
+test('リダイレクト、robots、sitemapが有効である', async ({ request }) => {
+  if (isRemoteTarget) {
+    const redirect = await request.get('/docs/applitools-integration', { maxRedirects: 0 });
+    expect(redirect.status()).toBe(301);
+    expect(new URL(redirect.headers().location, 'https://example.invalid').pathname).toBe(
+      '/docs/integrations/visual-validation'
+    );
+  } else {
+    const deploymentConfig = JSON.parse(await readFile('.vercel/output/config.json', 'utf8')) as {
+      routes: Array<{ src?: string; status?: number; headers?: Record<string, string> }>;
+    };
+    expect(deploymentConfig.routes).toContainEqual(
+      expect.objectContaining({
+        src: '^/docs/applitools-integration$',
+        status: 301,
+        headers: { Location: '/docs/integrations/visual-validation' },
+      })
+    );
+  }
 
   const robots = await request.get('/robots.txt');
   expect(robots.status()).toBe(200);
@@ -108,28 +208,109 @@ test('リダイレクト、404、robots、sitemapが有効である', async ({ r
   expect(await sitemap.text()).toContain('<sitemapindex');
 });
 
-test('モバイル幅でページ全体が横にはみ出さない', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test('公開ページにセキュリティヘッダーが付与される', async ({ request }) => {
+  if (isRemoteTarget) {
+    const response = await request.get('/');
 
-  const targets = [
-    {
-      path: '/',
-      primaryElement: page.getByRole('link', { name: 'ドキュメントを読む' }),
-    },
-    {
-      path: '/docs/administration/api-access',
-      primaryElement: page.getByRole('button', { name: '検索' }),
-    },
-  ];
+    expect(response.status()).toBe(200);
+    expect(response.headers()).toMatchObject({
+      'x-frame-options': 'DENY',
+      'x-content-type-options': 'nosniff',
+      'referrer-policy': 'strict-origin-when-cross-origin',
+    });
+  } else {
+    const vercelConfig = JSON.parse(await readFile('vercel.json', 'utf8')) as {
+      headers: Array<{ source: string; headers: Array<{ key: string; value: string }> }>;
+    };
+    expect(vercelConfig.headers).toContainEqual(
+      expect.objectContaining({
+        source: '/(.*)',
+        headers: expect.arrayContaining([
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ]),
+      })
+    );
+  }
+});
 
-  for (const { path, primaryElement } of targets) {
-    await page.goto(path);
+test('設定済みのNoto Sans JP 4ウェイトを読み込める', async ({ page }) => {
+  await page.goto('/');
+
+  const fontFaceResults = await page.evaluate(async () => {
+    const weights = ['400', '500', '600', '700'];
+    const fontLoadCanary = 'Testim';
+    const normalizeFamily = (family: string) => family.replace(/^(['"])(.*)\1$/, '$2');
+    const fontFamily = getComputedStyle(document.documentElement)
+      .getPropertyValue('--font-noto-sans-jp')
+      .split(',')[0]
+      .trim();
+    const matchingFaces = Array.from(document.fonts).filter(
+      (face) => normalizeFamily(face.family) === normalizeFamily(fontFamily)
+    );
+
+    return Promise.all(
+      weights.map(async (weight) => {
+        const faces = matchingFaces.filter(
+          (face) => face.weight === weight && face.style === 'normal'
+        );
+        await Promise.all(faces.map((face) => face.load()));
+        const canaryFaces = await document.fonts.load(
+          `${weight} 16px ${fontFamily}`,
+          fontLoadCanary
+        );
+        return {
+          weight,
+          count: faces.length,
+          loaded: faces.length === 1 && faces[0].status === 'loaded',
+          canaryMatched: faces.length === 1 && canaryFaces.includes(faces[0]),
+        };
+      })
+    );
+  });
+  expect(fontFaceResults).toEqual(
+    ['400', '500', '600', '700'].map((weight) => ({
+      weight,
+      count: 1,
+      loaded: true,
+      canaryMatched: true,
+    }))
+  );
+});
+
+test('desktopとmobileでトップページが横にはみ出さない', async ({ page }, testInfo) => {
+  await page.setViewportSize(visualViewports[0]);
+  await page.goto('/');
+
+  for (const viewport of visualViewports) {
+    await page.setViewportSize(viewport);
+
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(primaryElement).toBeVisible();
-    const dimensions = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-    }));
-    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+    await expect(page.getByRole('link', { name: 'ドキュメントを読む' })).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+
+    const screenshotName = `home-${viewport.name}`;
+    const screenshotPath = testInfo.outputPath(`${screenshotName}.png`);
+    await page.screenshot({ path: screenshotPath });
+    await testInfo.attach(screenshotName, { path: screenshotPath, contentType: 'image/png' });
+  }
+});
+
+test('desktopとmobileで代表ドキュメントが横にはみ出さない', async ({ page }, testInfo) => {
+  await page.setViewportSize(visualViewports[0]);
+  await page.goto('/docs/administration/api-access');
+
+  for (const viewport of visualViewports) {
+    await page.setViewportSize(viewport);
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Testim REST API' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '検索' })).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+
+    const screenshotName = `api-access-${viewport.name}`;
+    const screenshotPath = testInfo.outputPath(`${screenshotName}.png`);
+    await page.screenshot({ path: screenshotPath });
+    await testInfo.attach(screenshotName, { path: screenshotPath, contentType: 'image/png' });
   }
 });

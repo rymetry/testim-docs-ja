@@ -48,6 +48,7 @@
     "test:all": "npm run test:mjs && npm run test:py:full",
     "test:e2e": "playwright test",
     "test:e2e:build": "npm run build && npm run test:e2e",
+    "test:e2e:production": "PLAYWRIGHT_BASE_URL=https://testim-docs-ja.vercel.app playwright test",
     "lint:docs": "cd scripts/python && uv run --locked python -m testim_parity.tools.lint_docs",
     "check:untranslated": "cd scripts/python && uv run python -m testim_parity.detection.find_untranslated",
     "lint:glossary": "cd scripts/python && uv run python -m testim_parity.tools.check_glossary_duplicates",
