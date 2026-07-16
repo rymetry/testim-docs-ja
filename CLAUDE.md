@@ -4,7 +4,7 @@
 
 ## プロジェクト概要
 
-Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ローカライゼーション。Astro 6、Tailwind CSS v4、TypeScript、React（検索 UI のみ）で構築。Vercel にデプロイ。全レスポンス・コンテンツは日本語で記述する。
+Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ローカライゼーション。Astro 7、Tailwind CSS v4、TypeScript、React（検索 UI のみ）で構築。Vercel にデプロイ。全レスポンス・コンテンツは日本語で記述する。
 
 ## コマンド一覧
 
