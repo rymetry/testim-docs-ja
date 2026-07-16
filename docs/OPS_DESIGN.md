@@ -17,7 +17,7 @@
 5. `source parity qa`
    `npm run check:parity` でローカル Markdown の品質チェックを行い、未翻訳行、レガシー callout、JSX callout、本文中 H1、orphan ページを検出する。
 6. `qa`
-   `npm run lint:docs && npm test && npm run build` を通す。必要なら `--section="..."` で対象を絞る。
+   `npm run lint && npm test && npm run build` を通す。ページ単位の事前確認では、必要に応じて `npm run lint:docs -- --section="..."` で対象を絞る。
 7. `release`
    セクション単位で PR を作成し、通過したセクションだけ `docs/SIDEBAR_URLS.md` の検証状態を更新する。
 

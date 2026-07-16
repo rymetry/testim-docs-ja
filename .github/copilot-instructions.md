@@ -40,11 +40,15 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 | `npm run dev`                   | 開発サーバー (http://localhost:4321)                                         |
 | `npm run build`                 | プロダクションビルド (`astro check` + build)                                 |
 | `npm run check`                 | TypeScript/Astro 型チェックのみ                                              |
-| `npm run lint`                  | 全 lint (`lint:md` + `lint:docs`)                                            |
+| `npm run lint`                  | 正規品質ゲート（Markdown・docs・Ruff・Python format・mypy）                  |
 | `npm run lint:docs`             | WRITING_GUIDE 準拠チェック（frontmatter、リンク、callout、機能名、画像存在） |
+| `npm run lint:py`               | Python Ruff lint                                                             |
+| `npm run format:py:check`       | Python Ruff format check                                                     |
+| `npm run typecheck:py`          | Python mypy                                                                  |
 | `npm run lint:fix`              | Markdown lint の自動修正                                                     |
 | `npm run format`                | Prettier フォーマット (Astro, TS, MD)                                        |
-| `npm run test`                  | `scripts/__tests__/` のテスト実行                                            |
+| `npm run format:py`             | Python Ruff formatter                                                        |
+| `npm run test`                  | Node mjs + Python pytest の全テスト実行                                      |
 | `npm run check:parity`          | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化）         |
 | `npm run check:snapshots`       | EN HTML スナップショット取得 + diff（変更検出）                              |
 | `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ                                             |
@@ -126,12 +130,12 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 ## 開発ワークフロー
 
-1. 初回セットアップ: `npm install`
+1. 初回セットアップ: `npm install` + `(cd scripts/python && uv sync --locked --all-extras)`
 2. 開発サーバー: `npm run dev`
 3. 本番ビルド: `npm run build`
-4. Lint: markdownlint（Markdown）+ `lint:docs`（WRITING_GUIDE 準拠）
-5. フォーマット: Prettier（Astro/TypeScript/Markdown）
-6. テスト: `npm run test`（`scripts/__tests__/`）
+4. 品質ゲート: `npm run lint`（Markdown / docs / Ruff / Python format / mypy）
+5. フォーマット: `npm run format`（Astro/TypeScript/Markdown）+ `npm run format:py`（Python）
+6. テスト: `npm run test`（Node mjs + Python pytest）
 7. パリティ検証: `npm run check:parity && npm run check:snapshots:diff`
 
 ## AI アシスタント出力ポリシー

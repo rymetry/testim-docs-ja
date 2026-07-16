@@ -27,6 +27,10 @@ npm run check:snapshots:fetch  # スナップショット取得のみ
 npm run check:snapshots:diff   # コミット済み vs 最新の差分比較
 
 # 品質チェック
+npm run lint                   # Markdown・docs・Ruff・Python format・mypy
+npm run lint:py                # Python Ruff lint
+npm run format:py:check        # Python Ruff format check
+npm run typecheck:py           # Python mypy
 npm run lint:docs              # Markdown 構文・frontmatter 検証
 npm run check:parity           # 未翻訳テキスト・レガシー callout 検出
 npm run check:summary          # summary / audit manifest 生成
@@ -62,6 +66,14 @@ npm run check:snapshots:fetch -- --dry-run               # フェッチ経路検
 ```
 
 **出力**: `snapshot-diff-status.json`。変更は `page-changed`（内容変更）、`page-added`（新規）、`page-removed`（404化）に分類され、差分行は `heading` / `image` / `code` / `callout` / `content` に自動分類される。
+
+`check:snapshots` は fetch と diff を非短絡で実行する。fetch が部分失敗しても
+取得済みページの diff と `snapshot-diff-status.json` を生成し、fetch 側の
+`source-sync-status.json` も保持する。集約終了コードはどちらか一方でも失敗すれば
+非0となる。Tricentis が旧URLを
+`/secure/testim/alert?type=PageNotFound` へリダイレクトしてHTTP 200を返した場合は
+論理404として扱うが、通常の200ページで `#mc-main-content` が欠落した場合は
+構造変更の可能性があるため取得エラーとして扱う。
 
 **Source-side debt の除外運用**: `testim_parity.sync_exclusions` (旧 `scripts/lib/source_sync_exclusions.mjs`) の registry に登録された slug は fetch は継続するが、以下の特別処理を受ける:
 
@@ -802,11 +814,16 @@ npm run test:py:quick                                 # fast gate only
 
 | npm コマンド                  | 実体                                                                  | 用途                             |
 | ----------------------------- | --------------------------------------------------------------------- | -------------------------------- |
-| `lint`                        | `lint:md && lint:docs`                                                | 全 lint 実行                     |
+| `lint`                        | `lint:md && lint:docs && check:py:static`                             | local / CI 共通の正規品質ゲート  |
 | `lint:md`                     | `lint:md:content && lint:md:repo`                                     | markdownlint 実行                |
 | `lint:md:content`             | markdownlint (docs content)                                           | コンテンツ MD lint (MD001 無効)  |
 | `lint:md:repo`                | markdownlint (repo docs, .github)                                     | リポジトリ MD lint               |
-| `lint:docs`                   | `uv run python -m testim_parity.tools.lint_docs`                      | 構文・frontmatter 検証           |
+| `lint:docs`                   | `uv run --locked python -m testim_parity.tools.lint_docs`             | 構文・frontmatter 検証           |
+| `check:py:static`             | `lint:py && format:py:check && typecheck:py`                          | Python 静的検査の集約            |
+| `lint:py`                     | `uv run --locked ruff check src tests`                                | Python Ruff lint                 |
+| `format:py`                   | `uv run --locked ruff format src tests`                               | Python Ruff formatter            |
+| `format:py:check`             | `uv run --locked ruff format --check src tests`                       | Python Ruff format check         |
+| `typecheck:py`                | `uv run --locked mypy src`                                            | Python mypy                      |
 | `lint:glossary`               | `uv run python -m testim_parity.tools.check_glossary_duplicates`      | glossary 重複検知                |
 | `check:snapshots`             | snapshot fetch + diff (Python)                                        | スナップショット取得→比較        |
 | `check:snapshots:fetch`       | `uv run python -m testim_parity.detection.snapshot_update`            | スナップショット取得             |
@@ -831,9 +848,8 @@ npm run test:py:quick                                 # fast gate only
 | `test:py:corpus`              | `pytest -m corpus -n auto --dist load`                                | 288×3 matrix 並列                |
 | `test:py:corpus:regen`        | `uv run python -m testim_parity.tools.emit_corpus_oracle`             | committed golden 再生成          |
 | `test:py:corpus:drift`        | drift check (committed vs live Python)                                | 暫定 drift gate                  |
-| `test:mjs`                    | `node --test sync_detection_issues.test.mjs`                          | 残存 mjs test                    |
+| `test:mjs`                    | `node --test scripts/__tests__/*.test.mjs`                            | Node 回帰テスト                  |
 | `format`                      | `prettier --write`                                                    | コードフォーマット               |
-| `format:check`                | `prettier --check`                                                    | フォーマットチェック (CI 用)     |
 
 ---
 
@@ -847,7 +863,7 @@ npm run check:parity -- --slug=overview/testim-overview
 npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 # 全文チェック
-npm run lint:docs && npm run check:parity && npm test && npm run build
+npm run lint && npm run check:parity && npm test && npm run build
 ```
 
 ### CI 連携

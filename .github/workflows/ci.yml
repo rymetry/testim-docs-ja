@@ -14,7 +14,8 @@ concurrency:
 
 jobs:
   lint:
-    # lint:md (Node) + lint:docs (Python) を連結するため Node と Python の両方が必要。
+    # Markdown / docs / Ruff / Python format / mypy を連結するため
+    # Node と Python の両方が必要。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -36,7 +37,7 @@ jobs:
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
         working-directory: scripts/python
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
       - run: npm run lint
 
   test:
@@ -64,7 +65,8 @@ jobs:
       - run: npm run build
 
   python-fast:
-    # Python tooling の fast-feedback gate。Node 依存は残存 mjs test の job に限定する。
+    # Python test の fast-feedback gate。Ruff / format / mypy は lint job の
+    # ``npm run lint`` に集約し、local と CI で同じ command を使う。
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -81,13 +83,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
-        run: uv sync --all-extras
-      - name: Ruff lint
-        run: uv run ruff check src tests
-      - name: Ruff format check
-        run: uv run ruff format --check src tests
-      - name: mypy
-        run: uv run mypy src
+        run: uv sync --locked --all-extras
       - name: pytest (fast)
         # default addopts (6 marker exclude) を yaml 側で **明示的に重ねて指定** し
         # silent 無効化を防ぐ defense in depth。``slow`` marker は Phase 6b cutover
@@ -155,7 +151,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
       - name: Oracle sha256 TSV drift check
         # summarize(committed JSONL) vs committed TSV。committed golden の tamper
         # あるいは TSV regen 忘れを block する (PR #387 review P2-1 対応、
@@ -203,7 +199,7 @@ jobs:
         run: pip install 'uv==0.11.7'
       - name: Sync Python deps
         working-directory: scripts/python
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
       - name: Check source parity
         run: npm run check:parity
       - name: Upload parity results

@@ -44,7 +44,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
       - name: Generate today's oracle JSONL
         # Python 実装で 3 suite (segments_en + turndown + align) 全て生成。
         run: |
@@ -109,7 +109,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
       - name: pytest (parity_smoke)
         # Phase 6b cutover 後は cutover marker の 5-counter gate は green 維持が
         # 前提 (new drift は発生時に parser / content 側で解決する規律)。本 job
@@ -137,6 +137,6 @@ jobs:
           enable-cache: true
           cache-dependency-glob: 'scripts/python/uv.lock'
       - name: Sync Python deps
-        run: uv sync --all-extras
+        run: uv sync --locked --all-extras
       - name: pytest (recall + boundary + real_repo)
         run: uv run pytest -m 'recall or boundary or real_repo' --tb=short --durations=30

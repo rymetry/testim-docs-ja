@@ -13,6 +13,7 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -37,6 +38,7 @@ __all__ = [
     "build_sidebar_url_map",
     "classify_changes",
     "fallback_source_url",
+    "write_error_status",
     "main",
     "parse_args",
 ]
@@ -69,12 +71,13 @@ CHANGE_CLASSIFIERS: tuple[tuple[str, re.Pattern[str]], ...] = (
 )
 
 
-def _read_source_sync_payload() -> dict[str, Any] | None:
+def _read_source_sync_payload(path: Path | None = None) -> dict[str, Any] | None:
     """``source-sync-status.json`` を読み込む (不在 / 破損で None)。"""
-    if not _SOURCE_SYNC_STATUS_PATH.exists():
+    source_path = path if path is not None else _SOURCE_SYNC_STATUS_PATH
+    if not source_path.exists():
         return None
     try:
-        data = json.loads(_SOURCE_SYNC_STATUS_PATH.read_text(encoding="utf-8"))
+        data = json.loads(source_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return None
     return data if isinstance(data, dict) else None
@@ -305,24 +308,69 @@ def _find_html_files(root: Path) -> list[str]:
     return sorted(str(p.relative_to(root)) for p in root.rglob("*.html"))
 
 
-def _empty_error_result() -> dict[str, Any]:
-    return {
+def _checked_at(now: datetime | None = None) -> str:
+    value = now if now is not None else datetime.now(tz=UTC)
+    value = value.replace(tzinfo=UTC) if value.tzinfo is None else value.astimezone(UTC)
+    return value.strftime("%Y-%m-%dT%H:%M:%S.") + f"{value.microsecond // 1000:03d}Z"
+
+
+def write_error_status(
+    *,
+    output_path: Path,
+    source_status_path: Path,
+    run_scope: Mapping[str, Any],
+    detail: str,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """既存 schema に適合する error snapshot-diff artifact を書き出す。"""
+    source_sync_payload = _read_source_sync_payload(source_status_path)
+    source_inventory_fp = None
+    source_sync_run_id = None
+    source_run_scope: Mapping[str, Any] | None = None
+    if source_sync_payload:
+        fp = source_sync_payload.get("sourceInventoryFingerprint")
+        source_inventory_fp = fp if isinstance(fp, str) else None
+        source_run_id = source_sync_payload.get("runId")
+        source_sync_run_id = source_run_id if isinstance(source_run_id, str) else None
+        source_scope = source_sync_payload.get("runScope")
+        source_run_scope = source_scope if isinstance(source_scope, Mapping) else None
+    if source_inventory_fp is None:
+        source_inventory_fp = f"sha256:{hashlib.sha256(b'').hexdigest()}"
+
+    checked_at = _checked_at(now)
+    scope_payload = dict(source_run_scope if source_run_scope is not None else run_scope)
+    report: dict[str, Any] = {
+        "schemaVersion": SNAPSHOT_DIFF_SCHEMA_VERSION,
+        "runId": _build_snapshot_diff_run_id(checked_at, source_inventory_fp, scope_payload),
+        "sourceSyncRunId": source_sync_run_id,
+        "sourceInventoryFingerprint": source_inventory_fp,
+        "runScope": scope_payload,
+        "checkedAt": checked_at,
         "error": True,
+        "errorDetail": detail,
         "summary": {
             "totalSnapshots": 0,
             "changed": 0,
             "added": 0,
             "removed": 0,
             "unchanged": 0,
+            "runScope": scope_payload,
         },
         "changes": [],
         "sidebar": {"changed": False, "addedPages": [], "removedPages": []},
     }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return report
 
 
 def main(argv: list[str] | None = None) -> int:
     """CLI エントリポイント (exit 0 / 1)。"""
     args = parse_args(argv)
+    run_scope = build_run_scope(slug=args["slug"], section=args["section"])
 
     resolved_slug: str | None = None
     if args["slug"]:
@@ -332,12 +380,25 @@ def main(argv: list[str] | None = None) -> int:
                 f'❌ Unknown slug: "{args["slug"]}". No matching document found.',
                 file=sys.stderr,
             )
+            write_error_status(
+                output_path=_OUTPUT_PATH,
+                source_status_path=_SOURCE_SYNC_STATUS_PATH,
+                run_scope=run_scope,
+                detail=f'Unknown slug: "{args["slug"]}". No matching document found.',
+            )
             return 1
+        run_scope = build_run_scope(slug=resolved_slug, section=args["section"])
 
     source_urls = _build_source_url_index(section=args["section"])
 
     if not _CONTENT_DIR.exists():
         print("No snapshots found. Run check:snapshots:fetch first.")
+        write_error_status(
+            output_path=_OUTPUT_PATH,
+            source_status_path=_SOURCE_SYNC_STATUS_PATH,
+            run_scope=run_scope,
+            detail="No snapshots found. Run check:snapshots:fetch first.",
+        )
         return 1
 
     sidebar_text = (
@@ -348,6 +409,7 @@ def main(argv: list[str] | None = None) -> int:
     snapshot_files = _find_html_files(_CONTENT_DIR)
     changes: list[dict[str, Any]] = []
     unchanged = 0
+    scoped_total = 0
 
     for rel in snapshot_files:
         # rel は POSIX 区切りか OS 区切り。snapshot は常に POSIX-like で扱う。
@@ -356,6 +418,7 @@ def main(argv: list[str] | None = None) -> int:
             continue
         if not resolved_slug and args["section"] and slug not in source_urls:
             continue
+        scoped_total += 1
 
         snapshot_path = _CONTENT_DIR / rel
         current_content = snapshot_path.read_text(encoding="utf-8")
@@ -364,6 +427,12 @@ def main(argv: list[str] | None = None) -> int:
             head_content = _get_head_content(rel_path)
         except RuntimeError as err:
             print(f"{err}", file=sys.stderr)
+            write_error_status(
+                output_path=_OUTPUT_PATH,
+                source_status_path=_SOURCE_SYNC_STATUS_PATH,
+                run_scope=run_scope,
+                detail=str(err),
+            )
             return 1
         source_url = source_urls.get(slug) or fallback_source_url(slug, sidebar_url_map)
         is_404 = bool(MARKER_404_RE.match(current_content))
@@ -415,11 +484,7 @@ def main(argv: list[str] | None = None) -> int:
         else _diff_sidebar()
     )
 
-    scoped_total = 1 if resolved_slug else len(snapshot_files)
-
-    now = datetime.now(tz=UTC)
-    checked_at = now.strftime("%Y-%m-%dT%H:%M:%S.") + f"{now.microsecond // 1000:03d}Z"
-    run_scope = build_run_scope(slug=resolved_slug, section=args["section"])
+    checked_at = _checked_at()
     source_sync_payload = _read_source_sync_payload()
     source_inventory_fp = None
     source_sync_run_id = None
@@ -451,6 +516,10 @@ def main(argv: list[str] | None = None) -> int:
         "changes": changes,
         "sidebar": sidebar,
     }
+    sidebar_error = bool(sidebar.get("parseError"))
+    if sidebar_error:
+        report["error"] = True
+        report["errorDetail"] = "Sidebar diff failed because Git data or JSON was unavailable."
 
     _OUTPUT_PATH.write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
@@ -488,7 +557,7 @@ def main(argv: list[str] | None = None) -> int:
                 elif change["type"] == "page-removed":
                     print(f"  REMOVED  {change['slug']}")
 
-    return 0
+    return 1 if sidebar_error else 0
 
 
 if __name__ == "__main__":

@@ -42,6 +42,10 @@ export default defineConfig({
     }),
     '/docs/applitools-integration': '/docs/integrations/visual-validation',
     '/docs/changelog': '/docs/overview/changelog',
+    '/docs/integrations/grid-management/browserstack-integration-1':
+      '/docs/integrations/grid-management/browserstack-integration',
+    '/docs/integrations/grid-management/browserstack-integration-copy':
+      '/docs/integrations/grid-management/lambdatest-integration',
   },
   vite: {
     plugins: [tailwindcss()],

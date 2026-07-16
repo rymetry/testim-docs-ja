@@ -49,9 +49,9 @@ Web とモバイルの基本的な CLI コマンド例は、**設定 > CLI** タ
 
 [Testim Headspin Mobile（モバイル グリッド）](/docs/integrations/grid-management/headspin-integration)
 
-[Browserstack（グリッド）](/docs/integrations/grid-management/browserstack-integration-1)
+[Browserstack（グリッド）](/docs/integrations/grid-management/browserstack-integration)
 
-[LambdaTest（グリッド）](/docs/integrations/grid-management/browserstack-integration-copy)
+[LambdaTest（グリッド）](/docs/integrations/grid-management/lambdatest-integration)
 
 基本的な CLI コマンドは **例** の下部に表示されます。
 

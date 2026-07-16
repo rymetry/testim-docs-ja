@@ -53,6 +53,10 @@ npm run check:snapshots:diff
 npm run check:snapshots
 ```
 
+`check:snapshots` は fetch が一部失敗しても diff を実行し、`source-sync-status.json` と
+`snapshot-diff-status.json` の両方を残します。終了コードは fetch または diff の
+どちらかが失敗すれば非0となるため、観測できた差分を報告しつつ同期劣化も隠しません。
+
 ### オプション
 
 ```bash
@@ -74,8 +78,8 @@ npm run check:snapshots:fetch -- --dry-run
 ### CI 定期チェック（3日ごと）
 
 1. `git checkout`（clean）→ snapshots = コミット済み（翻訳済みベースライン）
-2. `npm run check:snapshots:fetch` → snapshots を最新英語で上書き
-3. `npm run check:snapshots:diff` → committed vs working tree を比較
+2. `npm run check:snapshots` → snapshots を最新英語で上書きし、fetch が部分失敗しても committed vs working tree の diff を実行
+3. `source-sync-status.json` と `snapshot-diff-status.json` を常に生成し、どちらかの stage が失敗した場合は非0で終了
 4. 差分あり → レポート生成 → GitHub Issue 作成/更新
 5. CI は snapshots をコミットしない → 翻訳するまで毎回同じ差分が検出され続ける
 
@@ -89,7 +93,7 @@ npm run check:snapshots:fetch -- --dry-run
 
 ### スナップショットから翻訳入力に再利用
 
-`fetch_translate_images.mjs` はスナップショットから自動的に読み込みます（HTML → turndown で Markdown 変換）:
+`testim_parity.pipeline.fetch_translate_images` はスナップショットから自動的に読み込みます（HTML → Markdown 変換）:
 
 ```bash
 npm run docs:fetch -- --mode=full
@@ -103,9 +107,14 @@ npm run docs:fetch -- --mode=full
 
 ### ページ削除時
 
-1. `snapshot_update` が 404 マーカー（`<!-- 404: ... -->`）を書き込む
+1. `snapshot_update` が HTTP 404、または
+   `/secure/testim/alert?type=PageNotFound` へのリダイレクトを論理404として判定し、
+   404マーカー（`<!-- 404: ... -->`）を書き込む
 2. `snapshot_diff` が `page-removed` として検出
 3. 対応: 日本語ドキュメントの扱いを判断（削除 or アーカイブ）
+
+通常のHTTP 200ページで `#mc-main-content` が見つからない場合は404へ読み替えず、
+ページ構造変更または取得異常として `errorPages` に計上します。
 
 ### Source-side debt（broken upstream）の隔離
 

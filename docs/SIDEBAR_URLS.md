@@ -1,16 +1,16 @@
 # Testim Documentation - 全サイドバーURL一覧
 
-取得日: 2026年3月31日
-総数: 287 URL
+取得日: 2026年7月16日
+総数: 288 URL
 
 ## 翻訳ステータス
 
-- ✅ 翻訳済み: 287個
+- ✅ 翻訳済み: 288個
 - ⏳ 未翻訳: 0個
 
 ## 検証ステータス
 
-- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 287個
+- ✅🔍 検証済み(frontmatter・keywords・リンク・lint): 288個
 - ✅   翻訳のみ完了: 0個
 
 ### アイコンの意味
@@ -249,8 +249,8 @@
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/virtual-mobile-grid.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/custom-grid.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-integration.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-1.htm
-- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration-copy.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/browserstack-integration.htm
+- ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/lambdatest-integration.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/custom-capabilities.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/saucelabs-browserstack-options.htm
 - ✅🔍 https://docs.tricentis.com/testim/content/integrations/grid-management/headspin-integration.htm

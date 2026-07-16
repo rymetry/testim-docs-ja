@@ -244,8 +244,8 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Applied**: 2026-04-18 (M2 PR D — Integrations area burn-down; renumbered from originally-proposed UD-005 due to ID collision with C's UD-005 mixed stale-reference/index.htm family in hooks & parameters)
 - **Review after**: 2026-10-18
 - **Affected slugs** (5):
-  - `integrations/grid-management/browserstack-integration-1`
-  - `integrations/grid-management/browserstack-integration-copy`
+  - `integrations/grid-management/browserstack-integration`
+  - `integrations/grid-management/lambdatest-integration`
   - `integrations/grid-management/custom-grid`
   - `integrations/grid-management/headspin-integration`
   - `integrations/grid-management/saucelabs-integration`

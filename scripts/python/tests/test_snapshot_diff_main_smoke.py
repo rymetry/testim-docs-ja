@@ -217,3 +217,100 @@ class TestMain:
         monkeypatch.setattr(snapshot_diff, "_OUTPUT_PATH", tmp_path / "snapshot-diff-status.json")
         rc = snapshot_diff.main([])
         assert rc == 1
+
+    def test_main_sidebar_parse_error_writes_error_report_and_returns_one(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        content_dir = tmp_path / "snapshots" / "en" / "content"
+        content_dir.mkdir(parents=True)
+        snapshot_path = content_dir / "overview" / "page.html"
+        snapshot_path.parent.mkdir(parents=True)
+        snapshot_path.write_text("<p>unchanged</p>", encoding="utf-8")
+
+        sidebar_path = tmp_path / "snapshots" / "en" / "sidebar.json"
+        sidebar_path.write_text("{not-json", encoding="utf-8")
+        source_status_path = tmp_path / "source-sync-status.json"
+        source_status_path.write_text(
+            json.dumps(
+                {
+                    "runId": "source-run",
+                    "sourceInventoryFingerprint": "sha256:test",
+                    "runScope": {
+                        "type": "full",
+                        "isComplete": True,
+                        "filters": {"slug": None, "section": None},
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        output_path = tmp_path / "snapshot-diff-status.json"
+
+        monkeypatch.setattr(snapshot_diff, "ROOT_DIR", tmp_path)
+        monkeypatch.setattr(snapshot_diff, "_CONTENT_DIR", content_dir)
+        monkeypatch.setattr(snapshot_diff, "_SIDEBAR_PATH", sidebar_path)
+        monkeypatch.setattr(snapshot_diff, "_SIDEBAR_URLS_PATH", tmp_path / "sidebar-urls.md")
+        monkeypatch.setattr(snapshot_diff, "_SOURCE_SYNC_STATUS_PATH", source_status_path)
+        monkeypatch.setattr(snapshot_diff, "_OUTPUT_PATH", output_path)
+        monkeypatch.setattr(snapshot_diff, "_build_source_url_index", lambda **_kwargs: {})
+
+        def fake_head_content(path: Path) -> str:
+            if path.name == "page.html":
+                return "<p>unchanged</p>"
+            raise RuntimeError("git sidebar failure")
+
+        monkeypatch.setattr(snapshot_diff, "_get_head_content", fake_head_content)
+
+        assert snapshot_diff.main([]) == 1
+        report = json.loads(output_path.read_text(encoding="utf-8"))
+        assert report["error"] is True
+        assert report["sidebar"]["parseError"] is True
+        assert "Sidebar diff failed" in report["errorDetail"]
+
+    def test_main_section_total_counts_only_filtered_snapshots(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        content_dir = tmp_path / "snapshots" / "en" / "content"
+        for slug in ("section/in-scope", "other/out-of-scope"):
+            path = content_dir / f"{slug}.html"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(f"<p>{slug}</p>", encoding="utf-8")
+
+        source_status_path = tmp_path / "source-sync-status.json"
+        source_status_path.write_text(
+            json.dumps(
+                {
+                    "runId": "source-run",
+                    "sourceInventoryFingerprint": "sha256:test",
+                    "runScope": {
+                        "type": "section",
+                        "isComplete": False,
+                        "filters": {"slug": None, "section": "Target"},
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        output_path = tmp_path / "snapshot-diff-status.json"
+
+        monkeypatch.setattr(snapshot_diff, "ROOT_DIR", tmp_path)
+        monkeypatch.setattr(snapshot_diff, "_CONTENT_DIR", content_dir)
+        monkeypatch.setattr(snapshot_diff, "_SIDEBAR_PATH", tmp_path / "missing-sidebar.json")
+        monkeypatch.setattr(snapshot_diff, "_SIDEBAR_URLS_PATH", tmp_path / "sidebar-urls.md")
+        monkeypatch.setattr(snapshot_diff, "_SOURCE_SYNC_STATUS_PATH", source_status_path)
+        monkeypatch.setattr(snapshot_diff, "_OUTPUT_PATH", output_path)
+        monkeypatch.setattr(
+            snapshot_diff,
+            "_build_source_url_index",
+            lambda **_kwargs: {"section/in-scope": "https://example.com/in-scope"},
+        )
+        monkeypatch.setattr(
+            snapshot_diff,
+            "_get_head_content",
+            lambda path: (tmp_path / path).read_text(encoding="utf-8"),
+        )
+
+        assert snapshot_diff.main(["--section=Target"]) == 0
+        report = json.loads(output_path.read_text(encoding="utf-8"))
+        assert report["summary"]["totalSnapshots"] == 1
+        assert report["summary"]["unchanged"] == 1

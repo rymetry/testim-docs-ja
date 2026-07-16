@@ -2,7 +2,7 @@
 
 ## 概要
 
-Testim Help Documentation (docs.tricentis.com/testim) の日本語ローカライズサイト。全 287 ページを翻訳済み。
+Testim Help Documentation (docs.tricentis.com/testim) の日本語ローカライズサイト。全 288 ページを翻訳済み。
 
 | 項目 | 値 |
 | --- | --- |
@@ -20,6 +20,9 @@ Testim Help Documentation (docs.tricentis.com/testim) の日本語ローカラ�
 
 ```text
 EN snapshot (docs.tricentis.com)
+  |
+  v
+testim_parity.detection.snapshot_check ── fetch と diff を非短絡で統合実行
   |
   v
 testim_parity.detection.snapshot_update ── fetch EN HTML (#mc-main-content)
@@ -57,7 +60,7 @@ Vercel deploy
 | --- | --- |
 | `docs/GLOSSARY.md` | 3-tier 用語集 (Tier A: 固有名詞, B: UI label, C: 一般 IT 用語)。`testim_parity.glossary_mask` が参照 |
 | `docs/INVARIANT_TOKENS.md` | 23 種の invariant token pattern 定義。正規表現で英語維持 token をマスク |
-| `docs/SIDEBAR_URLS.md` | 全 287 URL のマスターリスト。カテゴリ・ページ順序の single source of truth |
+| `docs/SIDEBAR_URLS.md` | 全 288 URL のマスターリスト。カテゴリ・ページ順序の single source of truth |
 
 ## 検出システム仕様
 
@@ -157,17 +160,20 @@ npm run build
 
 ```bash
 cd scripts/python
-uv sync --all-extras
+uv sync --locked --all-extras
 ```
 
 通常の実行:
 
 ```bash
 uv run pytest
-uv run ruff check src tests
-uv run ruff format --check src tests
-uv run mypy src
+cd ../..
+npm run lint:py
+npm run format:py:check
+npm run typecheck:py
 ```
+
+`npm run lint` を local / CI 共通の正規品質ゲートとする。
 
 `uv` が作る `.venv/`、pytest/ruff/mypy の cache、coverage artifact はローカル生成物として扱う。
 
@@ -218,7 +224,7 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 | 5 | `PARITY_GUIDE.md` | パリティ保全、2-mechanism 設計、gate matrix | 運用 |
 | 6 | `GLOSSARY.md` | 3-tier 用語分類 (runtime データ) | データ |
 | 7 | `INVARIANT_TOKENS.md` | 23 種 invariant token pattern (runtime データ) | データ |
-| 8 | `SIDEBAR_URLS.md` | マスターページリスト、287 URL | データ |
+| 8 | `SIDEBAR_URLS.md` | マスターページリスト、288 URL | データ |
 | 9 | `DOCS_DATE_TRACKING.md` | snapshot ベース変更検知、diff 分類、CI フロー | 仕様 |
 | 10 | `WRITING_FEATURES.md` | Markdown 拡張機能リファレンス | 参照 |
 | 11 | `UPSTREAM_DEFECTS.md` | 上流欠陥レジストリ (UD-001..UD-010+) | 運用 |
@@ -234,9 +240,12 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 | `npm run dev` | 開発サーバー (localhost:4321) |
 | `npm run build` | 本番ビルド (`astro check` + build) |
 | `npm run check` | TypeScript/Astro 型チェック |
-| `npm run lint` | 全 lint (`lint:md` + `lint:docs`) |
+| `npm run lint` | 正規品質ゲート (Markdown / docs / Ruff / Python format / mypy) |
 | `npm run lint:docs` | WRITING_GUIDE 準拠チェック |
-| `npm run test` | テスト実行 (`scripts/__tests__/`) |
+| `npm run lint:py` | Python Ruff lint |
+| `npm run format:py:check` | Python Ruff format check |
+| `npm run typecheck:py` | Python mypy |
+| `npm run test` | Node mjs + Python pytest の全テスト実行 |
 | `npm run check:parity` | パリティチェック (構造・token・baseline) |
 | `npm run check:snapshots` | EN スナップショット取得 + diff |
 | `npm run check:snapshots:diff` | スナップショット差分のみ |

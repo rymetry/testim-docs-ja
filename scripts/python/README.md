@@ -6,7 +6,7 @@
 
 ```bash
 cd scripts/python
-uv sync --all-extras
+uv sync --locked --all-extras
 ```
 
 Python は `.python-version` で 3.14.4 に固定し、依存関係は `uv.lock` を正とする。`.venv/` は `uv` が作るローカル生成物で、リポジトリには保持しない。
@@ -14,11 +14,14 @@ Python は `.python-version` で 3.14.4 に固定し、依存関係は `uv.lock`
 ## Commands
 
 ```bash
-uv run pytest                 # run test suite
-uv run pytest --cov           # with coverage
-uv run ruff check src tests   # lint
-uv run ruff format src tests  # format
-uv run mypy src               # type check
+uv run --locked pytest        # run test suite
+uv run --locked pytest --cov  # with coverage
+cd ../..
+npm run lint                  # canonical local / CI quality gate
+npm run lint:py               # Ruff lint only
+npm run format:py             # Ruff formatter
+npm run format:py:check       # Ruff format check only
+npm run typecheck:py          # mypy only
 ```
 
 ## Layout

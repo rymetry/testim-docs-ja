@@ -173,6 +173,10 @@ def validate_snapshot_diff_status(parsed: Any) -> Any:
         raise ValueError('snapshot-diff-status.json: missing "runScope" object')
     if not isinstance(run_scope.get("isComplete"), bool):
         raise ValueError("snapshot-diff-status.json: runScope.isComplete must be boolean")
+    if "error" in parsed and not isinstance(parsed.get("error"), bool):
+        raise ValueError("snapshot-diff-status.json: error must be boolean when present")
+    if parsed.get("error") is True and not isinstance(parsed.get("errorDetail"), str):
+        raise ValueError("snapshot-diff-status.json: errorDetail must be string when error is true")
     return parsed
 
 
@@ -414,7 +418,15 @@ def validate_detection_inputs(
         except Exception as e:
             errors.append(f"{label}: {e}")
 
-    try_validate("snapshot", lambda: validate_snapshot_diff_status(inputs.get("snapshot")))
+    def validate_snapshot() -> None:
+        snapshot = validate_snapshot_diff_status(inputs.get("snapshot"))
+        if snapshot.get("error") is True:
+            raise ValueError(
+                "snapshot-diff-status.json reports a failed diff stage: "
+                f"{snapshot.get('errorDetail')}"
+            )
+
+    try_validate("snapshot", validate_snapshot)
     try_validate("parity", lambda: validate_parity_check_status(inputs.get("parity")))
     source_sync = inputs.get("sourceSync")
     if source_sync and isinstance(source_sync, dict) and len(source_sync) > 0:

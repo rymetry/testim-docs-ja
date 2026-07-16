@@ -11,6 +11,7 @@ import datetime
 import io
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -76,6 +77,85 @@ def test_extract_main_content_unmatched_returns_none() -> None:
 # ----------------------------------------------------------------------
 # fetch_html_with_retry — 522 / network error の retry 挙動
 # ----------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        (
+            "https://docs.tricentis.com/secure/testim/alert?type=PageNotFound",
+            True,
+        ),
+        (
+            "https://docs.tricentis.com/secure/testim/alert/?lang=en&type=PageNotFound",
+            True,
+        ),
+        (
+            "https://docs.tricentis.com/secure/testim/alert?type=Other",
+            False,
+        ),
+        (
+            "https://docs.tricentis.com/testim/content/overview/page.htm",
+            False,
+        ),
+    ],
+)
+def test_is_logical_not_found_url(url: str, expected: bool) -> None:
+    assert su.is_logical_not_found_url(url) is expected
+
+
+def test_default_fetch_html_maps_page_not_found_redirect_to_404(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    response = SimpleNamespace(
+        status_code=200,
+        url="https://docs.tricentis.com/secure/testim/alert?type=PageNotFound",
+        text="<html><body>Page not found</body></html>",
+    )
+    monkeypatch.setattr(su.httpx, "get", lambda *_args, **_kwargs: response)
+
+    assert su._default_fetch_html("https://example.com/old.htm") == {
+        "html": None,
+        "status": 404,
+    }
+
+
+def test_default_fetch_html_preserves_page_not_found_endpoint_503(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    response = SimpleNamespace(
+        status_code=503,
+        url="https://docs.tricentis.com/secure/testim/alert?type=PageNotFound",
+        text="<html><body>Temporarily unavailable</body></html>",
+    )
+    monkeypatch.setattr(su.httpx, "get", lambda *_args, **_kwargs: response)
+
+    assert su._default_fetch_html("https://example.com/old.htm") == {
+        "html": None,
+        "status": 503,
+    }
+
+
+@pytest.mark.parametrize(
+    ("status", "expected"),
+    [
+        (200, {"html": "<html>ok</html>", "status": 200}),
+        (404, {"html": None, "status": 404}),
+    ],
+)
+def test_default_fetch_html_preserves_regular_http_status(
+    monkeypatch: pytest.MonkeyPatch,
+    status: int,
+    expected: dict[str, Any],
+) -> None:
+    response = SimpleNamespace(
+        status_code=status,
+        url="https://docs.tricentis.com/testim/content/overview/page.htm",
+        text="<html>ok</html>",
+    )
+    monkeypatch.setattr(su.httpx, "get", lambda *_args, **_kwargs: response)
+
+    assert su._default_fetch_html("https://example.com/page.htm") == expected
 
 
 def test_fetch_html_with_retry_ok_first_try() -> None:
@@ -654,7 +734,8 @@ def test_main_unknown_slug_returns_error(tmp_path: Path) -> None:
         sleep_fn=lambda _s: None,
     )
     assert result["errors"] == 1
-    assert result["sourceSyncStatus"] is None
+    assert result["sourceSyncStatus"]["freshnessState"] == "broken"
+    assert (tmp_path / "source-sync-status.json").exists()
 
 
 # ----------------------------------------------------------------------
@@ -679,9 +760,7 @@ def test_constants_match_mjs() -> None:
 def test_main_writes_source_sync_status_on_sidebar_only_empty_targets(
     tmp_path: Path,
 ) -> None:
-    """target 0 件 (section 絞り込みで miss) でも source-sync-status は
-    書かれないことを確認 (mjs と同じ: targets 0 → 早期 return、status path に
-    write しない契約)。"""
+    """target 0 件でも broken source-sync-status を必ず書く。"""
     stdout = io.StringIO()
 
     def fake_toc() -> dict[str, Any]:
@@ -698,5 +777,13 @@ def test_main_writes_source_sync_status_on_sidebar_only_empty_targets(
         run_seed="deterministic",
     )
     assert result["fetched"] == 0
-    # targets 0 の早期 return → source-sync-status は書かれない
-    assert not (tmp_path / "source-sync-status.json").exists()
+    assert result["errors"] == 1
+    status_path = tmp_path / "source-sync-status.json"
+    assert status_path.exists()
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    assert status["freshnessState"] == "broken"
+    assert status["runScope"] == {
+        "type": "section",
+        "isComplete": False,
+        "filters": {"slug": None, "section": "___nonexistent_section___"},
+    }

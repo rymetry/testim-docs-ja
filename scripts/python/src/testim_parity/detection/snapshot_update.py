@@ -35,6 +35,7 @@ import time
 from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 from typing import Any, TypedDict
+from urllib.parse import parse_qs, urlsplit
 
 import httpx
 
@@ -67,10 +68,12 @@ __all__ = [
     "MARKER_404",
     "DEFAULT_USER_AGENT",
     "extract_main_content",
+    "is_logical_not_found_url",
     "fetch_html_with_retry",
     "fetch_html_content",
     "run_recovery_probe",
     "verify_sidebar",
+    "write_error_status",
     "main",
 ]
 
@@ -80,6 +83,7 @@ THROTTLE_MS = 100
 MAX_RETRIES = 3
 RETRY_BASE_MS = 1000
 FETCH_TIMEOUT_S = 30.0
+_PAGE_NOT_FOUND_PATH = "/secure/testim/alert"
 
 
 def MARKER_404(url: str) -> str:  # noqa: N802 — mjs ``MARKER_404`` と同名
@@ -171,6 +175,14 @@ def extract_main_content(html: str) -> str | None:
 # ---------------------------------------------------------------------------
 
 
+def is_logical_not_found_url(url: str) -> bool:
+    """Tricentis の HTTP 200 PageNotFound リダイレクトを識別する。"""
+    parsed = urlsplit(url)
+    return parsed.path.rstrip("/") == _PAGE_NOT_FOUND_PATH and "PageNotFound" in parse_qs(
+        parsed.query
+    ).get("type", [])
+
+
 def _default_fetch_html(url: str) -> FetchResult:
     """httpx ベースの default fetcher。mjs ``fetch`` + timeout 等価。"""
     try:
@@ -184,6 +196,8 @@ def _default_fetch_html(url: str) -> FetchResult:
             follow_redirects=True,
         )
         status = response.status_code
+        if status == 200 and is_logical_not_found_url(str(response.url)):
+            return {"html": None, "status": 404}
         if 200 <= status < 300:
             return {"html": response.text, "status": status}
         return {"html": None, "status": status}
@@ -462,6 +476,43 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def write_error_status(
+    *,
+    status_path: Path,
+    run_scope: Mapping[str, Any],
+    detail: str,
+    slug: str | None = None,
+    now: datetime.datetime | None = None,
+    run_seed: str | None = None,
+) -> dict[str, Any]:
+    """既存 schema に適合する broken source-sync artifact を書き出す。"""
+    error_slug = slug or "_fetch"
+    payload = build_source_sync_status(
+        pages=[
+            {
+                "slug": error_slug,
+                "fetchStatus": "error",
+                "errorDetail": detail,
+            }
+        ],
+        sidebar_result={
+            "ok": False,
+            "reason": detail,
+            "sectionCount": 0,
+            "pageCount": 0,
+        },
+        run_scope=run_scope,
+        now=now,
+        run_seed=run_seed,
+    )
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    status_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return payload
+
+
 def main(
     argv: list[str] | None = None,
     *,
@@ -496,12 +547,22 @@ def main(
     content_dir = effective_root / "snapshots" / "en" / "content"
     sidebar_path = effective_root / "snapshots" / "en" / "sidebar.json"
     status_path = effective_root / "source-sync-status.json"
+    requested_run_scope = build_run_scope(slug=args.slug, section=args.section)
 
     resolved_slug = resolve_slug(args.slug, docs_dir=docs_dir) if args.slug else None
     if args.slug and not resolved_slug:
+        detail = f'Unknown slug: "{args.slug}". No matching document found.'
         print(
-            f'❌ Unknown slug: "{args.slug}". No matching document found.',
+            f"❌ {detail}",
             file=err,
+        )
+        source_sync_status = write_error_status(
+            status_path=status_path,
+            run_scope=requested_run_scope,
+            detail=detail,
+            slug=args.slug,
+            now=now,
+            run_seed=run_seed,
         )
         return {
             "fetched": 0,
@@ -510,7 +571,7 @@ def main(
             "excluded": 0,
             "skipped": 0,
             "sidebarVerified": False,
-            "sourceSyncStatus": None,
+            "sourceSyncStatus": source_sync_status,
         }
 
     targets = _collect_targets(
@@ -523,14 +584,22 @@ def main(
 
     if len(targets) == 0:
         print("No targets found.", file=out)
+        source_sync_status = write_error_status(
+            status_path=status_path,
+            run_scope=run_scope,
+            detail="No targets found.",
+            slug=args.slug,
+            now=now,
+            run_seed=run_seed,
+        )
         return {
             "fetched": 0,
             "notFound": 0,
-            "errors": 1 if args.slug else 0,
+            "errors": 1,
             "excluded": 0,
             "skipped": 0,
             "sidebarVerified": False,
-            "sourceSyncStatus": None,
+            "sourceSyncStatus": source_sync_status,
         }
 
     if not args.dry_run:

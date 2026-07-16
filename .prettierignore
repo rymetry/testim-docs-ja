@@ -1,4 +1,8 @@
 node_modules/
 dist/
 .astro/
+**/.venv/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
 *.log
