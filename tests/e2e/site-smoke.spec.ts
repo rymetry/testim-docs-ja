@@ -5,6 +5,10 @@ import { expect, test, type Page } from '@playwright/test';
 const runtimeIssues = new WeakMap<Page, string[]>();
 const checkedResourceTypes = new Set(['script', 'stylesheet', 'font', 'image']);
 const isRemoteTarget = Boolean(process.env.PLAYWRIGHT_BASE_URL);
+const visualViewports = [
+  { name: 'desktop-1440x900', width: 1440, height: 900 },
+  { name: 'mobile-390x844', width: 390, height: 844 },
+];
 
 async function expectNoHorizontalOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({
@@ -66,7 +70,7 @@ test('デスクトップのサイドバーからドキュメントへ遷移で�
   await expect(page.getByRole('heading', { level: 1, name: 'Web とモバイルテスト' })).toBeVisible();
 });
 
-test('既存のMarkdown拡張が本番ビルドで描画される', async ({ page }) => {
+test('APIドキュメントのMarkdown拡張と主要画像が本番ビルドで描画される', async ({ page }) => {
   await page.goto('/docs/administration/api-access');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Testim REST API' })).toBeVisible();
@@ -74,9 +78,28 @@ test('既存のMarkdown拡張が本番ビルドで描画される', async ({ pag
   await expect(page.locator('.expressive-code').first()).toBeVisible();
   await expect(page.locator('.heading-link').first()).toBeVisible();
 
+  const contentImage = page.getByRole('img', {
+    name: 'API 設定ページと Generate API Key ボタン',
+  });
+  await expect(contentImage).toBeVisible();
+  await expect(contentImage).toHaveJSProperty('complete', true);
+  expect(
+    await contentImage.evaluate((image: HTMLImageElement) => image.naturalWidth)
+  ).toBeGreaterThan(0);
+});
+
+test('記録ドキュメントの表と主要画像が本番ビルドで描画される', async ({ page }) => {
   await page.goto('/docs/recording-tests/how-to-record-a-test');
+
   await expect(page.getByRole('heading', { level: 1, name: 'Web テストの記録方法' })).toBeVisible();
   await expect(page.locator('.overflow-x-auto > table').first()).toBeVisible();
+
+  const contentImage = page.getByRole('img', { name: 'New Test の作成' });
+  await expect(contentImage).toBeVisible();
+  await expect(contentImage).toHaveJSProperty('complete', true);
+  expect(
+    await contentImage.evaluate((image: HTMLImageElement) => image.naturalWidth)
+  ).toBeGreaterThan(0);
 });
 
 test('検索インデックスとキーボード操作が機能する', async ({ page }) => {
@@ -175,44 +198,57 @@ test('公開ページにセキュリティヘッダーが付与される', async
   }
 });
 
-test('Noto Sans JPの4ウェイトを読み込める', async ({ page }) => {
+test('設定済みのNoto Sans JP 4ウェイトを読み込める', async ({ page }) => {
   await page.goto('/');
 
   const loadedWeights = await page.evaluate(async () => {
     const weights = [400, 500, 600, 700];
+    // 現行のFontsource設定で配信されるLatin subsetを確実に要求するcanary。
+    const fontLoadCanary = 'Testim';
     const fontFamily = getComputedStyle(document.documentElement)
       .getPropertyValue('--font-noto-sans-jp')
       .split(',')[0]
       .trim();
     const loaded = await Promise.all(
-      weights.map((weight) => document.fonts.load(`${weight} 16px ${fontFamily}`, 'Testim'))
+      weights.map((weight) => document.fonts.load(`${weight} 16px ${fontFamily}`, fontLoadCanary))
     );
     return weights.filter((_, index) => loaded[index].length > 0);
   });
   expect(loadedWeights).toEqual([400, 500, 600, 700]);
 });
 
-test('desktopとmobileでページ全体が横にはみ出さない', async ({ page }, testInfo) => {
-  const viewports = [
-    { name: 'desktop-1440x900', width: 1440, height: 900 },
-    { name: 'mobile-390x844', width: 390, height: 844 },
-  ];
+test('desktopとmobileでトップページが横にはみ出さない', async ({ page }, testInfo) => {
+  await page.setViewportSize(visualViewports[0]);
+  await page.goto('/');
 
-  for (const viewport of viewports) {
+  for (const viewport of visualViewports) {
     await page.setViewportSize(viewport);
 
-    await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.getByRole('link', { name: 'ドキュメントを読む' })).toBeVisible();
     await expectNoHorizontalOverflow(page);
 
-    const screenshotPath = testInfo.outputPath(`${viewport.name}.png`);
+    const screenshotName = `home-${viewport.name}`;
+    const screenshotPath = testInfo.outputPath(`${screenshotName}.png`);
     await page.screenshot({ path: screenshotPath });
-    await testInfo.attach(viewport.name, { path: screenshotPath, contentType: 'image/png' });
+    await testInfo.attach(screenshotName, { path: screenshotPath, contentType: 'image/png' });
+  }
+});
 
-    await page.goto('/docs/administration/api-access');
+test('desktopとmobileで代表ドキュメントが横にはみ出さない', async ({ page }, testInfo) => {
+  await page.setViewportSize(visualViewports[0]);
+  await page.goto('/docs/administration/api-access');
+
+  for (const viewport of visualViewports) {
+    await page.setViewportSize(viewport);
+
     await expect(page.getByRole('heading', { level: 1, name: 'Testim REST API' })).toBeVisible();
     await expect(page.getByRole('button', { name: '検索' })).toBeVisible();
     await expectNoHorizontalOverflow(page);
+
+    const screenshotName = `api-access-${viewport.name}`;
+    const screenshotPath = testInfo.outputPath(`${screenshotName}.png`);
+    await page.screenshot({ path: screenshotPath });
+    await testInfo.attach(screenshotName, { path: screenshotPath, contentType: 'image/png' });
   }
 });
