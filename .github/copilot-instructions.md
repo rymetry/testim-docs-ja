@@ -6,7 +6,7 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 
 ## 技術スタック
 
-- **フレームワーク**: Astro 6 + TypeScript（静的サイト生成。Basic 認証有効時は SSR）
+- **フレームワーク**: Astro 7 + TypeScript（静的サイト生成。Basic 認証有効時は SSR）
 - **スタイリング**: Tailwind CSS v4
 - **フォント**: Noto Sans JP（Astro 組み込みフォントシステム経由で `fontsource` から読み込み）
 - **React**: 検索 UI のみ (`src/components/SearchModal.tsx`, `src/components/search/`)
