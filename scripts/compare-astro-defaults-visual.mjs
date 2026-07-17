@@ -97,20 +97,22 @@ function representativeRoutes(manifest) {
 }
 
 async function pixelDiff(baselinePath, candidatePath, outputPath) {
-  const baseline = await sharp(baselinePath)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const candidate = await sharp(candidatePath)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  if (
-    baseline.info.width !== candidate.info.width ||
-    baseline.info.height !== candidate.info.height
-  ) {
-    throw new Error(`Screenshot dimensions differ: ${baselinePath} and ${candidatePath}`);
-  }
+  const baselineMetadata = await sharp(baselinePath).metadata();
+  const candidateMetadata = await sharp(candidatePath).metadata();
+  const width = Math.max(baselineMetadata.width, candidateMetadata.width);
+  const height = Math.max(baselineMetadata.height, candidateMetadata.height);
+  const normalizeDimensions = (path, metadata) =>
+    sharp(path)
+      .ensureAlpha()
+      .extend({
+        right: width - metadata.width,
+        bottom: height - metadata.height,
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
+      })
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+  const baseline = await normalizeDimensions(baselinePath, baselineMetadata);
+  const candidate = await normalizeDimensions(candidatePath, candidateMetadata);
   const output = Buffer.alloc(baseline.data.length);
   let differentPixels = 0;
   for (let index = 0; index < baseline.data.length; index += 4) {
@@ -141,7 +143,14 @@ const artifactRoot = parseArgs(process.argv.slice(2));
 const manifest = JSON.parse(
   await readFile(join(artifactRoot, 'baseline/static/manifest.json'), 'utf8')
 );
-const routes = representativeRoutes(manifest);
+const routeSet = new Set(representativeRoutes(manifest));
+for (const candidate of ['satteri', 'jsx']) {
+  const diffPath = join(artifactRoot, candidate, 'static/diff.json');
+  if (!(await exists(diffPath))) continue;
+  const diff = JSON.parse(await readFile(diffPath, 'utf8'));
+  for (const document of diff.diffIndex?.documents ?? []) routeSet.add(document.route);
+}
+const routes = [...routeSet];
 const servers = {};
 for (const variant of VARIANTS) {
   const root = join(artifactRoot, variant, 'static/snapshot/dist');
