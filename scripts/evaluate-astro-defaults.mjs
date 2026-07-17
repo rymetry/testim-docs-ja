@@ -51,6 +51,11 @@ const WHITESPACE_CONTAINER_TAGS = new Set([
   'main',
   'nav',
   'section',
+  'table',
+  'tbody',
+  'tfoot',
+  'thead',
+  'tr',
 ]);
 
 function parseArgs(argv) {
@@ -491,6 +496,19 @@ function compareManifests(baseline, candidate) {
   return {
     pass: Object.values(results).every(Boolean),
     sections: results,
+    diffIndex: {
+      documents: documentDiffIndex(baseline.documents, candidate.documents),
+      routes: setDiff(baseline.routes, candidate.routes),
+      sitemap: setDiff(baseline.sitemap, candidate.sitemap),
+      redirects: setDiff(
+        baseline.redirects.map((redirect) => JSON.stringify(redirect)),
+        candidate.redirects.map((redirect) => JSON.stringify(redirect))
+      ),
+      clientAssets: setDiff(
+        baseline.clientAssets.map((asset) => JSON.stringify(asset)),
+        candidate.clientAssets.map((asset) => JSON.stringify(asset))
+      ),
+    },
     observed: {
       baselineHtmlSize: baseline.htmlSize,
       candidateHtmlSize: candidate.htmlSize,
@@ -499,6 +517,58 @@ function compareManifests(baseline, candidate) {
       candidateContainsSatteriNapi: candidate.functions.containsSatteriNapi,
     },
   };
+}
+
+function setDiff(baseline, candidate) {
+  const baselineSet = new Set(baseline);
+  const candidateSet = new Set(candidate);
+  return {
+    removed: baseline.filter((value) => !candidateSet.has(value)),
+    added: candidate.filter((value) => !baselineSet.has(value)),
+  };
+}
+
+function firstDifference(baseline, candidate, path = '$') {
+  if (baseline === candidate) return null;
+  if (
+    baseline === null ||
+    candidate === null ||
+    typeof baseline !== 'object' ||
+    typeof candidate !== 'object'
+  ) {
+    return { path, baseline: baseline ?? null, candidate: candidate ?? null };
+  }
+  if (Array.isArray(baseline) !== Array.isArray(candidate)) {
+    return { path, baseline, candidate };
+  }
+  const keys = [...new Set([...Object.keys(baseline), ...Object.keys(candidate)])];
+  for (const key of keys) {
+    const difference = firstDifference(
+      baseline[key],
+      candidate[key],
+      Array.isArray(baseline) ? `${path}[${key}]` : `${path}.${key}`
+    );
+    if (difference) return difference;
+  }
+  return null;
+}
+
+function documentDiffIndex(baseline, candidate) {
+  const baselineByRoute = new Map(baseline.map((document) => [document.route, document]));
+  return candidate.flatMap((document) => {
+    const baselineDocument = baselineByRoute.get(document.route);
+    if (JSON.stringify(baselineDocument) === JSON.stringify(document)) return [];
+    const fields = Object.keys(document).filter(
+      (field) => JSON.stringify(baselineDocument?.[field]) !== JSON.stringify(document[field])
+    );
+    return [
+      {
+        route: document.route,
+        fields,
+        firstDifference: firstDifference(baselineDocument, document),
+      },
+    ];
+  });
 }
 
 async function collectEnvironment(worktreeRoot, baselineSha) {
