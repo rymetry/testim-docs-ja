@@ -1,0 +1,46 @@
+name: Issue 414 evaluation
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [baseline, satteri, jsx]
+        mode: [static, ssr]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+      - run: npm ci
+      - name: Inspect dependency tree and native package
+        run: |
+          npm ls
+          npm ls @bruits/satteri-linux-x64-gnu || true
+      - name: Build variant
+        run: npm run build
+        env:
+          ISSUE_414_VARIANT: ${{ matrix.variant }}
+          BASIC_AUTH_ENABLED: ${{ matrix.mode == 'ssr' && 'true' || 'false' }}
+
+  astro-defaults:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:astro-defaults

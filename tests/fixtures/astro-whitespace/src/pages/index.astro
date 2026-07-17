@@ -1,0 +1,29 @@
+---
+import InlineToken from '../components/InlineToken.astro';
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Astro whitespace fixture</title>
+  </head>
+  <body>
+    <main>
+      <p data-whitespace-case="japanese-link">日本語の<a href="/docs">リンク</a>です。</p>
+      <p data-whitespace-case="strong-code"><strong>強調</strong>と<code>inline()</code>です。</p>
+      <p data-whitespace-case="adjacent-components">
+        <InlineToken label="甲" /><InlineToken label="乙" />
+      </p>
+      <p data-whitespace-case="multiline">複数行の テキストです。</p>
+      <p data-whitespace-case="explicit-spaces">半角 空白と全角　空白</p>
+      <p data-whitespace-case="punctuation">句読点、<em>そのまま</em>。保持します！</p>
+      <p data-whitespace-case="inline-boundaries">前 <span>中央</span> 後</p>
+      <section data-whitespace-case="block-newlines">
+        <p>ブロックA</p>
+        <p>ブロックB</p>
+      </section>
+    </main>
+  </body>
+</html>
