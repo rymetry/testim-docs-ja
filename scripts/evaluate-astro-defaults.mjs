@@ -37,6 +37,12 @@ const BLOCK_TAGS = new Set([
   'pre',
   'section',
   'table',
+  'tbody',
+  'td',
+  'tfoot',
+  'th',
+  'thead',
+  'tr',
   'ul',
 ]);
 const WHITESPACE_CONTAINER_TAGS = new Set([
@@ -309,7 +315,13 @@ async function collectStaticManifest(distRoot) {
       ),
     }));
     const tables = findAll(article, (node) => isElement(node, 'table')).map((node) => ({
-      text: textContent(node),
+      cells: findAll(node, (child) => isElement(child, 'th') || isElement(child, 'td')).map(
+        (cell) => ({
+          tag: cell.tagName,
+          text: textContent(cell),
+          attrs: canonicalAttributes(cell),
+        })
+      ),
       parentClasses: classes(node.parentNode ?? {}).sort(),
     }));
     const expressiveCode = findAll(article, (node) =>
@@ -607,6 +619,7 @@ async function snapshotOutputs(worktreeRoot, variantModeRoot) {
 async function main() {
   const { variant, mode, cache, rounds, artifactRoot } = parseArgs(process.argv.slice(2));
   const worktreeRoot = process.cwd();
+  const analyzeOnly = process.env.ISSUE_414_ANALYZE_ONLY === 'true';
   const baselineSha =
     process.env.ISSUE_414_BASELINE_SHA ??
     (await commandOutput('git', ['rev-parse', 'origin/main'], worktreeRoot));
@@ -632,7 +645,16 @@ async function main() {
   const commandLogPath = join(variantModeRoot, 'commands.log');
   const manifests = [];
 
-  for (let round = 1; round <= rounds; round += 1) {
+  for (let round = 1; round <= (analyzeOnly ? 1 : rounds); round += 1) {
+    if (analyzeOnly) {
+      const manifest = await collectManifest(worktreeRoot, mode);
+      manifests.push(manifest);
+      await writeFile(
+        join(runsRoot, 'analyze-only-manifest.json'),
+        `${JSON.stringify(manifest, null, 2)}\n`
+      );
+      break;
+    }
     if (cache === 'cold') {
       for (const target of ['dist', '.vercel/output', '.astro', 'node_modules/.astro']) {
         await safeRemoveWorktreeOutput(worktreeRoot, join(worktreeRoot, target));
@@ -681,25 +703,34 @@ async function main() {
 
   const manifest = manifests.at(-1);
   await writeFile(join(variantModeRoot, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-  await snapshotOutputs(worktreeRoot, variantModeRoot);
+  if (!analyzeOnly) await snapshotOutputs(worktreeRoot, variantModeRoot);
 
   const deterministic = manifests.every(
     (candidate) => JSON.stringify(candidate) === JSON.stringify(manifests[0])
   );
-  let diff = { pass: deterministic, selfDeterministic: deterministic, sections: {} };
+  const diffPath = join(variantModeRoot, 'diff.json');
+  const previousDiff = (await pathExists(diffPath))
+    ? JSON.parse(await readFile(diffPath, 'utf8'))
+    : null;
+  const selfDeterministic = analyzeOnly
+    ? (previousDiff?.selfDeterministic ?? deterministic)
+    : deterministic;
+  let diff = { pass: selfDeterministic, selfDeterministic, sections: {} };
   if (variant !== 'baseline') {
     const baselinePath = join(artifactRoot, 'baseline', mode, 'manifest.json');
     if (!(await pathExists(baselinePath)))
       throw new Error(`Baseline manifest is missing: ${baselinePath}`);
     diff = {
       ...compareManifests(JSON.parse(await readFile(baselinePath, 'utf8')), manifest),
-      selfDeterministic: deterministic,
+      selfDeterministic,
     };
-    diff.pass = diff.pass && deterministic;
+    diff.pass = diff.pass && selfDeterministic;
   }
-  await writeFile(join(variantModeRoot, 'diff.json'), `${JSON.stringify(diff, null, 2)}\n`);
+  await writeFile(diffPath, `${JSON.stringify(diff, null, 2)}\n`);
 
-  console.log(JSON.stringify({ variant, mode, cache, rounds, artifactRoot, diff }, null, 2));
+  console.log(
+    JSON.stringify({ variant, mode, cache, rounds, analyzeOnly, artifactRoot, diff }, null, 2)
+  );
   if (!diff.pass) process.exitCode = 2;
 }
 
