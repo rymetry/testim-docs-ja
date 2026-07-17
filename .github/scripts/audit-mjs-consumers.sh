@@ -4,6 +4,9 @@
 # Allow-list (2 assets):
 #   - .github/scripts/sync-detection-issues.cjs  (Phase 6.1 scope)
 #   - scripts/__tests__/sync_detection_issues.test.mjs
+# Temporary Issue #414 evaluation consumers (the evaluation PR is never merged):
+#   - package.json test:astro-defaults command
+#   - scripts/compare-astro-defaults-visual.mjs usage text
 #
 # The search file-type allow-list is intentionally narrow to keep noise low.
 # docs/*.md is excluded (historical notes reference removed mjs paths as
@@ -25,7 +28,7 @@ MATCHES=$(grep -rEn \
   package.json .github scripts \
   2>/dev/null \
   | grep -vE \
-    'sync-detection-issues\.cjs|scripts/__tests__/sync_detection_issues\.test\.mjs|\.github/scripts/audit-mjs-consumers\.sh|\.github/workflows/ci\.yml' \
+    'sync-detection-issues\.cjs|scripts/__tests__/sync_detection_issues\.test\.mjs|test:astro-defaults|scripts/compare-astro-defaults-visual\.mjs|\.github/scripts/audit-mjs-consumers\.sh|\.github/workflows/ci\.yml' \
   || true)
 
 if [ -n "$MATCHES" ]; then
