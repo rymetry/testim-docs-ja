@@ -49,6 +49,12 @@ class TestVersionStrings:
         assert "v2.0.0" in tokens
 
 
+class TestIpv4Cidr:
+    def test_address_and_cidr_are_preserved_in_full(self):
+        assert extract_invariant_tokens("Allow 23.105.12.38") == ["23.105.12.38"]
+        assert extract_invariant_tokens("Allow 23.105.12.38/32") == ["23.105.12.38/32"]
+
+
 class TestNumberUnit:
     def test_ms_without_space(self):
         tokens = extract_invariant_tokens("wait 500ms")
