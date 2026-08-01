@@ -83,6 +83,7 @@ _LINK_DEST_RE = re.compile(
 )
 _FLAG_RE = re.compile(r"(?:^|\s)(--?[a-zA-Z][\w-]*)(?=\s|$)")
 _DOT_RE = re.compile(r"\b([a-zA-Z_]\w*(?:\.\w+)+)\b")
+_IPV4_CIDR_RE = re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?:/\d{1,2})?(?![\w./])")
 _VERSION_RE = re.compile(r"\bv?\d+\.\d+\.\d+\b")
 _NUMBER_UNIT_RE = re.compile(
     r"\b(\d+(?:\.\d+)?\s*(?:sec|ms|s|px|em|rem|%|MB|GB|KB|min|hr))\b",
@@ -139,6 +140,13 @@ def extract_invariant_tokens(cell: str) -> list[str]:
         segment_count = len(dot_path.split("."))
         if segment_count >= 3 or _KNOWN_DOT_PREFIX_RE.match(dot_path):
             token_set.add(dot_path)
+
+    ip_spans: list[tuple[int, int]] = []
+    for match in _IPV4_CIDR_RE.finditer(rest):
+        token_set.add(match.group(0))
+        ip_spans.append((match.start(), match.end()))
+    for start, end in reversed(ip_spans):
+        rest = _blank_span(rest, start, end)
 
     for match in _VERSION_RE.finditer(rest):
         token_set.add(match.group(0))

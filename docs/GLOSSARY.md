@@ -282,6 +282,7 @@ Testim が統合 / 連携する第三者製品。JA 文中でも英語のまま�
 | Slack | 通知 / メッセージングサービス |
 | LambdaTest | クラウドブラウザ / デバイスグリッド |
 | LambdaTest Grid | LambdaTest のグリッドサービス |
+| TestMu AI | LambdaTest の新ブランド名 |
 | Azure AD | Microsoft Azure Active Directory 略称 |
 | Azure Active Directory | Microsoft のクラウド ID 管理サービス |
 | Azure AD Seamless SSO | Azure AD シームレスシングルサインオン |
