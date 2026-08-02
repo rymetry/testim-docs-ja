@@ -59,7 +59,7 @@ description: 'ページの説明（100文字以内、プレースホルダ禁止
 category: '概要'
 order: 1001
 updated: '2026-01-15'
-sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/{slug}.htm'
+sourceUrl: 'https://docs.tricentis.com/testim/content/{en-path}.htm' # 英語原文 URL のパスに合わせる（フォルダー階層はページにより異なる）
 keywords:
   - キーワード1
   - キーワード2

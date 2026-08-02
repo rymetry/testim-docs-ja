@@ -83,7 +83,7 @@ description: 'ページの説明文'
 category: 'カテゴリ名'
 order: 10
 updated: 'YYYY-MM-DD' # 英語原文の更新日に合わせる
-sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/{slug}.htm'
+sourceUrl: 'https://docs.tricentis.com/testim/content/{en-path}.htm' # 英語原文 URL のパスに合わせる（フォルダー階層はページにより異なる）
 keywords:
   - keyword1
   - keyword2

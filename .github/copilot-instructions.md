@@ -1,4 +1,4 @@
-# Copilot Instructions for Tricentis Testim User-Maintained Japanese Translation
+# Copilot Instructions for Tricentis Testim User-Created Japanese Translation
 
 ## プロジェクト概要
 

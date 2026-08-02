@@ -11,6 +11,7 @@ Claude Code の設定・スキル・プロジェクト固有の指示を管理�
     ├── README.md          # このファイル（人間向けガイド）
     └── skills/
         ├── codex-review/  # Codex CLI によるレビュー
+        │   └── SKILL.md
         ├── empirical-prompt-tuning/
         │   └── SKILL.md
         └── fix-doc-localization-issues/  # GitHub Issue 対応ワークフロー
