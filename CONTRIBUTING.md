@@ -95,6 +95,8 @@ npm run dev
 git switch -c fix/translation-error-in-overview
 ```
 
+通常のセットアップでは lockfile を変更しない `npm ci` を使います。依存パッケージを追加・更新するときは `npm install <package>` を使い、`package.json` と `package-lock.json` の変更をコミットしてください。
+
 ### 開発時のコマンド
 
 ```bash
@@ -280,8 +282,7 @@ Pull Requestは以下の観点でレビューされます：
 
 ## 質問・サポート
 
-- **Issue**: バグ報告や機能要望は [GitHub Issues](https://github.com/rymetry/testim-docs-ja/issues) で
-- **Discussion**: 一般的な質問や相談は [GitHub Discussions](https://github.com/rymetry/testim-docs-ja/discussions) で
+- **Issue・質問**: バグ報告、機能要望、一般的な質問や相談は [GitHub Issues](https://github.com/rymetry/testim-docs-ja/issues) で
 - **レビュー**: Pull Requestでフィードバックを受けられます
 
 ## 謝辞

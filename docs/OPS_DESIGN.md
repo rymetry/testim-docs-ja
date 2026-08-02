@@ -2,9 +2,8 @@
 
 ## 目的
 
-[Tricentis Testim 公式英語ドキュメント](https://docs.tricentis.com/testim/content/home.htm)の
-更新に継続追従するため、同期から QA までをリポジトリ内のスクリプトと CI で
-再現可能にします。本プロジェクトは Tricentis または Testim が運営する公式日本語版ではありません。
+[Tricentis Testim 公式英語ドキュメント](https://docs.tricentis.com/testim/content/home.htm)の更新に継続追従するため、同期から QA までをリポジトリ内のスクリプトと CI で再現可能にします。
+本プロジェクトは Tricentis または Testim が提供する公式日本語版ではありません。
 
 ## 運用フロー
 
@@ -337,8 +336,7 @@ issue 化する。
 
 ## Parity gate 障害時の rollback playbook
 
-`segment-*` exact diff を primary gate とする現行構成で、false negative の疑いや
-baseline 機構の障害が発生した場合の対応手順。
+`segment-*` exact diff を primary gate とする現行構成で、false negative の疑いや baseline 機構の障害が発生した場合の対応手順。
 
 ### 判断フロー
 
@@ -379,8 +377,7 @@ gate に異常が出たら
 5. 検出された failure pattern を baseline-recall / determinism / 新規 test として regression guard に追加する
 6. 修正 PR で全 gate を再実行し、同じ不具合が再発しないことを確認する
 
-revert 後も baseline 機構（schema、generation script、alignment）は維持されるため、
-調査時は `npm run check:parity` と `npm run generate:parity-baseline` を利用できる。
+revert 後も baseline 機構（schema、generation script、alignment）は維持されるため、調査時は `npm run check:parity` と `npm run generate:parity-baseline` を利用できる。
 
 ### Path 2 — Translate-first, rebaseline as last resort
 

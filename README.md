@@ -1,8 +1,6 @@
 # Tricentis Testim ユーザー制作日本語翻訳ドキュメント
 
-[Tricentis Testim](https://www.testim.io/test-automation-tool/) の
-[公式英語ドキュメント](https://docs.tricentis.com/testim/content/home.htm)を日本語に翻訳し、
-原文の更新に継続して追従するユーザー制作プロジェクトです。
+[Tricentis Testim](https://www.testim.io/test-automation-tool/) の[公式英語ドキュメント](https://docs.tricentis.com/testim/content/home.htm)を日本語に翻訳し、原文の更新に継続して追従するユーザー制作プロジェクトです。
 Tricentis または Testim が提供する公式日本語版ではありません。
 
 ## 🚀 プロジェクト構成
@@ -174,4 +172,4 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
 ---
 
-**免責事項**: 本プロジェクトはユーザーが制作・運営する非公式翻訳です。Tricentis およびTestim とは提携していません。正確性や最新性が重要な場合は、上記の公式英語ドキュメントを確認してください。
+**免責事項**: 本プロジェクトはユーザーが制作・運営する非公式翻訳です。Tricentis および Testim とは提携していません。正確性や最新性が重要な場合は、上記の公式英語ドキュメントを確認してください。

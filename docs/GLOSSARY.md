@@ -1417,7 +1417,8 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
   して記述し、classifier の CJK 比率でマスク不要にする
 
 この方針は `scripts/python/tests/test_glossary_mask.py` の
-`"GLOSSARY common-word false-negative regression"` suite で pin されている。
+`TestGlossaryContract.test_no_common_english_words_registered()` と
+`TestGlossaryContract.test_three_word_all_english_segment_is_flagged()` で pin されている。
 -->
 
 ## [Tier C] 一般的な技術用語（英語維持）
@@ -2921,7 +2922,7 @@ UI ラベルやキー名を英語維持したい場合は、代わりに以下�
 
 PR #325 §5.3.7 rework v2 (2026-04-17 architect reviewer 2 指摘) で **content-level 英語 UI term 復元** 方針に転換した際に追加した Testim UI label + 第三者ベンダー固有名詞。いずれも WRITING_GUIDE §33 の「英語維持」対象 (Testim UI / vendor 固有名詞 / SNS ブランド / 例示値)。
 
-**Spec Invariant 5 compliance**: 以下の語は全て **固有名詞** もしくは **Testim/vendor 固有 UI label** (大文字始まり / vendor-specific abbreviation / brand name / example value) である。一般英語 prose で 3-word all-English segment を silent bypass させる経路は存在しない。禁止語 (`Enter` / `Tab` / `Page Up` / `Page Down` / `Approve`) は含まれていない。`scripts/python/tests/test_glossary_mask.py` の `GLOSSARY common-word false-negative regression` suite は継続 pass する。
+**Spec Invariant 5 compliance**: 以下の語は全て **固有名詞** もしくは **Testim/vendor 固有 UI label** (大文字始まり / vendor-specific abbreviation / brand name / example value) である。一般英語 prose で 3-word all-English segment を silent bypass させる経路は存在しない。禁止語 (`Enter` / `Tab` / `Page Up` / `Page Down` / `Approve`) は含まれていない。`scripts/python/tests/test_glossary_mask.py` の `TestGlossaryContract.test_no_common_english_words_registered()` と `TestGlossaryContract.test_three_word_all_english_segment_is_flagged()` で検証される。
 
 **allowlist 再導入との差異**: 本登録は `TECH_TOKEN_ALLOWLIST` の residue-word-count filter とは **別経路** (`maskSegmentText` による text replacement)。classifier の `RESIDUE_MIN_WORDS=3` threshold は維持され、設計原則 (§5.3.7 の allowlist 禁止: 許容機構は broken EN snapshot 退避のみ) との衝突は無い — GLOSSARY は「固有用語の英語維持」を masking で実現する正規チャネル。
 
