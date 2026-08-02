@@ -1142,12 +1142,13 @@ src/content/docs/getting-started/creating-your-first-test.md
 
 ### Q5: 既存ページを更新する際の注意点は？
 
-**A:** Frontmatter の `updated` 日付を必ず更新してください。
+**A:** 日本語ページだけを編集した日ではなく、英語原文の更新日に合わせてください。
+英語原文の更新日が変わった場合のみ `updated` を更新します。
 
 ```yaml
 ---
 title: 'ページタイトル'
-updated: '2025-11-02' # ← 更新日を変更
+updated: 'YYYY-MM-DD' # 英語原文の更新日
 ---
 ```
 

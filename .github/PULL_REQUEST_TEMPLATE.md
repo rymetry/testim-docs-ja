@@ -9,6 +9,7 @@
 ## 確認事項
 
 - [ ] `npm run lint` が通る
+- [ ] `npm run test` が成功する
 - [ ] `npm run build` が成功する
 - [ ] ローカルで表示を確認済み
 - [ ] `INVARIANT_TOKENS.md` 変更を含む PR は `grep '^## ' docs/INVARIANT_TOKENS.md` 出力 diff を PR 本文に記載（silent drop 予防 / plan §7 R2 / §4 G6）

@@ -1,21 +1,23 @@
-# Testim Docs JA 運用設計
+# Tricentis Testim ユーザー制作日本語翻訳ドキュメント 運用設計
 
 ## 目的
 
-英語版ドキュメント更新に継続追従するため、同期から QA までを repo 内のスクリプトと CI で再現可能にします。
+[Tricentis Testim 公式英語ドキュメント](https://docs.tricentis.com/testim/content/home.htm)の
+更新に継続追従するため、同期から QA までをリポジトリ内のスクリプトと CI で
+再現可能にします。本プロジェクトは Tricentis または Testim が運営する公式日本語版ではありません。
 
 ## 運用フロー
 
 1. `sync`
    `npm run docs:sync-sidebar` で `docs/SIDEBAR_URLS.md` を更新する。URL 収集が 0 件なら即停止する。
 2. `diff detect`
-   `npm run check:snapshots` で英語原文の Markdown スナップショットと sidebar HTML を取得・比較し、変更ページを検出する。コミット済みスナップショット = 翻訳済みベースライン、working tree = 最新英語版として git diff で差分を検知する。
+   `npm run check:snapshots` で英語原文の HTML スナップショットと sidebar JSON を取得・比較し、変更ページを検出する。コミット済みスナップショット = 翻訳済みベースライン、working tree = 最新英語版として git diff で差分を検知する。
 3. `translate`
-   `docs:prepare-llm` でタスクを切り出し、`docs:apply-llm` で翻訳結果を反映する。
+   `npm run docs:pipeline` を使う場合は、`url_collect` → `placeholders`（full モードのみ）→ `fetch` → `prepare_llm` → `apply_llm` の順で実行する。個別実行では `docs:fetch` の後に `docs:prepare-llm` と `docs:apply-llm` を使う。
 4. `format`
-   `docs:fetch` と `docs:normalize` で本文、画像、内部リンク、固有名詞、description を正規化する。
+   必要に応じて `npm run docs:normalize` で frontmatter、内部リンク、固有名詞、description を正規化する。
 5. `source parity qa`
-   `npm run check:parity` でローカル Markdown の品質チェックを行い、未翻訳行、レガシー callout、JSX callout、本文中 H1、orphan ページを検出する。
+   `npm run check:parity` で EN HTML と JA Markdown の構造・invariant token・ページ coverage を比較し、未翻訳、構造差分、欠落ページ、orphan ページなどを検出する。
 6. `qa`
    `npm run lint && npm test && npm run build` を通す。ページ単位の事前確認では、必要に応じて `npm run lint:docs -- --section="..."` で対象を絞る。
 7. `release`
@@ -64,7 +66,7 @@ queue 全体を消費する。
 
 ### EN スナップショット正規化
 
-比較前に `normalizeEnArtifacts()` で EN 側の既知アーティファクトを正規化する:
+比較前に `testim_parity.extract.normalize_en_artifacts()` で EN 側の既知アーティファクトを正規化する:
 
 | アーティファクト | 処理 |
 | --- | --- |
@@ -77,24 +79,24 @@ queue 全体を消費する。
 
 ### EN アーティファクト注釈
 
-`detectEnArtifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
+`testim_parity.extract.detect_en_artifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
 
-**`source-unusable` / `snapshot-incomplete` の ack 形式**: emitter (`source_parity_source_usability.mjs::describeReason`) は `detail` 末尾に `[reason=<token>]` を埋め込む。ack 作成時はこの token を `detailIncludes` に指定する:
+**`source-unusable` / `snapshot-incomplete` の ack 形式**: `testim_parity.source_usability` の emitter は `detail` 末尾に `[reason=<token>]` を埋め込む。ack 作成時はこの token を `detailIncludes` に指定する:
 
 - `detailIncludes: "[reason=escaped-details-residue]"` — `<details>` widget tree 破壊
 - `detailIncludes: "[reason=shallow-snapshot]"` — EN snapshot が本文欠損
 - `detailIncludes: "[reason=extractor-empty]"` — extractor が body=0 を返した
 
-`reason` token は `usabilitySignals.reason` と 1:1 対応で、baseline 側 (`buildBaselineKey`) は同じ token を構造化 identity key に使う。`scripts/__tests__/source_parity_usability_ack_integration.test.mjs` が detector→matcher round-trip を固定している。
+`reason` token は `usabilitySignals.reason` と 1:1 対応で、baseline 側 (`build_baseline_key`) は同じ token を構造化 identity key に使う。`scripts/python/tests/test_usability_ack_integration.py` が detector→matcher round-trip を固定している。
 
-`detectEnArtifacts()` の `artifacts` フィールド種別:
+`detect_en_artifacts()` の `artifacts` フィールド種別:
 
 - `EN uses <details> blocks` — EN が `<details>` を使用
 - `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
 
 ### Structure comparator (canonical block sequence)
 
-`alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに `compareSectionStructure()` を呼び、**原文 block 列の並びと多重集合** を比較する。この比較器は、`paragraph-count-mismatch` などの count heuristic を補助シグナルへ降格した後の **構造保持の主判定** を担う。
+`align_segments()` が weighted LCS を走らせる前に、heading path が一致する section ごとに `compare_section_structure()` を呼び、**原文 block 列の並びと多重集合** を比較する。この比較器は、`paragraph-count-mismatch` などの count heuristic を補助シグナルへ降格した後の **構造保持の主判定** を担う。
 
 **比較対象の block 語彙 (凍結)**: `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary`。segment 単位の `ordered-list-item` / `unordered-list-item` / `table-cell` は比較前に list / table block に畳み込まれる (block 内部の件数差は別 comparator の責務)。
 
@@ -106,15 +108,15 @@ queue 全体を消費する。
 | B | multiset は一致するが **並び順** が違う (mixed-kind reorder) | `segment-order-mismatch` | `kind-sequence` |
 | C | kind 列は完全一致しているが **content bijection が monotonic でない** (same-kind の swap / rotation) | `segment-order-mismatch` | `content-order` |
 
-どの stage も発火しなければ比較器は空配列を返し、alignSegments は従来通り weighted LCS にフォールスルーする。section あたり最大 1 件までしか emit しない — 先に発火した stage が勝ち、後続 stage は short-circuit でスキップされる (gate 契約を予測可能にするため)。
+どの stage も発火しなければ比較器は空配列を返し、`align_segments()` は weighted LCS にフォールスルーする。section あたり最大 1 件までしか emit しない — 先に発火した stage が勝ち、後続 stage は short-circuit でスキップされる (gate 契約を予測可能にするため)。
 
 **gate 分類**: `section-structure-mismatch` と `segment-order-mismatch` は **reportable** (gate 対象)。`parity-baseline.json` に entry が無ければ `--fail-on=any` と `--fail-on=actionable` の両方で exit code 1。
 
-**baseline identity**: structure 系 entry の machine identity は **`sectionIndex` + `structureCategory` + `structureFingerprint`** の 3 つ組で構成する (`buildBaselineKey` / `buildBaselineKeyFromEntry`)。`structureFingerprint` は `structureCategory` + `enKinds` + `jaKinds` (+ content-order の場合は `contentPermutation` の `enIndex→jaIndex` pair) を sha256 に畳み込んだもの。`sectionPath` は **reviewer 可読性のために entry に保存するが identity key には含めない**。同一ページ内で同じ heading text が複数現れる場合に、`sectionPath` だけでは一意にならないため。
+**baseline identity**: structure 系 entry の machine identity は **`sectionIndex` + `structureCategory` + `structureFingerprint`** の 3 つ組で構成する (`build_baseline_key` / `build_baseline_key_from_entry`)。`structureFingerprint` は `structureCategory` + `enKinds` + `jaKinds` (+ content-order の場合は `contentPermutation` の `enIndex→jaIndex` pair) を sha256 に畳み込んだもの。`sectionPath` は **reviewer 可読性のために entry に保存するが identity key には含めない**。同一ページ内で同じ heading text が複数現れる場合に、`sectionPath` だけでは一意にならないため。
 
 ### Source unusable 判定
 
-比較前に `detectSourceUsability()` が EN snapshot の **比較可能性** を判定する。比較不能と判定されたページはその 1 件だけを emit し、後続の alignSegments / structure comparator は呼ばれない (translation drift と snapshot/source debt を混ぜないため)。
+比較前に `detect_source_usability()` が EN snapshot の **比較可能性** を判定する。比較不能と判定されたページはその 1 件だけを emit し、後続の `align_segments()` / structure comparator は呼ばれない (translation drift と snapshot/source debt を混ぜないため)。
 
 **3 つの reason (凍結)**:
 
@@ -218,8 +220,8 @@ sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstrea
 
 ## レビュー方針
 
-- セルフチェック後に Codex CLI（`.claude/skills/codex-review/SKILL.md`）で read-only レビューを実施
-- Codex のフィードバックを修正に反映してから lint/test/build を実行する
+- セルフチェック後、必要に応じて `.claude/skills/codex-review/SKILL.md` の手順で read-only レビューを実施する
+- レビューで見つかった問題を修正してから lint/test/build を実行する
 
 ## フィードバックループ（学んだことの反映）
 
@@ -238,7 +240,7 @@ sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstrea
 | 運用フロー・CI設定の変更                     | `docs/OPS_DESIGN.md`                                      |
 | Claude Code の動作ガイダンス                 | `CLAUDE.md`                                               |
 
-3. ガイド更新を main にコミットする（`.claude/` 配下は git 管理外のためコミット不要）
+3. ガイドとプロジェクト固有 skill の更新を同じ変更としてコミットする（`.claude/skills/` も git 管理対象）
 
 **例:**
 
@@ -333,9 +335,10 @@ issue 化する。
 
 ---
 
-## Frozen Baseline Rollback Playbook
+## Parity gate 障害時の rollback playbook
 
-frozen baseline cutover 後に問題が発生した場合の対応手順。`segment-*` exact diff を primary gate に昇格させた構成での rollback runbook。
+`segment-*` exact diff を primary gate とする現行構成で、false negative の疑いや
+baseline 機構の障害が発生した場合の対応手順。
 
 ### 判断フロー
 
@@ -369,14 +372,15 @@ gate に異常が出たら
 
 **手順**:
 
-1. main に取り込まれた cutover commit の SHA を特定し、通常の squash merge なら `git revert <commit SHA on main>` で revert PR を起こす（merge commit を使っている場合のみ `git revert -m 1 <merge commit SHA>`）
+1. main に取り込まれた対象を特定する。通常の merge commit は `git revert -m 1 <merge commit SHA>`、単一 commit は `git revert <commit SHA>` で revert PR を起こす
 2. revert PR で `npm run check:parity -- --fail-on=actionable` が exit 0 を確認
 3. fast-track で merge（reviewer 1 名 + CI green）
 4. main 復旧確認後、separate issue で root cause investigation を起票
-5. 修正 + 再 cutover を再実施
-6. **再 cutover の前提**: 検出された failure pattern を baseline-recall / determinism / 新規 test として regression guard を仕込んでから再実施。テスト追加なしの再 cutover は禁止
+5. 検出された failure pattern を baseline-recall / determinism / 新規 test として regression guard に追加する
+6. 修正 PR で全 gate を再実行し、同じ不具合が再発しないことを確認する
 
-revert すると segment-* issues は cutover 前の状態に戻る。baseline 機構そのもの（schema, generation script, alignment）はそのままなので、`npm run generate:parity-baseline` は引き続き使える。
+revert 後も baseline 機構（schema、generation script、alignment）は維持されるため、
+調査時は `npm run check:parity` と `npm run generate:parity-baseline` を利用できる。
 
 ### Path 2 — Translate-first, rebaseline as last resort
 
@@ -405,13 +409,13 @@ revert すると segment-* issues は cutover 前の状態に戻る。baseline �
 
 ### Baseline 運用ルール
 
-- `parity-baseline.json` は schema v2 (Phase 4 cutover 以降)。`reviewAfter` による期限管理は撤廃し、`priority` (`high`/`medium`/`low`) と `note` で paydown 優先度を表現する
-- Phase 4 完了時点で `entries.length === 0` を維持する。新規発生の segment-* / structure issue は baseline に載らず即 gate fail — 翻訳追従 / artifact registry / normalizer / extractor / alignment / source lock のいずれかで解消する
-- `isFrozenByBaseline(issue) ≡ issue.baselined === true` — 期限概念は撤廃されたので、baseline に載った entry は明示的に削除するまで gate を抑止し続ける。paydown は **必ず明示的な PR** として行う (段階的縮小 / rebaseline のいずれか)
+- `parity-baseline.json` は schema v2。`reviewAfter` による期限管理は行わず、`priority` (`high`/`medium`/`low`) と `note` で paydown 優先度を表現する
+- `entries.length === 0` を維持する。新規発生の segment-* / structure issue は baseline に載せず、翻訳追従 / artifact registry / normalizer / extractor / alignment / source lock のいずれかで解消する
+- `is_frozen_by_baseline(issue) ≡ issue.baselined is True` — baseline entry が存在する場合は明示的に削除するまで gate を抑止する。paydown は **必ず明示的な PR** として行う
 - `segment-extra` と `segment-shifted` は acknowledgeable、それ以外の segment-* は `NON_ACKNOWLEDGEABLE_TYPES` に残したまま frozen baseline で運用する
 - `tokenless-near-tie` は baseline 対象外 (schema v2 で `segment-inconclusive` は `BASELINE_ELIGIBLE_TYPES` から除外)。`--include-advisory` review queue として triage する
 
-### Phase 0 後の baseline 運用（2026-04-14 以降）
+### Baseline の継続運用
 
 baseline は bug backlog として運用する:
 
@@ -437,16 +441,15 @@ issueType の baseline entry は **orphan** として残留する。`testim_pari
 2. 該当 slug に対して `npm run generate:parity-baseline -- --slug=<slug>` で再生成
 3. 再度 `npm run check:parity` を走らせて `orphanBaselineEntries === 0` を確認
 
-`scripts/__tests__/source_parity_orphan_integration.test.mjs` が
+`scripts/python/tests/test_orphan_integration.py` が
 「既存 clean slug に stale entry を注入 → orphan として集計される」E2E を
 pin する。repo-global な baseline/status file を奪い合わないよう、
-`checkSourceParity({ baselinePath, outputPath })` の test-only 注入 hook を
-使って `mkdtemp` 上の temp copy だけを操作する。
+一時ディレクトリ上の baseline/status copy だけを操作する。
 
 ### representative / source-side debt の現行運用
 
 - representative fixture は clean page 群だけを対象にし、source-side debt ページは別テストで扱う
-- `testops/testops-version-control/pull-requests` は source-side debt registry で管理し、snapshot fetch 時に上書きしない
+- `SOURCE_SYNC_EXCLUSIONS` の active entry は現在 0 件。新しい上流欠陥を確認した場合のみ slug 単位で登録する
 - 代表ページ、clean sentinel、source unusable fixture、source-side debt fixture はそれぞれ専用テストで契約を固定する
 - 詳細な経緯や過去のレビュー履歴は git 履歴を参照
 
@@ -601,115 +604,3 @@ frontmatter の必須フィールドとルールは `docs/WRITING_GUIDE.md` の�
 - SECTION_NAME: xxxx
 - FOLDER_NAME: yyyy
 -->
-
-## 付録 B: 並列レビューエージェントテンプレート
-
-対象 PR に対して以下のエージェントチームを作成してください。
-
-PR_NUMBER = #{85, 86, 87, 88, 89, 90, 91}
-
-### リードの行動ルール（厳守）
-
-あなたはチームリードとして以下の役割のみを行うこと:
-
-- gh pr view {PR_NUMBER} でPRの概要と変更ファイル一覧を取得
-- gh pr diff {PR_NUMBER} で差分を取得し、各チームメイトに担当観点を割り当て
-- チームメイトの発見事項を統合し、最終レビューコメントを作成
-- gh pr review {PR_NUMBER} でレビュー結果を投稿
-- モデル: Claude Ops 4.6
-
-以下の行為は禁止:
-
-- 自分でファイルを読んでレビューする
-- Bash, Edit, Write ツールの直接使用
-- チームメイトの担当観点に口を出す
-
-すべてのレビュー作業はチームメイトに委譲すること。
-
-### チームメイト: 3名
-
-**Teammate 1 - 翻訳品質レビュアー:**
-
-役割: 日本語の自然さと原文との整合性チェック
-モデル: Claude sonnet 4.6
-
-手順:
-
-1. PRの変更ファイル一覧を取得
-2. 各変更ファイルの sourceUrl から WebFetch で英語原文を取得
-3. 原文と日本語版を突合し以下をチェック:
-   - 欠落セクション・段落はないか
-   - 誤訳・意味のずれはないか
-   - 不自然な日本語表現（「開かれています」→「利用できます」等）
-   - Testim製品名・プラン名が英語のまま維持されているか
-4. `docs/TRANSLATION_GUIDE.md` の既知パターンに該当する問題がないか
-5. 発見事項を重大度（error / warning / suggestion）付きでリードに報告
-   報告形式: ファイル名、行番号、問題内容、修正案
-
-**Teammate 2 - フォーマットレビュアー:**
-
-役割: マークダウン構造とサイト固有フォーマットのチェック（Source-First 構造契約前提）
-モデル: Claude sonnet 4.6
-
-手順:
-
-1. PRの変更ファイルを読み込み
-2. `docs/WRITING_GUIDE.md` のフォーマットルールに基づき以下をチェック:
-   - Source-First 構造契約に準拠しているか:
-     - 見出し: 1st H1 → frontmatter title:、2nd+ H1 → H2 降格、H2/H3/H4 維持
-     - リスト: マーカーは `-`、ネストレベルは原文準拠
-     - テーブル: 行数・列数が原文と一致
-   - callout記法が :::形式に正しく変換されているか
-   - 内部リンクがパスベース /docs/{folder}/{slug} 形式になっているか
-   - 画像が正しく埋め込まれているか（パス、alt text）
-   - frontmatter（title, description, sidebar等）が正しいか
-   - 見出しレベルの構造が適切か
-3. 発見事項を重大度付きでリードに報告
-   報告形式: ファイル名、行番号、問題内容、修正案
-
-**Teammate 3 - ビルド検証担当:**
-
-役割: ビルド・リント・テストの実行と結果報告
-モデル: Claude sonnet 4.6
-
-手順:
-
-1. PRのブランチをチェックアウト: gh pr checkout {PR_NUMBER}
-2. npm install（必要な場合）
-3. 以下を順番に実行し結果を記録:
-   a. npm run lint
-   b. npm run test
-   c. npm run build
-4. エラーがあれば該当箇所を特定し、原因を分析
-5. 結果をリードに報告（pass/fail + エラー詳細）
-   報告形式: コマンド、結果（pass/fail）、エラー内容（あれば）
-
-### リードの最終作業
-
-3名の報告を統合し、以下の形式でPRにレビューコメントを投稿:
-
-#### レビュー結果サマリー
-
-- 翻訳品質: {問題数} 件（error: X, warning: Y, suggestion: Z）
-- フォーマット: {問題数} 件
-- ビルド検証: pass / fail
-
-#### 詳細
-
-##### 翻訳品質
-
-（Teammate 1 の報告内容）
-
-#### フォーマット
-
-（Teammate 2 の報告内容）
-
-#### ビルド検証
-
-（Teammate 3 の報告内容）
-
-#### 判定
-
-- 問題なし → Approve
-- warning のみ → Approve + コメント
-- error あり → Request Changes

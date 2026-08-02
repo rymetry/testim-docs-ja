@@ -65,7 +65,7 @@ npm run check:snapshots:fetch -- --section="Overview"
 npm run check:snapshots:diff -- --section="Overview"
 
 # 単一ページ
-npm run check:snapshots:fetch -- --slug=testim-overview
+npm run check:snapshots:fetch -- --slug=overview/testim-overview
 
 # ドライラン
 npm run check:snapshots:fetch -- --dry-run
@@ -77,7 +77,7 @@ npm run check:snapshots:fetch -- --dry-run
 
 ### CI 定期チェック（3日ごと）
 
-1. `git checkout`（clean）→ snapshots = コミット済み（翻訳済みベースライン）
+1. clean な作業ツリーで開始 → snapshots = コミット済み（翻訳済みベースライン）
 2. `npm run check:snapshots` → snapshots を最新英語で上書きし、fetch が部分失敗しても committed vs working tree の diff を実行
 3. `source-sync-status.json` と `snapshot-diff-status.json` を常に生成し、どちらかの stage が失敗した場合は非0で終了
 4. 差分あり → レポート生成 → GitHub Issue 作成/更新
@@ -179,4 +179,4 @@ git commit -m "feat: 初回英語原文スナップショット"
 
 ---
 
-最終更新: 2026-04-09
+最終確認: 2026-08-03（現行スクリプトと CI ワークフローに照合）

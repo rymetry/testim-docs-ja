@@ -1,6 +1,6 @@
 {
   "name": "testim-docs-ja",
-  "description": "Testim 公式ヘルプドキュメントの日本語ローカライゼーション",
+  "description": "Tricentis Testim 公式英語ドキュメントのユーザー制作日本語翻訳",
   "type": "module",
   "version": "0.0.1",
   "license": "MIT",

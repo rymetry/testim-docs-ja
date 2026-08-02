@@ -4,7 +4,7 @@
 
 ## プロジェクト概要
 
-Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ローカライゼーション。Astro 7、Tailwind CSS v4、TypeScript、React（検索 UI のみ）で構築。Vercel にデプロイ。全レスポンス・コンテンツは日本語で記述する。
+Tricentis Testim 公式英語ドキュメント (docs.tricentis.com/testim) のユーザー制作日本語翻訳。公式日本語版ではない。Astro 7、Tailwind CSS v4、TypeScript、React（検索 UI のみ）で構築。Vercel にデプロイ。全レスポンス・コンテンツは日本語で記述する。
 
 ## コマンド一覧
 
@@ -21,7 +21,7 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 | `npm run lint:fix`              | Markdown lint の自動修正                                                                                |
 | `npm run format`                | Prettier フォーマット (Astro, TS, MD)                                                                   |
 | `npm run format:py`             | Python Ruff formatter                                                                                   |
-| `npm run test`                  | mjs bridge tests と Python pytest の実行                                                                |
+| `npm run test`                  | Node 回帰テストと Python pytest の実行                                                                  |
 | `npm run check:parity`          | ソースパリティチェック（構造、テーブル、acknowledgement、EN 正規化）                                    |
 | `npm run check:snapshots`       | EN HTML スナップショット取得 + diff（変更検出）                                                         |
 | `npm run check:snapshots:fetch` | EN HTML スナップショット取得のみ                                                                        |
@@ -47,11 +47,11 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 - **検索**: `src/components/SearchModal.tsx`（React）でクライアントサイド MiniSearch を実装。データは `/api/search.json` から。
 - **レイアウト**: `src/layouts/DocsLayout.astro` が全ドキュメントページをサイドバー（`src/components/navigation/NavSidebar.astro`）と目次（`TableOfContents.astro`）で包む。
 - **認証モード**: 環境変数 `BASIC_AUTH_ENABLED` で SSR+認証（レビュー用）と静的（本番）を切り替え。`src/middleware.ts` 参照。
-- **ドキュメントパイプライン**: `npm run docs:pipeline` (`testim_parity.pipeline.pipeline`) が翻訳ワークフロー全体をオーケストレーション: EN ソース取得 → プレースホルダー生成 (`testim_parity.pipeline.generate_untranslated_placeholders`) → LLM タスク準備 (`testim_parity.pipeline.prepare_llm_tasks`) → LLM 翻訳適用 (`testim_parity.pipeline.apply_llm_translations`)。checkpoint ベースのレジューム対応。
+- **ドキュメントパイプライン**: `npm run docs:pipeline` (`testim_parity.pipeline.pipeline`) が翻訳ワークフロー全体をオーケストレーション: URL 収集 → プレースホルダー生成（full モードのみ）→ EN ソース取得 → LLM タスク準備 → LLM 翻訳適用。checkpoint ベースのレジューム対応。
 - **スナップショットパイプライン**:
   - **Content**: 各 EN ページ HTML から `#mc-main-content` を抽出、`snapshots/en/content/{folder}/{basename}.html` に保存。
   - **Sidebar**: MadCap Flare TOC データを `testim_parity.madcap_toc` / `testim_parity.sidebar` でパースし、`snapshots/en/sidebar.json` に保存。
-  - **パリティ比較**: HTML スナップショットを `turndown` で Markdown 変換し、JA 翻訳と構造比較。
+  - **パリティ比較**: EN HTML と JA Markdown をそれぞれ canonical segment に変換し、構造比較。
   - **ソース側負債**: 壊れた上流 EN ソースは `testim_parity.sync_exclusions` の registry で隔離し、スナップショット上書きを抑止して `source-sync-status.json` の exclusion counters で可視化する（詳細は `docs/DOCS_DATE_TRACKING.md`）。
 
 ## 権威ソース

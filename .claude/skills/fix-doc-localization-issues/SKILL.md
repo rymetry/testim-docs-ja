@@ -47,8 +47,8 @@ gh issue view {ISSUE_NUMBER}
 ### ステップ 2: ブランチ作成
 
 ```bash
-git checkout main && git pull
-git checkout -b claude/{topic-name}
+git switch main && git pull
+git switch -c claude/{topic-name}
 ```
 
 ブランチ名は Issue 内容から導出（例: `claude/fix-recording-tests`）。
@@ -90,7 +90,7 @@ Issue が指定するページがリポジトリに存在しない場合:
 1. **EN 原文取得**: `sourceUrl` を WebFetch で取得
 2. **EN スナップショット取得**: `npm run check:snapshots:fetch -- --slug={slug}` で HTML スナップショットを保存
 3. **画像ダウンロード**: `npm run docs:fetch -- --slug={slug}` または EN HTML に参照される画像を `public/images/{category-folder}/{slug}/` にダウンロード
-4. **SIDEBAR_URLS.md に追加**: `snapshots/en/sidebar.json` に基づき正しい位置に URL を挿入。sidebar.json に未掲載の���合は EN サイトの実際のナビゲーション順序を WebFetch で確認して決定する
+4. **SIDEBAR_URLS.md に追加**: `snapshots/en/sidebar.json` に基づき正しい位置に URL を挿入。sidebar.json に未掲載の場合は EN サイトの実際のナビゲーション順序を WebFetch で確認して決定する
 5. **order 値を設定**: 隣接ファイルの `order` 値を確認。挿入箇所にギャップがなければ後続ファイルの `order` を +1 シフト
 6. **Markdown ファイル作成** (`src/content/docs/{category-folder}/{slug}.md`):
    - frontmatter: title, description, category, order, updated, sourceUrl, keywords

@@ -1,6 +1,6 @@
 # コントリビューションガイド
 
-Testim Help Docs 日本語版へのコントリビューションありがとうございます！このドキュメントでは、プロジェクトへの貢献方法を説明します。
+Tricentis Testim ユーザー制作日本語翻訳ドキュメントへのコントリビューションありがとうございます！このドキュメントでは、プロジェクトへの貢献方法を説明します。
 
 ## 📋 目次
 
@@ -65,8 +65,8 @@ npm run check:snapshots
 
 ### 前提条件
 
-- Node.js 18.x 以上
-- npm または pnpm
+- Node.js 22.12 以上、25 未満（`package.json` の `engines` に準拠）
+- npm
 - Python 3.14.4
 - [uv](https://docs.astral.sh/uv/)
 - Git
@@ -82,7 +82,7 @@ git clone https://github.com/YOUR_USERNAME/testim-docs-ja.git
 cd testim-docs-ja
 
 # 3. 依存関係をインストール
-npm install
+npm ci
 cd scripts/python
 uv sync --locked --all-extras
 cd ../..
@@ -92,7 +92,7 @@ npm run dev
 # → http://localhost:4321 でアクセス
 
 # 5. ブランチを作成
-git checkout -b fix/translation-error-in-overview
+git switch -c fix/translation-error-in-overview
 ```
 
 ### 開発時のコマンド
@@ -138,9 +138,9 @@ npm run check:snapshots
 **例:**
 
 ```bash
-git checkout -b fix/typo-in-getting-started
-git checkout -b feat/add-salesforce-guide
-git checkout -b docs/update-translation-guide
+git switch -c fix/typo-in-getting-started
+git switch -c feat/add-salesforce-guide
+git switch -c docs/update-translation-guide
 ```
 
 ## コミットメッセージ
@@ -187,6 +187,7 @@ git commit -m "docs: TRANSLATION_GUIDEに画像取得手順を追加"
 ### PR作成前のチェックリスト
 
 - [ ] `npm run lint` が通る
+- [ ] `npm run test` が成功する
 - [ ] `npm run build` が成功する
 - [ ] ローカルで表示を確認済み
 - [ ] コミットメッセージが明確
@@ -206,6 +207,7 @@ git commit -m "docs: TRANSLATION_GUIDEに画像取得手順を追加"
 ## 確認事項
 
 - [ ] Lintエラーなし
+- [ ] テスト成功
 - [ ] ビルド成功
 - [ ] ローカルで動作確認済み
 
@@ -272,14 +274,14 @@ Pull Requestは以下の観点でレビューされます：
 ### 重要なポイント
 
 1. **ファイル命名**: 英語原文のURL slugと一致させる
-2. **Frontmatter**: `title`, `description`, `category`, `updated`, `keywords`, `sourceUrl` を必ず設定
+2. **Frontmatter**: `title`, `description`, `category`, `updated`, `sourceUrl` を必ず設定（`order`, `keywords` は任意）
 3. **画像**: `public/images/` 配下に配置
 4. **内部リンク**: 日本語版のファイルが存在する場合は内部リンクに変更
 
 ## 質問・サポート
 
-- **Issue**: バグ報告や機能要望は [GitHub Issues](../../issues) で
-- **Discussion**: 一般的な質問や相談は [GitHub Discussions](../../discussions) で
+- **Issue**: バグ報告や機能要望は [GitHub Issues](https://github.com/rymetry/testim-docs-ja/issues) で
+- **Discussion**: 一般的な質問や相談は [GitHub Discussions](https://github.com/rymetry/testim-docs-ja/discussions) で
 - **レビュー**: Pull Requestでフィードバックを受けられます
 
 ## 謝辞

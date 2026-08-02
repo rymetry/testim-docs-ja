@@ -35,7 +35,7 @@
 1. 既存 narrow pattern のドメインに収まるか？ → yes なら既存 pattern に語を追加（≤12 語で留める）
 2. 新ドメインが必要か？ → 新 narrow pattern を作成（`<domain>-<subcategory>` 命名）
 3. 広 alternation は禁止（pattern 1 つで複数ドメインを吸収しない）
-4. 追加後は `scripts/__tests__/parity_glossary_mask.test.mjs` の inventory guard に narrow ID を追加
+4. 追加後は `scripts/python/tests/test_glossary_mask.py` の inventory guard に narrow ID を追加
 
 ---
 
@@ -67,7 +67,7 @@
 | regex | `\b(Enter|Tab|Esc|Escape|Space|Backspace|Delete|Insert|Home|End|Page\s?Up|Page\s?Down|PgUp|PgDn|F\d+)\b(\s*[、,]\s*\b(Enter|Tab|Esc|Escape|Space|Backspace|Delete|Insert|Home|End|Page\s?Up|Page\s?Down|PgUp|PgDn|F\d+)\b)+` |
 | flags | `gi` |
 | example | `Enter、Tab、ESC、Page Up、Page Down`、`Enter, Tab, Esc`、`F1, F2, F3` |
-| note | カンマ（`、` `,`）区切りで**2 個以上連続する**キー名の列挙のみマッチする narrow pattern。単独の `Enter` / `Tab` を文脈非依存に mask すると "Press Enter key" のような 3 語英文の false-negative を招く (`parity_glossary_mask.test.mjs` §"GLOSSARY common-word false-negative regression" で pin 済) ため、列挙文脈でのみマスクする設計。これにより JA 文中で EN 原文通りの "Enter、Tab、ESC、Page Up、Page Down など" という列挙表現を残せる。単独キーは WRITING_GUIDE に従い bold + 日本語補足 (例: "**Enter** キーを押します") か backtick で囲むなど別の方法を使う |
+| note | カンマ（`、` `,`）区切りで**2 個以上連続する**キー名の列挙のみマッチする narrow pattern。単独の `Enter` / `Tab` を文脈非依存に mask すると "Press Enter key" のような 3 語英文の false-negative を招く (`scripts/python/tests/test_glossary_mask.py` §"GLOSSARY common-word false-negative regression" で pin 済) ため、列挙文脈でのみマスクする設計。これにより JA 文中で EN 原文通りの "Enter、Tab、ESC、Page Up、Page Down など" という列挙表現を残せる。単独キーは WRITING_GUIDE に従い bold + 日本語補足 (例: "**Enter** キーを押します") か backtick で囲むなど別の方法を使う |
 
 ## cli-flag
 
@@ -293,5 +293,5 @@ Web / ネットワーク / 認証トークン文脈の一般 IT 用語。
 
 1. 本ファイルに `##` で新規 pattern の節を追加
 2. `id`, `regex`, `example`, `note` を埋める（大文字小文字無視が必要な場合は `flags` に `gi` を指定）
-3. `scripts/__tests__/parity_glossary_mask.test.mjs` に該当 pattern の TDD ケースを追加
+3. `scripts/python/tests/test_glossary_mask.py` に該当 pattern の TDD ケースを追加
 4. 実装を追加し、`npm run test` で通るか確認

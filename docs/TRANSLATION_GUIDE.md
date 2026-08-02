@@ -594,7 +594,7 @@ Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のま
 
 - 新しい一般 IT 用語を英語維持したい場合は、[INVARIANT_TOKENS.md](./INVARIANT_TOKENS.md) の narrow pattern に追加する
 - 文脈限定で pattern を narrow に保つ（広 alternation 禁止、pattern あたり語数 ≤ 6-8）
-- 追加時は `scripts/__tests__/parity_glossary_mask.test.mjs` に inventory guard test を追加する
+- 追加時は `scripts/python/tests/test_glossary_mask.py` に inventory guard test を追加する
 
 **false-positive 事例**（M1 T4 で除外済）:
 
@@ -602,7 +602,7 @@ Testim 固有名詞以外でも、以下の **一般 IT 用語** は英語のま
 
 ### 5.5 Source-first 翻訳パターン（Wave 2 確立）
 
-2026-04-17 時点の Wave 2 (P2-2) で確立済の翻訳パターン一覧。各 pattern は `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` 内 sentinel slug で zero-drift として pin 済。canonical reference は PARITY_GUIDE §Wave 2 実績 pattern catalog と各 sentinel slug のコメント。
+2026-04-17 時点の Wave 2 (P2-2) で確立済の翻訳パターン一覧。各 pattern は `scripts/python/tests/test_clean_page_fixtures.py` の `CLEAN_PAGE_SLUGS` 内 sentinel slug で zero-drift として pin 済。canonical reference は PARITY_GUIDE §Wave 2 実績 pattern catalog と各 sentinel slug のコメント。
 
 本 subsection は **既に確定したパターンの codification** であり、新規 mechanical exception / §5.3.N carve-out の提案経路ではない。翻訳作業中に未知 pattern を見つけた場合は §Source-first 例外の canonical registry (WRITING_GUIDE 冒頭) に従って reviewer gate を経由する。
 

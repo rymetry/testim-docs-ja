@@ -217,7 +217,7 @@ EN が `<p>` 内にインラインで書く callout を、JA が Markdown 番号
 
 ### Wave 2 実績 pattern catalog
 
-P2-2 で burn-down 済の source-first pattern 一覧。各 pattern は `scripts/__tests__/source_parity_clean_page_fixtures.test.mjs` の `CLEAN_PAGE_SLUGS` 内 sentinel slug で zero-drift として pin 済。
+P2-2 で burn-down 済の source-first pattern 一覧。各 pattern は `scripts/python/tests/test_clean_page_fixtures.py` の `CLEAN_PAGE_SLUGS` 内 sentinel slug で zero-drift として pin 済。
 
 | #   | pattern                             | 概要                                                                                                                     | canonical sentinel slug                                                                  |
 | --- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |

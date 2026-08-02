@@ -1,6 +1,9 @@
-# Testim Help Docs 日本語版
+# Tricentis Testim ユーザー制作日本語翻訳ドキュメント
 
-[Tricentis Testim](https://www.testim.io/) の公式ヘルプドキュメント（[help.testim.io](https://help.testim.io/docs/testim-overview)）を日本語で提供するプロジェクトです。最新の機能や使い方を日本語でまとめています。
+[Tricentis Testim](https://www.testim.io/test-automation-tool/) の
+[公式英語ドキュメント](https://docs.tricentis.com/testim/content/home.htm)を日本語に翻訳し、
+原文の更新に継続して追従するユーザー制作プロジェクトです。
+Tricentis または Testim が提供する公式日本語版ではありません。
 
 ## 🚀 プロジェクト構成
 
@@ -51,8 +54,13 @@
 ### インストール
 
 ```bash
-# 依存関係のインストール
-npm install
+# Node.js 依存関係のインストール
+npm ci
+
+# Python tooling の依存関係
+cd scripts/python
+uv sync --locked --all-extras
+cd ../..
 
 # 開発サーバーの起動（http://localhost:4321）
 npm run dev
@@ -63,9 +71,6 @@ npm run build
 # ビルド結果のプレビュー
 npm run preview
 
-# Python tooling の依存関係
-cd scripts/python
-uv sync --locked --all-extras
 ```
 
 ## 📝 ドキュメントの追加方法
@@ -79,7 +84,8 @@ title: 'ページタイトル'
 description: 'ページの説明文'
 category: 'カテゴリ名'
 order: 10
-updated: '2025-10-29'
+updated: 'YYYY-MM-DD' # 英語原文の更新日に合わせる
+sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/{slug}.htm'
 keywords:
   - keyword1
   - keyword2
@@ -91,7 +97,7 @@ keywords:
 
 ## 🎨 デザイン方針
 
-- Tricentis Testim Docs 公式（[help.testim.io](https://help.testim.io/)）のレイアウトを踏襲
+- [Tricentis Testim 公式ドキュメント](https://docs.tricentis.com/testim/content/home.htm)のレイアウトを踏襲
 - 日本語フォントは Noto Sans JP を使用（Astro Fonts API で自動管理）
 - コードブロックは GitHub Dark Dimmed テーマでシンタックスハイライト
 - レスポンシブデザイン対応（モバイル・タブレット・デスクトップ）
@@ -100,7 +106,7 @@ keywords:
 
 Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
-- **情報パネル（Callout）**: `:::tip`, `:::warning`, `:::success`, `:::danger`, `:::note`, `:::info`
+- **情報パネル（Callout）**: `:::tip`, `:::warning`, `:::caution`, `:::danger`, `:::note`, `:::info`
 - **コードブロックタイトル**: ` ```javascript title="example.js" `
 - **GitHub Flavored Markdown**: テーブル、タスクリスト、脚注、取り消し線
 - **見出しへの自動リンク**: すべての見出しにアンカーリンクが自動付与
@@ -162,10 +168,10 @@ Markdown (.md) ファイルで以下の拡張機能が利用できます：
 
 ## 🔗 関連リンク
 
-- [Tricentis Testim 公式サイト](https://www.testim.io/)
-- [Tricentis Testim Docs 公式ドキュメント](https://help.testim.io/)
-- [Tricentis Testim Docs 公式 Changelog](https://help.testim.io/changelog)
+- [Tricentis Testim 公式製品ページ](https://www.testim.io/test-automation-tool/)
+- [Tricentis Testim 公式ドキュメント](https://docs.tricentis.com/testim/content/home.htm)
+- [Tricentis Testim 公式 Changelog](https://docs.tricentis.com/testim/content/overview/changelog.htm)
 
 ---
 
-**Note**: このプロジェクトは Testim 公式の日本語化プロジェクトではなく、個人による非公式翻訳です。
+**免責事項**: 本プロジェクトはユーザーが制作・運営する非公式翻訳です。Tricentis およびTestim とは提携していません。正確性や最新性が重要な場合は、上記の公式英語ドキュメントを確認してください。
