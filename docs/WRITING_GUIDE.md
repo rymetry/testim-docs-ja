@@ -59,7 +59,7 @@ description: 'ページの説明（100文字以内、プレースホルダ禁止
 category: '概要'
 order: 1001
 updated: '2026-01-15'
-sourceUrl: 'https://docs.tricentis.com/testim/content/{category}/{slug}.htm'
+sourceUrl: 'https://docs.tricentis.com/testim/content/{en-path}.htm' # 英語原文 URL のパスに合わせる（フォルダー階層はページにより異なる）
 keywords:
   - キーワード1
   - キーワード2
@@ -1142,12 +1142,13 @@ src/content/docs/getting-started/creating-your-first-test.md
 
 ### Q5: 既存ページを更新する際の注意点は？
 
-**A:** Frontmatter の `updated` 日付を必ず更新してください。
+**A:** Frontmatter の `updated` は、日本語ページを編集した日ではなく、英語原文の更新日に合わせてください。
+英語原文の更新日が変わった場合のみ `updated` を更新します。
 
 ```yaml
 ---
 title: 'ページタイトル'
-updated: '2025-11-02' # ← 更新日を変更
+updated: 'YYYY-MM-DD' # 英語原文の更新日
 ---
 ```
 

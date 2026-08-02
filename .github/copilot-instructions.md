@@ -1,8 +1,8 @@
-# Copilot Instructions for Testim Help Docs (Japanese)
+# Copilot Instructions for Tricentis Testim User-Created Japanese Translation
 
 ## プロジェクト概要
 
-Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ローカライゼーション。英語原文との構造的パリティを維持しつつ、日本人ユーザーが理解しやすい表現で提供する。Vercel にデプロイ。
+Tricentis Testim 公式英語ドキュメント (docs.tricentis.com/testim) のユーザー制作日本語翻訳。公式日本語版ではない。英語原文との構造的パリティを維持しつつ、日本人ユーザーが理解しやすい表現で提供する。Vercel にデプロイ。
 
 ## 技術スタック
 
@@ -26,12 +26,12 @@ Testim ヘルプドキュメント (docs.tricentis.com/testim) の日本語ロ�
 
 `scripts/` の運用コードは Python package `scripts/python/src/testim_parity/` が canonical:
 
-| ディレクトリ                     | 責務                                                                       |
-| -------------------------------- | -------------------------------------------------------------------------- |
-| `testim_parity.detection`        | パリティチェック、スナップショット取得/差分、変更検出                      |
-| `testim_parity.pipeline`         | 翻訳パイプライン: EN ソース取得 → プレースホルダー → LLM タスク → 翻訳適用 |
-| `testim_parity.tools`            | lint、正規化、frontmatter 同期などのユーティリティ                         |
-| `testim_parity.*` shared modules | パリティ解析、turndown、MadCap TOC パーサー等                              |
+| ディレクトリ                     | 責務                                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------- |
+| `testim_parity.detection`        | パリティチェック、スナップショット取得/差分、変更検出                           |
+| `testim_parity.pipeline`         | 翻訳パイプライン: URL 収集 → プレースホルダー → EN 取得 → LLM タスク → 翻訳適用 |
+| `testim_parity.tools`            | lint、正規化、frontmatter 同期などのユーティリティ                              |
+| `testim_parity.*` shared modules | パリティ解析、turndown、MadCap TOC パーサー等                                   |
 
 ## コマンド一覧
 
@@ -85,10 +85,11 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 `testim_parity.pipeline.pipeline` が翻訳ワークフロー全体をオーケストレーション:
 
-1. EN ソース取得
-2. プレースホルダー生成 (`testim_parity.pipeline.generate_untranslated_placeholders`)
-3. LLM タスク準備 (`testim_parity.pipeline.prepare_llm_tasks`)
-4. LLM 翻訳適用 (`testim_parity.pipeline.apply_llm_translations`)
+1. URL 収集 (`testim_parity.pipeline.update_sidebar_urls_from_live`)
+2. プレースホルダー生成 (`testim_parity.pipeline.generate_untranslated_placeholders`、full モードのみ)
+3. EN ソース取得 (`testim_parity.pipeline.fetch_translate_images`)
+4. LLM タスク準備 (`testim_parity.pipeline.prepare_llm_tasks`)
+5. LLM 翻訳適用 (`testim_parity.pipeline.apply_llm_translations`)
 
 `scripts/.checkpoint` によるチェックポイントベースのレジューム対応。
 
@@ -130,7 +131,7 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 
 ## 開発ワークフロー
 
-1. 初回セットアップ: `npm install` + `(cd scripts/python && uv sync --locked --all-extras)`
+1. 初回セットアップ: `npm ci` + `(cd scripts/python && uv sync --locked --all-extras)`
 2. 開発サーバー: `npm run dev`
 3. 本番ビルド: `npm run build`
 4. 品質ゲート: `npm run lint`（Markdown / docs / Ruff / Python format / mypy）
