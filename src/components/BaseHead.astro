@@ -45,5 +45,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageUrl.href} />
-<Font cssVariable="--font-noto-sans-jp" preload />
+{
+  /* preload は latin slice (約 24KB・1ファイル) に限定する。preload を true にすると
+     unicode-range 分割された全 slice (約 5MB) が高優先度で読み込まれるため禁止。
+     google provider では名前付き latin ブロックのみ subset タグを持ち、番号付き日本語
+     slice はタグなしのため、subset フィルタで latin だけを選別できる (Issue #417)。 */
+}
+<Font cssVariable="--font-noto-sans-jp" preload={[{ subset: 'latin' }]} />
 <Fragment set:html={gtmHeadCode} />

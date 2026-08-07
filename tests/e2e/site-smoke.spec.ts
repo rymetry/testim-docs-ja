@@ -235,12 +235,36 @@ test('公開ページにセキュリティヘッダーが付与される', async
   }
 });
 
-test('設定済みのNoto Sans JP 4ウェイトを読み込める', async ({ page }) => {
+test('Noto Sans JPが4つのweight checkpointで日本語とLatinのglyphを読み込める', async ({ page }) => {
+  // フォントはビルド時に self-host 化される契約。実行時に外部フォント CDN への
+  // リクエストが発生した場合は配信構成の回帰として検出する。
+  const externalFontRequests: string[] = [];
+  page.on('request', (request) => {
+    if (/fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.fontsource\.org/.test(request.url())) {
+      externalFontRequests.push(request.url());
+    }
+  });
+
   await page.goto('/');
+
+  // preload は latin slice のみに限定する契約。0 なら preload の消失、
+  // 多数なら全 slice preload (約5MB) への回帰を意味する。期待値は 1 だが、
+  // 上流の名前付き subset ブロック増加を許容するバッファとして上限は 4 にする。
+  const preloadCount = await page.locator('link[rel="preload"][as="font"]').count();
+  expect(preloadCount, 'フォント preload リンク数').toBeGreaterThanOrEqual(1);
+  expect(preloadCount, 'フォント preload リンク数').toBeLessThanOrEqual(4);
 
   const fontFaceResults = await page.evaluate(async () => {
     const weights = ['400', '500', '600', '700'];
-    const fontLoadCanary = 'Testim';
+    // unicode-range 分割配信では canary 文字列を含む slice のみが取得される。
+    // 文字種ごとに担当 slice が異なるため、一部の slice 消失を見逃さないよう
+    // Latin・ひらがな・カタカナ・漢字を個別に検証する。
+    const canaries: Record<string, string> = {
+      latin: 'Testim',
+      hiragana: 'てすとのきろく',
+      katakana: 'テストジッコウ',
+      kanji: '自動化概要',
+    };
     const normalizeFamily = (family: string) => family.replace(/^(['"])(.*)\1$/, '$2');
     const fontFamily = getComputedStyle(document.documentElement)
       .getPropertyValue('--font-noto-sans-jp')
@@ -249,34 +273,77 @@ test('設定済みのNoto Sans JP 4ウェイトを読み込める', async ({ pag
     const matchingFaces = Array.from(document.fonts).filter(
       (face) => normalizeFamily(face.family) === normalizeFamily(fontFamily)
     );
+    // variable font は "400 700" のような範囲宣言になるため、単一値と範囲の両方を解釈する。
+    const coversWeight = (faceWeight: string, target: number) => {
+      const bounds = faceWeight
+        .split(' ')
+        .map((value) => Number.parseFloat(value))
+        .filter((value) => !Number.isNaN(value));
+      if (bounds.length === 2) {
+        return target >= bounds[0] && target <= bounds[1];
+      }
+      if (bounds.length === 1) {
+        return bounds[0] === target;
+      }
+      if (faceWeight === 'normal') {
+        return target === 400;
+      }
+      return faceWeight === 'bold' && target === 700;
+    };
 
-    return Promise.all(
+    const isWebFontFace = (face: FontFace) =>
+      normalizeFamily(face.family) === normalizeFamily(fontFamily) && face.status === 'loaded';
+
+    const perWeight = await Promise.all(
       weights.map(async (weight) => {
         const faces = matchingFaces.filter(
-          (face) => face.weight === weight && face.style === 'normal'
+          (face) => coversWeight(face.weight, Number(weight)) && face.style === 'normal'
         );
-        await Promise.all(faces.map((face) => face.load()));
-        const canaryFaces = await document.fonts.load(
-          `${weight} 16px ${fontFamily}`,
-          fontLoadCanary
+        const scripts = await Promise.all(
+          Object.entries(canaries).map(async ([script, text]) => {
+            // 複数文字をまとめて load すると、一部の slice が消えても他の slice が
+            // マッチして非空になり欠落を見逃す。1 文字ずつ担当 slice の存在を検証する。
+            const perChar = await Promise.all(
+              Array.from(text).map(async (char) => {
+                const faces = await document.fonts.load(`${weight} 16px ${fontFamily}`, char);
+                return faces.length > 0 && faces.every(isWebFontFace);
+              })
+            );
+            return {
+              script,
+              loaded: perChar.every(Boolean),
+              rendered: document.fonts.check(`${weight} 16px ${fontFamily}`, text),
+            };
+          })
         );
-        return {
-          weight,
-          count: faces.length,
-          loaded: faces.length === 1 && faces[0].status === 'loaded',
-          canaryMatched: faces.length === 1 && canaryFaces.includes(faces[0]),
-        };
+        return { weight, faceCount: faces.length, scripts };
       })
     );
+    return {
+      perWeight,
+      totalFaceCount: matchingFaces.length,
+      // 全 face が範囲宣言 ("400 700") なら variable font 配信。静的インスタンス配信へ
+      // 回帰すると中間 weight が faux weight に劣化するため、範囲宣言を契約とする。
+      allFacesUseWeightRange: matchingFaces.every((face) => face.weight.trim().includes(' ')),
+    };
   });
-  expect(fontFaceResults).toEqual(
-    ['400', '500', '600', '700'].map((weight) => ({
-      weight,
-      count: 1,
-      loaded: true,
-      canaryMatched: true,
-    }))
-  );
+
+  for (const result of fontFaceResults.perWeight) {
+    // slice 数は Google Fonts 側の分割方式に依存するため厳密値は検証しない。
+    // 配信劣化の実質的な検知は文字種ごとの load・render アサーションが担う。
+    expect(result.faceCount, `weight ${result.weight} のface数`).toBeGreaterThan(0);
+    for (const script of result.scripts) {
+      expect(script.loaded, `weight ${result.weight} の${script.script} glyph読み込み`).toBe(true);
+      expect(script.rendered, `weight ${result.weight} の${script.script} glyph描画可否`).toBe(
+        true
+      );
+    }
+  }
+  // variable font の範囲宣言なら slice あたり 1 rule で収まる。weight ごとの rule 複製が
+  // 復活すると全ページの inline CSS が数百 KB 肥大するため、総 face 数に予算を設ける。
+  expect(fontFaceResults.totalFaceCount, '@font-face 総数の予算').toBeLessThanOrEqual(200);
+  expect(fontFaceResults.allFacesUseWeightRange, 'variable font 範囲宣言の維持').toBe(true);
+  expect(externalFontRequests, '外部フォントCDNへの実行時リクエスト').toEqual([]);
 });
 
 test('desktopとmobileでトップページが横にはみ出さない', async ({ page }, testInfo) => {
