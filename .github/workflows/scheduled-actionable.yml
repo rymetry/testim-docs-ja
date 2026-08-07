@@ -37,10 +37,21 @@ jobs:
       # actions/github-script runtime + sync-detection-issues.cjs (Phase 6.1
       # scope) で残る。
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: '24'
+          package-manager-cache: false
+      - name: Enable pinned npm
+        run: |
+          corepack enable npm
+          npm --version
+      - name: Cache npm downloads
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ runner.arch }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-npm-
       - name: Install Node dependencies
         run: npm ci
       - name: Setup Python
