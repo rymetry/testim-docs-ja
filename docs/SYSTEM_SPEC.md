@@ -62,6 +62,26 @@ Vercel deploy
 | `docs/INVARIANT_TOKENS.md` | 23 種の invariant token pattern 定義。正規表現で英語維持 token をマスク |
 | `docs/SIDEBAR_URLS.md` | 全 288 URL のマスターリスト。カテゴリ・ページ順序の single source of truth |
 
+### フォント配信 (Noto Sans JP)
+
+Issue #417 / PR #432 で決定した設計。詳細な計測値は PR #432 を参照。
+
+- **provider**: Astro Fonts API の `google` provider。unicode-range 分割 (121 slice) の
+  variable font (`wght 400..700`) をビルド時に取得し `/_astro/fonts/` へ self-host する。
+  fontsource の japanese subset は 1 weight = 1 ファイル (約 1MB) の一枚岩配信になるため不採用。
+- **weights**: 範囲指定 `['400 700']`。離散指定は slice ごとに weight 数だけ `@font-face` が
+  複製され、全ページの inline CSS が肥大する。
+- **preload**: latin slice のみ (`preload={[{ subset: 'latin' }]}`、約 24KB・1 ファイル)。
+  `preload` (= true) は全 slice 約 5MB の高優先度読み込みになるため禁止。
+- **fallback**: `optimizedFallbacks: false` + プラットフォームフォント明示。自動生成の
+  fallback metrics は CJK slice 基準の `size-adjust` を算出し Latin が約 2 倍サイズで
+  swap される回帰を起こすため無効化。
+- **壊れると日本語が消える依存**: 番号付き日本語 slice は unifont のメタデータで subset
+  タグを持たない (named latin ブロックのみ `latin`)。unifont / astro の更新でこのタグ付けが
+  変わると、subsets フィルタや preload 選別が破綻しうる。回帰は
+  `tests/e2e/site-smoke.spec.ts` のフォントテスト (文字種別 glyph 検証・preload 数・
+  `@font-face` 予算・外部 CDN 不在) が pre-merge で検知する。
+
 ## 検出システム仕様
 
 ### パリティチェック (`testim_parity.detection.check_source_parity`)
