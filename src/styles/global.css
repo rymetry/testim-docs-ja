@@ -448,9 +448,11 @@
      削除した (EC の frame styling は astro.config.mjs の styleOverrides で
      調整する契約に移行)。*/
 
-  /* 見出しリンク */
-  .heading-link {
-    @apply no-underline hover:underline;
+  /* 見出しリンク: rehype-autolink-headings の behavior 'wrap' により見出し全体が
+     アンカーになるため、.docs-prose a (詳細度 0,1,1) の本文リンク用スタイルに
+     詳細度で勝つセレクタで色と下線を打ち消す。hover 時のみ下線でリンク可能と示す。 */
+  .docs-prose a.heading-link {
+    @apply text-inherit no-underline hover:underline;
   }
 
   /* 見出しのアンカー遷移時にヘッダー下に隠れないようオフセット */
