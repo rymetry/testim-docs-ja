@@ -39,9 +39,10 @@ jobs:
       # Phase 6b cutover: docs pipeline / parity CLI は全て Python (``uv run``)
       # 経由。Node は package.json orchestrator + markdownlint で残る。
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
+          package-manager-cache: false
       - name: Enable pinned npm
         run: |
           corepack enable npm
