@@ -43,6 +43,10 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
+      - name: Enable pinned npm
+        run: |
+          corepack enable npm
+          npm --version
       - name: Install Node dependencies
         run: npm ci
       - name: Setup Python
