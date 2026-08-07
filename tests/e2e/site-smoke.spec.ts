@@ -236,6 +236,15 @@ test('公開ページにセキュリティヘッダーが付与される', async
 });
 
 test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを読み込める', async ({ page }) => {
+  // フォントはビルド時に self-host 化される契約。実行時に外部フォント CDN への
+  // リクエストが発生した場合は配信構成の回帰として検出する。
+  const externalFontRequests: string[] = [];
+  page.on('request', (request) => {
+    if (/fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.fontsource\.org/.test(request.url())) {
+      externalFontRequests.push(request.url());
+    }
+  });
+
   await page.goto('/');
 
   const fontFaceResults = await page.evaluate(async () => {
@@ -254,11 +263,25 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
     const matchingFaces = Array.from(document.fonts).filter(
       (face) => normalizeFamily(face.family) === normalizeFamily(fontFamily)
     );
+    // variable font は "400 700" のような範囲宣言になるため、単一値と範囲の両方を解釈する。
+    const coversWeight = (faceWeight: string, target: number) => {
+      const bounds = faceWeight
+        .split(' ')
+        .map((value) => Number.parseFloat(value))
+        .filter((value) => !Number.isNaN(value));
+      if (bounds.length === 2) {
+        return target >= bounds[0] && target <= bounds[1];
+      }
+      if (bounds.length === 1) {
+        return bounds[0] === target;
+      }
+      return faceWeight === 'normal' && target === 400;
+    };
 
-    return Promise.all(
+    const perWeight = await Promise.all(
       weights.map(async (weight) => {
         const faces = matchingFaces.filter(
-          (face) => face.weight === weight && face.style === 'normal'
+          (face) => coversWeight(face.weight, Number(weight)) && face.style === 'normal'
         );
         const [latinFaces, japaneseFaces] = await Promise.all([
           document.fonts.load(`${weight} 16px ${fontFamily}`, canaries.latin),
@@ -277,15 +300,22 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
         };
       })
     );
+    return { perWeight, totalFaceCount: matchingFaces.length };
   });
 
-  for (const result of fontFaceResults) {
+  for (const result of fontFaceResults.perWeight) {
+    // slice 数は Google Fonts 側の分割方式に依存するため厳密値は検証しない。
+    // 配信劣化の実質的な検知は latin/japanese の load・render アサーションが担う。
     expect(result.faceCount, `weight ${result.weight} のface数`).toBeGreaterThan(0);
     expect(result.latinLoaded, `weight ${result.weight} のLatin glyph読み込み`).toBe(true);
     expect(result.japaneseLoaded, `weight ${result.weight} の日本語glyph読み込み`).toBe(true);
     expect(result.latinRendered, `weight ${result.weight} のLatin glyph描画可否`).toBe(true);
     expect(result.japaneseRendered, `weight ${result.weight} の日本語glyph描画可否`).toBe(true);
   }
+  // variable font の範囲宣言なら slice あたり 1 rule で収まる。weight ごとの rule 複製が
+  // 復活すると全ページの inline CSS が数百 KB 肥大するため、総 face 数に予算を設ける。
+  expect(fontFaceResults.totalFaceCount, '@font-face 総数の予算').toBeLessThanOrEqual(200);
+  expect(externalFontRequests, '外部フォントCDNへの実行時リクエスト').toEqual([]);
 });
 
 test('desktopとmobileでトップページが横にはみ出さない', async ({ page }, testInfo) => {

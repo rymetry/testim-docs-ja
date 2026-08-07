@@ -46,6 +46,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageUrl.href} />
 <!-- preload を付けると unicode-range 分割された全 slice (約 5MB) が高優先度で
-     読み込まれるため付けない。実際に描画へ必要な slice のみ遅延取得させる (Issue #417)。 -->
+     読み込まれるため付けない。実際に描画へ必要な slice のみ遅延取得させる (Issue #417)。
+     部分 preload も不可: Astro の preload フィルタは weight/style/subset の3軸のみで、
+     google provider の全 slice は subset "latin" 扱いのため latin だけを選別できない。 -->
 <Font cssVariable="--font-noto-sans-jp" />
 <Fragment set:html={gtmHeadCode} />

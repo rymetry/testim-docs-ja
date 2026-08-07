@@ -134,9 +134,15 @@ export default defineConfig({
       // 配信できる。fontsource の japanese subset は 1 weight = 1 ファイル (約 1MB) の
       // 一枚岩配信になるため使わない (Issue #417)。
       provider: fontProviders.google(),
-      weights: [400, 500, 600, 700],
+      // 離散 weight 指定だと slice ごとに weight 数だけ @font-face が複製され、
+      // 全ページの inline CSS が肥大する。variable font の範囲指定で 1 slice = 1 rule に抑える。
+      weights: ['400 700'],
       styles: ['normal'],
       subsets: ['latin', 'japanese'],
+      // 自動 fallback metrics (size-adjust) は CJK slice 基準で算出されて Latin が
+      // 約2倍サイズで swap されるため無効化し、プラットフォームフォントを明示する。
+      optimizedFallbacks: false,
+      fallbacks: ['Hiragino Sans', 'Yu Gothic', 'system-ui', 'sans-serif'],
     },
   ],
 
