@@ -66,7 +66,11 @@ jobs:
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: node_modules/.astro/fonts
-          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}
+          # フォントメタデータには TTL があり、固定 key だと期限切れキャッシュを
+          # 復元し続ける。run_id で毎回保存し直し、restore-keys で最新を復元する。
+          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}-${{ github.run_id }}
+          restore-keys: |
+            astro-fonts-${{ hashFiles('astro.config.mjs') }}-
       - name: Build static site
         run: npm run build
 
@@ -83,7 +87,11 @@ jobs:
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: node_modules/.astro/fonts
-          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}
+          # フォントメタデータには TTL があり、固定 key だと期限切れキャッシュを
+          # 復元し続ける。run_id で毎回保存し直し、restore-keys で最新を復元する。
+          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}-${{ github.run_id }}
+          restore-keys: |
+            astro-fonts-${{ hashFiles('astro.config.mjs') }}-
       - name: Build Vercel SSR site with Basic Auth
         run: npm run build
         env:
@@ -102,7 +110,11 @@ jobs:
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: node_modules/.astro/fonts
-          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}
+          # フォントメタデータには TTL があり、固定 key だと期限切れキャッシュを
+          # 復元し続ける。run_id で毎回保存し直し、restore-keys で最新を復元する。
+          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}-${{ github.run_id }}
+          restore-keys: |
+            astro-fonts-${{ hashFiles('astro.config.mjs') }}-
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
       - name: Run production E2E tests

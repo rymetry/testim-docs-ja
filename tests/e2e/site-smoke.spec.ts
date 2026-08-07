@@ -247,13 +247,22 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
 
   await page.goto('/');
 
+  // preload は latin slice のみに限定する契約。0 なら preload の消失、
+  // 多数なら全 slice preload (約5MB) への回帰を意味する。
+  const preloadCount = await page.locator('link[rel="preload"][as="font"]').count();
+  expect(preloadCount, 'フォント preload リンク数').toBeGreaterThanOrEqual(1);
+  expect(preloadCount, 'フォント preload リンク数').toBeLessThanOrEqual(4);
+
   const fontFaceResults = await page.evaluate(async () => {
     const weights = ['400', '500', '600', '700'];
     // unicode-range 分割配信では canary 文字列を含む slice のみが取得される。
-    // Latin と日本語 (ひらがな・カタカナ・漢字) の両方を検証する。
-    const canaries = {
+    // 文字種ごとに担当 slice が異なるため、一部の slice 消失を見逃さないよう
+    // Latin・ひらがな・カタカナ・漢字を個別に検証する。
+    const canaries: Record<string, string> = {
       latin: 'Testim',
-      japanese: 'テスト自動化の概要',
+      hiragana: 'てすとのきろく',
+      katakana: 'テストジッコウ',
+      kanji: '自動化概要',
     };
     const normalizeFamily = (family: string) => family.replace(/^(['"])(.*)\1$/, '$2');
     const fontFamily = getComputedStyle(document.documentElement)
@@ -278,26 +287,25 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
       return faceWeight === 'normal' && target === 400;
     };
 
+    const isWebFontFace = (face: FontFace) =>
+      normalizeFamily(face.family) === normalizeFamily(fontFamily) && face.status === 'loaded';
+
     const perWeight = await Promise.all(
       weights.map(async (weight) => {
         const faces = matchingFaces.filter(
           (face) => coversWeight(face.weight, Number(weight)) && face.style === 'normal'
         );
-        const [latinFaces, japaneseFaces] = await Promise.all([
-          document.fonts.load(`${weight} 16px ${fontFamily}`, canaries.latin),
-          document.fonts.load(`${weight} 16px ${fontFamily}`, canaries.japanese),
-        ]);
-        const isWebFontFace = (face: FontFace) =>
-          normalizeFamily(face.family) === normalizeFamily(fontFamily) &&
-          face.status === 'loaded';
-        return {
-          weight,
-          faceCount: faces.length,
-          latinLoaded: latinFaces.length > 0 && latinFaces.every(isWebFontFace),
-          japaneseLoaded: japaneseFaces.length > 0 && japaneseFaces.every(isWebFontFace),
-          latinRendered: document.fonts.check(`${weight} 16px ${fontFamily}`, canaries.latin),
-          japaneseRendered: document.fonts.check(`${weight} 16px ${fontFamily}`, canaries.japanese),
-        };
+        const scripts = await Promise.all(
+          Object.entries(canaries).map(async ([script, text]) => {
+            const loadedFaces = await document.fonts.load(`${weight} 16px ${fontFamily}`, text);
+            return {
+              script,
+              loaded: loadedFaces.length > 0 && loadedFaces.every(isWebFontFace),
+              rendered: document.fonts.check(`${weight} 16px ${fontFamily}`, text),
+            };
+          })
+        );
+        return { weight, faceCount: faces.length, scripts };
       })
     );
     return { perWeight, totalFaceCount: matchingFaces.length };
@@ -305,12 +313,14 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
 
   for (const result of fontFaceResults.perWeight) {
     // slice 数は Google Fonts 側の分割方式に依存するため厳密値は検証しない。
-    // 配信劣化の実質的な検知は latin/japanese の load・render アサーションが担う。
+    // 配信劣化の実質的な検知は文字種ごとの load・render アサーションが担う。
     expect(result.faceCount, `weight ${result.weight} のface数`).toBeGreaterThan(0);
-    expect(result.latinLoaded, `weight ${result.weight} のLatin glyph読み込み`).toBe(true);
-    expect(result.japaneseLoaded, `weight ${result.weight} の日本語glyph読み込み`).toBe(true);
-    expect(result.latinRendered, `weight ${result.weight} のLatin glyph描画可否`).toBe(true);
-    expect(result.japaneseRendered, `weight ${result.weight} の日本語glyph描画可否`).toBe(true);
+    for (const script of result.scripts) {
+      expect(script.loaded, `weight ${result.weight} の${script.script} glyph読み込み`).toBe(true);
+      expect(script.rendered, `weight ${result.weight} の${script.script} glyph描画可否`).toBe(
+        true
+      );
+    }
   }
   // variable font の範囲宣言なら slice あたり 1 rule で収まる。weight ごとの rule 複製が
   // 復活すると全ページの inline CSS が数百 KB 肥大するため、総 face 数に予算を設ける。
