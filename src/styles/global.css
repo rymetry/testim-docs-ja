@@ -1,9 +1,11 @@
 @import 'tailwindcss';
+@import './noto-sans-jp.css';
 
 @layer base {
   :root {
     /* アンカーオフセット（デフォルト: 小さい画面） */
     --anchor-offset: 6rem;
+    --font-noto-sans-jp: 'Noto Sans JP';
   }
   @media (min-width: 1024px) {
     :root {

@@ -95,16 +95,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
-      # npm ci は node_modules を削除するため、フォントキャッシュ復元は npm ci の後に置く。
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: node_modules/.astro/fonts
-          # 同一設定ならキャッシュを再利用する安定キー。メタデータの 1 週間 TTL は
-          # 問題にならない: unifont が期限切れを検知してメタデータのみ再取得し、
-          # バイナリ (TTL なし・content-addressed) はキャッシュヒットしたままになる。
-          key: astro-fonts-${{ hashFiles('astro.config.mjs', 'package-lock.json') }}
-          restore-keys: |
-            astro-fonts-
       - name: Build static site
         run: npm run build
 
@@ -128,16 +118,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
-      # npm ci は node_modules を削除するため、フォントキャッシュ復元は npm ci の後に置く。
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: node_modules/.astro/fonts
-          # 同一設定ならキャッシュを再利用する安定キー。メタデータの 1 週間 TTL は
-          # 問題にならない: unifont が期限切れを検知してメタデータのみ再取得し、
-          # バイナリ (TTL なし・content-addressed) はキャッシュヒットしたままになる。
-          key: astro-fonts-${{ hashFiles('astro.config.mjs', 'package-lock.json') }}
-          restore-keys: |
-            astro-fonts-
       - name: Build Vercel SSR site with Basic Auth
         run: npm run build
         env:
@@ -163,16 +143,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
-      # npm ci は node_modules を削除するため、フォントキャッシュ復元は npm ci の後に置く。
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: node_modules/.astro/fonts
-          # 同一設定ならキャッシュを再利用する安定キー。メタデータの 1 週間 TTL は
-          # 問題にならない: unifont が期限切れを検知してメタデータのみ再取得し、
-          # バイナリ (TTL なし・content-addressed) はキャッシュヒットしたままになる。
-          key: astro-fonts-${{ hashFiles('astro.config.mjs', 'package-lock.json') }}
-          restore-keys: |
-            astro-fonts-
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
       - name: Run production E2E tests

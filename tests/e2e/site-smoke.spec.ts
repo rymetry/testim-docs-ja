@@ -236,12 +236,17 @@ test('公開ページにセキュリティヘッダーが付与される', async
 });
 
 test('Noto Sans JPが4つのweight checkpointで日本語とLatinのglyphを読み込める', async ({ page }) => {
-  // フォントはビルド時に self-host 化される契約。実行時に外部フォント CDN への
-  // リクエストが発生した場合は配信構成の回帰として検出する。
+  // フォントはリポジトリ管理のローカル資産から配信する契約。実行時に外部フォント CDN への
+  // リクエストが発生した場合は配信構成の回帰として検出する。vendoring後は、実際に
+  // リポジトリ管理下のローカル資産から取得することも確認する。
   const externalFontRequests: string[] = [];
+  const vendoredFontRequests: string[] = [];
   page.on('request', (request) => {
     if (/fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.fontsource\.org/.test(request.url())) {
       externalFontRequests.push(request.url());
+    }
+    if (/\/fonts\/noto-sans-jp\/v56\/[^/?]+\.woff2(?:\?.*)?$/.test(request.url())) {
+      vendoredFontRequests.push(request.url());
     }
   });
 
@@ -344,6 +349,7 @@ test('Noto Sans JPが4つのweight checkpointで日本語とLatinのglyphを読�
   expect(fontFaceResults.totalFaceCount, '@font-face 総数の予算').toBeLessThanOrEqual(200);
   expect(fontFaceResults.allFacesUseWeightRange, 'variable font 範囲宣言の維持').toBe(true);
   expect(externalFontRequests, '外部フォントCDNへの実行時リクエスト').toEqual([]);
+  expect(vendoredFontRequests, 'vendoring済みフォント資産への実行時リクエスト').not.toEqual([]);
 });
 
 test('desktopとmobileでトップページが横にはみ出さない', async ({ page }, testInfo) => {

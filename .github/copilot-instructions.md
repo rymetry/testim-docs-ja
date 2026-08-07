@@ -8,7 +8,7 @@ Tricentis Testim 公式英語ドキュメント (docs.tricentis.com/testim) の�
 
 - **フレームワーク**: Astro 7 + TypeScript（静的サイト生成。Basic 認証有効時は SSR）
 - **スタイリング**: Tailwind CSS v4
-- **フォント**: Noto Sans JP（Astro 組み込みフォントシステムの `google` provider 経由。latin + japanese subset を unicode-range 分割 variable font としてビルド時取得・self-host 配信）
+- **フォント**: Noto Sans JP（`public/fonts/noto-sans-jp/` にvendoring。latin + japanese のunicode-range分割variable fontをローカル配信。更新時は `SOURCE.json` と `scripts/__tests__/noto_sans_jp_vendor_assets.test.mjs` を同期する）
 - **React**: 検索 UI のみ (`src/components/SearchModal.tsx`, `src/components/search/`)
 - **Markdown 処理**: remark-gfm, remark-directive, remark-callout-directives, Shiki (`github-dark-dimmed`)
 - **デプロイ**: Vercel（`@astrojs/vercel` アダプター）

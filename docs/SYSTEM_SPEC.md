@@ -4,15 +4,15 @@
 
 Testim Help Documentation (docs.tricentis.com/testim) の日本語ローカライズサイト。全 288 ページを翻訳済み。
 
-| 項目 | 値 |
-| --- | --- |
-| フレームワーク | Astro 7, Tailwind CSS v4, TypeScript, React (検索 UI のみ) |
-| デプロイ | Vercel (static / SSR+auth 切替: `BASIC_AUTH_ENABLED`) |
-| コンテンツ | `src/content/docs/` 配下の Markdown (20 カテゴリフォルダー) |
-| スキーマ | `src/content.config.ts` (Zod validation) |
-| ルーティング | `src/pages/docs/[...slug].astro` (単一動的ルート) |
-| 検索 | MiniSearch (`src/components/SearchModal.tsx`) + `/api/search.json` |
-| レイアウト | `src/layouts/DocsLayout.astro` + NavSidebar + TableOfContents |
+| 項目           | 値                                                                 |
+| -------------- | ------------------------------------------------------------------ |
+| フレームワーク | Astro 7, Tailwind CSS v4, TypeScript, React (検索 UI のみ)         |
+| デプロイ       | Vercel (static / SSR+auth 切替: `BASIC_AUTH_ENABLED`)              |
+| コンテンツ     | `src/content/docs/` 配下の Markdown (20 カテゴリフォルダー)        |
+| スキーマ       | `src/content.config.ts` (Zod validation)                           |
+| ルーティング   | `src/pages/docs/[...slug].astro` (単一動的ルート)                  |
+| 検索           | MiniSearch (`src/components/SearchModal.tsx`) + `/api/search.json` |
+| レイアウト     | `src/layouts/DocsLayout.astro` + NavSidebar + TableOfContents      |
 
 ## アーキテクチャ
 
@@ -45,42 +45,43 @@ Vercel deploy
 
 ### 検出 artifact (4 JSON)
 
-| artifact | schemaVersion | 生成スクリプト |
-| --- | --- | --- |
-| `snapshot-diff-status.json` | 1 | `testim_parity.detection.snapshot_diff` |
-| `source-sync-status.json` | 2 | `testim_parity.detection.snapshot_update` |
-| `parity-check-status.json` | 1 | `testim_parity.detection.check_source_parity` |
-| `docs-actionable-report.json` | 1 | `testim_parity.detection.generate_detection_reports` |
+| artifact                      | schemaVersion | 生成スクリプト                                       |
+| ----------------------------- | ------------- | ---------------------------------------------------- |
+| `snapshot-diff-status.json`   | 1             | `testim_parity.detection.snapshot_diff`              |
+| `source-sync-status.json`     | 2             | `testim_parity.detection.snapshot_update`            |
+| `parity-check-status.json`    | 1             | `testim_parity.detection.check_source_parity`        |
+| `docs-actionable-report.json` | 1             | `testim_parity.detection.generate_detection_reports` |
 
 全 artifact は `schemaVersion` を持ち、`testim_parity.detection.generate_detection_reports --strict` が schema validation を実行する。
 
 ### ランタイムデータファイル
 
-| ファイル | 用途 |
-| --- | --- |
-| `docs/GLOSSARY.md` | 3-tier 用語集 (Tier A: 固有名詞, B: UI label, C: 一般 IT 用語)。`testim_parity.glossary_mask` が参照 |
-| `docs/INVARIANT_TOKENS.md` | 23 種の invariant token pattern 定義。正規表現で英語維持 token をマスク |
-| `docs/SIDEBAR_URLS.md` | 全 288 URL のマスターリスト。カテゴリ・ページ順序の single source of truth |
+| ファイル                   | 用途                                                                                                 |
+| -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `docs/GLOSSARY.md`         | 3-tier 用語集 (Tier A: 固有名詞, B: UI label, C: 一般 IT 用語)。`testim_parity.glossary_mask` が参照 |
+| `docs/INVARIANT_TOKENS.md` | 23 種の invariant token pattern 定義。正規表現で英語維持 token をマスク                              |
+| `docs/SIDEBAR_URLS.md`     | 全 288 URL のマスターリスト。カテゴリ・ページ順序の single source of truth                           |
 
 ### フォント配信 (Noto Sans JP)
 
 Issue #417 / PR #432 で決定した設計。詳細な計測値は PR #432 を参照。
 
-- **provider**: Astro Fonts API の `google` provider。unicode-range 分割 (121 slice) の
-  variable font (`wght 400..700`) をビルド時に取得し `/_astro/fonts/` へ self-host する。
-  fontsource の japanese subset は 1 weight = 1 ファイル (約 1MB) の一枚岩配信になるため不採用。
-- **weights**: 範囲指定 `['400 700']`。離散指定は slice ごとに weight 数だけ `@font-face` が
-  複製され、全ページの inline CSS が肥大する。
-- **preload**: latin slice のみ (`preload={[{ subset: 'latin' }]}`、約 24KB・1 ファイル)。
-  `preload` (= true) は全 slice 約 5MB の高優先度読み込みになるため禁止。
-- **fallback**: `optimizedFallbacks: false` + プラットフォームフォント明示。自動生成の
-  fallback metrics は CJK slice 基準の `size-adjust` を算出し Latin が約 2 倍サイズで
-  swap される回帰を起こすため無効化。
-- **壊れると日本語が消える依存**: 番号付き日本語 slice は unifont のメタデータで subset
-  タグを持たない (named latin ブロックのみ `latin`)。unifont / astro の更新でこのタグ付けが
-  変わると、subsets フィルタや preload 選別が破綻しうる。回帰は
-  `tests/e2e/site-smoke.spec.ts` のフォントテスト (文字種別 glyph 検証・preload 数・
-  `@font-face` 予算・外部 CDN 不在) が pre-merge で検知する。
+- **provider**: `public/fonts/noto-sans-jp/` にvendoringしたunicode-range分割（124 slice）の
+  variable font (`wght 400..700`) を `src/styles/noto-sans-jp.css` から配信する。ビルド時の
+  Google Fonts依存を持たない。ファイルのライセンスは同ディレクトリの `OFL.txt`、取得元と一覧は
+  `SOURCE.json` に記録する。fontsourceのjapanese subsetは1 weight = 1ファイル（約1MB）の
+  一枚岩配信になるため不採用。
+- **weights**: 全sliceを範囲指定 `400 700` で宣言する。離散指定はsliceごとにweight数だけ
+  `@font-face` が複製され、全ページのCSSを肥大させる。
+- **preload**: latin sliceのみ（約24KB・1ファイル）。全124 slice約5MBの高優先度読み込みは禁止。
+- **キャッシュ**: 配信URLに取得元の版（現行 `v56`）を含め、Vercelでは `immutable` を付与する。
+  更新時は既存の版ディレクトリを上書きせず、新しい版ディレクトリとURLへ一括で切り替える。
+- **fallback**: Hiragino Sans / Yu Gothic / system-ui / sans-serif を明示する。CJK slice由来の
+  自動fallback metricsでLatinが約2倍サイズでswapされる回帰を避ける。
+- **回帰防止**: `tests/e2e/site-smoke.spec.ts` のフォントテストで文字種別glyph検証・preload数・
+  `@font-face`予算・外部CDN不在・variable font範囲宣言をpre-mergeで検知する。
+  `scripts/__tests__/noto_sans_jp_vendor_assets.test.mjs` は、記録済みの取得元URL・SHA-256と
+  124資産・生成CSSの一致を検証する。
 
 ## 検出システム仕様
 
@@ -92,14 +93,14 @@ Section-anchored exact diff engine。EN snapshot と JA Markdown を canonical s
 
 **issue type (5+1)**:
 
-| type | 説明 |
-| --- | --- |
-| `segment-missing` | EN に存在するが JA に無い |
-| `segment-extra` | JA に存在するが EN に無い |
-| `segment-untranslated` | JA に英語が残留 |
-| `segment-token-gap` | invariant token の不一致 |
-| `segment-shifted` | section body swap (symmetric destination evidence 必須) |
-| `segment-inconclusive` | 自動判定の限界ケース (advisory) |
+| type                   | 説明                                                    |
+| ---------------------- | ------------------------------------------------------- |
+| `segment-missing`      | EN に存在するが JA に無い                               |
+| `segment-extra`        | JA に存在するが EN に無い                               |
+| `segment-untranslated` | JA に英語が残留                                         |
+| `segment-token-gap`    | invariant token の不一致                                |
+| `segment-shifted`      | section body swap (symmetric destination evidence 必須) |
+| `segment-inconclusive` | 自動判定の限界ケース (advisory)                         |
 
 **補助検出**: `section-structure-mismatch` / `segment-order-mismatch` (structure comparator, 3 段階 fall-through)。
 
@@ -127,10 +128,10 @@ EN snapshot fetch の健全性を freshness state で表す。
 
 **2-axis 状態モデル**:
 
-| Axis | 値 | 判定 |
-| --- | --- | --- |
+| Axis                           | 値                             | 判定                                                        |
+| ------------------------------ | ------------------------------ | ----------------------------------------------------------- |
 | **Axis A** (upstream 修正検知) | `active` / `stale` / `unknown` | patch の find が EN に存在するか / exclusion の fetchStatus |
-| **Axis B** (登録解除忘れ) | `current` / `overdue` | `reviewAfter` 日付が過去かどうか |
+| **Axis B** (登録解除忘れ)      | `current` / `overdue`          | `reviewAfter` 日付が過去かどうか                            |
 
 **出力**: `upstream-recovery-status.json` (schemaVersion 1)。non-blocking (常に exit 0)。
 
@@ -203,13 +204,13 @@ npm run typecheck:py
 
 以下の 5 counter は全て 0 を維持する。測定は機械判定。
 
-| # | counter | JSON field | 期待値 |
-| --- | --- | --- | --- |
-| 1 | baseline entries | `parity-baseline.json` `entries.length` | `0` |
-| 2 | reportable active files | `parity-check-status.json` `summary.reportableActiveFiles` | `0` |
-| 3 | baselined issues | `parity-check-status.json` `summary.baselinedIssues` | `0` |
-| 4 | advisory queue issues | `parity-check-status.json` `summary.advisoryQueueIssues` | `0` |
-| 5 | audit signal issues | `parity-check-status.json` `summary.auditSignalIssues` | `0` |
+| #   | counter                 | JSON field                                                 | 期待値 |
+| --- | ----------------------- | ---------------------------------------------------------- | ------ |
+| 1   | baseline entries        | `parity-baseline.json` `entries.length`                    | `0`    |
+| 2   | reportable active files | `parity-check-status.json` `summary.reportableActiveFiles` | `0`    |
+| 3   | baselined issues        | `parity-check-status.json` `summary.baselinedIssues`       | `0`    |
+| 4   | advisory queue issues   | `parity-check-status.json` `summary.advisoryQueueIssues`   | `0`    |
+| 5   | audit signal issues     | `parity-check-status.json` `summary.auditSignalIssues`     | `0`    |
 
 **補助不変量**: baseline schemaVersion === 2、snapshot-diff-status の changed/added/removed === 0、artifact coverage shape の 4 field 存在。
 
@@ -217,9 +218,9 @@ npm run typecheck:py
 
 EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism のみ許容される。第三の mechanism は契約違反。
 
-| mechanism | scope | 用途 | truth source |
-| --- | --- | --- | --- |
-| **Mechanism 1**: page-level freeze | ページ全体 | 壊れた EN page を snapshot 同期から隔離 | `testim_parity.sync_exclusions` |
+| mechanism                            | scope                           | 用途                                                                      | truth source                                                       |
+| ------------------------------------ | ------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Mechanism 1**: page-level freeze   | ページ全体                      | 壊れた EN page を snapshot 同期から隔離                                   | `testim_parity.sync_exclusions`                                    |
 | **Mechanism 2**: segment-level patch | slug-scope literal find/replace | EN HTML の typo / href-miswire / madcap-artifact / stale-reference を修復 | `testim_parity.en_source_patches` + `_en_source_patches_data.json` |
 
 **禁止される suppression**: intentional-divergence allowlist、callout-normalization allowlist、JA-side policy suppression、およびparity 時に EN/JA drift を隠す一切の suppression lane。
@@ -235,19 +236,19 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 
 ## ドキュメント一覧
 
-| # | ファイル | 説明 | 分類 |
-| --- | --- | --- | --- |
-| 1 | `SYSTEM_SPEC.md` | プロジェクト仕様サマリ (本ファイル) | 仕様 |
-| 2 | `WRITING_GUIDE.md` | コンテンツ書式ルール、source-first 構造契約 | 規約 |
-| 3 | `TRANSLATION_GUIDE.md` | 翻訳ルール、用語テーブル、NG/OK パターン | 規約 |
-| 4 | `OPS_DESIGN.md` | 運用マニュアル、レビュー手順、CI ワークフロー | 運用 |
-| 5 | `PARITY_GUIDE.md` | パリティ保全、2-mechanism 設計、gate matrix | 運用 |
-| 6 | `GLOSSARY.md` | 3-tier 用語分類 (runtime データ) | データ |
-| 7 | `INVARIANT_TOKENS.md` | 23 種 invariant token pattern (runtime データ) | データ |
-| 8 | `SIDEBAR_URLS.md` | マスターページリスト、288 URL | データ |
-| 9 | `DOCS_DATE_TRACKING.md` | snapshot ベース変更検知、diff 分類、CI フロー | 仕様 |
-| 10 | `WRITING_FEATURES.md` | Markdown 拡張機能リファレンス | 参照 |
-| 11 | `UPSTREAM_DEFECTS.md` | 上流欠陥レジストリ (UD-001..UD-010+) | 運用 |
+| #   | ファイル                | 説明                                           | 分類   |
+| --- | ----------------------- | ---------------------------------------------- | ------ |
+| 1   | `SYSTEM_SPEC.md`        | プロジェクト仕様サマリ (本ファイル)            | 仕様   |
+| 2   | `WRITING_GUIDE.md`      | コンテンツ書式ルール、source-first 構造契約    | 規約   |
+| 3   | `TRANSLATION_GUIDE.md`  | 翻訳ルール、用語テーブル、NG/OK パターン       | 規約   |
+| 4   | `OPS_DESIGN.md`         | 運用マニュアル、レビュー手順、CI ワークフロー  | 運用   |
+| 5   | `PARITY_GUIDE.md`       | パリティ保全、2-mechanism 設計、gate matrix    | 運用   |
+| 6   | `GLOSSARY.md`           | 3-tier 用語分類 (runtime データ)               | データ |
+| 7   | `INVARIANT_TOKENS.md`   | 23 種 invariant token pattern (runtime データ) | データ |
+| 8   | `SIDEBAR_URLS.md`       | マスターページリスト、288 URL                  | データ |
+| 9   | `DOCS_DATE_TRACKING.md` | snapshot ベース変更検知、diff 分類、CI フロー  | 仕様   |
+| 10  | `WRITING_FEATURES.md`   | Markdown 拡張機能リファレンス                  | 参照   |
+| 11  | `UPSTREAM_DEFECTS.md`   | 上流欠陥レジストリ (UD-001..UD-010+)           | 運用   |
 
 ## スクリプトリファレンス
 
@@ -255,24 +256,24 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 
 ### 主要 npm コマンド
 
-| コマンド | 用途 |
-| --- | --- |
-| `npm run dev` | 開発サーバー (localhost:4321) |
-| `npm run build` | 本番ビルド (`astro check` + build) |
-| `npm run check` | TypeScript/Astro 型チェック |
-| `npm run lint` | 正規品質ゲート (Markdown / docs / Ruff / Python format / mypy) |
-| `npm run lint:docs` | WRITING_GUIDE 準拠チェック |
-| `npm run lint:py` | Python Ruff lint |
-| `npm run format:py:check` | Python Ruff format check |
-| `npm run typecheck:py` | Python mypy |
-| `npm run test` | Node mjs + Python pytest の全テスト実行 |
-| `npm run check:parity` | パリティチェック (構造・token・baseline) |
-| `npm run check:snapshots` | EN スナップショット取得 + diff |
-| `npm run check:snapshots:diff` | スナップショット差分のみ |
-| `npm run check:summary` | summary / audit manifest 生成 |
-| `npm run docs:pipeline` | 翻訳パイプライン実行 |
-| `npm run docs:sync-sidebar` | SIDEBAR_URLS.md 更新 |
-| `npm run format` | Prettier フォーマット |
+| コマンド                       | 用途                                                           |
+| ------------------------------ | -------------------------------------------------------------- |
+| `npm run dev`                  | 開発サーバー (localhost:4321)                                  |
+| `npm run build`                | 本番ビルド (`astro check` + build)                             |
+| `npm run check`                | TypeScript/Astro 型チェック                                    |
+| `npm run lint`                 | 正規品質ゲート (Markdown / docs / Ruff / Python format / mypy) |
+| `npm run lint:docs`            | WRITING_GUIDE 準拠チェック                                     |
+| `npm run lint:py`              | Python Ruff lint                                               |
+| `npm run format:py:check`      | Python Ruff format check                                       |
+| `npm run typecheck:py`         | Python mypy                                                    |
+| `npm run test`                 | Node mjs + Python pytest の全テスト実行                        |
+| `npm run check:parity`         | パリティチェック (構造・token・baseline)                       |
+| `npm run check:snapshots`      | EN スナップショット取得 + diff                                 |
+| `npm run check:snapshots:diff` | スナップショット差分のみ                                       |
+| `npm run check:summary`        | summary / audit manifest 生成                                  |
+| `npm run docs:pipeline`        | 翻訳パイプライン実行                                           |
+| `npm run docs:sync-sidebar`    | SIDEBAR_URLS.md 更新                                           |
+| `npm run format`               | Prettier フォーマット                                          |
 
 **単一ページ指定**:
 
