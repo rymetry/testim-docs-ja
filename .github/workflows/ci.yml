@@ -25,11 +25,17 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          cache: 'npm'
       - name: Enable pinned npm
         run: |
           corepack enable npm
           npm --version
+      - name: Cache npm downloads
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ runner.arch }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
@@ -53,11 +59,17 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          cache: 'npm'
       - name: Enable pinned npm
         run: |
           corepack enable npm
           npm --version
+      - name: Cache npm downloads
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ runner.arch }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
       - run: npm run test:mjs
 
@@ -68,11 +80,17 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          cache: 'npm'
       - name: Enable pinned npm
         run: |
           corepack enable npm
           npm --version
+      - name: Cache npm downloads
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ runner.arch }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
       - name: Build static site
         run: npm run build
@@ -84,11 +102,17 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          cache: 'npm'
       - name: Enable pinned npm
         run: |
           corepack enable npm
           npm --version
+      - name: Cache npm downloads
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ runner.arch }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
       - name: Build Vercel SSR site with Basic Auth
         run: npm run build
@@ -102,11 +126,17 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-          cache: 'npm'
       - name: Enable pinned npm
         run: |
           corepack enable npm
           npm --version
+      - name: Cache npm downloads
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ runner.arch }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-npm-
       - run: npm ci
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
