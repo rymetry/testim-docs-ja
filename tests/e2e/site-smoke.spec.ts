@@ -235,12 +235,17 @@ test('公開ページにセキュリティヘッダーが付与される', async
   }
 });
 
-test('設定済みのNoto Sans JP 4ウェイトを読み込める', async ({ page }) => {
+test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを読み込める', async ({ page }) => {
   await page.goto('/');
 
   const fontFaceResults = await page.evaluate(async () => {
     const weights = ['400', '500', '600', '700'];
-    const fontLoadCanary = 'Testim';
+    // unicode-range 分割配信では canary 文字列を含む slice のみが取得される。
+    // Latin と日本語 (ひらがな・カタカナ・漢字) の両方を検証する。
+    const canaries = {
+      latin: 'Testim',
+      japanese: 'テスト自動化の概要',
+    };
     const normalizeFamily = (family: string) => family.replace(/^(['"])(.*)\1$/, '$2');
     const fontFamily = getComputedStyle(document.documentElement)
       .getPropertyValue('--font-noto-sans-jp')
@@ -255,28 +260,32 @@ test('設定済みのNoto Sans JP 4ウェイトを読み込める', async ({ pag
         const faces = matchingFaces.filter(
           (face) => face.weight === weight && face.style === 'normal'
         );
-        await Promise.all(faces.map((face) => face.load()));
-        const canaryFaces = await document.fonts.load(
-          `${weight} 16px ${fontFamily}`,
-          fontLoadCanary
-        );
+        const [latinFaces, japaneseFaces] = await Promise.all([
+          document.fonts.load(`${weight} 16px ${fontFamily}`, canaries.latin),
+          document.fonts.load(`${weight} 16px ${fontFamily}`, canaries.japanese),
+        ]);
+        const isWebFontFace = (face: FontFace) =>
+          normalizeFamily(face.family) === normalizeFamily(fontFamily) &&
+          face.status === 'loaded';
         return {
           weight,
-          count: faces.length,
-          loaded: faces.length === 1 && faces[0].status === 'loaded',
-          canaryMatched: faces.length === 1 && canaryFaces.includes(faces[0]),
+          faceCount: faces.length,
+          latinLoaded: latinFaces.length > 0 && latinFaces.every(isWebFontFace),
+          japaneseLoaded: japaneseFaces.length > 0 && japaneseFaces.every(isWebFontFace),
+          latinRendered: document.fonts.check(`${weight} 16px ${fontFamily}`, canaries.latin),
+          japaneseRendered: document.fonts.check(`${weight} 16px ${fontFamily}`, canaries.japanese),
         };
       })
     );
   });
-  expect(fontFaceResults).toEqual(
-    ['400', '500', '600', '700'].map((weight) => ({
-      weight,
-      count: 1,
-      loaded: true,
-      canaryMatched: true,
-    }))
-  );
+
+  for (const result of fontFaceResults) {
+    expect(result.faceCount, `weight ${result.weight} のface数`).toBeGreaterThan(0);
+    expect(result.latinLoaded, `weight ${result.weight} のLatin glyph読み込み`).toBe(true);
+    expect(result.japaneseLoaded, `weight ${result.weight} の日本語glyph読み込み`).toBe(true);
+    expect(result.latinRendered, `weight ${result.weight} のLatin glyph描画可否`).toBe(true);
+    expect(result.japaneseRendered, `weight ${result.weight} の日本語glyph描画可否`).toBe(true);
+  }
 });
 
 test('desktopとmobileでトップページが横にはみ出さない', async ({ page }, testInfo) => {

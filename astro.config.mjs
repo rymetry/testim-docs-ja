@@ -130,9 +130,13 @@ export default defineConfig({
     {
       name: 'Noto Sans JP',
       cssVariable: '--font-noto-sans-jp',
-      provider: fontProviders.fontsource(),
+      // google provider は unicode-range 分割 (121 slice の variable font) で日本語 glyph を
+      // 配信できる。fontsource の japanese subset は 1 weight = 1 ファイル (約 1MB) の
+      // 一枚岩配信になるため使わない (Issue #417)。
+      provider: fontProviders.google(),
       weights: [400, 500, 600, 700],
       styles: ['normal'],
+      subsets: ['latin', 'japanese'],
     },
   ],
 
