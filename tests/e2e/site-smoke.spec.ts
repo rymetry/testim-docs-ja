@@ -235,7 +235,7 @@ test('公開ページにセキュリティヘッダーが付与される', async
   }
 });
 
-test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを読み込める', async ({ page }) => {
+test('Noto Sans JPが4つのweight checkpointで日本語とLatinのglyphを読み込める', async ({ page }) => {
   // フォントはビルド時に self-host 化される契約。実行時に外部フォント CDN への
   // リクエストが発生した場合は配信構成の回帰として検出する。
   const externalFontRequests: string[] = [];
@@ -248,7 +248,8 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
   await page.goto('/');
 
   // preload は latin slice のみに限定する契約。0 なら preload の消失、
-  // 多数なら全 slice preload (約5MB) への回帰を意味する。
+  // 多数なら全 slice preload (約5MB) への回帰を意味する。期待値は 1 だが、
+  // 上流の名前付き subset ブロック増加を許容するバッファとして上限は 4 にする。
   const preloadCount = await page.locator('link[rel="preload"][as="font"]').count();
   expect(preloadCount, 'フォント preload リンク数').toBeGreaterThanOrEqual(1);
   expect(preloadCount, 'フォント preload リンク数').toBeLessThanOrEqual(4);
@@ -284,7 +285,10 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
       if (bounds.length === 1) {
         return bounds[0] === target;
       }
-      return faceWeight === 'normal' && target === 400;
+      if (faceWeight === 'normal') {
+        return target === 400;
+      }
+      return faceWeight === 'bold' && target === 700;
     };
 
     const isWebFontFace = (face: FontFace) =>
@@ -297,10 +301,17 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
         );
         const scripts = await Promise.all(
           Object.entries(canaries).map(async ([script, text]) => {
-            const loadedFaces = await document.fonts.load(`${weight} 16px ${fontFamily}`, text);
+            // 複数文字をまとめて load すると、一部の slice が消えても他の slice が
+            // マッチして非空になり欠落を見逃す。1 文字ずつ担当 slice の存在を検証する。
+            const perChar = await Promise.all(
+              Array.from(text).map(async (char) => {
+                const faces = await document.fonts.load(`${weight} 16px ${fontFamily}`, char);
+                return faces.length > 0 && faces.every(isWebFontFace);
+              })
+            );
             return {
               script,
-              loaded: loadedFaces.length > 0 && loadedFaces.every(isWebFontFace),
+              loaded: perChar.every(Boolean),
               rendered: document.fonts.check(`${weight} 16px ${fontFamily}`, text),
             };
           })
@@ -308,7 +319,13 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
         return { weight, faceCount: faces.length, scripts };
       })
     );
-    return { perWeight, totalFaceCount: matchingFaces.length };
+    return {
+      perWeight,
+      totalFaceCount: matchingFaces.length,
+      // 全 face が範囲宣言 ("400 700") なら variable font 配信。静的インスタンス配信へ
+      // 回帰すると中間 weight が faux weight に劣化するため、範囲宣言を契約とする。
+      allFacesUseWeightRange: matchingFaces.every((face) => face.weight.trim().includes(' ')),
+    };
   });
 
   for (const result of fontFaceResults.perWeight) {
@@ -325,6 +342,7 @@ test('設定済みのNoto Sans JP 4ウェイトで日本語とLatinのglyphを�
   // variable font の範囲宣言なら slice あたり 1 rule で収まる。weight ごとの rule 複製が
   // 復活すると全ページの inline CSS が数百 KB 肥大するため、総 face 数に予算を設ける。
   expect(fontFaceResults.totalFaceCount, '@font-face 総数の予算').toBeLessThanOrEqual(200);
+  expect(fontFaceResults.allFacesUseWeightRange, 'variable font 範囲宣言の維持').toBe(true);
   expect(externalFontRequests, '外部フォントCDNへの実行時リクエスト').toEqual([]);
 });
 
