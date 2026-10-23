@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active (v2, 2026-04-20 — Reserved IDs table added, proposal B')
+- **Status**: Active (reviewed 2026-10-23; 32 retained patches)
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -14,14 +14,28 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | --- | --- | --- | --- | --- |
 | UD-001 | Salesforce Verify list `-this` typo | `typo` | applied | (initial v1) |
 | UD-002 | Salesforce Steps "Log out" href miswire | `href-miswire` | applied | (initial v1) |
-| UD-003 | broken-table-row-as-paragraph (predefined-properties) | `madcap-artifact` | candidate | (initial v1) |
-| UD-004 | legacy `help.testim.io` stale-reference (scheduler pages) | `stale-reference` | applied | (initial v1) |
-| UD-005 | bare/bogus `index.htm` self-link href-miswire family | `href-miswire` | reserved | TBD (next index.htm family PR) |
-| UD-006 | _(unallocated)_ | _TBD_ | reserved | TBD |
-| UD-007 | _(unallocated)_ | _TBD_ | reserved | TBD |
-| UD-008 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-003 | broken-table-row-as-paragraph (predefined-properties) | `madcap-artifact` | applied | 2026-04-20 registry entry |
+| UD-004 | legacy `help.testim.io` stale-reference (scheduler pages) | `stale-reference` | recovered / archived | 2026-04-25 cleanup |
+| UD-005 | hooks / parameters legacy references and index links | `stale-reference` (A–D), `madcap-artifact` (E–F) | applied | 2026-04-18 registry entries |
+| UD-006 | Search limitations `-variable` typo | `typo` | applied | 2026-04-18 registry entry |
+| UD-007 | Random data `step.This` typo | `typo` | applied | 2026-04-18 registry entry |
+| UD-008 | Chrome microphone CLI index self-link | `madcap-artifact` | applied | 2026-04-18 registry entry |
 | UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
 | UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5 + VSTS broken step-2/3 extension) |
+
+| UD-012 | Data-driven test section cross-reference | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-013 | Hidden parameters parent link | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-014 | Auto grouping parent link | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-015 | Run hooks empty ZWSP paragraph | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-016 | Subscription plans localhost token markup | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-017 | API assertion paragraph break artifact | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-018 | SeaLights list-wrapped CLI code snippets | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-019 | Salesforce recording image-only list item | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-020 | Salesforce troubleshooting image-only list item | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-021 | Validate download broken PDF table row | `madcap-artifact` | applied | 2026-04-20 registry entries |
+| UD-022 | Jenkins Docker trailing ZWSP paragraph | `madcap-artifact` | applied | 2026-04-20 registry entries |
+
+UD-011 has no active registry entry; this review does not assign or reuse that ID.
 
 ### Allocation protocol
 
@@ -107,24 +121,15 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 
 ### UD-003: broken-table-row-as-paragraph in predefined-properties-in-config-file-hooks
 
-- **Patch IDs**: _none_ (candidate — not yet patched)
+- **Patch IDs**: `UD-003-predefined-properties-broken-global-parameters-row`
 - **Defect class**: `madcap-artifact`
-- **Added**: 2026-04-18
-- **Review after**: 2026-10-18
-- **Affected slugs** (1):
-  - `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
-- **Defect**: EN HTML 内に `<p>| globalParameters | | |</p>` という段落が存在する。著者は markdown-table row を意図して書いたが、MadCap が raw paragraph として出力したため、`|` 区切り文字を含む単なる散文として render されている。Turndown 通過後も同形の段落として JA 側と compare されるため、JA は byte-identical な literal mirror で fingerprint 一致させる interim workaround を採っている。
-- **Fix applied**: _none_ — `en_source_patches` entry は未登録。JA 側も broken form をそのまま mirror (source-first literal 忠誠)
-- **Status**: `candidate (not yet patched)`
-- **Planned mechanism**: M3 PR Z / C phase で `en_source_patches` に `UD-003-broken-table-row-as-paragraph` を登録し、EN HTML boundary で broken row を strip / normalize する。候補案:
-  - Option A: `<p>| globalParameters | | |</p>` → 削除 (JA も同期削除)
-  - Option B: 完全な markdown-table form に normalize し、header / body を復元する
-- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP** (after patch applied and upstream fix confirmed):
-  1. `snapshots/en/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.html` を再取得
-  2. `grep '| globalParameters | | |'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-003 entry を削除
-  4. baseline 再生成
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slug**: `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
+- **Defect**: A raw `<p>| globalParameters | | |</p>` fragment remains after the table.
+- **Fix applied**: Option A was implemented: remove the empty broken row at the HTML boundary; the JA mirror line was also removed. The earlier candidate description was stale.
+- **Status**: `applied`; still present in the 2026-10-23 live fetch.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below after verifying the upstream row has been removed or repaired.
 
 ### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
 
@@ -302,6 +307,146 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
   8. `npm run generate:parity-baseline -- --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
 
+### UD-012: Data-driven test section cross-reference
+
+- **Patch IDs**: `UD-012-ddt-visual-editor-index-section-cross-ref`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor`
+- **Defect / fix**: The Visual Editor page points its external-data cross-reference to a legacy index.htm fragment. The patch targets configuring-data-driven-tests-using-data-from-an-external-source.htm.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-013: Hidden parameters parent link
+
+- **Patch IDs**: `UD-013-hidden-parameters-index-parent-link`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `advanced-editing/parameters/hidden-parameters`
+- **Defect / fix**: The parameters link uses bare index.htm. The patch resolves the intended Parameters parent with ../parameters/index.htm.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-014: Auto grouping parent link
+
+- **Patch IDs**: `UD-014-auto-grouping-index-parent-link`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `editing-tests/groups/auto-grouping`
+- **Defect / fix**: The Group link uses bare index.htm. The patch resolves the intended Groups parent with ../groups/index.htm.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-015: Run hooks empty ZWSP paragraph
+
+- **Patch IDs**: `UD-015-config-file-run-hooks-empty-zwsp-paragraph`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `running-tests/configuration-file-run-hooks`
+- **Defect / fix**: An empty paragraph containing only U+200B follows the grid-name callout. The patch removes this authoring residue.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-016: Subscription plans localhost token markup
+
+- **Patch IDs**: `UD-016A-subscription-plans-host-localhost-cli-span`, `UD-016B-subscription-plans-host-localhost-grid-span`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `administration/subscription-plans`
+- **Defect / fix**: Two table cells wrap host=localhost/127.0.0.1 in FileOrFilePath spans. The patches use code markup so URL-like text is retained as a literal token; the CRLF context distinguishes CLI and Grid cells.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-017: API assertion paragraph break artifact
+
+- **Patch IDs**: `UD-017-api-testing-assertion-br-br-paragraph-inflation`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `advanced-editing/api-testing`
+- **Defect / fix**: A double br inside one assertion paragraph creates a second paragraph in Markdown extraction. The patch removes the redundant visual break while retaining all prose.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-018: SeaLights list-wrapped CLI code snippets
+
+- **Patch IDs**: `UD-018A-sealights-build-session-id-list-wrapped-codesnippet`, `UD-018B-sealights-lab-id-list-wrapped-codesnippet`, `UD-018C-sealights-test-stage-list-wrapped-codesnippet`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `integrations/sealights-integration`
+- **Defect / fix**: Three single-flag list items use full codeSnippet scaffolding. The patches preserve each flag in an inline-code list item, keeping list and segment counts consistent.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-019: Salesforce recording image-only list item
+
+- **Patch IDs**: `UD-019-create-salesforce-test-image-only-li-inflates-step-count`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `salesforce-testing/create-a-salesforce-test`
+- **Defect / fix**: Recording step 5 contains only the post-login screenshot. The patch lifts that image out of the list item, matching adjacent standalone screenshots without dropping the image.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-020: Salesforce troubleshooting image-only list item
+
+- **Patch IDs**: `UD-020-troubleshoot-grid-image-only-li-inflates-bullet-count`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `salesforce-testing/troubleshoot`
+- **Defect / fix**: The Grid troubleshooting list contains a screenshot-only item. The patch preserves the image in a paragraph immediately after the list.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-021: Validate download broken PDF table row
+
+- **Patch IDs**: `UD-021-validate-download-pdf-broken-row-as-code`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `advanced-editing/validations/validate-download`
+- **Defect / fix**: The expectedText PDF example row is a raw pipe paragraph after a table. The patch wraps that paragraph in inline code so both extractors preserve its text as a paragraph.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+### UD-022: Jenkins Docker trailing ZWSP paragraph
+
+- **Patch IDs**: `UD-022-jenkins-docker-trailing-zwsp-paragraph`
+- **Defect class**: `madcap-artifact`
+- **Added / review after**: 2026-04-20 / 2026-10-20
+- **Affected slugs**:
+  - `integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker`
+- **Defect / fix**: The final paragraph contains two U+200B characters and a space. The patch removes this non-content authoring residue.
+- **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
+- **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
+- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+
+## Shared removal checklist
+
+1. Re-fetch every scoped slug with `npm run check:snapshots:fetch -- --slug=<slug>`.
+2. Preserve CRLF while reading HTML (`read_bytes().decode("utf-8")`). Inspect the actual defect and replacement semantics, including each slug of multi-slug entries. A missing literal alone does not prove recovery.
+3. If the defect is genuinely fixed, remove only the recovered patch or recovered slug scope; update related regression pins and archive the corresponding tracker entry.
+4. Run affected-page parity and the required aggregate checks. Keep baseline entries at zero and add no acknowledgements or suppressions. Do not regenerate a baseline to conceal new drift.
+5. Use a section-scoped paydown PR and the registry-change review gate in `PARITY_GUIDE.md`. If the defect persists, retain the patch and record evidence in the triage log.
+
 ## Adding a new defect
 
 新しい broken-EN defect を見つけた際のチェックリスト:
@@ -320,11 +465,20 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - 各 entry は `reviewAfter` 日付を持つ (通常 addedAt + 6 ヶ月)
 - `reviewAfter` 超過した場合:
   1. Tricentis への報告 status 再確認
-  2. Upstream fix 未完了なら reviewAfter を 3-6 ヶ月延長し本ファイルに rationale 追記
-  3. Upstream fix 完了なら Removal SOP を実行
+  2. Upstream fix 未完了なら `reviewAfter` を延長せず、`priority=high` のセクション別 paydown 計画と再確認証跡を記録する (`OPS_DESIGN.md` / `PARITY_GUIDE.md` に従う)
+  3. Upstream fix 完了なら shared removal checklist を実行する。overdue は実際の負債解消まで残す
 - Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
+
+### 2026-10-23 — issue #449 overdue review
+
+- Live fetch: 32/32 unique pages, HTTP 200; all bytes match committed snapshots at `d99f9bb3`.
+- All 32 patches remain active: 39/39 scoped patch/page pairs matched, 39 hits, zero mismatches. No partial recovery was found in UD-001A/B or UD-009.
+- Decision: retain all patches and original `reviewAfter` dates. Recovery report: active=32, stale=0, overdue=32, unknown=0. Issue #449 remains actionable.
+- No upstream ticket evidence is recorded; no vendor report was sent during this review.
+- Corrected stale allocation/status text, restored the missing UD-012–UD-022 details, and removed the deadline-extension instruction that conflicted with the authoritative operations and parity guides.
+- Evidence, section-scoped `priority=high` paydown schedule, and reconciliation requirements: [2026-10-23 review](./UPSTREAM_REVIEW_2026-10-23.md).
 
 上流 defect の probe 結果を時系列で記録する。Phase A/B の `upstream-recovery-status.json` + 手動 triage から得られた事実のみ記載。
 
