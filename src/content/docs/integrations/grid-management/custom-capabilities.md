@@ -36,6 +36,14 @@ Testim のテスト設定ですでに定義されている一部のケイパビ�
 - `platformName` / `platform`
 - `app`/`bundleId`/`appPackage`
 - `chromiumOptions.extensions`
+- `automationName`
+- `autoAcceptAlerts`
+- `autoGrantPermissions`
+- `fullReset`
+- `appActivity`
+- `appWaitActivity`
+- `dontStopAppOnReset`（Tricentis Mobile Agent を使用するローカルテスト実行の場合）
+- `browserName`（Tricentis Mobile Agent を使用するローカルテスト実行の場合）
 
 ## Custom capabilities を作成する
 
