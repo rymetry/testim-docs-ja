@@ -22,7 +22,6 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-008 | Chrome microphone CLI index self-link | `madcap-artifact` | applied | 2026-04-18 registry entry |
 | UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
 | UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5 + VSTS broken step-2/3 extension) |
-
 | UD-012 | Data-driven test section cross-reference | `madcap-artifact` | applied | 2026-04-20 registry entries |
 | UD-013 | Hidden parameters parent link | `madcap-artifact` | applied | 2026-04-20 registry entries |
 | UD-014 | Auto grouping parent link | `madcap-artifact` | applied | 2026-04-20 registry entries |

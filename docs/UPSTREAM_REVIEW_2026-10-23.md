@@ -4,7 +4,7 @@ Refs #449. Review base: `d99f9bb3` (main).
 
 ## Outcome
 
-All 32 active patches are still needed by their current literal contracts. Live HTML fetched on 2026-10-23 returned HTTP 200 for all 32 unique slugs and was byte-identical to the committed snapshots. Every one of the 39 patch/page pairs matched after the normal pre-patch HTML normalization; runtime patch coverage reported 39 matched hits and zero mismatches. No patch or slug scope was removed. Original review dates remain overdue.
+All 32 registered patch patterns still occur in the current upstream HTML; this review established no safe retirement. Live HTML fetched on 2026-10-23 returned HTTP 200 for all 32 unique slugs and was byte-identical to the committed snapshots. Every one of the 39 patch/page pairs matched after the normal pre-patch HTML normalization; runtime patch coverage reported 39 matched hits and zero mismatches. No patch or slug scope was removed. Original review dates remain overdue. Matching proves the patterns persist, not that every patch is indispensable under every possible extractor implementation.
 
 The review inspected the existing find/replace fragments against the fresh HTML, including all five Salesforce typo pages, all five UD-009 Grid pages, and the CRLF-sensitive UD-016/018/019/020 fragments. These exact artifacts persist; a successful fetch or an exit code of zero from the non-blocking recovery command is not evidence of recovery.
 
@@ -61,7 +61,9 @@ Owner: Testim JA Docs parity subsystem (existing tracker owner). Every batch has
 | Integrations | UD-009, UD-010A/C/D, UD-018A/B/C, UD-022 | 9 | high | 2026-10-30 |
 | Administration | UD-016A/B | 1 | high | 2026-10-30 |
 
-At each checkpoint, re-fetch every scoped page, inspect defects, and record the result. Confirm existing vendor ticket references first; none are currently recorded. Vendor contact requires separate authorization. A retirement PR is contingent on a real upstream fix and must follow the shared removal checklist in [the tracker](./UPSTREAM_DEFECTS.md#shared-removal-checklist), including affected parity, regression pins, and the registry-change review gate. If upstream remains defective, document that result and retain the patch without extending its date.
+At each checkpoint, re-fetch every scoped page, inspect defects, and record the result. Confirm existing vendor ticket references first; none are currently recorded. Vendor contact requires separate authorization. For the ordinary upstream-recovery route, a retirement PR requires a real upstream fix and must follow the shared removal checklist in [the tracker](./UPSTREAM_DEFECTS.md#shared-removal-checklist), including affected parity, regression pins, and the registry-change review gate. Until a safe retirement is established, document the result and retain the patch without extending its date.
+
+A separate local paydown proposal can investigate whether a general extractor or normalizer correction makes a patch redundant while preserving source content and detection sensitivity. `SYSTEM_SPEC.md` permits content, extractor and normalizer fixes; it does not permit moving exceptions into a new suppression lane. Such a proposal must demonstrate correctness with patch-disabled comparisons, affected-page parity, corpus and recall regression tests, and the five zero counters, then satisfy the applicable review gates. The current recovery SOP in `PARITY_GUIDE.md` explicitly requires visual confirmation of an upstream fix before entry deletion; any alternative that changes that contract must be proposed and approved under `CLAUDE.md`'s specification-change policy before deleting entries. This review neither validates a local replacement nor changes that policy.
 
 ## Automated issue reconciliation
 
