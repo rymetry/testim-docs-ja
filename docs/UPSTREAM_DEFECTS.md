@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active (v2, 2026-04-20 — Reserved IDs table added, proposal B')
+- **Status**: Active（2026-10-23 確認済み、補正32件を維持）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -14,14 +14,27 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | --- | --- | --- | --- | --- |
 | UD-001 | Salesforce Verify list `-this` typo | `typo` | applied | (initial v1) |
 | UD-002 | Salesforce Steps "Log out" href miswire | `href-miswire` | applied | (initial v1) |
-| UD-003 | broken-table-row-as-paragraph (predefined-properties) | `madcap-artifact` | candidate | (initial v1) |
-| UD-004 | legacy `help.testim.io` stale-reference (scheduler pages) | `stale-reference` | applied | (initial v1) |
-| UD-005 | bare/bogus `index.htm` self-link href-miswire family | `href-miswire` | reserved | TBD (next index.htm family PR) |
-| UD-006 | _(unallocated)_ | _TBD_ | reserved | TBD |
-| UD-007 | _(unallocated)_ | _TBD_ | reserved | TBD |
-| UD-008 | _(unallocated)_ | _TBD_ | reserved | TBD |
+| UD-003 | broken-table-row-as-paragraph (predefined-properties) | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-004 | legacy `help.testim.io` stale-reference (scheduler pages) | `stale-reference` | recovered / archived | 2026-04-25 整理 |
+| UD-005 | hooks / parameters の旧参照と index リンク | `stale-reference` (A–D), `madcap-artifact` (E–F) | applied | 2026-04-18 登録 |
+| UD-006 | Search limitations の `-variable` 誤記 | `typo` | applied | 2026-04-18 登録 |
+| UD-007 | Random data の `step.This` 誤記 | `typo` | applied | 2026-04-18 登録 |
+| UD-008 | Chrome マイク設定の CLI index 自己リンク | `madcap-artifact` | applied | 2026-04-18 登録 |
 | UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
 | UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5 + VSTS broken step-2/3 extension) |
+| UD-012 | データ駆動テストのセクション相互参照 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-013 | Hidden parameters の親ページへのリンク | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-014 | Auto grouping の親ページへのリンク | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-015 | Run hooks の ZWSP だけを含む空段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-016 | Subscription plans の localhost トークンのマークアップ | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-017 | API assertion の段落内改行による余分な段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-018 | SeaLights のリスト内 CLI コードスニペット | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-019 | Salesforce 記録手順の画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-020 | Salesforce トラブルシューティングの画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-021 | Validate download の壊れた PDF 表行 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-022 | Jenkins Docker の末尾にある ZWSP 段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
+
+UD-011 に対応する有効なレジストリ項目はない。今回の確認では、この ID の割当・再利用は行わない。
 
 ### Allocation protocol
 
@@ -81,11 +94,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - 本来は `Verify - this action verifies ...` と半角スペースが入るべき箇所
 - **Fix applied**: `preprocess_en_html` 内で `-this action verifies` → `- this action verifies` に置換
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**: Tricentis が該当 HTML を修正して MadCap rebuild、`docs.tricentis.com/testim` に反映されたら:
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/salesforce-testing/salesforce-steps/sfdc-step-{create,edit,quickactions,relatedlistaction,validate}.html` を再取得
-  2. `grep '-this action verifies'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-001A / UD-001B entry を削除
-  4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+  2. 5ページすべてで Verify リストの導入文に欠けていた空白が補われたことを確認する。plain と strong の両形式を個別に調べる。
 
 ### UD-002: Salesforce Steps "Log out" href miswire
 
@@ -99,32 +110,25 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Fix applied**: `preprocess_en_html` 内で `<a href="sfdc-step-launchapp.htm">Log out</a>` → `<a href="sfdc-step-logout.htm">Log out</a>` に置換
 - **JA side**: JA markdown は既に `sfdc-step-logout` への正しいリンクを保持 (UX 上正しい)。patch により EN/JA 両側で同じ `/docs/salesforce-testing/salesforce-steps/sfdc-step-logout` token が emit され、parity alignment 成立。
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/salesforce-testing/salesforce-steps.html` を再取得
-  2. `grep '<a href="sfdc-step-launchapp.htm">Log out</a>'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-002 entry を削除
-  4. baseline 再生成
+  2. Log out のリンクが正しい logout ページを指していることを確認する。古い launch-app リンクの文字列が消えただけでは回復と判断しない。
 
 ### UD-003: broken-table-row-as-paragraph in predefined-properties-in-config-file-hooks
 
-- **Patch IDs**: _none_ (candidate — not yet patched)
+- **Patch IDs**: `UD-003-predefined-properties-broken-global-parameters-row`
 - **Defect class**: `madcap-artifact`
-- **Added**: 2026-04-18
-- **Review after**: 2026-10-18
+- **Added / review after**: 2026-04-20 / 2026-10-20
 - **Affected slugs** (1):
   - `running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks`
-- **Defect**: EN HTML 内に `<p>| globalParameters | | |</p>` という段落が存在する。著者は markdown-table row を意図して書いたが、MadCap が raw paragraph として出力したため、`|` 区切り文字を含む単なる散文として render されている。Turndown 通過後も同形の段落として JA 側と compare されるため、JA は byte-identical な literal mirror で fingerprint 一致させる interim workaround を採っている。
-- **Fix applied**: _none_ — `en_source_patches` entry は未登録。JA 側も broken form をそのまま mirror (source-first literal 忠誠)
-- **Status**: `candidate (not yet patched)`
-- **Planned mechanism**: M3 PR Z / C phase で `en_source_patches` に `UD-003-broken-table-row-as-paragraph` を登録し、EN HTML boundary で broken row を strip / normalize する。候補案:
-  - Option A: `<p>| globalParameters | | |</p>` → 削除 (JA も同期削除)
-  - Option B: 完全な markdown-table form に normalize し、header / body を復元する
-- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP** (after patch applied and upstream fix confirmed):
+- **Defect**: EN HTML 内に `<p>| globalParameters | | |</p>` という段落が存在する。著者は markdown-table row を意図して書いたが、MadCap が raw paragraph として出力したため、`|` 区切り文字を含む単なる散文として render されている。補正適用前は Turndown 通過後も同形の段落として JA 側と compare されるため、JA は byte-identical な literal mirror で fingerprint を一致させる暫定対処を採っていた。
+- **Fix applied**: 以前の候補案のうち Option A（HTML 境界で空の壊れた行を削除し、JA の対応行も削除する方式）が実装済み。`en_source_patches` は登録済みであり、「未適用」という旧記述を訂正した。
+- **検討履歴**: 当初は Option A の削除と、Option B の markdown-table 形式への正規化による header / body の復元を検討していた。現在の実装は Option A。
+- **Status**: `applied`。2026-10-23 に取得した公式 HTML にも対象の欠陥が残っている。
+- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)。チケット参照の記録なし。
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従う。
   1. `snapshots/en/content/running-tests/configuration-file-run-hooks/predefined-properties-in-config-file-hooks.html` を再取得
-  2. `grep '| globalParameters | | |'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-003 entry を削除
-  4. baseline 再生成
+  2. 上流で当該行が実際に削除または修復されたことを確認する。文字列が一致しないだけでは回復と判断しない。
 
 ### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
 
@@ -146,7 +150,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - `UD-004A-scheduler-high-speed-mode`: `<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>` → `<a href="../testops/turbo-mode.htm">Turbo mode</a>` (scheduler のみ — scheduler-mobile に high-speed-mode 参照なし)
   - `UD-004C-scheduler-slack-integration-anchor`: `<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>` → `<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>` (scheduler + scheduler-mobile 両方に適用)
   - `UD-004B`: **N/A retired** — scheduler-mobile には high-speed-mode legacy URL 参照が存在しないため、当初 plan 時の推測上の patch は不要 (EN HTML grep で確認済)
-  - 結果: baseline から URL token mismatch 由来の segment-extra/missing pair が消滅 (scheduler 5→1, scheduler-mobile 3→1 / 残 1 件ずつは segment-inconclusive tokenless-near-tie = P2-5 対象)
+  - 当初の補正適用時の結果（2026-04-25 の recovery cleanup より前の履歴）: baseline から URL token mismatch 由来の segment-extra/missing pair が消滅 (scheduler 5→1, scheduler-mobile 3→1 / 残 1 件ずつは segment-inconclusive tokenless-near-tie = P2-5 対象)
 - **Status**: `recovered / archived` — live and refreshed local snapshots no longer contain either legacy `help.testim.io` pattern; entries removed from `_en_source_patches_data.json`.
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP** (after upstream fix confirmed):
@@ -178,11 +182,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - UD-005F: `<a href="index.htm">params-file's parameters</a>` → `<a href="../parameters/index.htm">params-file's parameters</a>` (disambiguated by display text in list item)
 - **JA side**: JA was already using the canonical `/docs/<category>/<basename>` and `/docs/advanced-editing/parameters` paths per WRITING_GUIDE §91-109. For UD-005F the JA list-item link `/docs/advanced-editing/parameters/json-parameters-file-parameters` was corrected to `/docs/advanced-editing/parameters` to match the EN `index.htm` self-reference semantics (as a companion content-fix).
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP** (after upstream fix confirmed):
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/advanced-editing/hooks.html`, `.../parameters.html`, `.../parameters/parameter-override-rules.html` を再取得
-  2. `grep 'help.testim.io/docs/'` および `grep 'doc:https'` および `grep '"index\.htm"'` が 0 hit であることを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-005A-F entry を削除
-  4. baseline 再生成
+  2. A–F の各補正について表示テキストとリンク先を確認し、補正・ページ単位で回復を判断する。無関係な旧 URL や index リンクの有無だけで一括削除しない。
 
 ### UD-006: `-variable` typo in editing-tests/search-within-a-test Search limitations list
 
@@ -195,11 +197,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect**: MadCap authoring typo in the Search limitations list item `"Generate email address -variable name"` — missing space between `-` and `variable`. Adjacent list items use the correct `- variable name` form (e.g. `"Extract value - variable name"`, `"Get cookie - cookie name & variable name"`). The parity extractor flag regex emits a spurious `-variable` token because of the absent leading whitespace; JA (which uses the em-dash form `"— 変数名"`) has no corresponding token.
 - **Fix applied**: `<p>Generate email address -variable name</p>` → `<p>Generate email address - variable name</p>`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/editing-tests/search-within-a-test.html` を再取得
-  2. `grep '-variable name'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-006 entry を削除
-  4. baseline 再生成
+  2. variable の前に欠けていた空白が修復され、誤ったフラグトークンが生じないことを確認する。
 
 ### UD-007: `step.This` typo in guides/generate-random-data-with-js
 
@@ -212,11 +212,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect**: MadCap authoring typo — missing space after period in `"to your JS step.This will create the variable..."` in the "How to assign Random Data to a step?" list item. The parity extractor dotted-path regex emits a spurious `step.This` dotted-path token because of the absent space; JA uses a natural Japanese sentence break and has no corresponding token.
 - **Fix applied**: `to your JS step.This will create` → `to your JS step. This will create`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/guides/generate-random-data-with-js.html` を再取得
-  2. `grep 'step\.This'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-007 entry を削除
-  4. baseline 再生成
+  2. step と This の文境界が修復され、両方の文が保持されていることを確認する。
 
 ### UD-008: `index.htm` CLI self-link in running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone
 
@@ -230,11 +228,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Fix applied**: `read here about the <a href="index.htm">CLI command</a>` → `read here about the <a href="../the-command-line-cli/index.htm">CLI command</a>`
 - **JA side**: JA first paragraph was missing the sentence introducing the CLI command flag; restored as a companion content-fix so JA also emits `/docs/running-tests/the-command-line-cli`.
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.html` を再取得
-  2. `grep '<a href="index.htm">CLI command</a>'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-008 entry を削除
-  4. baseline 再生成
+  2. CLI command リンクが意図した親 CLI ページを指していることを確認する。
 
 ### UD-009: `index.htm` self-link miswire in grid-management child pages
 
@@ -250,18 +246,16 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - `integrations/grid-management/headspin-integration`
   - `integrations/grid-management/saucelabs-integration`
 - **Defect**: 5 つの grid-management 子ページの「Adding a grid」相互参照リンクが、親ページへのリンクとして `<a href="index.htm#adding-a-grid">Adding a grid</a>` を使用している。MadCap Flare の convention では `index.htm` は folder の TOC/index ページに解決されると期待されるが、実際の親 topic は 1 階層上の `integrations/grid-management.htm` に存在する。`integrations/grid-management/` フォルダ内には `index.htm` は存在しない (実測確認済)。
-- **Observed symptom**: `normalizeUrlToken` が broken `index.htm` を `/docs/index` token に変換する一方、JA 側は WRITING_GUIDE §192 に従い正しい `/docs/integrations/grid-management#adding-a-grid` を維持しているため、parity gate で `segment-extra + segment-missing` のペアが発生 (baseline 10 entries, 5 slug × 2)。
+- **過去の症状（UD-009 適用前）**: `normalizeUrlToken` が broken `index.htm` を `/docs/index` token に変換する一方、JA 側は WRITING_GUIDE §192 に従い正しい `/docs/integrations/grid-management#adding-a-grid` を維持しているため、parity gate で `segment-extra + segment-missing` のペアが発生していた (当時の baseline は 10 entries, 5 slug × 2)。これは適用前の観測記録であり、現在の baseline 件数ではない。2026-10-23 の全件検証では baseline entries は 0。
 - **JA side**: JA markdown は WRITING_GUIDE §91-109 / §192 に従い `/docs/integrations/grid-management#adding-a-grid` を canonical target とする。これは JA 独自構造ではなく、§192 で明示的に許容された URL localization。
 - **Fix applied**:
   - `UD-009-grid-management-index-self-link`: `<a href="index.htm#adding-a-grid">Adding a grid</a>` → `<a href="../grid-management.htm#adding-a-grid">Adding a grid</a>` (5 slug 共通、literal 1-to-1)
   - `normalizeUrlToken` は patched relative `../grid-management.htm` を `/docs/integrations/grid-management` token に変換するため、JA 側 token と一致する。
 - **Status**: `applied`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — 5 ページ共通の MadCap authoring pattern)
-- **Removal SOP** (after upstream fix confirmed):
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. 5 slug の EN HTML snapshot を再取得
-  2. `grep 'href="index.htm#adding-a-grid"'` が全 5 file で 0 hit を確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-009 entry を削除
-  4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+  2. 全5ページの Adding a grid リンク先を確認し、実際に修復されたページの範囲だけを削除候補にする。
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
 
@@ -292,15 +286,150 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - GLOSSARY Tier A 追加: `webdriver-manager`。
 - **Status**: `applied`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — MadCap authoring tool での heading/step-item シリアライゼーション bug、同種 pattern が他ページにも潜在する可能性あり)
-- **Removal SOP** (after upstream fix confirmed):
+- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. 3 slug の EN HTML snapshot を再取得
-  2. UD-010A: `grep '<p>\u200b## Run with external'` が 0 hit になったことを確認
-  3. UD-010B: `grep '<p>\u200b5. Enter a value'` が 0 hit になったことを確認
-  4. UD-010C/D: `grep -E '<p>\u200b[23]\. (Create|Select)'` が 0 hit になったことを確認
-  5. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-010A/B/C/D entry を削除
-  6. JA 側 vsts-and-tfs-integration の orphan paragraph も `​N. ` prefix を再度付与するか、EN upstream が正規 `<li>` に戻れば JA も正規番号リストに統合するか、reviewer 判断
-  7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
-  8. `npm run generate:parity-baseline -- --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
+  2. 3ページすべてで見出し・段落・手順リストの修正内容を確認する。VSTS/TFS の JA 側も、本文と画像を保持したまま、修復された上流の段落・リスト構造に合わせる。
+  3. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
+
+### UD-012: データ駆動テストのセクション相互参照
+
+- **補正 ID**: `UD-012-ddt-visual-editor-index-section-cross-ref`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor`
+- **欠陥 / 補正内容**: Visual Editor ページの外部データ参照先が旧 index.htm のフラグメントを指している。補正では configuring-data-driven-tests-using-data-from-an-external-source.htm を参照先にする。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-013: Hidden parameters の親ページへのリンク
+
+- **補正 ID**: `UD-013-hidden-parameters-index-parent-link`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `advanced-editing/parameters/hidden-parameters`
+- **欠陥 / 補正内容**: parameters リンクが単独の index.htm を使用している。補正では ../parameters/index.htm を指定し、意図した親 Parameters ページに解決する。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-014: Auto grouping の親ページへのリンク
+
+- **補正 ID**: `UD-014-auto-grouping-index-parent-link`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `editing-tests/groups/auto-grouping`
+- **欠陥 / 補正内容**: Group リンクが単独の index.htm を使用している。補正では ../groups/index.htm を指定し、意図した親 Groups ページに解決する。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-015: Run hooks の ZWSP だけを含む空段落
+
+- **補正 ID**: `UD-015-config-file-run-hooks-empty-zwsp-paragraph`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `running-tests/configuration-file-run-hooks`
+- **欠陥 / 補正内容**: grid-name の callout の後に U+200B だけを含む空段落がある。補正では、この編集時の残骸を削除する。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-016: Subscription plans の localhost トークンのマークアップ
+
+- **補正 ID**: `UD-016A-subscription-plans-host-localhost-cli-span`, `UD-016B-subscription-plans-host-localhost-grid-span`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `administration/subscription-plans`
+- **欠陥 / 補正内容**: 2つの表セルで host=localhost/127.0.0.1 が FileOrFilePath の span に囲まれている。補正では code マークアップを使い、URL に似た文字列をリテラルトークンとして保持する。CLI と Grid のセルは CRLF を含む前後の文脈で区別する。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-017: API assertion の段落内改行による余分な段落
+
+- **補正 ID**: `UD-017-api-testing-assertion-br-br-paragraph-inflation`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `advanced-editing/api-testing`
+- **欠陥 / 補正内容**: assertion の1段落内にある二重の br が、Markdown 抽出時に余分な段落を生む。補正では本文をすべて保持し、余分な表示上の改行を取り除く。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-018: SeaLights のリスト内 CLI コードスニペット
+
+- **補正 ID**: `UD-018A-sealights-build-session-id-list-wrapped-codesnippet`, `UD-018B-sealights-lab-id-list-wrapped-codesnippet`, `UD-018C-sealights-test-stage-list-wrapped-codesnippet`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `integrations/sealights-integration`
+- **欠陥 / 補正内容**: 単一フラグのリスト項目3つが codeSnippet の全体構造を使用している。補正では各フラグをインラインコードのリスト項目として保持し、リストとセグメントの件数を整合させる。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-019: Salesforce 記録手順の画像だけのリスト項目
+
+- **補正 ID**: `UD-019-create-salesforce-test-image-only-li-inflates-step-count`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `salesforce-testing/create-a-salesforce-test`
+- **欠陥 / 補正内容**: 記録手順の step 5 はログイン後のスクリーンショットだけを含む。補正では画像を消さずにリスト項目の外へ移し、前後の独立したスクリーンショットと同じ構造にする。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-020: Salesforce トラブルシューティングの画像だけのリスト項目
+
+- **補正 ID**: `UD-020-troubleshoot-grid-image-only-li-inflates-bullet-count`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `salesforce-testing/troubleshoot`
+- **欠陥 / 補正内容**: Grid のトラブルシューティング一覧にスクリーンショットだけの項目がある。補正では画像をリスト直後の段落に保持する。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-021: Validate download の壊れた PDF 表行
+
+- **補正 ID**: `UD-021-validate-download-pdf-broken-row-as-code`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `advanced-editing/validations/validate-download`
+- **欠陥 / 補正内容**: expectedText の PDF 例の行が、表の後にパイプ区切りの未整形段落として残っている。補正ではその段落をインラインコードで囲み、両方の extractor がテキストを段落として保持できるようにする。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-022: Jenkins Docker の末尾にある ZWSP 段落
+
+- **補正 ID**: `UD-022-jenkins-docker-trailing-zwsp-paragraph`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-20 / 2026-10-20
+- **対象 slug**:
+  - `integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker`
+- **欠陥 / 補正内容**: 末尾の段落は U+200B 2文字と空白1文字を含む。補正では、この本文ではない編集時の残骸を削除する。
+- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+## 共通の削除確認手順
+
+1. `npm run check:snapshots:fetch -- --slug=<slug>` で対象の全 slug を再取得する。
+2. HTML は CRLF を保持して読み込む (`read_bytes().decode("utf-8")`)。複数ページを対象とする補正も各 slug を個別に調べ、欠陥の実態と置換内容の意味を目視確認する。文字列が一致しないだけでは回復の証拠にならない。
+3. 欠陥が実際に修復された場合だけ、回復した補正または slug の範囲を削除する。関連する回帰テストの固定期待値を更新し、対応する台帳項目をアーカイブする。
+4. 対象ページの parity と必要な全体チェックを実行する。baseline の件数は0を維持し、acknowledgement や suppression を追加しない。新たな差異を隠すために baseline を再生成しない。
+5. セクション単位の補正整理 PR とし、`PARITY_GUIDE.md` のレジストリ変更時のレビューを通す。欠陥が残る場合は補正を維持し、確認記録に証拠を残す。
 
 ## Adding a new defect
 
@@ -320,11 +449,20 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - 各 entry は `reviewAfter` 日付を持つ (通常 addedAt + 6 ヶ月)
 - `reviewAfter` 超過した場合:
   1. Tricentis への報告 status 再確認
-  2. Upstream fix 未完了なら reviewAfter を 3-6 ヶ月延長し本ファイルに rationale 追記
-  3. Upstream fix 完了なら Removal SOP を実行
+  2. Upstream fix 未完了なら `reviewAfter` を延長せず、`priority=high` のセクション別 paydown 計画と再確認証跡を記録する (`OPS_DESIGN.md` / `PARITY_GUIDE.md` に従う)
+  3. Upstream fix 完了なら[共通の削除確認手順](#共通の削除確認手順)を実行する。overdue は実際の負債解消まで残す
 - Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
+
+### 2026-10-23 — issue #449 の期限超過補正の再確認
+
+- 公式ソースの取得: 全32ページが HTTP 200。すべて `d99f9bb3` のコミット済みスナップショットとバイト単位で一致した。
+- 全32件の補正が引き続き active: 対象の補正／ページ39組すべてが一致し、39 hits、mismatches は0。UD-001A/B と UD-009 に部分的な回復も見つからなかった。
+- 判断: 全補正と元の `reviewAfter` を維持する。回復レポートは active=32、stale=0、overdue=32、unknown=0。Issue #449 は引き続き対応が必要。
+- 上流への報告チケットの証拠は記録されておらず、今回の確認ではベンダーへの報告を送っていない。
+- 古い割当・状態の記述を訂正し、欠落していた UD-012～UD-022 の詳細を補完した。権威ある運用・パリティガイドと矛盾する期限延長の案内を修正した。
+- 証拠、セクション別の `priority=high` 対応計画、Issue 照合の条件: [2026-10-23 の確認記録](./UPSTREAM_REVIEW_2026-10-23.md)。
 
 上流 defect の probe 結果を時系列で記録する。Phase A/B の `upstream-recovery-status.json` + 手動 triage から得られた事実のみ記載。
 
