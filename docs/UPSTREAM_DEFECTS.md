@@ -94,11 +94,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - 本来は `Verify - this action verifies ...` と半角スペースが入るべき箇所
 - **Fix applied**: `preprocess_en_html` 内で `-this action verifies` → `- this action verifies` に置換
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**: Tricentis が該当 HTML を修正して MadCap rebuild、`docs.tricentis.com/testim` に反映されたら:
-  1. `snapshots/en/content/salesforce-testing/salesforce-steps/sfdc-step-{create,edit,quickactions,relatedlistaction,validate}.html` を再取得
-  2. `grep '-this action verifies'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-001A / UD-001B entry を削除
-  4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-001 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify that the missing whitespace in each of the five scoped Verify-list introductions is actually repaired; inspect both plain and strong variants separately.
 
 ### UD-002: Salesforce Steps "Log out" href miswire
 
@@ -112,11 +108,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Fix applied**: `preprocess_en_html` 内で `<a href="sfdc-step-launchapp.htm">Log out</a>` → `<a href="sfdc-step-logout.htm">Log out</a>` に置換
 - **JA side**: JA markdown は既に `sfdc-step-logout` への正しいリンクを保持 (UX 上正しい)。patch により EN/JA 両側で同じ `/docs/salesforce-testing/salesforce-steps/sfdc-step-logout` token が emit され、parity alignment 成立。
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
-  1. `snapshots/en/content/salesforce-testing/salesforce-steps.html` を再取得
-  2. `grep '<a href="sfdc-step-launchapp.htm">Log out</a>'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-002 entry を削除
-  4. baseline 再生成
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify that the Log out link actually points to the intended logout page, not merely that the old launch-app link literal is absent.
 
 ### UD-003: broken-table-row-as-paragraph in predefined-properties-in-config-file-hooks
 
@@ -128,7 +120,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Fix applied**: Option A was implemented: remove the empty broken row at the HTML boundary; the JA mirror line was also removed. The earlier candidate description was stale.
 - **Status**: `applied`; still present in the 2026-10-23 live fetch.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below after verifying the upstream row has been removed or repaired.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist) after verifying the upstream row has been removed or repaired.
 
 ### UD-004: legacy `help.testim.io` vs modern path mismatch in scheduler pages
 
@@ -150,7 +142,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - `UD-004A-scheduler-high-speed-mode`: `<a href="https://help.testim.io/docs/high-speed-mode">Turbo mode</a>` → `<a href="../testops/turbo-mode.htm">Turbo mode</a>` (scheduler のみ — scheduler-mobile に high-speed-mode 参照なし)
   - `UD-004C-scheduler-slack-integration-anchor`: `<a href="https://help.testim.io/v2.0/docs/scheduler#integrating-scheduler-with-slack">below</a>` → `<a href="scheduler.htm#integrating-scheduler-with-slack">below</a>` (scheduler + scheduler-mobile 両方に適用)
   - `UD-004B`: **N/A retired** — scheduler-mobile には high-speed-mode legacy URL 参照が存在しないため、当初 plan 時の推測上の patch は不要 (EN HTML grep で確認済)
-  - 結果: baseline から URL token mismatch 由来の segment-extra/missing pair が消滅 (scheduler 5→1, scheduler-mobile 3→1 / 残 1 件ずつは segment-inconclusive tokenless-near-tie = P2-5 対象)
+  - 当初の補正適用時の結果（2026-04-25 の recovery cleanup より前の履歴）: baseline から URL token mismatch 由来の segment-extra/missing pair が消滅 (scheduler 5→1, scheduler-mobile 3→1 / 残 1 件ずつは segment-inconclusive tokenless-near-tie = P2-5 対象)
 - **Status**: `recovered / archived` — live and refreshed local snapshots no longer contain either legacy `help.testim.io` pattern; entries removed from `_en_source_patches_data.json`.
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP** (after upstream fix confirmed):
@@ -182,11 +174,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - UD-005F: `<a href="index.htm">params-file's parameters</a>` → `<a href="../parameters/index.htm">params-file's parameters</a>` (disambiguated by display text in list item)
 - **JA side**: JA was already using the canonical `/docs/<category>/<basename>` and `/docs/advanced-editing/parameters` paths per WRITING_GUIDE §91-109. For UD-005F the JA list-item link `/docs/advanced-editing/parameters/json-parameters-file-parameters` was corrected to `/docs/advanced-editing/parameters` to match the EN `index.htm` self-reference semantics (as a companion content-fix).
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP** (after upstream fix confirmed):
-  1. `snapshots/en/content/advanced-editing/hooks.html`, `.../parameters.html`, `.../parameters/parameter-override-rules.html` を再取得
-  2. `grep 'help.testim.io/docs/'` および `grep 'doc:https'` および `grep '"index\.htm"'` が 0 hit であることを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-005A-F entry を削除
-  4. baseline 再生成
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify the corrected display text and link destinations for each scoped variant (A–F). Evaluate recovery per patch and page; unrelated legacy URLs or index links are not evidence for removing the whole bundle.
 
 ### UD-006: `-variable` typo in editing-tests/search-within-a-test Search limitations list
 
@@ -199,11 +187,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect**: MadCap authoring typo in the Search limitations list item `"Generate email address -variable name"` — missing space between `-` and `variable`. Adjacent list items use the correct `- variable name` form (e.g. `"Extract value - variable name"`, `"Get cookie - cookie name & variable name"`). The parity extractor flag regex emits a spurious `-variable` token because of the absent leading whitespace; JA (which uses the em-dash form `"— 変数名"`) has no corresponding token.
 - **Fix applied**: `<p>Generate email address -variable name</p>` → `<p>Generate email address - variable name</p>`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
-  1. `snapshots/en/content/editing-tests/search-within-a-test.html` を再取得
-  2. `grep '-variable name'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-006 entry を削除
-  4. baseline 再生成
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify that the missing whitespace before variable is repaired and no spurious flag token is introduced.
 
 ### UD-007: `step.This` typo in guides/generate-random-data-with-js
 
@@ -216,11 +200,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect**: MadCap authoring typo — missing space after period in `"to your JS step.This will create the variable..."` in the "How to assign Random Data to a step?" list item. The parity extractor dotted-path regex emits a spurious `step.This` dotted-path token because of the absent space; JA uses a natural Japanese sentence break and has no corresponding token.
 - **Fix applied**: `to your JS step.This will create` → `to your JS step. This will create`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
-  1. `snapshots/en/content/guides/generate-random-data-with-js.html` を再取得
-  2. `grep 'step\.This'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-007 entry を削除
-  4. baseline 再生成
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify that the sentence boundary between step and This is repaired without dropping either sentence.
 
 ### UD-008: `index.htm` CLI self-link in running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone
 
@@ -234,11 +214,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Fix applied**: `read here about the <a href="index.htm">CLI command</a>` → `read here about the <a href="../the-command-line-cli/index.htm">CLI command</a>`
 - **JA side**: JA first paragraph was missing the sentence introducing the CLI command flag; restored as a companion content-fix so JA also emits `/docs/running-tests/the-command-line-cli`.
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**:
-  1. `snapshots/en/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.html` を再取得
-  2. `grep '<a href="index.htm">CLI command</a>'` が 0 hit になったことを確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-008 entry を削除
-  4. baseline 再生成
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify that the CLI command link resolves to the intended parent CLI page.
 
 ### UD-009: `index.htm` self-link miswire in grid-management child pages
 
@@ -254,18 +230,14 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - `integrations/grid-management/headspin-integration`
   - `integrations/grid-management/saucelabs-integration`
 - **Defect**: 5 つの grid-management 子ページの「Adding a grid」相互参照リンクが、親ページへのリンクとして `<a href="index.htm#adding-a-grid">Adding a grid</a>` を使用している。MadCap Flare の convention では `index.htm` は folder の TOC/index ページに解決されると期待されるが、実際の親 topic は 1 階層上の `integrations/grid-management.htm` に存在する。`integrations/grid-management/` フォルダ内には `index.htm` は存在しない (実測確認済)。
-- **Observed symptom**: `normalizeUrlToken` が broken `index.htm` を `/docs/index` token に変換する一方、JA 側は WRITING_GUIDE §192 に従い正しい `/docs/integrations/grid-management#adding-a-grid` を維持しているため、parity gate で `segment-extra + segment-missing` のペアが発生 (baseline 10 entries, 5 slug × 2)。
+- **Historical symptom (before UD-009 was applied)**: `normalizeUrlToken` が broken `index.htm` を `/docs/index` token に変換する一方、JA 側は WRITING_GUIDE §192 に従い正しい `/docs/integrations/grid-management#adding-a-grid` を維持しているため、parity gate で `segment-extra + segment-missing` のペアが発生していた (当時の baseline は 10 entries, 5 slug × 2)。これは適用前の観測記録であり、現在の baseline 件数ではない。2026-10-23 の全件検証では baseline entries は 0。
 - **JA side**: JA markdown は WRITING_GUIDE §91-109 / §192 に従い `/docs/integrations/grid-management#adding-a-grid` を canonical target とする。これは JA 独自構造ではなく、§192 で明示的に許容された URL localization。
 - **Fix applied**:
   - `UD-009-grid-management-index-self-link`: `<a href="index.htm#adding-a-grid">Adding a grid</a>` → `<a href="../grid-management.htm#adding-a-grid">Adding a grid</a>` (5 slug 共通、literal 1-to-1)
   - `normalizeUrlToken` は patched relative `../grid-management.htm` を `/docs/integrations/grid-management` token に変換するため、JA 側 token と一致する。
 - **Status**: `applied`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — 5 ページ共通の MadCap authoring pattern)
-- **Removal SOP** (after upstream fix confirmed):
-  1. 5 slug の EN HTML snapshot を再取得
-  2. `grep 'href="index.htm#adding-a-grid"'` が全 5 file で 0 hit を確認
-  3. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-009 entry を削除
-  4. `npm run generate:parity-baseline -- --regenerate --rationale="UD-009 upstream fix confirmed"` で baseline を再生成 (新規追加 0、既存 entry への影響無しを期待)
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify the Adding a grid destination on all five scoped pages; retire only scopes whose actual source links have recovered.
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
 
@@ -296,15 +268,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - GLOSSARY Tier A 追加: `webdriver-manager`。
 - **Status**: `applied`
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — MadCap authoring tool での heading/step-item シリアライゼーション bug、同種 pattern が他ページにも潜在する可能性あり)
-- **Removal SOP** (after upstream fix confirmed):
-  1. 3 slug の EN HTML snapshot を再取得
-  2. UD-010A: `grep '<p>\u200b## Run with external'` が 0 hit になったことを確認
-  3. UD-010B: `grep '<p>\u200b5. Enter a value'` が 0 hit になったことを確認
-  4. UD-010C/D: `grep -E '<p>\u200b[23]\. (Create|Select)'` が 0 hit になったことを確認
-  5. `scripts/python/src/testim_parity/_en_source_patches_data.json` から UD-010A/B/C/D entry を削除
-  6. JA 側 vsts-and-tfs-integration の orphan paragraph も `​N. ` prefix を再度付与するか、EN upstream が正規 `<li>` に戻れば JA も正規番号リストに統合するか、reviewer 判断
-  7. `docs/GLOSSARY.md` から `webdriver-manager` entry を保持するか否か判断 (upstream 修正と独立した policy decision)
-  8. `npm run generate:parity-baseline -- --regenerate --rationale="UD-010 upstream fix confirmed"` で baseline を再生成し、新規追加 0 を確認
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist), including source inspection, affected-page parity, regression pins, archival and the registry-change review gate. Verify each heading, paragraph and step-list correction on all three scoped pages. For VSTS/TFS, align the JA paragraph/list structure with the repaired upstream source while preserving prose and images. Review webdriver-manager glossary retention separately; it is not evidence of upstream recovery.
 
 ### UD-012: Data-driven test section cross-reference
 
@@ -316,7 +280,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: The Visual Editor page points its external-data cross-reference to a legacy index.htm fragment. The patch targets configuring-data-driven-tests-using-data-from-an-external-source.htm.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-013: Hidden parameters parent link
 
@@ -328,7 +292,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: The parameters link uses bare index.htm. The patch resolves the intended Parameters parent with ../parameters/index.htm.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-014: Auto grouping parent link
 
@@ -340,7 +304,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: The Group link uses bare index.htm. The patch resolves the intended Groups parent with ../groups/index.htm.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-015: Run hooks empty ZWSP paragraph
 
@@ -352,7 +316,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: An empty paragraph containing only U+200B follows the grid-name callout. The patch removes this authoring residue.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-016: Subscription plans localhost token markup
 
@@ -364,7 +328,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: Two table cells wrap host=localhost/127.0.0.1 in FileOrFilePath spans. The patches use code markup so URL-like text is retained as a literal token; the CRLF context distinguishes CLI and Grid cells.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-017: API assertion paragraph break artifact
 
@@ -376,7 +340,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: A double br inside one assertion paragraph creates a second paragraph in Markdown extraction. The patch removes the redundant visual break while retaining all prose.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-018: SeaLights list-wrapped CLI code snippets
 
@@ -388,7 +352,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: Three single-flag list items use full codeSnippet scaffolding. The patches preserve each flag in an inline-code list item, keeping list and segment counts consistent.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-019: Salesforce recording image-only list item
 
@@ -400,7 +364,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: Recording step 5 contains only the post-login screenshot. The patch lifts that image out of the list item, matching adjacent standalone screenshots without dropping the image.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-020: Salesforce troubleshooting image-only list item
 
@@ -412,7 +376,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: The Grid troubleshooting list contains a screenshot-only item. The patch preserves the image in a paragraph immediately after the list.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-021: Validate download broken PDF table row
 
@@ -424,7 +388,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: The expectedText PDF example row is a raw pipe paragraph after a table. The patch wraps that paragraph in inline code so both extractors preserve its text as a paragraph.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ### UD-022: Jenkins Docker trailing ZWSP paragraph
 
@@ -436,7 +400,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Defect / fix**: The final paragraph contains two U+200B characters and a space. The patch removes this non-content authoring residue.
 - **Status**: `applied`; every scoped patch still matches the 2026-10-23 live HTML.
 - **Tricentis upstream report status**: _pending_; no ticket reference is recorded.
-- **Removal SOP**: Follow the shared removal checklist below; preserve prose, tokens, links and images when verifying the upstream correction.
+- **Removal SOP**: Follow the [shared removal checklist](#shared-removal-checklist); preserve prose, tokens, links and images when verifying the upstream correction.
 
 ## Shared removal checklist
 
