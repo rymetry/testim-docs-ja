@@ -1,18 +1,18 @@
-# Upstream patch review — 2026-10-23
+# 上流補正の確認記録 — 2026-10-23
 
-Refs #449. Review base: `d99f9bb3` (main).
+Refs #449。確認時の基準コミット: `d99f9bb3` (main)。
 
-## Outcome
+## 確認結果
 
-All 32 registered patch patterns still occur in the current upstream HTML; this review established no safe retirement. Live HTML fetched on 2026-10-23 returned HTTP 200 for all 32 unique slugs and was byte-identical to the committed snapshots. Every one of the 39 patch/page pairs matched after the normal pre-patch HTML normalization; runtime patch coverage reported 39 matched hits and zero mismatches. No patch or slug scope was removed. Original review dates remain overdue. Matching proves the patterns persist, not that every patch is indispensable under every possible extractor implementation.
+登録済みの補正32件すべての対象パターンが、現在の上流 HTML に残っている。今回、安全に削除できる補正は確認できなかった。2026-10-23 の取得では、重複を除く全32ページが HTTP 200 で、コミット済みスナップショットとバイト単位で一致した。通常の補正前 HTML 正規化を通した後、補正／ページの39組すべてが一致した。実行時の補正適用件数は39 hits、mismatches は0。補正も対象 slug の範囲も削除していない。元の確認期限は超過したまま維持する。パターンの一致は残存の証拠であり、どのような extractor の実装でも各補正が必須だという証明ではない。
 
-The review inspected the existing find/replace fragments against the fresh HTML, including all five Salesforce typo pages, all five UD-009 Grid pages, and the CRLF-sensitive UD-016/018/019/020 fragments. These exact artifacts persist; a successful fetch or an exit code of zero from the non-blocking recovery command is not evidence of recovery.
+最新の HTML に対して既存の find/replace 断片を確認した。Salesforce の誤記がある全5ページ、UD-009 の Grid 全5ページ、CRLF の保持が必要な UD-016/018/019/020 も含む。これらの欠陥は引き続き存在する。取得成功や、失敗時にも処理を止めない recovery コマンドの終了コード0だけでは、回復を確認したことにはならない。
 
-## Evidence by page
+## ページ別の証拠
 
-SHA-256 values below cover the unmodified `#mc-main-content` extraction, including CRLF. Each digest also matches `snapshots/en/content/<slug>.html` at the review base. Short patch IDs map to the full IDs in the authoritative JSON registry.
+以下の SHA-256 は、CRLF を含む未変更の `#mc-main-content` 抽出結果を対象とする。各値は基準コミットの `snapshots/en/content/<slug>.html` とも一致する。短縮補正 ID は、正本の JSON レジストリにある完全な ID に対応する。
 
-| Official source | SHA-256 | Patch IDs and hits |
+| 公式ソース | SHA-256 | 補正 ID と一致件数 |
 | --- | --- | --- |
 | [administration/subscription-plans](https://docs.tricentis.com/testim/content/administration/subscription-plans/index.htm) | `87a626443b4775585c85aec46d8e78c7623456f464c8ab96735b67d3c72217fe` | UD-016A: 1, UD-016B: 1 |
 | [advanced-editing/api-testing](https://docs.tricentis.com/testim/content/advanced-editing/api-testing.htm) | `d7f051411b10aba9f41572d48ee710b1e52b690636090a3f43138acd81f0f780` | UD-017: 1 |
@@ -47,11 +47,11 @@ SHA-256 values below cover the unmodified `#mc-main-content` extraction, includi
 | [salesforce-testing/salesforce-steps/sfdc-step-validate](https://docs.tricentis.com/testim/content/salesforce-testing/salesforce-steps/sfdc-step-validate.htm) | `cf65b8f283a883144a305652c41ba6b4bde1d4f9ed31f5e4c98eb513af74c8dd` | UD-001A: 1 |
 | [salesforce-testing/troubleshoot](https://docs.tricentis.com/testim/content/salesforce-testing/troubleshoot.htm) | `b805135f96569ca54cc8063134196760fb44ac039f61ead6fe956f16f72bb82e` | UD-020: 1 |
 
-## Paydown plan
+## 補正整理の計画
 
-Owner: Testim JA Docs parity subsystem (existing tracker owner). Every batch has `priority=high`; this is a proposed maintainer work schedule, not an automated reminder or a claim that upstream changes are scheduled. Keep one content/patch paydown PR per sidebar section. The 2026-10-30 checkpoint is for fresh evidence and report-status review, not a new `reviewAfter` deadline.
+担当: Testim JA Docs parity subsystem（既存台帳の担当）。全対象を `priority=high` とする。これは保守作業日程の提案であり、自動リマインダーの設定や上流の修正予定を意味しない。コンテンツ・補正の整理 PR は、サイドバーの1セクションにつき1本とする。2026-10-30 は最新の証拠と報告状況を再確認する日の提案であり、新しい `reviewAfter` ではない。
 
-| Section | Patch IDs | Unique pages | Priority | Next checkpoint |
+| セクション | 補正 ID | 重複を除くページ数 | 優先度 | 次の確認日（案） |
 | --- | --- | --- | --- | --- |
 | Salesforce Testing | UD-001A/B, UD-002, UD-019, UD-020 | 8 | high | 2026-10-30 |
 | Advanced Editing | UD-005A–F, UD-010B, UD-012, UD-013, UD-017, UD-021 | 8 | high | 2026-10-30 |
@@ -61,12 +61,12 @@ Owner: Testim JA Docs parity subsystem (existing tracker owner). Every batch has
 | Integrations | UD-009, UD-010A/C/D, UD-018A/B/C, UD-022 | 9 | high | 2026-10-30 |
 | Administration | UD-016A/B | 1 | high | 2026-10-30 |
 
-At each checkpoint, re-fetch every scoped page, inspect defects, and record the result. Confirm existing vendor ticket references first; none are currently recorded. Vendor contact requires separate authorization. For the ordinary upstream-recovery route, a retirement PR requires a real upstream fix and must follow the shared removal checklist in [the tracker](./UPSTREAM_DEFECTS.md#shared-removal-checklist), including affected parity, regression pins, and the registry-change review gate. Until a safe retirement is established, document the result and retain the patch without extending its date.
+各確認日には対象ページをすべて再取得し、欠陥を確認して結果を記録する。まず既存のベンダー報告チケットを確認するが、現時点では参照の記録がない。ベンダーへの連絡には別途許可が必要。通常の上流回復による削除 PR では、実際の上流修正を確認し、[台帳の共通の削除確認手順](./UPSTREAM_DEFECTS.md#共通の削除確認手順)に従う。対象ページの parity、回帰テストの固定期待値、レジストリ変更時のレビューも含む。安全な削除を確認できるまでは、結果を記録し、期限を延長せず補正を維持する。
 
-A separate local paydown proposal can investigate whether a general extractor or normalizer correction makes a patch redundant while preserving source content and detection sensitivity. `SYSTEM_SPEC.md` permits content, extractor and normalizer fixes; it does not permit moving exceptions into a new suppression lane. Such a proposal must demonstrate correctness with patch-disabled comparisons, affected-page parity, corpus and recall regression tests, and the five zero counters, then satisfy the applicable review gates. The current recovery SOP in `PARITY_GUIDE.md` explicitly requires visual confirmation of an upstream fix before entry deletion; any alternative that changes that contract must be proposed and approved under `CLAUDE.md`'s specification-change policy before deleting entries. This review neither validates a local replacement nor changes that policy.
+別の補正整理案として、一般的な extractor / normalizer の修正により、原文の内容と検出感度を保ったまま補正を不要にできるか調査する余地はある。`SYSTEM_SPEC.md` はコンテンツ・extractor・normalizer の修正を認めているが、例外を新たな suppression 経路へ移すことは認めていない。そのような案では、補正を無効化した比較、対象ページの parity、corpus・recall 回帰テスト、5カウンターがすべて0であることを実証し、必要なレビューを通す。現行の `PARITY_GUIDE.md` の回復手順は、項目削除前の上流修正の目視確認を明示的に要求している。この規定を変える別案は、削除前に `CLAUDE.md` の仕様変更方針に従って提案・承認を得る必要がある。今回、ローカルの代替実装を検証したわけではなく、この方針も変更していない。
 
-## Automated issue reconciliation
+## 管理対象 Issue の自動照合
 
-Only the scheduled event of `.github/workflows/scheduled-actionable.yml` synchronizes managed issues. It refreshes sidebar data, fetches/diffs all snapshots, runs full parity and upstream recovery, and generates a strict summary before issue synchronization. Reports must be full-scope, valid, fresh and linked. Manual workflow dispatch and partial slug/section checks do not synchronize issues.
+管理対象 Issue を同期するのは、`.github/workflows/scheduled-actionable.yml` の scheduled イベントだけである。サイドバー更新、全スナップショットの取得・差分確認、全件 parity、上流回復チェックを実施し、strict summary を生成してから Issue を同期する。レポートは全件対象で、有効・最新かつ相互に紐付いている必要がある。手動の workflow dispatch や、一部の slug／セクションだけの確認では Issue を同期しない。
 
-After reviewed changes reach main, a successful full scheduled run can reconcile #447 and #448. #449 remains open while the 32 overdue patches persist. This review does not claim that local changes, a manual dispatch, or a successful parity check closed any issue.
+レビュー済み変更が main に入った後、完全な scheduled run が成功すれば #447 と #448 を照合できる。32件の期限超過補正が残る間、#449 は未解決のまま。今回のローカル変更、手動実行、parity 成功によって Issue が閉じられたとは扱わない。
