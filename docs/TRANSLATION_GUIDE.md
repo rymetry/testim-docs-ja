@@ -684,9 +684,9 @@ EN `<td>` が `<br />` + nested `<p>` で複数行を包む場合、JA で ` / `
 
 Canonical sentinel: `advanced-editing/keyboard-shortcut-step`
 
-#### パターン 7: JA navigation link removal（MadCap self-link artifact の除去）
+#### パターン 7: JA parent-category link（bare `index.htm` は親カテゴリへのリンク）
 
-EN MadCap Flare が吐く `<a href="index.htm">` / `<a href="index.htm/#/">` の self-link artifact が JA にも残存している場合、JA 側でリンクを除去する（text のみ残す）。これは plan §5.3.2 registry の slug-scope extension 対象パターン。
+EN MadCap Flare の bare `<a href="index.htm">` は、そのページの親カテゴリ index を指す。パリティ checker は親カテゴリへ解決するため、JA にも同じ位置に親カテゴリへのリンク（`/docs/<親カテゴリ>`）を置く。リンクを除去してはならない。壊れた `<a href="index.htm/#/">` は UD-024 で `index.htm` に補正され、同じ規則で解決される。
 
 Canonical sentinel: `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`
 

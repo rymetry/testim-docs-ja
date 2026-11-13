@@ -2,7 +2,8 @@
 
 ``source_parity_clean_page_fixtures.test.mjs`` を pytest に移植。実 snapshot と
 実 JA md を読み、structure comparator が 0 件を維持することを全 CLEAN_PAGE_SLUGS
-で pin する。
+で pin する。EN 側は patches + link rewrite を通した入力で、
+``check_source_parity`` が見るものと同じ。
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from pathlib import Path
 import pytest
 
 from testim_parity.align import align_segments, parity_diffs_to_issues
+from testim_parity.preprocess_en import preprocess_en_html
 from testim_parity.project import ROOT_DIR
 from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
@@ -99,7 +101,7 @@ def _run_structure_comparator(slug: str) -> dict:
     raw_en_html = (SNAPSHOTS_DIR / f"{slug}.html").read_text(encoding="utf-8")
     ja_md = (JA_CONTENT_DIR / f"{slug}.md").read_text(encoding="utf-8")
     ja_body = _extract_ja_body(ja_md)
-    en_segments = extract_segments_from_html(raw_en_html)
+    en_segments = extract_segments_from_html(preprocess_en_html(raw_en_html, slug=slug))
     ja_segments = extract_segments_from_markdown(ja_body)
     alignment = align_segments(en_segments, ja_segments, slug=slug)
     issues = parity_diffs_to_issues(alignment["diffs"])

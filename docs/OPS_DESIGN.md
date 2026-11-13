@@ -190,7 +190,7 @@ npm run test && npm run build
       - どちらも `docs/UPSTREAM_DEFECTS.md` の対応 entry を archive 状態に更新
       - `npm run check:parity` が 0 issues を維持していることを確認
    d. まだ消えていなければ managed issue にコメントで状況記録 (次週 run で再評価)
-3. overdue entry (`statusB: 'overdue'`) は `reviewAfter` 延長でなく **paydown PR** で対応する (`priority='high'` を付与して順位付け)
+3. overdue entry (`statusB: 'overdue'`) は次のいずれかで対応する。(a) ライブの上流ページで欠陥が残っていることを再検証できた場合のみ、`lastVerifiedAt` を記録して `reviewAfter` を更新する（`lastVerifiedAt`（未記録なら `addedAt`）から最大 184 日。`lastVerifiedAt` は `addedAt` 以降かつ今日以前、未知の key は拒否。いずれも validator が強制）。(b) 検証できない、または欠陥が解消した entry は更新せず、削除手順または **paydown PR** で対応する。checker 都合で存在する patch は更新の対象外
 4. 全 stale / overdue 解消後、当該 section が空になり `sourceSyncHealth` が他 signal も無ければ workflow が自動で issue を close
 
 sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstream recovery") も同じ `upstream-recovery-status.json` を読むため、PR 作業中にも stale / overdue entry が可視化される。weekly triage で解消した項目は次の PR run で comment から自動削除される。

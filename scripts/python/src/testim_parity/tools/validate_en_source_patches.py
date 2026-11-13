@@ -12,6 +12,9 @@ Phase 6b cutover 以降、``_en_source_patches_data.json`` が en_source_patches
     * ``replace`` が string (空でもよい — "削除" を意味する)
     * ``addedAt`` / ``reviewAfter`` が ISO8601 date (``YYYY-MM-DD``)
     * ``reviewAfter`` が ``addedAt`` より後
+    * ``reviewAfter`` は ``lastVerifiedAt`` (無ければ ``addedAt``) + 184 日以内
+    * 任意 ``lastVerifiedAt`` (ISO date) は ``addedAt`` 以降かつ今日以前
+    * 未知の key は error (``lastVerifiedAt`` の typo で上限を迂回させない)
     * ``linkedDefect`` が ``docs/UPSTREAM_DEFECTS.md#UD-...`` 形式
 
 CI ``python-fast`` job の required step として registered。patch 追加時の編集ミスを
@@ -26,7 +29,7 @@ import argparse
 import json
 import re
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -48,8 +51,10 @@ _REQUIRED_PATCH_KEYS: frozenset[str] = frozenset(
         "reviewAfter",
     }
 )
+_OPTIONAL_PATCH_KEYS: frozenset[str] = frozenset({"lastVerifiedAt"})
 _ID_RE = re.compile(r"^[A-Z]{1,3}-\d{3}[A-Z]?(?:-[a-z0-9][a-z0-9-]*)*$")
 _LINKED_DEFECT_RE = re.compile(r"^docs/[A-Z_]+\.md(?:#[A-Z]{1,4}-\d{3})?$")
+_MAX_RENEWAL_DAYS = 184
 _ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
@@ -62,11 +67,13 @@ def _parse_iso_date(value: str, *, context: str) -> date | None:
         return None
 
 
-def validate_data(data: Any) -> list[str]:
+def validate_data(data: Any, today: date | None = None) -> list[str]:
     """``data`` (パース済 JSON) を検証し、error message の list を返す。
 
     empty list = 全て OK。1 つでも error があれば caller は exit 1 扱い。
+    ``today`` は ``lastVerifiedAt`` の未来日判定の基準 (default: ``date.today()``)。
     """
+    today = today or date.today()
     errors: list[str] = []
 
     if not isinstance(data, dict):
@@ -98,6 +105,9 @@ def validate_data(data: Any) -> list[str]:
             continue
 
         ctx = f"patches[{idx}]"
+        unknown = set(entry.keys()) - _REQUIRED_PATCH_KEYS - _OPTIONAL_PATCH_KEYS
+        if unknown:
+            errors.append(f"{ctx} has unknown keys: {sorted(unknown)}")
         missing_patch = _REQUIRED_PATCH_KEYS - set(entry.keys())
         if missing_patch:
             errors.append(f"{ctx} missing required keys: {sorted(missing_patch)}")
@@ -152,6 +162,35 @@ def validate_data(data: Any) -> list[str]:
 
         if added_date is not None and review_date is not None and review_date <= added_date:
             errors.append(f"{ctx}: reviewAfter ({review}) must be after addedAt ({added})")
+
+        cap_base, cap_label = added_date, "addedAt"
+        if "lastVerifiedAt" in entry:
+            verified = entry["lastVerifiedAt"]
+            verified_date = (
+                _parse_iso_date(verified, context=ctx) if isinstance(verified, str) else None
+            )
+            if verified_date is None:
+                errors.append(
+                    f"{ctx}: lastVerifiedAt must be ISO date YYYY-MM-DD (got {verified!r})"
+                )
+                cap_base = None
+            else:
+                if added_date is not None and verified_date < added_date:
+                    errors.append(
+                        f"{ctx}: lastVerifiedAt ({verified}) must not be before addedAt ({added})"
+                    )
+                if verified_date > today:
+                    errors.append(f"{ctx}: lastVerifiedAt ({verified}) must not be in the future")
+                cap_base, cap_label = verified_date, "lastVerifiedAt"
+        if (
+            cap_base is not None
+            and review_date is not None
+            and review_date > cap_base + timedelta(days=_MAX_RENEWAL_DAYS)
+        ):
+            errors.append(
+                f"{ctx}: reviewAfter ({review}) exceeds {cap_label} ({cap_base}) + "
+                f"{_MAX_RENEWAL_DAYS} days"
+            )
 
     return errors
 

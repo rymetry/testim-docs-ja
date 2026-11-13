@@ -18,7 +18,8 @@
       "rationale": "MadCap authoring typo: missing space between \"-\" and \"this\" in Verify list item intro (plain-leading variant). Upstream report pending.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-001",
       "addedAt": "2026-04-17",
-      "reviewAfter": "2026-10-17"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-001B-dash-this-typo-strong",
@@ -33,7 +34,8 @@
       "rationale": "MadCap authoring typo: missing space between \"-\" and \"this\" in Verify list item intro (strong-leading variant). Upstream report pending.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-001",
       "addedAt": "2026-04-17",
-      "reviewAfter": "2026-10-17"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-002-logout-href-miswire",
@@ -46,7 +48,8 @@
       "rationale": "Upstream MadCap href miswire: Log out list entry links to launchapp.htm instead of logout.htm. JA content already points to correct sfdc-step-logout.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-002",
       "addedAt": "2026-04-17",
-      "reviewAfter": "2026-10-17"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-005A-hooks-config-file-legacy-display-text",
@@ -59,7 +62,8 @@
       "rationale": "Upstream EN anchor display-text uses a legacy flat help.testim.io/docs/<basename> URL (pre-category-reorg). The href target is correct (running-tests/configuration-file-run-hooks), but the display-text URL emits a stale /docs/configuration-file-run-hooks invariant token that no longer exists in JA (JA uses canonical /docs/running-tests/configuration-file-run-hooks per WRITING_GUIDE §91-109). Patch aligns display-text with modern canonical path so normalizeUrlToken emits the same token from both sides.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
       "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-005B-hooks-config-file-parameters-legacy-display-text",
@@ -72,7 +76,8 @@
       "rationale": "Upstream EN anchor display-text uses a legacy flat help.testim.io/docs/<basename> URL (pre-category-reorg). The href target is correct (advanced-editing/parameters/configuration-file-parameters), but the display-text URL emits a stale /docs/configuration-file-parameters#... invariant token that no longer exists in JA. Patch aligns display-text with the modern canonical path WITHOUT the fragment — extractInvariantTokens strips fragments from /docs/ URLs whereas normalizeUrlForParity (applied to raw https://...#frag URLs) retains them, so preserving the fragment would introduce an asymmetric token pair. The href-derived token (already fragment-stripped during extraction) carries the same /docs/ path, so fragment loss is harmless for parity gating.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
       "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-005C-parameters-loops-legacy-display-text",
@@ -85,7 +90,8 @@
       "rationale": "Upstream EN anchor display-text uses a legacy flat help.testim.io/docs/<basename> URL (pre-category-reorg). The href target is correct (advanced-editing/loops), but the display-text URL emits a stale /docs/loops#using-the-loop-iterator-parameter invariant token that no longer exists in JA. Patch aligns display-text with modern canonical path WITHOUT the fragment (see UD-005B rationale for the fragment-asymmetry explanation).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
       "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-005D-parameter-override-rules-exports-doc-prefix",
@@ -98,33 +104,8 @@
       "rationale": "Upstream EN anchor uses a malformed href \"doc:https://help.testim.io/docs/exports-parameters\" (stray \"doc:\" prefix from MadCap tooling + legacy flat help.testim.io/docs/<basename> path). Patch rewrites to the correct relative .htm path (exports-parameters.htm is a sibling of parameter-override-rules.htm in the parameters folder), which normalizeUrlToken resolves to /docs/advanced-editing/parameters/exports-parameters matching JA.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
       "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
-      "id": "UD-005E-parameter-override-rules-params-file-index-preface",
-      "slugs": [
-        "advanced-editing/parameters/parameter-override-rules"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "and the <a href=\"index.htm\">Params file</a>",
-      "replace": "and the <a href=\"../parameters/index.htm\">Params file</a>",
-      "rationale": "Upstream EN uses a bare \"index.htm\" relative self-link for the parent Parameters category index page. The parity extractor normalizes \"index.htm\" to the literal slug \"index\" (not present in docs), producing a bogus /docs/index invariant token. Patch prepends the explicit ../parameters/ directory hop so normalizeUrlToken resolves to /docs/advanced-editing/parameters matching JA. Literal find is anchored with \"and the\" preamble to disambiguate from the identical href in the list item below (patched by UD-005F).",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
-      "id": "UD-005F-parameter-override-rules-params-file-index-listitem",
-      "slugs": [
-        "advanced-editing/parameters/parameter-override-rules"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<a href=\"index.htm\">params-file's parameters</a>",
-      "replace": "<a href=\"../parameters/index.htm\">params-file's parameters</a>",
-      "rationale": "Same defect class as UD-005E (bare \"index.htm\" → bogus /docs/index token) in the \"Before the test begins:\" list item. Display text \"params-file's parameters\" disambiguates the occurrence from the preface paragraph. After patch, normalizeUrlToken emits /docs/advanced-editing/parameters matching JA.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-006-search-within-a-test-email-variable-typo",
@@ -137,20 +118,8 @@
       "rationale": "Upstream MadCap authoring typo: missing space between \"-\" and \"variable\" in the Search limitations list item \"Generate email address -variable name\". Adjacent list items use the correct \"- variable name\" form (e.g. \"Extract value - variable name\" at index 0). Without the space, extractInvariantTokens flag regex emits a bogus \"-variable\" token that JA (which uses em-dash \"— 変数名\") does not have. Patch adds the missing space to match the adjacent items.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-006",
       "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
-      "id": "UD-008-allow-chrome-microphone-cli-index-self-link",
-      "slugs": [
-        "running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "read here about the <a href=\"index.htm\">CLI command</a>",
-      "replace": "read here about the <a href=\"../the-command-line-cli/index.htm\">CLI command</a>",
-      "rationale": "Same defect class as UD-005E/F (bare \"index.htm\" self-link → bogus /docs/index token). Page links to the parent CLI category index via a bare \"index.htm\"; extractInvariantTokens resolves it to the non-existent slug \"index\". Patch prepends the ../the-command-line-cli/ directory hop so normalizeUrlToken resolves to /docs/running-tests/the-command-line-cli, matching JA once JA content is restored to include the CLI command link.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-008",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-007-generate-random-data-step-this-typo",
@@ -163,24 +132,8 @@
       "rationale": "Upstream MadCap authoring typo: missing space after the period in \"to your JS step.This will create the variable...\". Without the space, extractInvariantTokens dotRe regex emits a bogus \"step.This\" dotted-path token that JA (natural prose with a proper sentence break) does not have. Patch inserts the missing space.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-007",
       "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
-      "id": "UD-009-grid-management-index-self-link",
-      "slugs": [
-        "integrations/grid-management/browserstack-integration",
-        "integrations/grid-management/lambdatest-integration",
-        "integrations/grid-management/custom-grid",
-        "integrations/grid-management/headspin-integration",
-        "integrations/grid-management/saucelabs-integration"
-      ],
-      "defectClass": "href-miswire",
-      "find": "<a href=\"index.htm#adding-a-grid\">Adding a grid</a>",
-      "replace": "<a href=\"../grid-management.htm#adding-a-grid\">Adding a grid</a>",
-      "rationale": "Upstream MadCap href miswire: 5 grid-management child pages link to a non-existent `index.htm` inside the `integrations/grid-management/` folder for the \"Adding a grid\" cross-reference. MadCap convention would expect `index.htm` to resolve to the folder's TOC page, but the actual parent topic lives at `integrations/grid-management.htm` one level up. normalizeUrlToken converts the broken `index.htm` → `/docs/index` token while JA content correctly references `/docs/integrations/grid-management#adding-a-grid` per WRITING_GUIDE §192, causing segment-extra + segment-missing pairs in the parity gate. Patched relative path `../grid-management.htm` normalizes to the same `/docs/integrations/grid-management` token as JA.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-009",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-010A-codeship-broken-h2-paragraph",
@@ -193,7 +146,8 @@
       "rationale": "Upstream MadCap authoring artifact: the third section heading (\"Run with external Selenium Grid\") was serialized into a single <p> element whose text content begins with a zero-width space (U+200B) followed by a literal markdown-style \"## \" prefix and then fused with the following body paragraph via a <br /> line break, instead of the expected <h2><a name=\"...\"></a>Heading</h2> + separate <p>. Adjacent sections on the same page (\"Project configuration\" / \"Run with local Selenium Grid\") use the correct <h2>-with-anchor shape, so the broken third heading is clearly a MadCap source-side serialization defect. Symptom: `extractHeadingSequence` counts EN=2 while JA has 3 H2 headings, surfacing as a `segment-inconclusive` [heading-count-mismatch] entry for the slug. Patch rewrites the broken <p> to a canonical <h2> + <p> pair matching sibling heading anchors; parity counts converge to 3 on both sides.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-010B-parameters-for-groups-broken-step-paragraph",
@@ -206,7 +160,8 @@
       "rationale": "Upstream MadCap authoring artifact: step 5 of the \"Adding Parameters to a Group\" ordered list was serialized as an orphan <p> element interleaved between <li value=\"4\"> and <li value=\"5\"> (where the list item with value=\"5\" carries different content — \"Repeat steps 4-5 to add additional parameters\"). The orphan <p> begins with a zero-width space (U+200B) followed by a literal \"5. \" step-number prefix, which turndown converts to a Markdown paragraph whose first line matches `extractStepCounts` \"^\\d+\\.\\s\" regex, inflating the EN step count from 6 (the correct <li value> count) to 7. JA is already correctly structured as 6 numbered steps with the translated value-entry guidance folded into a prose paragraph between steps, so the symptom surfaces as a `step-count-mismatch` audit signal (EN=7, JA=6) for section #2. Patch strips the leading \"​5. \" prefix so the content remains as prose (matching JA) but is no longer counted as a numbered step by extractStepCounts.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-010C-vsts-broken-step-paragraph-2",
@@ -219,7 +174,8 @@
       "rationale": "Upstream MadCap authoring artifact (2nd \"broken step\" variant in the VSTS/TFS integration page): an orphan <p> begins with a zero-width space (U+200B) followed by a literal \"2. \" step-number prefix. Unlike UD-010B (parameters-for-groups), this ZWSP-step <p> sits inside a sequence of <img> + <p> + <img> siblings between <li value=\"1\"> (\"Go to Build page\") and the next real <li> items — the authoring intent appears to have been to present \"Create a new build\" and \"Select your repository\" as sub-labels under step 1, not as top-level list items. But turndown still maps them to Markdown paragraphs whose first line matches `extractStepCounts` \"^\\d+\\.\\s\" regex after normalizeEnArtifacts strips the ZWSP, inflating the EN total step count from 11 (actual <li value> count) to 13. JA mirrors the EN structure but normalizeNumericPeriodSpacing does not strip ZWSP, so JA counts 11. This patch strips the leading \"​2. \" prefix in EN so both sides converge to 11 after normalization. JA content is updated in the same PR to remove the matching \"​2. \" prefix so segment-level comparison lines up (plain paragraph = plain paragraph).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-010D-vsts-broken-step-paragraph-3",
@@ -232,7 +188,8 @@
       "rationale": "Paired with UD-010C — same defect pattern (ZWSP + \"N. \" step-number prefix on an orphan <p>), just the adjacent occurrence for \"Select your repository\" (step-sub-label 3). Without this patch, UD-010C alone would still leave a 1-step EN=12 / JA=11 mismatch. Both patches together bring step-count to 11/11. Rationale, impact, and JA-side sync strategy are identical to UD-010C.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-012-ddt-visual-editor-index-section-cross-ref",
@@ -242,49 +199,11 @@
       "defectClass": "madcap-artifact",
       "find": "<a href=\"index.htm#section-data-driven-tests-using-data-from-an-external-source\">Data Driven tests using data from an external source</a>",
       "replace": "<a href=\"configuring-data-driven-tests-using-data-from-an-external-source.htm\">Data Driven tests using data from an external source</a>",
-      "rationale": "Upstream MadCap cross-reference artifact: the EN callout \"As part of this method...\" links to `index.htm#section-data-driven-tests-using-data-from-an-external-source`, a MadCap TOC-stitched anchor on the non-existent category-index page. The intended target is the sibling page `configuring-data-driven-tests-using-data-from-an-external-source.htm` (which JA correctly references as `/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source`). Without this patch, normalizeUrlToken emits `/docs/index` for EN vs the full canonical slug for JA, leaving token-overlap at 0 so the callout-body LCS pair fails (segment-missing + segment-extra). Same defect class as UD-005E/F/008/009 (bare `index.htm` self-reference).",
+      "rationale": "Upstream MadCap cross-reference artifact: the EN callout \"As part of this method...\" links to `index.htm#section-data-driven-tests-using-data-from-an-external-source`, a MadCap TOC-stitched anchor on the non-existent category-index page. The intended target is the sibling page `configuring-data-driven-tests-using-data-from-an-external-source.htm` (which JA correctly references as `/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source`). Without this patch, normalizeUrlToken emits `/docs/index` for EN vs the full canonical slug for JA, leaving token-overlap at 0 so the callout-body LCS pair fails (segment-missing + segment-extra). Same bare `index.htm#...` pattern as the archived UD-005E/F, UD-008 and UD-009, but the target here is a sibling page, so the bare-index rewrite rule cannot resolve it and this patch stays.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-012",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
-      "id": "UD-013-hidden-parameters-index-parent-link",
-      "slugs": [
-        "advanced-editing/parameters/hidden-parameters"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "When you use <a href=\"index.htm\">parameters</a> in your tests",
-      "replace": "When you use <a href=\"../parameters/index.htm\">parameters</a> in your tests",
-      "rationale": "Upstream MadCap artifact: the preface paragraph links to the bare `index.htm` for the parent Parameters category, producing a bogus `/docs/index` invariant token. JA content correctly links to `/docs/advanced-editing/parameters`. Patch prepends the explicit `../parameters/` hop so normalizeUrlToken resolves to the same canonical `/docs/advanced-editing/parameters` path as JA. Same defect class as UD-005E/F (parameter-override-rules) on the sibling preface.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-013",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
-      "id": "UD-014-auto-grouping-index-parent-link",
-      "slugs": [
-        "editing-tests/groups/auto-grouping"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "When creating a new <a href=\"index.htm\">Group</a>",
-      "replace": "When creating a new <a href=\"../groups/index.htm\">Group</a>",
-      "rationale": "Upstream MadCap artifact: the first ordered-list-item links to the bare `index.htm` for the parent Groups category, producing a bogus `/docs/index` invariant token. JA content correctly links to `/docs/editing-tests/groups`. Patch prepends the explicit `../groups/` hop so normalizeUrlToken resolves to the same canonical `/docs/editing-tests/groups` path as JA. Same defect class as UD-005E/F/008/013.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-014",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
-      "id": "UD-015-config-file-run-hooks-empty-zwsp-paragraph",
-      "slugs": [
-        "running-tests/configuration-file-run-hooks"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​</p>",
-      "replace": "",
-      "rationale": "Upstream MadCap authoring artifact: a stray `<p>​</p>` element (zero-width space only) sits immediately after the \"grid name\" callout in the preface. The turndown-extracted segment survives as an empty paragraph, inflating EN preface body structure to [paragraph, callout-body, paragraph] vs JA [paragraph, callout-body]. The ZWSP has no user-visible content and is an authoring residue (same ZWSP pattern as UD-010A/B/C/D and UD-011). Patch strips it so EN body structure collapses to [paragraph, callout-body] matching JA. No information loss.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-015",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-016A-subscription-plans-host-localhost-cli-span",
@@ -333,10 +252,11 @@
       "defectClass": "madcap-artifact",
       "find": "<p>| globalParameters      |             |      |</p>",
       "replace": "",
-      "rationale": "Upstream MadCap authoring artifact: a broken table row `<p>| globalParameters | | |</p>` sits immediately after the After Test Predefined Properties `</table>` close. The author intended another table row, but MadCap serialized it as a raw paragraph whose first character is the pipe separator. Turndown re-emits the same text as a paragraph line `| globalParameters | | |`; the coarse `extractParagraphCounts` heuristic treats pipe-leading lines as markdown-table (EN=0 paragraphs for the section), while the JA mirror backtick-wraps the leading pipe to preserve source-first fidelity (`` `|` globalParameters | | | ``) and IS counted as a paragraph (JA=1), producing a paragraph-count-mismatch signal. alignSegments also extracts the EN `<p>` as a segment-paragraph that has no semantically meaningful JA counterpart. Patch strips the broken paragraph at the HTML boundary (UPSTREAM_DEFECTS.md UD-003 Option A). JA side drops the mirror line so both bodies converge to \"section ends at `</table>`\". Same defect class as UD-015/UD-017 (MadCap authoring residue with no user-visible content).",
+      "rationale": "Upstream MadCap authoring artifact: a broken table row `<p>| globalParameters | | |</p>` sits immediately after the After Test Predefined Properties `</table>` close. The author intended another table row, but MadCap serialized it as a raw paragraph whose first character is the pipe separator. Turndown re-emits the same text as a paragraph line `| globalParameters | | |`; the coarse `extractParagraphCounts` heuristic treats pipe-leading lines as markdown-table (EN=0 paragraphs for the section), while the JA mirror backtick-wraps the leading pipe to preserve source-first fidelity (`` `|` globalParameters | | | ``) and IS counted as a paragraph (JA=1), producing a paragraph-count-mismatch signal. alignSegments also extracts the EN `<p>` as a segment-paragraph that has no semantically meaningful JA counterpart. Patch strips the broken paragraph at the HTML boundary (UPSTREAM_DEFECTS.md UD-003 Option A). JA side drops the mirror line so both bodies converge to \"section ends at `</table>`\". Same defect class as UD-017 (MadCap authoring residue with no user-visible content).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-003",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
       "id": "UD-018A-sealights-build-session-id-list-wrapped-codesnippet",
@@ -346,7 +266,7 @@
       "defectClass": "madcap-artifact",
       "find": "<li>\r\n                                                <div class=\"codeSnippet\"><a class=\"codeSnippetCopyButton\" role=\"button\" href=\"javascript:void(0);\">Copy</a>\r\n                                                    <div class=\"codeSnippetBody\"><pre><code>--sealights-build-session-id [sealights-suid-session-id]</code></pre>\r\n                                                    </div>\r\n                                                </div>\r\n                                            </li>",
       "replace": "<li><code>--sealights-build-session-id [sealights-suid-session-id]</code></li>",
-      "rationale": "Upstream MadCap authoring pattern: a single one-line CLI flag is wrapped as the sole content of a <li> inside a <ul>, but rendered via the full <div class=\"codeSnippet\"><div class=\"codeSnippetBody\"><pre><code>FLAG</code></pre></div></div> codeSnippet scaffolding (Copy button + pre+code block). Turndown serializes this as `*   ```\\n    FLAG\\n    ```` — the coarse `extractBulletCounts` heuristic skips the line because `FENCE_LINE_RE` matches the bullet-led ` ``` ` opening (FENCE_LINE_RE = /^\\s*(?:(?:[-*+]\\s+|\\d+\\.\\s+))?```/), giving EN=0 bullets in the section while JA uses an inline-code bullet `- `--sealights-...`` that is correctly counted (JA=1). alignSegments already treats both sides as unordered-list-item with matching text (so segment checks pass / actionable=0), but the coarse bullet count emits an audit signal. Patch normalizes the list-wrapped codeSnippet scaffolding into a minimal <li><code>FLAG</code></li>, which turndown serializes as `* `FLAG`` — a real bullet that the coarse counter recognizes, matching JA exactly. Same defect class as UD-015/UD-017 (MadCap authoring residue that inflates coarse counts while segment alignment already works).",
+      "rationale": "Upstream MadCap authoring pattern: a single one-line CLI flag is wrapped as the sole content of a <li> inside a <ul>, but rendered via the full <div class=\"codeSnippet\"><div class=\"codeSnippetBody\"><pre><code>FLAG</code></pre></div></div> codeSnippet scaffolding (Copy button + pre+code block). Turndown serializes this as `*   ```\\n    FLAG\\n    ```` — the coarse `extractBulletCounts` heuristic skips the line because `FENCE_LINE_RE` matches the bullet-led ` ``` ` opening (FENCE_LINE_RE = /^\\s*(?:(?:[-*+]\\s+|\\d+\\.\\s+))?```/), giving EN=0 bullets in the section while JA uses an inline-code bullet `- `--sealights-...`` that is correctly counted (JA=1). alignSegments already treats both sides as unordered-list-item with matching text (so segment checks pass / actionable=0), but the coarse bullet count emits an audit signal. Patch normalizes the list-wrapped codeSnippet scaffolding into a minimal <li><code>FLAG</code></li>, which turndown serializes as `* `FLAG`` — a real bullet that the coarse counter recognizes, matching JA exactly. Same defect class as UD-017 (MadCap authoring residue that inflates coarse counts while segment alignment already works).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-018",
       "addedAt": "2026-04-20",
       "reviewAfter": "2026-10-20"
@@ -411,23 +331,37 @@
       "defectClass": "madcap-artifact",
       "find": "<p>| expectedText       | JavaScript | 'A Simple PDF File'  |</p>",
       "replace": "<p><code>| expectedText       | JavaScript | 'A Simple PDF File'  |</code></p>",
-      "rationale": "Upstream MadCap authoring artifact: the \"PDF files\" example-parameters table in the Validate download page has a broken third-row rendered as a stray `<p>|...|</p>` plain-text line after a proper `<table>` element (rows 1-2 are structured, row 3 leaked out as raw markdown pipe syntax in HTML). Turndown fuses the pipe paragraph into the preceding markdown table so `classifyLine` treats it as `markdown-table` (not counted), while JA authors the same broken-row in backtick-wrapped inline-code form (`\\`|...|\\``) which `classifyLine` correctly classifies as a paragraph-start. Result: EN=5 paragraphs vs JA=6 paragraph-count-mismatch signal. Patch wraps the broken-row `<p>` content in `<code>` so turndown emits matching backtick-inline-code markdown (`\\`|...|\\``), aligning paragraph-counts on both sides. Segment alignment remains intact because backticks are stripped from textNorm on both sides (symmetric), preserving the paragraph textNorm match. Same defect class as UD-015/UD-017 (MadCap authoring artifacts that survive turndown asymmetrically).",
+      "rationale": "Upstream MadCap authoring artifact: the \"PDF files\" example-parameters table in the Validate download page has a broken third-row rendered as a stray `<p>|...|</p>` plain-text line after a proper `<table>` element (rows 1-2 are structured, row 3 leaked out as raw markdown pipe syntax in HTML). Turndown fuses the pipe paragraph into the preceding markdown table so `classifyLine` treats it as `markdown-table` (not counted), while JA authors the same broken-row in backtick-wrapped inline-code form (`\\`|...|\\``) which `classifyLine` correctly classifies as a paragraph-start. Result: EN=5 paragraphs vs JA=6 paragraph-count-mismatch signal. Patch wraps the broken-row `<p>` content in `<code>` so turndown emits matching backtick-inline-code markdown (`\\`|...|\\``), aligning paragraph-counts on both sides. Segment alignment remains intact because backticks are stripped from textNorm on both sides (symmetric), preserving the paragraph textNorm match. Same defect class as UD-017 (MadCap authoring artifacts that survive turndown asymmetrically).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-021",
       "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "lastVerifiedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     },
     {
-      "id": "UD-022-jenkins-docker-trailing-zwsp-paragraph",
+      "id": "UD-024-agentic-salesforce-manual-steps-malformed-index-link",
       "slugs": [
-        "integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker"
+        "salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce"
       ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​ ​</p>",
-      "replace": "",
-      "rationale": "Upstream MadCap authoring artifact: a trailing `<p>​ ​</p>` element (two ZWSPs with a space between) sits at the end of the \"Now, just follow these steps:\" section after the final ordered-list item + screenshot. `normalizeEnArtifacts` strips ZWSPs per line; the residue for this line is a single space which matches `^[\\s]*$` so the paragraph-count extractor drops it. But `extractSegmentsFromHtml` still emits a `paragraph \"\"` segment for this `<p>`, creating an asymmetry: EN paragraph-count=1 vs JA paragraph-count=2 (JA authors the residue as `​ ​` prose at the end, which the paragraph-count classifier counts because `^[​...]+$` does not match due to the embedded space). Patch strips the stray `<p>` so neither counter nor segment extractor sees it on the EN side. JA content also removes the trailing `​ ​` line (pure authoring residue, no user-visible content). Same pattern as UD-015 (config-file-run-hooks ZWSP-only paragraph) — pure authoring-tool residue with no information loss.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-022",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
+      "defectClass": "href-miswire",
+      "find": "href=\"index.htm/#/\"",
+      "replace": "href=\"index.htm\"",
+      "rationale": "Upstream MadCap href miswire: the link text \"manually adding or recording steps\" points to the malformed `index.htm/#/` instead of the parent category index `index.htm`. The extractor cannot resolve `index.htm/#/` to a page. Patch restores the bare `index.htm`, which the shared bare-index rule then resolves to the parent category (salesforce-testing/create-a-salesforce-test).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-024",
+      "addedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
+    },
+    {
+      "id": "UD-025-local-mobile-test-supported-actions-index-miswire",
+      "slugs": [
+        "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test"
+      ],
+      "defectClass": "href-miswire",
+      "find": "href=\"index.htm#supported-mobile-actions\"",
+      "replace": "href=\"#supported-mobile-actions\"",
+      "rationale": "Upstream MadCap href miswire: step 8 links to `index.htm#supported-mobile-actions`, which resolves to the parent category page, but the Supported Mobile Actions section is on this page itself (h3 anchor supported-mobile-actions); the parent page has no such anchor. Patch turns it into the in-page link, which the bare-index rule leaves alone. JA already uses the in-page link.",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-025",
+      "addedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     }
   ]
 }
