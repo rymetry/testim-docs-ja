@@ -306,6 +306,7 @@ Testim は独自のメールサービスを通じて専用にメールアドレ�
 ![設定アイコン](/images/validations/email-validation/3b33312-emailaddresses.png)
 
 2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
+
 ![コピーボタン](/images/validations/email-validation/bb1c588-emailaddresses2.png)
 
 ### 一時的メールアドレスオプション
@@ -322,6 +323,7 @@ Email Service 画面から一時的メールアドレスを表示およびコピ
 ![設定アイコン](/images/validations/email-validation/f061421-image_1.png)
 
 2. 関連するメールにカーソルを合わせ、**Copy** をクリックします。  
+
 ![コピーボタン](/images/validations/email-validation/18ef3a0-image_2.png)
 
 ## Run API Action ステップの使用
@@ -390,6 +392,7 @@ Run API Action ステップを使用して、一時的/恒久的メールアド�
 7. **Create Step** をクリックします。
 
 8. **Coded** タブをクリックします。  
+
 ![コード化タブ](/images/validations/email-validation/fa0a6bb-coded.png)
 
 **function** エディターが開き、右側に **Properties** パネルが開きます。
@@ -519,6 +522,7 @@ exportsTest.emailLink = emailLinks[0];
 共有ステップの詳細については、[Groups](/docs/editing-tests/groups)を参照してください。
 
 7. **Create Step** をクリックします。  
+
 ![コードレス画面](/images/validations/email-validation/873ab96-codeless_screen.png)
 
 8. **Email Filters** の下で、有効にしたい条件タイプのチェックボックスを選択して、受信箱内のメールを特定する条件を指定します。これらの条件すべてに一致するメール（つまり AND 条件）が検証されてステップが成功します。受信箱内のメールがこれらの条件のいずれにも一致しない場合、ステップは失敗します。すべての条件はオプションですが、少なくとも 1 つの条件を有効にする必要があります：

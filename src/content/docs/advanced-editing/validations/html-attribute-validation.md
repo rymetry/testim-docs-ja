@@ -91,6 +91,7 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 3. **Attribute name** に `disabled` を入力します。
 
 4. **Expected value** には値を入力しません。  
+
 ![HTML](/images/validations/html-attribute-validation/a78b8f5-image.png)
 
 5. **OK** をクリックします。

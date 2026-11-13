@@ -36,17 +36,20 @@ keywords:
 構成の詳細を開かずに、モバイル構成に割り当てられている特定のデバイスを表示できます。
 **保存されたモバイル構成で利用可能なデバイスを表示するには:**
 
-1. 構成ライブラリで特定のモバイル構成を選択します。アクションメニューから **Check available devices button**（利用可能なデバイスを確認）ボタンをクリックします。\
+1. 構成ライブラリで特定のモバイル構成を選択します。アクションメニューから **Check available devices button**（利用可能なデバイスを確認）ボタンをクリックします。
+
 ![選択したモバイル構成に対して Check available devices ボタンをクリックする画面](/images/test-management/configuration-library-mobile/73aa8b5-image_9.png)
 
-2. Testim は、その構成に割り当てられたデバイスのリストを表示します。\
+2. Testim は、その構成に割り当てられたデバイスのリストを表示します。
+
 ![構成に割り当てられた利用可能なモバイルデバイスの一覧を表示するダイアログ](/images/test-management/configuration-library-mobile/31e58f9-image_10.png)
 
 ## 新しい構成を追加する
 
 **新しい構成を追加するには:**
 
-1. **Runs > Configuration Library** に移動し、**Create New** ボタンをクリックします。\
+1. **Runs > Configuration Library** に移動し、**Create New** ボタンをクリックします。
+
 ![Runs メニューの Configuration Library で Create New ボタンをクリックする画面](/images/test-management/configuration-library-mobile/f184ba9-image_11.png)
 
 2. **Configuration Name** フィールドに、構成の名前を入力します。
@@ -55,7 +58,8 @@ keywords:
 - **static allocation**（静的割り当て） - 下部に表示される（選択したグリッドからの）利用可能なデバイスのリストから手動で選択します。\
      ![Static allocation で利用可能なモバイルデバイス一覧からデバイスを選択する画面](/images/test-management/configuration-library-mobile/1436e57-image_13.png)
 
-- **dynamic allocation**（動的割り当て） - 以下の Rules セクションで定義されたルール条件に基づいて、構成で使用される選択したグリッドアカウントからモバイルデバイスを Testim が動的に選択できるようにするルールを作成します。このオプションを選択したら、以下の**ステップ 6**にスキップします。\
+- **dynamic allocation**（動的割り当て） - 以下の Rules セクションで定義されたルール条件に基づいて、構成で使用される選択したグリッドアカウントからモバイルデバイスを Testim が動的に選択できるようにするルールを作成します。このオプションを選択したら、以下の**ステップ 6**にスキップします。
+
 ![dynamic allocation を選択しルールベースでデバイスを割り当てる設定画面](/images/test-management/configuration-library-mobile/669b391-image_14.png)
 
 5. **Static Allocation** オプションを選択した場合、**Devices** セクションで、テストで使用したい特定のデバイスのチェックボックスを選択します。このデバイスのリストから、Testim は、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスを選択します。
@@ -189,7 +193,8 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 コンテキストツールが表示されます。
 
-3. **Delete** アイコンをクリックします。\
+3. **Delete** アイコンをクリックします。
+
 ![Configuration Library で Delete アイコンをクリックしてテスト構成の削除を実行する画面](/images/test-management/configuration-library-mobile/138a8ac-image_2.png)
 
 :::note
