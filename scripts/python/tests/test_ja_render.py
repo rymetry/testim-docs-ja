@@ -63,3 +63,35 @@ def test_separated_paragraph_between_lists():
 def test_table_and_strikethrough_enabled():
     html = render_ja_markdown("|a|b|\n|-|-|\n|1|~~2~~|\n")
     assert "<table>" in html and "<s>2</s>" in html
+
+
+def test_later_h1_kept_when_no_title_h1():
+    assert "<h1>later</h1>" in render_ja_markdown("## a\n\n# later\n")
+
+
+def test_second_h1_kept_after_title_h1():
+    assert render_ja_markdown("# title\n\n# second\n") == "<h1>second</h1>\n"
+
+
+def test_title_h1_after_frontmatter_stripped_only_once():
+    assert render_ja_markdown("---\nt: 1\n---\n# title\n\n## a\n") == "<h2>a</h2>\n"
+
+
+def test_longer_fence_not_closed_by_shorter_inner_fence():
+    html = render_ja_markdown("````\n```js\n:::note\n````\n\n:::note\nx\n")
+    assert html.count("<div") == 1 and 'data-line="6"' in html
+
+
+def test_tilde_fence_keeps_callout_marker_as_code():
+    html = render_ja_markdown("~~~\n:::note\n~~~\n")
+    assert "<div" not in html and "<pre>" in html
+
+
+def test_fence_inside_list_item_keeps_callout_marker_as_code():
+    html = render_ja_markdown("- ```\n  :::note\n  ```\n")
+    assert "<div" not in html
+
+
+def test_info_string_line_does_not_close_fence():
+    html = render_ja_markdown("```\n```js\n:::note\n```\n")
+    assert "data-line" not in html and "<pre>" in html
