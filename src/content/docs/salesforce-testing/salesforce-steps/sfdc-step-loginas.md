@@ -22,7 +22,8 @@ keywords:
 
 **Log In As Another User ステップを追加するには:**
 
-1. **+**ボタンをクリックし、**Salesforce**ステップタブの下で、**Common operations**をクリックして**Log in as another user**ステップを選択することで、**Log in as another user**ステップを追加します。\
+1. **+**ボタンをクリックし、**Salesforce**ステップタブの下で、**Common operations**をクリックして**Log in as another user**ステップを選択することで、**Log in as another user**ステップを追加します。
+
 次の**Properties Tab**が表示されます。
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-loginas/02cc7f3-2024-05-05_15-07-06.png)

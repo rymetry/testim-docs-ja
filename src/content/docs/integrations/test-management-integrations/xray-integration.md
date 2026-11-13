@@ -47,7 +47,8 @@ Xray 統合を使用する前に、Testim を Xray プロジェクトに接続�
 
 ![Jira API トークンと Xray クライアント情報を入力する画面](/images/test-management-integrations/xray-integration/a4eef2a-image_1.png)
 
-5. **Connect（接続）** をクリックします。\
+5. **Connect（接続）** をクリックします。
+
 この時点で、Testim は Xray のプロジェクトに関連付けられましたが、特定のテストにはマッピングされていません。
 
 :::info

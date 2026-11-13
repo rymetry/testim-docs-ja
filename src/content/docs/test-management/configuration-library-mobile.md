@@ -36,17 +36,20 @@ keywords:
 構成の詳細を開かずに、モバイル構成に割り当てられている特定のデバイスを表示できます。
 **保存されたモバイル構成で利用可能なデバイスを表示するには:**
 
-1. 構成ライブラリで特定のモバイル構成を選択します。アクションメニューから **Check available devices button**（利用可能なデバイスを確認）ボタンをクリックします。\
+1. 構成ライブラリで特定のモバイル構成を選択します。アクションメニューから **Check available devices button**（利用可能なデバイスを確認）ボタンをクリックします。
+
 ![選択したモバイル構成に対して Check available devices ボタンをクリックする画面](/images/test-management/configuration-library-mobile/73aa8b5-image_9.png)
 
-2. Testim は、その構成に割り当てられたデバイスのリストを表示します。\
+2. Testim は、その構成に割り当てられたデバイスのリストを表示します。
+
 ![構成に割り当てられた利用可能なモバイルデバイスの一覧を表示するダイアログ](/images/test-management/configuration-library-mobile/31e58f9-image_10.png)
 
 ## 新しい構成を追加する
 
 **新しい構成を追加するには:**
 
-1. **Runs > Configuration Library** に移動し、**Create New** ボタンをクリックします。\
+1. **Runs > Configuration Library** に移動し、**Create New** ボタンをクリックします。
+
 ![Runs メニューの Configuration Library で Create New ボタンをクリックする画面](/images/test-management/configuration-library-mobile/f184ba9-image_11.png)
 
 2. **Configuration Name** フィールドに、構成の名前を入力します。
@@ -55,7 +58,8 @@ keywords:
 - **static allocation**（静的割り当て） - 下部に表示される（選択したグリッドからの）利用可能なデバイスのリストから手動で選択します。\
      ![Static allocation で利用可能なモバイルデバイス一覧からデバイスを選択する画面](/images/test-management/configuration-library-mobile/1436e57-image_13.png)
 
-- **dynamic allocation**（動的割り当て） - 以下の Rules セクションで定義されたルール条件に基づいて、構成で使用される選択したグリッドアカウントからモバイルデバイスを Testim が動的に選択できるようにするルールを作成します。このオプションを選択したら、以下の**ステップ 6**にスキップします。\
+- **dynamic allocation**（動的割り当て） - 以下の Rules セクションで定義されたルール条件に基づいて、構成で使用される選択したグリッドアカウントからモバイルデバイスを Testim が動的に選択できるようにするルールを作成します。このオプションを選択したら、以下の**ステップ 6**にスキップします。
+
 ![dynamic allocation を選択しルールベースでデバイスを割り当てる設定画面](/images/test-management/configuration-library-mobile/669b391-image_14.png)
 
 5. **Static Allocation** オプションを選択した場合、**Devices** セクションで、テストで使用したい特定のデバイスのチェックボックスを選択します。このデバイスのリストから、Testim は、選択されたデバイスのプールからグリッドプロバイダーによって最初に利用可能にされたデバイスを選択します。
@@ -110,10 +114,14 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **テスト構成をクローンするには:**
 
-1. 左側のメニューで、**Runs > Configuration List** に移動します。\
+1. 左側のメニューで、**Runs > Configuration List** に移動します。
+
 **Configuration Library** が表示されます。
-2. クローンしたいテスト構成の行をクリックします。\
+
+2. クローンしたいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
+
 3. **Clone** アイコンをクリックします。
 
 ![Configuration Library でテスト構成を選択し Clone アイコンをクリックする画面](/images/test-management/configuration-library-mobile/1e505f5-image.png)
@@ -123,7 +131,8 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 :::
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
-5. **Clone** をクリックします。\
+5. **Clone** をクリックします。
+
 構成がクローンされ、**Configuration Library** に表示されます。
 
 ### テスト構成の名前変更
@@ -134,8 +143,10 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **Configuration Library** が表示されます。
 
-2. 名前を変更したいテスト構成の行をクリックします。\
+2. 名前を変更したいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
+
 3. **Rename** アイコンをクリックします。
 
 :::note
@@ -147,7 +158,8 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 ![Edit Name ダイアログでテスト構成の新しい名前を入力する画面](/images/test-management/configuration-library-mobile/b9a1933-image_1.png)
 
 4. **New name** フィールドに、この構成の新しい名前を入力します。
-5. **OK** をクリックします。\
+5. **OK** をクリックします。
+
 構成の名前が変更されます。
 
 ### テスト構成の変更
@@ -158,13 +170,15 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **Configuration Library** が表示されます。
 
-2. 変更したいテスト構成の行をダブルクリックします。\
+2. 変更したいテスト構成の行をダブルクリックします。
+
 **Edit Config** 設定が表示されます。
 
 ![既存のテスト構成をダブルクリックして Edit Config 画面を開いた状態](/images/test-management/configuration-library-mobile/4dabcb0-image_3.png)
 
 3. 上記の**新しい構成を追加する**セクションの手順に基づいて、基本設定と詳細設定を変更します。
-4. **Change** をクリックします。\
+4. **Change** をクリックします。
+
 構成が変更されます。
 
 ### テスト構成の削除
@@ -175,9 +189,12 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **Configuration Library** が表示されます。
 
-2. 削除したいテスト構成の行をクリックします。\
+2. 削除したいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
-3. **Delete** アイコンをクリックします。\
+
+3. **Delete** アイコンをクリックします。
+
 ![Configuration Library で Delete アイコンをクリックしてテスト構成の削除を実行する画面](/images/test-management/configuration-library-mobile/138a8ac-image_2.png)
 
 :::note
@@ -186,5 +203,6 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 確認ダイアログが表示されます。
 
-4. **Delete** をクリックします。\
+4. **Delete** をクリックします。
+
 構成が **Configuration Library** から削除されます。

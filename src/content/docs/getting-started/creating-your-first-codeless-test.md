@@ -56,17 +56,21 @@ Testim でテストを作成する際は、対象の Web サイトを開いて�
 ![Start A New Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/d42b2ee-gettingstarted4.png)
 
 3. **Your app URL** フィールドにデモサイトの URL「[demo.testim.io](https://demo.testim.io)」を入力し、**Create Test** をクリックします。
+
 新しいブラウザウィンドウが開き、Space & Beyond サイトが表示されます。このウィンドウが **Application Under Test (AUT)** です。このウィンドウで行った操作が記録され、Testim のテストとして保存されます。
+
 4. AUT のブラウザで任意のユーザー名とパスワードを使ってログインします。
 
 ![Space & Beyond のログイン画面](/images/getting-started/creating-your-first-codeless-test/7baa100-login.png)
 
 5. Testim エディターのブラウザに戻ります。
+
 Space & Beyond サイトで実行した手順がテストウィンドウ上にアクションの一覧として表示されます。各ボックスはテスト手順のステップで、左上のアイコンは実行したアクションの種類（クリック、テキスト入力、スクロールなど）を示します。
 
 ![記録されたステップ一覧](/images/getting-started/creating-your-first-codeless-test/bcf55a9-steps.png)
 
 6. **Save** をクリックします。
+
 **Save Test** ウィンドウが表示されます。
 
 ![Save Test ウィンドウ](/images/getting-started/creating-your-first-codeless-test/f78c409-savetest.png)
@@ -76,6 +80,7 @@ Space & Beyond サイトで実行した手順がテストウィンドウ上に�
 :::
 
 7. **Name** フィールドに `Space & Beyond Demo 01` と入力し、**OK** をクリックします。
+
 テストが保存され、最初のテストが完成しました！
 
 ## 検証（バリデーション）の追加
@@ -89,11 +94,13 @@ Space & Beyond サイトで実行した手順がテストウィンドウ上に�
 ![Testim の + ボタン](/images/getting-started/creating-your-first-codeless-test/177c8fc-plus.png)
 
 2. **"M"**（Testim の定義済みステップ）をクリックします。
+
 定義済みステップのメニューが開きます。
 
 ![定義済みステップのメニュー](/images/getting-started/creating-your-first-codeless-test/03388a3-stepsmenu.png)
 
 3. **Validations** をクリックします。
+
 Validation セクションが展開されます。
 
 ![Validations セクション](/images/getting-started/creating-your-first-codeless-test/12dda9f-validations.png)
@@ -114,6 +121,7 @@ Validation セクションが展開されます。
 ![Save ボタン](/images/getting-started/creating-your-first-codeless-test/84d3a25-savetest1.png)
 
 2. **Message** フィールドにテストバージョンの説明（任意）を入力し、**OK** をクリックします。
+
 検証を追加したテストが保存されました。次はテストを実行してみましょう。
 
 ## テストの実行

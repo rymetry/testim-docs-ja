@@ -33,12 +33,14 @@ keywords:
 
 ![アクションオプションメニュー](/images/validations/custom-code/ba79996-Testim_283a_r.png)
 
-2. "**M**"（Testim の事前定義ステップ）をクリックします。\
+2. "**M**"（Testim の事前定義ステップ）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Predefined steps メニュー](/images/validations/custom-code/dc5c5d1-Testim_270_r.png)
 
-3. **Validations**（または **Actions**）をクリックします。\
+3. **Validations**（または **Actions**）をクリックします。
+
 **Validations**（または **Actions**）メニューが展開されます。
 
 ![Validations メニュー展開](/images/validations/custom-code/e14660a-Testim_271_r.png)
@@ -54,9 +56,12 @@ keywords:
 ![Add Step ウィンドウ](/images/validations/custom-code/4f2e39a-Testim_215_r.png)
 
 5. **Name the new step** にステップ名を入力します。
-6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンのままにし（既定）、**Select shared step** のフォルダーを選択します。共有しない場合はオフにします。\
+6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンのままにし（既定）、**Select shared step** のフォルダーを選択します。共有しない場合はオフにします。
+
 共有ステップについては [Groups](/docs/editing-tests/groups) を参照してください。
-7. **Create Step** をクリックします。\
+
+7. **Create Step** をクリックします。
+
 **function** エディターと右側の **Properties** パネルが開きます。
 
 ![function エディターと Properties パネル](/images/validations/custom-code/5d95f6a-Testim_284.png)

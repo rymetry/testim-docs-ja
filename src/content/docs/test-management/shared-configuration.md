@@ -69,7 +69,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 - **OS** セクションで、ドロップダウン矢印をクリックして、希望するオペレーティングシステムを選択します。
 - **Resolution** セクションで、ドロップダウン矢印をクリックして、希望する解像度を選択します。
 
-4. **Advanced** をクリックします。\
+4. **Advanced** をクリックします。
+
 詳細構成オプションが表示されます。\
 ![テスト構成の詳細設定セクションで Native Events の動作を設定する画面](/images/test-management/shared-configuration/eac30c0-advancednative.jpg)
 
@@ -87,7 +88,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/advanced-editing/hooks) を参照してください。
 
-9. **Add** をクリックします。\
+9. **Add** をクリックします。
+
 構成が作成され、**Configuration Library** に追加されます。
 
 ### テスト構成のクローン作成
@@ -100,7 +102,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Configuration Library** が表示されます。
 
-2. クローンしたいテスト構成の行をクリックします。\
+2. クローンしたいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
 
 ![選択したテスト構成の行にコンテキストツールが表示されている画面](/images/test-management/shared-configuration/b2ffc88-Testim_590a.png)
@@ -118,7 +121,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 ![Edit Name ダイアログで構成の新しい名前を入力する画面](/images/test-management/shared-configuration/53958a2-Testim_591_r.png)
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
-5. **Clone** をクリックします。\
+5. **Clone** をクリックします。
+
 構成がクローンされ、**Configuration Library** に表示されます。
 
 ### テスト構成の変更
@@ -131,7 +135,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Configuration Library** が表示されます。
 
-2. 変更したいテスト構成の行をダブルクリックします。\
+2. 変更したいテスト構成の行をダブルクリックします。
+
 **Edit Config** 設定が表示されます。
 
 ![Edit Config 画面でブラウザや解像度など構成詳細を編集する画面](/images/test-management/shared-configuration/7ef3c8f-editconfig.jpg)
@@ -143,7 +148,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 - **OS** セクションで、ドロップダウン矢印をクリックして、希望するオペレーティングシステムを選択します。
 - **Resolution** セクションで、希望する解像度を選択します。
 
-4. **Advanced** をクリックします。\
+4. **Advanced** をクリックします。
+
 詳細構成オプションが表示されます。
 
 ![Edit Config 画面で Native Events やその他の詳細オプションを変更する画面](/images/test-management/shared-configuration/6780665-editconfig2.jpg)
@@ -152,7 +158,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 6. **Native Events** セクションでは、このテスト構成のみのクリックステップの処理方法のデフォルト設定を別の設定で上書きできます。デフォルトでは、プロジェクトレベルで、クリックステップはデフォルトでネイティブまたは非ネイティブイベントを使用するように構成されています。「クリックステップ」は合格したのに、クリックが実際には実行されなかったためにテストが失敗することがあります。考えられる解決策は、テストのクリックステップを反対の構成で構成することです（つまり、ネイティブの代わりに非ネイティブ、またはその逆）。すべてのクリックステップの構成を個別に変更する代わりに、デフォルトのネイティブ/非ネイティブ構成を上書きするテスト構成を作成し、この構成でテストを実行して、反対の設定が問題を解決したかどうかを確認できます。デフォルトの Native events 設定を上書きするには、**Apply to click steps** チェックボックスを選択します。
 7. **Click event type** では、現在のデフォルト設定が表示されます。このテスト構成のデフォルト設定を上書きするには、ドロップダウンメニューをクリックして、他の値を選択します（例: **Native click event** だった場合は、**Non-native click event** を選択します）。
 8. **Before/After hooks** セクションで、必要に応じて設定を変更します。詳細については、[Before & after hooks](/docs/advanced-editing/hooks) を参照してください。
-9. **Change** をクリックします。\
+9. **Change** をクリックします。
+
 構成が変更されます。
 
 ### テスト構成の名前変更
@@ -165,7 +172,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Configuration Library** が表示されます。
 
-2. 名前を変更したいテスト構成の行をクリックします。\
+2. 名前を変更したいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
 
 ![選択された構成行にコンテキストツールが表示されている Configuration Library 画面](/images/test-management/shared-configuration/815c253-Testim_590a.png)
@@ -183,7 +191,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 ![Edit Name 設定で構成の新しい名前を入力するダイアログ](/images/test-management/shared-configuration/3519685-Testim_593_r.png)
 
 4. **New name** フィールドに、この構成の新しい名前を入力します。
-5. **OK** をクリックします。\
+5. **OK** をクリックします。
+
 構成の名前が変更されます。
 
 ### テスト構成の削除
@@ -196,7 +205,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 **Configuration Library** が表示されます。
 
-2. 削除したいテスト構成の行をクリックします。\
+2. 削除したいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
 
 ![選択された構成に対して Delete アイコンを使用できる状態を示すコンテキストツールバー](/images/test-management/shared-configuration/2917eb3-Testim_590a.png)
@@ -213,7 +223,8 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 
 ![構成削除の確認内容が表示された Delete 確認ダイアログ](/images/test-management/shared-configuration/ac8e414-Testim_592_r.png)
 
-4. **Delete** をクリックします。\
+4. **Delete** をクリックします。
+
 構成が **Configuration Library** から削除されます。
 
 ## 構成ライブラリのフィルタリング
@@ -274,5 +285,6 @@ Web プロジェクト内では、すべての構成セットが構成ライブ�
 ![Change Message ウィンドウで今回の変更内容を Message 欄に入力する画面](/images/test-management/shared-configuration/990d848-Testim_601_r.png)
 
 6. **Message** フィールドに、必要に応じて、このバージョンで行われた変更の説明を入力します。
-7. **OK** をクリックします。\
+7. **OK** をクリックします。
+
 テストが保存されます。**Configuration** 設定の **Name** フィールドに名前を入力した場合、構成は **Configuration Library** に一覧表示されます。

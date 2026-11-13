@@ -119,6 +119,7 @@ keywords:
 ![ブレークポイントの挿入](/images/debugging/debugging-controls/4531fad-breakpoint1.png)
 
 - **仮想ブレークポイント** - デバッグコントロールの使用時にシステムが自動的に作成するブレークポイント（ステップイン、ステップアウト、ステップオーバー、一時停止など）。仮想ブレークポイントは、点滅する強調表示された矢印で表されます。
+
 ![仮想ブレークポイント](/images/debugging/debugging-controls/64f42cc-breakpoint2.png)
 
 ## デバッグ付きでローカル実行

@@ -40,12 +40,14 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 
 ![ステップ追加矢印](/images/validations/html-attribute-validation/c3f0d75-Testim_236a.png)
 
-4. 再び **（矢印記号）** にカーソルを合わせ、"**M**"（Testim 定義済みステップ）をクリックします。\
+4. 再び **（矢印記号）** にカーソルを合わせ、"**M**"（Testim 定義済みステップ）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![ステップ追加矢印](/images/validations/html-attribute-validation/0bd37d9-Testim_237_r.png)
 
-5. **Validations** をクリックします。\
+5. **Validations** をクリックします。
+
 **Validations** メニューが展開されます。
 
 ![検証](/images/validations/html-attribute-validation/e3e4f2e-Testim_238_r.png)
@@ -56,7 +58,8 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 メニュー上部の検索ボックスで **Validate HTML attribute** を検索することもできます。
 :::
 
-7. **AUT** ウィンドウで、HTML 属性を検証したい対象要素を特定し、クリックして選択します。\
+7. **AUT** ウィンドウで、HTML 属性を検証したい対象要素を特定し、クリックして選択します。
+
 **HTML Attribute Validation** フォームが表示されます。
 
 ![検証](/images/validations/html-attribute-validation/4a3f8b9-Testim_239_r.png)
@@ -68,8 +71,10 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 **Expected value** には正規表現も使用できます。たとえば、リンクの URL（`href` 属性）が安全なプロトコルで始まるかを確認するには、`/^https/` のような正規表現を指定します。
 :::
 
-10. **OK** をクリックします。\
+10. **OK** をクリックします。
+
 **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
+
 11. 検証ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
 
 ### 「disabled」属性の検証
@@ -79,15 +84,18 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 
 1. 上記の手順 1～6 を実行します。
 
-2. **AUT** ウィンドウで、「disabled」HTML 属性を検証したい対象要素を特定し、クリックして選択します。\
+2. **AUT** ウィンドウで、「disabled」HTML 属性を検証したい対象要素を特定し、クリックして選択します。
+
 **HTML Attribute Validation** フォームが表示されます。
 
 3. **Attribute name** に `disabled` を入力します。
 
 4. **Expected value** には値を入力しません。  
+
 ![HTML](/images/validations/html-attribute-validation/a78b8f5-image.png)
 
-5. **OK** をクリックします。\
+5. **OK** をクリックします。
+
 **Editor** に「Validate HTML attribute」ステップが追加され、ステップ内に選択要素のサムネイルが表示されます。
 ![検証](/images/validations/html-attribute-validation/a1bbe4a-image_1.png)
 
@@ -109,8 +117,10 @@ HTML 属性検証では、要素の任意の HTML 属性（_href_、_src_、_alt
 
 ![CLI](/images/validations/html-attribute-validation/1272545-Testim_241a_r.png)
 
-5. **AUT** ウィンドウで、新しく選択したい要素を特定し、クリックします。\
+5. **AUT** ウィンドウで、新しく選択したい要素を特定し、クリックします。
+
 選択された要素が **Properties** パネルの **Target element** ボックスに表示されます。
+
 6. **Properties** パネルの **Attribute name** フィールドに、新しい要素の属性名を入力します。
 7. **Properties** パネルの **Expected value** フィールドに、新しい属性の期待値を入力します。
 

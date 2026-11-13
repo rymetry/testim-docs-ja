@@ -72,7 +72,8 @@ exports.config = {
 
 設定ファイルには次の要素が含まれます。
 
-- CLI フラグ: テストの実行方法を指示します。設定ファイルで使えるフラグは、[CLI フラグ](/docs/running-tests/the-command-line-cli)に記載のプロパティをすべてサポートします。\
+- CLI フラグ: テストの実行方法を指示します。設定ファイルで使えるフラグは、[CLI フラグ](/docs/running-tests/the-command-line-cli)に記載のプロパティをすべてサポートします。
+
 プロパティ名の書式は CLI とは少し異なり、ハイフン（-）をキャメルケースに置き換えます。\
 例: `--base-url` → `baseUrl`
 
