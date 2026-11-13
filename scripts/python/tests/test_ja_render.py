@@ -89,9 +89,24 @@ def test_tilde_fence_keeps_callout_marker_as_code():
 
 def test_fence_inside_list_item_keeps_callout_marker_as_code():
     html = render_ja_markdown("- ```\n  :::note\n  ```\n")
-    assert "<div" not in html
+    assert "<div" not in html and "<pre>" in html and ":::note" in html
 
 
 def test_info_string_line_does_not_close_fence():
     html = render_ja_markdown("```\n```js\n:::note\n```\n")
     assert "data-line" not in html and "<pre>" in html
+
+
+def test_markdown_after_callout_close_is_parsed():
+    html = render_ja_markdown(":::note\nbody\n:::\n**bold**\n")
+    assert html.endswith("</div>\n<p><strong>bold</strong></p>\n")
+
+
+def test_data_line_counts_frontmatter_lines():
+    html = render_ja_markdown("---\nt: 1\n---\n\n:::note\nx\n:::\n")
+    assert 'data-line="5"' in html
+
+
+def test_thematic_break_without_frontmatter_keeps_both_paragraphs():
+    html = render_ja_markdown("a\n\n---\n\nb\n")
+    assert "<hr" in html and "<p>a</p>" in html and "<p>b</p>" in html

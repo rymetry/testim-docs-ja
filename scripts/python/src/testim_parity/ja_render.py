@@ -49,7 +49,7 @@ def render_ja_markdown(body: str) -> str:
         elif (o := _OPEN.match(line)) is not None:
             out += [f'<div class="callout-{o[1]}" data-line="{n + 1}">', ""]
         elif _CLOSE.match(line):
-            out += ["", "</div>"]
+            out += ["", "</div>", ""]
         elif first_content and _H1.match(line):
             pass  # title H1 は frontmatter 直後の最初の非空行のみ
         else:
