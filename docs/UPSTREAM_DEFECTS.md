@@ -20,7 +20,7 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-006 | Search limitations の `-variable` 誤記 | `typo` | applied | 2026-04-18 登録 |
 | UD-007 | Random data の `step.This` 誤記 | `typo` | applied | 2026-04-18 登録 |
 | UD-008 | Chrome マイク設定の CLI index 自己リンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-18 登録 |
-| UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
+| UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | recovered / archived (absorbed by extractor) | M2 PR D |
 | UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5 + VSTS broken step-2/3 extension) |
 | UD-012 | データ駆動テストのセクション相互参照 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-013 | Hidden parameters の親ページへのリンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
@@ -231,30 +231,22 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
-### UD-009: `index.htm` self-link miswire in grid-management child pages
+### UD-009: grid-management 子ページの `index.htm` リンク
 
-- **Patch IDs**: `UD-009-grid-management-index-self-link`
-- **Defect class**: `href-miswire`
-- **Added**: 2026-04-18
-- **Applied**: 2026-04-18 (M2 PR D — Integrations area burn-down; renumbered from originally-proposed UD-005 due to ID collision with C's UD-005 mixed stale-reference/index.htm family in hooks & parameters)
-- **Review after**: 2026-10-18
-- **Affected slugs** (5):
+- **補正 ID**: `UD-009-grid-management-index-self-link`（削除済み）
+- **欠陥分類**: `href-miswire`
+- **登録日 / 確認期限**: 2026-04-18 / 2026-10-18
+- **対象 slug**:
   - `integrations/grid-management/browserstack-integration`
   - `integrations/grid-management/lambdatest-integration`
   - `integrations/grid-management/custom-grid`
   - `integrations/grid-management/headspin-integration`
   - `integrations/grid-management/saucelabs-integration`
-- **Defect**: 5 つの grid-management 子ページの「Adding a grid」相互参照リンクが、親ページへのリンクとして `<a href="index.htm#adding-a-grid">Adding a grid</a>` を使用している。MadCap Flare の convention では `index.htm` は folder の TOC/index ページに解決されると期待されるが、実際の親 topic は 1 階層上の `integrations/grid-management.htm` に存在する。`integrations/grid-management/` フォルダ内には `index.htm` は存在しない (実測確認済)。
-- **過去の症状（UD-009 適用前）**: `normalizeUrlToken` が broken `index.htm` を `/docs/index` token に変換する一方、JA 側は WRITING_GUIDE §192 に従い正しい `/docs/integrations/grid-management#adding-a-grid` を維持しているため、parity gate で `segment-extra + segment-missing` のペアが発生していた (当時の baseline は 10 entries, 5 slug × 2)。これは適用前の観測記録であり、現在の baseline 件数ではない。2026-10-23 の全件検証では baseline entries は 0。
-- **JA side**: JA markdown は WRITING_GUIDE §91-109 / §192 に従い `/docs/integrations/grid-management#adding-a-grid` を canonical target とする。これは JA 独自構造ではなく、§192 で明示的に許容された URL localization。
-- **Fix applied**:
-  - `UD-009-grid-management-index-self-link`: `<a href="index.htm#adding-a-grid">Adding a grid</a>` → `<a href="../grid-management.htm#adding-a-grid">Adding a grid</a>` (5 slug 共通、literal 1-to-1)
-  - `normalizeUrlToken` は patched relative `../grid-management.htm` を `/docs/integrations/grid-management` token に変換するため、JA 側 token と一致する。
-- **Status**: `applied`
-- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD — 5 ページ共通の MadCap authoring pattern)
-- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
-  1. 5 slug の EN HTML snapshot を再取得
-  2. 全5ページの Adding a grid リンク先を確認し、実際に修復されたページの範囲だけを削除候補にする。
+- **欠陥 / 補正内容**: 5つの子ページの「Adding a grid」リンクが `<a href="index.htm#adding-a-grid">` を使用している。この `index.htm` は同じフォルダの `integrations/grid-management/index.htm`、つまり Grid management のカテゴリページ（`docs/SIDEBAR_URLS.md` 参照）で、`adding-a-grid` アンカーは親スナップショット `integrations/grid-management.html` に存在する。上流の誤配線ではなく、チェッカーが basename だけでリンクを解決していたために `/docs/index` と読んでいた。以前の「存在しない index.htm」という説明は誤りだった。
+- **状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が `../grid-management/index.htm#adding-a-grid` に解決し、JA の `/docs/integrations/grid-management#adding-a-grid` と同じ token になるため、補正はレジストリから削除済み。2026-11-13 に補正を外して `npm run check:parity` が 0 件であることを確認）。
+- **JA 側**: JA は WRITING_GUIDE §192 に従い `/docs/integrations/grid-management#adding-a-grid` を維持している。
+- **Tricentis への報告状況**: 不要（上流の欠陥ではない）。
+- **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
 ### UD-010: MadCap authoring-artifact family (ZWSP + literal-markdown-prefix-in-paragraph)
 
@@ -482,8 +474,8 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 ### 2026-11-13 — 検証済み補正の更新
 
 - 確認内容: `npm run check:snapshots:fetch` で全288ページのライブ EN ページを取得し（エラー0、コミット済みスナップショットとの差分なし）、`npm run check:upstream-recovery` で各補正の `find` がライブページに一致することを確認した。
-- 結果: 上流は未修正。対象17件はすべて `statusA: active`（stale 0）。
-- 更新対象: UD-001A, UD-001B, UD-002, UD-003, UD-005A, UD-005B, UD-005C, UD-005D, UD-006, UD-007, UD-009, UD-010A, UD-010B, UD-010C, UD-010D, UD-012, UD-021。
+- 結果: 上流は未修正。対象16件はすべて `statusA: active`（stale 0）。
+- 更新対象: UD-001A, UD-001B, UD-002, UD-003, UD-005A, UD-005B, UD-005C, UD-005D, UD-006, UD-007, UD-010A, UD-010B, UD-010C, UD-010D, UD-012, UD-021。
 - 設定値: `lastVerifiedAt` を 2026-11-13、`reviewAfter` を 2027-05-13（181 日後、上限 184 日以内）に更新した。
 - 対象外: UD-016A/B, UD-017, UD-018A/B/C, UD-019, UD-020 は更新せず、期限超過のまま削除手順に回す。UD-024, UD-025 は今週追加分。
 

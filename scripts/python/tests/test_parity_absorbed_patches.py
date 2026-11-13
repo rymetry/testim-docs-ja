@@ -65,7 +65,6 @@ def test_no_slug_skips_rewrite():
 @pytest.mark.parametrize(
     "patch_prefix, slug",
     [
-        ("UD-009", "integrations/grid-management/custom-grid"),
         (
             "UD-012",
             "advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor",
@@ -80,6 +79,23 @@ def test_patches_still_apply_before_link_rewrite(patch_prefix, slug):
     )
     raw = (_SNAPSHOTS / f"{slug}.html").read_bytes().decode("utf-8")
     assert patch["replace"] in preprocess_en_html(raw, slug=slug)
+
+
+@pytest.mark.real_repo
+@pytest.mark.parametrize(
+    "child",
+    [
+        "browserstack-integration",
+        "lambdatest-integration",
+        "custom-grid",
+        "headspin-integration",
+        "saucelabs-integration",
+    ],
+)
+def test_grid_management_children_link_to_parent_category(child):
+    slug = f"integrations/grid-management/{child}"
+    raw = (_SNAPSHOTS / f"{slug}.html").read_bytes().decode("utf-8")
+    assert 'href="../grid-management/index.htm#adding-a-grid"' in preprocess_en_html(raw, slug=slug)
 
 
 @pytest.mark.real_repo
