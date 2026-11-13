@@ -101,7 +101,8 @@ Log in ステップが追加され、**Object**ペインが表示されます。
 10. **+** ボタンをクリックして、別のステップを追加します。
 11. **Salesforce steps**タブの下で、**Record Operations**をクリックし、次に**Create**ステップをクリックします。このステップは、**Object**と**Record**を作成します。
 12. ステップの**Object**ペインで、**Select the Object**の下で、**Account**を選択します。
-13. **Select Record Type**フィールドが表示される場合（環境の構成に依存）、利用可能なオプションのいずれかを選択します。\
+13. **Select Record Type**フィールドが表示される場合（環境の構成に依存）、利用可能なオプションのいずれかを選択します。
+
 **Customer Account**フォームがペインに表示されます。
 
 ![スクリーンショット](/images/salesforce-testing/salesforce-testing-getting-started/d6e7105-createv2.png)
@@ -123,7 +124,8 @@ Log in ステップが追加され、**Object**ペインが表示されます。
 新しいテストを作成したり既存のテストを変更したりする場合は、必ずテストを保存してください。最初にテストを保存せずにブラウザを閉じると、作業内容が失われます。
 :::
 
-22. **Name**フィールドに「Create account」と入力し、**OK**をクリックします。\
+22. **Name**フィールドに「Create account」と入力し、**OK**をクリックします。
+
 テストが保存されます。\
 おめでとうございます、最初のテストを作成しました！
 

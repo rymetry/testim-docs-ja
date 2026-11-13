@@ -46,12 +46,14 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/9b114f6-Testim_566.png)
 
-2. “**M**”（Testim predefined steps）をクリックします。\
+2. “**M**”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/c70c927-Testim_544_r.png)
 
-3. **Salesforce** をクリックします。\
+3. **Salesforce** をクリックします。
+
 **Salesforce** メニューが展開されます。
 
 ![Salesforce 自動ログインステップのスクリーンショット](/images/special-steps/salesforce-auto-login-step/cedf632-Testim_545_r.png)
@@ -78,7 +80,8 @@ Salesforce 側で二要素認証（2FA/MFA）が有効な場合、テストを�
 
 9. **Login URL** に環境のログイン URL を入力します。
 10. **Username** と **Password** に認証情報を入力します。
-11. MFA を使う場合は [Setting up MFA](/docs/advanced-editing/salesforce-auto-login-step#mfa-のセットアップ) に従います。\
+11. MFA を使う場合は [Setting up MFA](/docs/advanced-editing/salesforce-auto-login-step#mfa-のセットアップ) に従います。
+
 これで設定は完了です。
 
 ### パラメーターの使用
@@ -94,8 +97,10 @@ MFA のシークレットキーはパラメーターとして扱えません。
 1. 次のいずれかの方法でパラメーターを定義します。
 - **テストデータにパラメーターを追加** – テストの最初のステップである **Setup** ステップに **Test Data** を追加してパラメーターを定義します。詳細な手順は [Configuring a data driven test from the visual editor](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
 - **設定ファイルにパラメーターを追加** – [Configuration file](/docs/running-tests/configuration-file-run-hooks) にパラメーターを追加します。詳細は [Configuring Data Driven Tests using the Config file](/docs/advanced-editing/data-driven-testing#データ駆動テストの一般的な用途) を参照してください。
-- **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。\
+- **カスタムステップにパラメーターを追加** – カスタムステップを作成してパラメーターを追加します。詳細は [Parameters in custom JavaScript steps](/docs/advanced-editing/parameters/parameters-in-custom-javascript-steps) を参照してください。
+
 その後、エクスポート機能を使ってパラメーターを _Salesforce auto-login_ ステップ、またはテストレベルに渡します。詳細は [Exports Parameters](/docs/advanced-editing/parameters/exports-parameters) を参照してください。
+
 2. _Salesforce auto-login_ ステップの **URL**、**Username**、**Password** フィールドに、定義したパラメーターを設定します。
 
 ## MFA のセットアップ

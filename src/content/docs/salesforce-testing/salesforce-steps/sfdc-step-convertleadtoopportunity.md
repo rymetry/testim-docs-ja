@@ -30,7 +30,8 @@ keywords:
 
 1. テストで、**リードを商談に変換**ステップの前に、目的のリードレコードにナビゲートするステップを追加します。詳細については、[テスト実行中に特定の Salesforce レコードを検索して表示する](/docs/salesforce-testing/methods-for-displaying-a-specific-record-during-test-execution)を参照してください。
 2. **+** ボタンをクリックしてステップを追加します。
-3. **Salesforce ステップ**タブの下で、**CPQ 操作**をクリックし、**リードを商談に変換**ステップを選択します。\
+3. **Salesforce ステップ**タブの下で、**CPQ 操作**をクリックし、**リードを商談に変換**ステップを選択します。
+
 **リードを商談に変換**ステップが追加され、次の**オブジェクト**プロパティが表示されます。
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-convertleadtoopportunity/f408a44-2024-05-05_19-30-37.png)

@@ -51,12 +51,14 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/d3b6f5e-Testim_202a_r.png)
 
-2. “**M**”（Testim predefined steps）をクリックします。\
+2. “**M**”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/42edd22-Testim_203_r.png)
 
-3. **Actions** をクリックします。\
+3. **Actions** をクリックします。
+
 **Actions** メニューが展開されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/bab0fb0-Testim_204_r.png)
@@ -101,12 +103,14 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/8a64224-Testim_202a_r.png)
 
-2. “**M**”（Testim predefined steps）をクリックします。\
+2. “**M**”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9634744-Testim_203_r.png)
 
-3. **Actions** をクリックします。\
+3. **Actions** をクリックします。
+
 **Actions** メニューが展開されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/0e28a9c-Testim_204_r.png)
@@ -121,7 +125,8 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/fc68884-Testim_205_r.png)
 
-5. **Use cookie parameter** ラジオボタンを選択します。\
+5. **Use cookie parameter** ラジオボタンを選択します。
+
 **Parameter Name** フィールドが表示されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/3d4b48c-Testim_218.png)
@@ -150,7 +155,8 @@ Cookie の値は、手入力または Get Cookie で取得したパラメータ�
 **Setup** ステップをダブルクリックするか、画面右上の **Show step properties** アイコンをクリックしても同じパネルを開けます。
 :::
 
-2. オプションをスクロールして **Test Data** をクリックします。\
+2. オプションをスクロールして **Test Data** をクリックします。
+
 JavaScript エディターが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f222a38-Testim_212.png)
@@ -198,17 +204,20 @@ return {
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/abbdb56-Testim_202a_r.png)
 
-2. “**M**”（Testim predefined steps）をクリックします。\
+2. “**M**”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/2042807-Testim_203_r.png)
 
-3. **Actions** をクリックします。\
+3. **Actions** をクリックします。
+
 **Actions** メニューが展開されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/bf34029-Testim_204_r.png)
 
-4. 下にスクロールして **Add custom action** を選択します。\
+4. 下にスクロールして **Add custom action** を選択します。
+
 **Add Step** ウィンドウが表示されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f0ba274-Testim_215_r.png)
@@ -219,7 +228,8 @@ return {
 
 5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
 6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダーを選択します（既定値）。このステップを共有したくない場合はチェックを外します。
-7. **Create Step** をクリックします。\
+7. **Create Step** をクリックします。
+
 **JS Editor** と右側の **Custom Action Properties** パネルが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/17ff9b7-Testim_216.png)
@@ -288,12 +298,14 @@ Testim では、Cookie の値を変数に代入することで Cookie を「取�
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/42c6ecf-Testim_202a_r.png)
 
-2. “**M**”（Testim predefined steps）をクリックします。\
+2. “**M**”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/f95fa58-Testim_203_r.png)
 
-3. **Actions** をクリックします。\
+3. **Actions** をクリックします。
+
 **Actions** メニューが展開されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/ab4f1d0-Testim_204_r.png)
@@ -345,17 +357,20 @@ Get Cookie ステップを使わなくても、custom action ステップ内の 
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/4daa9d3-Testim_202a_r.png)
 
-2. “**M**”（Testim predefined steps）をクリックします。\
+2. “**M**”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/ab3aebb-Testim_203_r.png)
 
-3. **Actions** をクリックします。\
+3. **Actions** をクリックします。
+
 **Actions** メニューが展開されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/9030d32-Testim_204_r.png)
 
-4. 下にスクロールして **Add custom action** を選択します。\
+4. 下にスクロールして **Add custom action** を選択します。
+
 **Add Step** ウィンドウが表示されます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/295c84e-Testim_215_r.png)
@@ -366,7 +381,8 @@ Get Cookie ステップを使わなくても、custom action ステップ内の 
 
 5. **Name the new step** フィールドに、このステップの分かりやすい名前を入力します。
 6. 他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** のチェックを維持し、保存先フォルダーを選択します（既定値）。共有不要ならチェックを外します。
-7. **Create Step** をクリックします。\
+7. **Create Step** をクリックします。
+
 **JS Editor** と **Custom Action Properties** パネルが開きます。
 
 ![Cookie 機能のスクリーンショット](/images/advanced-features/cookies/895c71a-Testim_221.png)

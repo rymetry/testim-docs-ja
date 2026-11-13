@@ -183,5 +183,6 @@ keywords:
 ![Clone Test ダイアログでターゲットプロジェクトを選択する画面](/images/test-management/cloning-tests/cd000a2-image_1.png)
 
 4. **Tests to be cloned** で、クローンしたいテストを選択します。
-5. **Confirm** をクリックします。\
+5. **Confirm** をクリックします。
+
 テストが選択したプロジェクトにクローンされます。Testim は元のテストの名前を使用してテストに名前を付けます。例: 「Copy of [元のテスト名]」。

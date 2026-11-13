@@ -57,7 +57,8 @@ Testim は組織構造を提供しており、**Company**（「アカウント�
 ![+ Teammate ボタンをクリックした後の招待フォーム](/images/project-user-management/project-and-user-management/b9302f5-invite_teammates.png)
 
 3. これらのユーザーがアクセスできるプロジェクトを選択するには、プロジェクト名の横にある + ボタンをクリックします。
-4. **Invite** をクリックします。\
+4. **Invite** をクリックします。
+
 ユーザーは、アカウントを有効化するための招待メールを受け取ります。
 
 ### 企業チームメイトの削除

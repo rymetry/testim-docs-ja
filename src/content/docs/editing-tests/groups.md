@@ -32,7 +32,8 @@ keywords:
 3. **Group Name** フィールドにグループ名を入力します。
 4. このグループをプロジェクト内の他のテストでも使用可能にする場合は、**Shared Group** チェックボックスをオンにします。
 5. 自動グループ化を有効にする場合は、**Apply auto group on matching steps** をオンにし、[Auto-grouping](/docs/editing-tests/groups/auto-grouping) の手順に従います。
-6. **Confirm** をクリックします。\
+6. **Confirm** をクリックします。
+
 ステップは 1 つのグループステップにまとめられます。グループがテスト間で共有されている場合は **Shared** インジケーターが表示されます。
 
 ![共有グループインジケーター](/images/groups/groups/86a6a5f-Screen_Shot_2021-04-07_at_8.16.06.png)
@@ -178,12 +179,14 @@ keywords:
 
 ![アクションオプション](/images/groups/groups/e8714ed-Untitled.png)
 
-2. **フォルダー**（Shared steps）をクリックします。\
+2. **フォルダー**（Shared steps）をクリックします。
+
 Shared steps メニューが開きます。
 
 ![Shared steps メニュー](/images/groups/groups/f27f1ea-Testim_070.png)
 
-3. グループ名をクリックして新しいステップとして追加します。\
+3. グループ名をクリックして新しいステップとして追加します。
+
 グループがエディターにステップとして追加されます。
 
 :::note
@@ -208,12 +211,14 @@ Shared steps メニューが開きます。
 
 ![アクションメニュー](/images/groups/groups/f510425-Testim_072a.png)
 
-2. **フォルダー**（Shared steps）をクリックします。\
+2. **フォルダー**（Shared steps）をクリックします。
+
 Shared steps メニューが開きます。
 
 ![共有ステップ一覧](/images/groups/groups/caf4176-Testim_070.png)
 
-3. グループ名をクリックして新しいステップとして追加します。\
+3. グループ名をクリックして新しいステップとして追加します。
+
 グループがエディターにステップとして追加されます。
 
 :::note
@@ -266,7 +271,8 @@ Shared steps メニューが開きます。
 
 1. **Test Lists > Shared Steps** に移動
 2. グループを選択
-3. 上部メニューまたはコンテキストメニューの **Hide** をクリック\
+3. 上部メニューまたはコンテキストメニューの **Hide** をクリック
+
 選択した共有ステップが共有ライブラリから非表示になります。既にテストに追加済みのステップには影響しません。
 
 ![共有ステップの非表示設定](/images/groups/groups/35bff41-Untitled.png)
@@ -286,5 +292,6 @@ Shared steps メニューが開きます。
 ![新しいグループ名の入力](/images/groups/groups/96ed6f2-replaceclone2.PNG)
 
 4. 新しいステップを共有として定義するかどうかを選択します。
-5. **Confirm** をクリックします。\
+5. **Confirm** をクリックします。
+
 グループとそのすべてのステップがクローンされます。共有ステップや入れ子のステップは共有のまま維持されます。

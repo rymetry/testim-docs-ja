@@ -110,10 +110,14 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **テスト構成をクローンするには:**
 
-1. 左側のメニューで、**Runs > Configuration List** に移動します。\
+1. 左側のメニューで、**Runs > Configuration List** に移動します。
+
 **Configuration Library** が表示されます。
-2. クローンしたいテスト構成の行をクリックします。\
+
+2. クローンしたいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
+
 3. **Clone** アイコンをクリックします。
 
 ![Configuration Library でテスト構成を選択し Clone アイコンをクリックする画面](/images/test-management/configuration-library-mobile/1e505f5-image.png)
@@ -123,7 +127,8 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 :::
 
 4. **Name** フィールドに、クローンされた構成の名前を入力します。
-5. **Clone** をクリックします。\
+5. **Clone** をクリックします。
+
 構成がクローンされ、**Configuration Library** に表示されます。
 
 ### テスト構成の名前変更
@@ -134,8 +139,10 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **Configuration Library** が表示されます。
 
-2. 名前を変更したいテスト構成の行をクリックします。\
+2. 名前を変更したいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
+
 3. **Rename** アイコンをクリックします。
 
 :::note
@@ -147,7 +154,8 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 ![Edit Name ダイアログでテスト構成の新しい名前を入力する画面](/images/test-management/configuration-library-mobile/b9a1933-image_1.png)
 
 4. **New name** フィールドに、この構成の新しい名前を入力します。
-5. **OK** をクリックします。\
+5. **OK** をクリックします。
+
 構成の名前が変更されます。
 
 ### テスト構成の変更
@@ -158,13 +166,15 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **Configuration Library** が表示されます。
 
-2. 変更したいテスト構成の行をダブルクリックします。\
+2. 変更したいテスト構成の行をダブルクリックします。
+
 **Edit Config** 設定が表示されます。
 
 ![既存のテスト構成をダブルクリックして Edit Config 画面を開いた状態](/images/test-management/configuration-library-mobile/4dabcb0-image_3.png)
 
 3. 上記の**新しい構成を追加する**セクションの手順に基づいて、基本設定と詳細設定を変更します。
-4. **Change** をクリックします。\
+4. **Change** をクリックします。
+
 構成が変更されます。
 
 ### テスト構成の削除
@@ -175,8 +185,10 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 **Configuration Library** が表示されます。
 
-2. 削除したいテスト構成の行をクリックします。\
+2. 削除したいテスト構成の行をクリックします。
+
 コンテキストツールが表示されます。
+
 3. **Delete** アイコンをクリックします。\
 ![Configuration Library で Delete アイコンをクリックしてテスト構成の削除を実行する画面](/images/test-management/configuration-library-mobile/138a8ac-image_2.png)
 
@@ -186,5 +198,6 @@ SauceLabs 固有のルールの詳細については、[SauceLabs Test Configura
 
 確認ダイアログが表示されます。
 
-4. **Delete** をクリックします。\
+4. **Delete** をクリックします。
+
 構成が **Configuration Library** から削除されます。

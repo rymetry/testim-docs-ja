@@ -29,9 +29,11 @@ Testim Copilot ヘルプアシスタント機能は、生成 AI 技術を使用�
 ![質問を入力](/images/overview/help-ai-assistant/8243ad1-image_7.png)
 5. または、提案された質問のいずれかをクリックします。\
 ![提案された質問](/images/overview/help-ai-assistant/5c13977-question.png)
-6. Enter キーを押すか、**送信**ボタンをクリックします。\
+6. Enter キーを押すか、**送信**ボタンをクリックします。
+
 回答が生成されて表示されます。\
 ![回答が表示される](/images/overview/help-ai-assistant/166ab74-answer.png)
+
 7. **リソースと例を表示** をクリックしてビューを展開し、ドキュメント、関連テスト、ビデオへのリンクを表示します。\
 ![リソースと例](/images/overview/help-ai-assistant/da4666a-resources.png)
 8. **コピー**アイコンをクリックして回答をコピーします。

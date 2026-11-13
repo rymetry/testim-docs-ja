@@ -38,7 +38,8 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 1. Testim for Salesforce で、**New Branch**アイコンを選択します。
 2. **New branch name**フィールドに、ブランチの名前を入力します。
 3. **Salesforce environment**フィールドで、ドロップダウンメニューから Salesforce 環境を選択します
-4. **OK**をクリックします。\
+4. **OK**をクリックします。
+
 すべてのブランチは、Salesforce > Environments の下に表示されます。また、画面上部のブランチ検索ドロップダウンでも利用できます。
 
 ## ブランチのマージ
@@ -48,8 +49,10 @@ Testim for Salesforce の各テスト環境は、次の設定で構成されて�
 ![操作手順アニメーション](/images/salesforce-testing/create-and-merge-branches-from-different-test-environments/2c34ad0-mergebranch.gif)
 
 1. Testim for Salesforce で、ブランチ検索ドロップダウンから、マージするブランチを選択します。
-2. マージアイコンをクリックします。\
+2. マージアイコンをクリックします。
+
 Merge Branch ダイアログが表示されます。
+
 3. マージする前に変更を確認します。
 4. マージ後にブランチを削除する場合は、`Delete branch<branch_name> upon merge` のチェックボックス（`<branch_name>` は対象ブランチ名）を選択します。
 5. **Merge**をクリックします。

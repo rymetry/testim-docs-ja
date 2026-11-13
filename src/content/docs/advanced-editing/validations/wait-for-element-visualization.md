@@ -58,12 +58,14 @@ RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切�
 
 ![Run test ボタン](/images/visual-validations/wait-for-element-visualization/25f5431-Testim_277b.png)
 
-4. 再び **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。\
+4. 再び **（矢印記号）** にカーソルを合わせ、「**M**」（Testim 定義済みステップ）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![Predefined steps メニュー](/images/visual-validations/wait-for-element-visualization/2ab8794-Testim_270_r.png)
 
-5. **Wait For** をクリックします。\
+5. **Wait For** をクリックします。
+
 **Wait For** メニューが展開されます。
 
 ![Wait For メニュー](/images/visual-validations/wait-for-element-visualization/1140ec5-Testim_278_r.png)
@@ -74,10 +76,12 @@ RCA および Ultrafast Test Cloud（追加環境の追加）機能は、適切�
 メニュー上部の検索ボックスから **Wait for element visualization** を検索することもできます。
 :::
 
-7. **AUT** ウィンドウで、待機したい要素を特定し、クリックして選択します。\
+7. **AUT** ウィンドウで、待機したい要素を特定し、クリックして選択します。
+
 「Wait for element visualization」ステップが**エディター**に追加され、選択した要素のサムネイルがステップに表示されます。
 
 ![エディターに追加されたステップ](/images/visual-validations/wait-for-element-visualization/974471e-Testim_279a.png)
 
-8. 待機ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。\
+8. 待機ステップの後にある **Toggle Breakpoint** ボタンをクリックしてブレークポイントを削除します。
+
 テストを実行すると、要素のビジュアルがベースラインと比較されます。ビジュアル検証の失敗でステップが失敗した場合は、失敗した Wait for element visualization ステップをダブルクリックして Applitools Eyes で詳細を確認してください。

@@ -27,7 +27,8 @@ keywords:
 **追加手順:**
 
 1. 記録中に **Mirroring Toolbar** の **More actions** をクリック。
-2. **Set Geolocation** を選択します。\
+2. **Set Geolocation** を選択します。
+
 ステップ設定画面が表示されます。
 
 ![ジオロケーション設定ステップのスクリーンショット](/images/special-steps/set-geolocation/d7ff4c5-geo1.png)

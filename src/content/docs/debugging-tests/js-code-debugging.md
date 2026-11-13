@@ -67,6 +67,7 @@ AUT が**Code Debugging**メッセージとともに表示されます。\
 次のメッセージが表示されます。\
 ![スクリプト実行結果のメッセージ](/images/debugging/js-code-debugging/f4a1bde-message.jpg)
 
-9. **Go back to the editor**リンクをクリックします。\
+9. **Go back to the editor**リンクをクリックします。
+
 フォーカスが Testim エディターに戻り、デバッグされたステップの後に仮想ブレークポイントが表示されます。この時点で、デバッグプロセスを続行するか、変更を加えたテストを保存できます。\
 ![仮想ブレークポイントの表示](/images/debugging/js-code-debugging/80326c6-virtual.jpg)
