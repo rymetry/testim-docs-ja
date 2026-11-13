@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-10-23 確認済み、補正27件を維持）
+- **Status**: Active（2026-11-13 確認済み、有効な補正26件）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -182,7 +182,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - UD-005D: `doc:https://help.testim.io/docs/exports-parameters` → `exports-parameters.htm` (sibling path)
   - UD-005E (archived: absorbed by extractor): `and the <a href="index.htm">Params file</a>` → `and the <a href="../parameters/index.htm">Params file</a>` (preamble-disambiguated in preface paragraph)
   - UD-005F (archived: absorbed by extractor): `<a href="index.htm">params-file's parameters</a>` → `<a href="../parameters/index.htm">params-file's parameters</a>` (disambiguated by display text in list item)
-- **JA side**: JA was already using the canonical `/docs/<category>/<basename>` and `/docs/advanced-editing/parameters` paths per WRITING_GUIDE §91-109. For UD-005F the JA list-item link `/docs/advanced-editing/parameters/json-parameters-file-parameters` was corrected to `/docs/advanced-editing/parameters` to match the EN `index.htm` self-reference semantics (as a companion content-fix).
+- **JA side**: JA was already using the canonical `/docs/<category>/<basename>` and `/docs/advanced-editing/parameters` paths per WRITING_GUIDE §91-109. For the (now archived) UD-005F case the JA list-item link `/docs/advanced-editing/parameters/json-parameters-file-parameters` was corrected to `/docs/advanced-editing/parameters` to match the EN `index.htm` self-reference semantics (a JA content fix made while that patch existed; it is no longer tied to an active patch).
 - **E/F の状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が親カテゴリ index に解決するため、E/F の補正はレジストリから削除済み）。A–D は active。
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
@@ -227,6 +227,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone`
 - **欠陥 / 補正内容**: 単独の `<a href="index.htm">CLI command</a>` が親 CLI カテゴリ index を指す。補正では `../the-command-line-cli/index.htm` を指定していた。
+- **JA 側の履歴**: 登録当時、JA の冒頭段落には CLI command への導入文が欠けていたため、補正と同時に復元した（現在の JA は復元済み）。
 - **状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が親カテゴリ index に解決するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: 不要（抽出器が吸収したため削除済み）。

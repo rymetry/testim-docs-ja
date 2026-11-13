@@ -1,7 +1,7 @@
 """EN 側 artifact registry (slug-scope, token) + runtime coverage 集計器。
 
 ``scripts/lib/parity_artifact_registry.mjs`` の port。EN ページ固有の artifact
-(self-index link、demo placeholder link 等) で、JA 側で修復不可能なものを
+(demo placeholder link 等) で、JA 側で修復不可能なものを
 ``(slug, token)`` ペアで記録し、``segment-token-gap`` の検出を抑止するための静的
 レジストリ。literal 照合のみ — glob / regex は使わない。
 

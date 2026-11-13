@@ -231,7 +231,9 @@ _BARE_INDEX_LINK_RE = re.compile(r'href="index\.htm(#[^"]*)?"')
 def _rewrite_bare_index_links(html: str, slug: str) -> str:
     """MadCap の bare ``href="index.htm"`` を親カテゴリ index への相対 path に書き換える。
 
-    bare ``index.htm`` は同フォルダの index ではなく親カテゴリ index を指す。
+    同フォルダの ``index.htm`` は親カテゴリページそのもの (``a/b/c`` なら ``a/b``)。
+    checker は basename でリンクを解決するため、フォルダ名を ``../<parent>/index.htm`` と
+    明示して ``/docs/<parent の slug>`` に正規化させる。
     slug が 1 segment のページは親を持たないので触らない。
     """
     parts = slug.split("/")
