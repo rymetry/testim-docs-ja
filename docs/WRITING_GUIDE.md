@@ -107,6 +107,7 @@ keywords:
 補足:
 
 - アンカー付きリンクは `/docs/{folder}/{slug}#section-name` 形式を使用する
+- 見出しの ID を固定したい場合は、見出し末尾に `{#section-name}` を付ける（例: `## パラメーターの使用 {#using-parameters}`）。ID は空白を含めず、ページ内で一意にする（重複はビルドエラー）。付けない見出しの ID は見出しテキストから自動生成される
 - 本文中の `https://docs.tricentis.com/testim/content/.../{slug}.htm` は、対応する JA ファイルが存在する場合 `/docs/{folder}/{slug}` に変換する（HTML `<a href>` 含む）
 - スラグが実在するファイルを指しているか必ず検証する。英語原文側でスラグがリネームされている場合があるため、ファイル名との突き合わせが必要
 
