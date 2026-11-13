@@ -473,11 +473,19 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - 各 entry は `reviewAfter` 日付を持つ (通常 addedAt + 6 ヶ月)
 - `reviewAfter` 超過した場合:
   1. Tricentis への報告 status 再確認
-  2. Upstream fix 未完了なら `reviewAfter` を延長せず、`priority=high` のセクション別 paydown 計画と再確認証跡を記録する (`OPS_DESIGN.md` / `PARITY_GUIDE.md` に従う)
+  2. Upstream fix 未完了なら、ライブの上流ページで欠陥が残っていることを再検証した場合に限り更新する。`lastVerifiedAt` に検証日を記録し、`reviewAfter` は `lastVerifiedAt` から最大 184 日後まで（validator が強制）。検証できない entry、欠陥が解消した entry は更新せず削除手順に回す。checker 都合で存在する patch は対象外。検証記録は下記 Registry triage log に残す
   3. Upstream fix 完了なら[共通の削除確認手順](#共通の削除確認手順)を実行する。overdue は実際の負債解消まで残す
 - Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
+
+### 2026-11-13 — 検証済み補正の更新
+
+- 確認内容: `npm run check:snapshots:fetch` で全288ページのライブ EN ページを取得し（エラー0、コミット済みスナップショットとの差分なし）、`npm run check:upstream-recovery` で各補正の `find` がライブページに一致することを確認した。
+- 結果: 上流は未修正。対象17件はすべて `statusA: active`（stale 0）。
+- 更新対象: UD-001A, UD-001B, UD-002, UD-003, UD-005A, UD-005B, UD-005C, UD-005D, UD-006, UD-007, UD-009, UD-010A, UD-010B, UD-010C, UD-010D, UD-012, UD-021。
+- 設定値: `lastVerifiedAt` を 2026-11-13、`reviewAfter` を 2027-05-13（181 日後、上限 184 日以内）に更新した。
+- 対象外: UD-016A/B, UD-017, UD-018A/B/C, UD-019, UD-020 は更新せず、期限超過のまま削除手順に回す。UD-024, UD-025 は今週追加分。
 
 ### 2026-10-23 — issue #449 の期限超過補正の再確認
 

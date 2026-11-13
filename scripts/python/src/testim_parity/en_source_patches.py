@@ -28,7 +28,8 @@ patch を追加・更新する。700+ 行の HTML fragment を Python dict に i
       "rationale": "MadCap authoring typo ...",  // 人間向け説明
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-001",  // tracker link
       "addedAt": "2026-04-17",               // ISO date
-      "reviewAfter": "2026-10-17"            // 6-month review due date
+      "lastVerifiedAt": "2026-11-13",        // optional: 更新時にライブ上流で欠陥残存を確認した日
+      "reviewAfter": "2027-05-13"            // review due date (lastVerifiedAt があれば +184 日以内)
     }
   ]
 }

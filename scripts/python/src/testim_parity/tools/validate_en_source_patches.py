@@ -12,6 +12,8 @@ Phase 6b cutover 以降、``_en_source_patches_data.json`` が en_source_patches
     * ``replace`` が string (空でもよい — "削除" を意味する)
     * ``addedAt`` / ``reviewAfter`` が ISO8601 date (``YYYY-MM-DD``)
     * ``reviewAfter`` が ``addedAt`` より後
+    * 任意 ``lastVerifiedAt`` (ISO date) がある場合、``reviewAfter`` は
+      ``lastVerifiedAt`` + 184 日以内 (検証済み更新の上限)
     * ``linkedDefect`` が ``docs/UPSTREAM_DEFECTS.md#UD-...`` 形式
 
 CI ``python-fast`` job の required step として registered。patch 追加時の編集ミスを
@@ -26,7 +28,7 @@ import argparse
 import json
 import re
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +52,7 @@ _REQUIRED_PATCH_KEYS: frozenset[str] = frozenset(
 )
 _ID_RE = re.compile(r"^[A-Z]{1,3}-\d{3}[A-Z]?(?:-[a-z0-9][a-z0-9-]*)*$")
 _LINKED_DEFECT_RE = re.compile(r"^docs/[A-Z_]+\.md(?:#[A-Z]{1,4}-\d{3})?$")
+_MAX_RENEWAL_DAYS = 184
 _ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
@@ -152,6 +155,23 @@ def validate_data(data: Any) -> list[str]:
 
         if added_date is not None and review_date is not None and review_date <= added_date:
             errors.append(f"{ctx}: reviewAfter ({review}) must be after addedAt ({added})")
+
+        verified = entry.get("lastVerifiedAt")
+        if verified is not None:
+            verified_date = (
+                _parse_iso_date(verified, context=ctx) if isinstance(verified, str) else None
+            )
+            if verified_date is None:
+                errors.append(
+                    f"{ctx}: lastVerifiedAt must be ISO date YYYY-MM-DD (got {verified!r})"
+                )
+            elif review_date is not None and review_date > verified_date + timedelta(
+                days=_MAX_RENEWAL_DAYS
+            ):
+                errors.append(
+                    f"{ctx}: reviewAfter ({review}) exceeds lastVerifiedAt ({verified}) + "
+                    f"{_MAX_RENEWAL_DAYS} days"
+                )
 
     return errors
 

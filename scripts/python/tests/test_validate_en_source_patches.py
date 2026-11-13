@@ -111,6 +111,22 @@ class TestValidateData:
         errors = v.validate_data(bad)
         assert any("addedAt must be ISO date" in e for e in errors)
 
+    @staticmethod
+    def _entry(**overrides: str) -> dict:
+        return {"defectClasses": ["typo"], "patches": [{**_VALID_MIN["patches"][0], **overrides}]}
+
+    def test_renewal_within_window_is_valid(self) -> None:
+        data = self._entry(lastVerifiedAt="2026-11-10", reviewAfter="2027-05-13")
+        assert v.validate_data(data) == []
+
+    def test_renewal_beyond_window_is_rejected(self) -> None:
+        data = self._entry(lastVerifiedAt="2026-11-10", reviewAfter="2027-05-14")
+        assert any("184 days" in e for e in v.validate_data(data))
+
+    def test_entry_without_last_verified_keeps_existing_rules(self) -> None:
+        data = self._entry(addedAt="2026-04-17", reviewAfter="2026-10-17")
+        assert v.validate_data(data) == []
+
     def test_review_after_before_added_at_fails(self) -> None:
         bad = {**_VALID_MIN}
         bad["patches"] = [
