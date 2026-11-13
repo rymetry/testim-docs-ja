@@ -94,3 +94,11 @@ def test_no_category_index_snapshot_has_bare_index_link():
         if 'href="index.htm' in (_SNAPSHOTS / f"{s}.html").read_text(encoding="utf-8")
     ]
     assert offenders == []
+
+
+def test_in_page_mobile_actions_link_is_not_rewritten():
+    slug = "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test"
+    raw = (_SNAPSHOTS / f"{slug}.html").read_bytes().decode("utf-8")
+    out = preprocess_en_html(raw, slug=slug)
+    assert 'href="#supported-mobile-actions"' in out
+    assert "index.htm#supported-mobile-actions" not in out

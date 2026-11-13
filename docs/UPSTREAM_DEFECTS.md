@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-10-23 確認済み、補正26件を維持）
+- **Status**: Active（2026-10-23 確認済み、補正27件を維持）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -34,6 +34,7 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-021 | Validate download の壊れた PDF 表行 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-022 | Jenkins Docker の末尾にある ZWSP 段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 | UD-024 | Agentic Test Automation for Salesforce の壊れた `index.htm/#/` リンク | `href-miswire` | applied | 2026-11-13 登録 |
+| UD-025 | Local mobile test の補足アクションへの `index.htm#supported-mobile-actions` miswire | `href-miswire` | applied | 2026-11-13 登録 |
 
 UD-011 に対応する有効なレジストリ項目はない。今回の確認では、この ID の割当・再利用は行わない。
 
@@ -429,6 +430,19 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`
 - **欠陥 / 補正内容**: 「manually adding or recording steps」のリンクが `index.htm/#/` という壊れた href を持つ。補正では `index.htm` に直し、後段の bare `index.htm` 書き換え規則が親カテゴリ index に解決する。
+- **状態**: `applied`。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-025: Local mobile test のページ内リンクが親ページを指す miswire
+
+- **補正 ID**: `UD-025-local-mobile-test-supported-actions-index-miswire`
+- **欠陥分類**: `href-miswire`
+- **登録日 / 確認期限**: 2026-11-13 / 2027-05-13
+- **対象 slug**:
+  - `recording-tests/recording-a-mobile-test/recording-a-local-mobile-test`
+- **欠陥 / 補正内容**: 手順 8 の「Supported Mobile Actions」リンクが `index.htm#supported-mobile-actions` で親カテゴリページに解決されるが、該当セクションはこのページ自身にある (親ページに anchor なし)。補正では `#supported-mobile-actions` のページ内リンクにする。
+- **JA 側**: JA は既にページ内リンク `#サポートされているモバイルアクション` を保持している。
 - **状態**: `applied`。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。

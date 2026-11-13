@@ -350,6 +350,19 @@
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-024",
       "addedAt": "2026-11-13",
       "reviewAfter": "2027-05-13"
+    },
+    {
+      "id": "UD-025-local-mobile-test-supported-actions-index-miswire",
+      "slugs": [
+        "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test"
+      ],
+      "defectClass": "href-miswire",
+      "find": "href=\"index.htm#supported-mobile-actions\"",
+      "replace": "href=\"#supported-mobile-actions\"",
+      "rationale": "Upstream MadCap href miswire: step 8 links to `index.htm#supported-mobile-actions`, which resolves to the parent category page, but the Supported Mobile Actions section is on this page itself (h3 anchor supported-mobile-actions); the parent page has no such anchor. Patch turns it into the in-page link, which the bare-index rule leaves alone. JA already uses the in-page link.",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-025",
+      "addedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     }
   ]
 }
