@@ -320,7 +320,26 @@ EN snapshot           →  JA 翻訳
 - 番号付きステップ数は原文に合わせる（merge/split で調整）
 - 原文で step 配下に nested list がある場合、本文へ圧縮せず nested list のまま維持する
 - 箇条書きの内容を 1 paragraph や 1 list item に統合して bullet 数を減らさない
-- EN が list item の間に独立した段落を置いている場合、JA も `item` / 空行 / 段落 / 空行 / 次の `item` で分離する。item 行末の `\` と、段落を直後の行に続ける書き方は使わない（Markdown では段落が item 内の hard break になり、EN と構造が異なる）。EN が1つのブロック内でテキスト行の間に `<br />` を持つ場合（`<br />` の後に同じ `<p>` または `<li>` のテキストが続く場合）の hard break 保持（`TRANSLATION_GUIDE.md`）はこの規則の対象外。ブロック末尾の `<br />` は例外に当たらない
+- EN が list item の間に独立した段落を置いている場合、JA も `item` / 空行 / 段落 / 空行 / 次の `item` で分離する。item 行末の `\` と、段落を直後の行に続ける書き方は使わない（Markdown では段落が item 内の hard break になり、EN と構造が異なる）。EN が1つのブロック内でテキスト行の間に `<br />` を持つ場合（`<br />` の後に同じ `<p>` または `<li>` のテキストが続く場合）の hard break 保持（`TRANSLATION_GUIDE.md`）はこの規則の対象外。ブロック末尾の `<br />` は例外に当たらない item 行の直後に画像行を続ける場合も同様に、「Callout 規則」節の「画像の前後には必ず空行を入れる」に従って分離する。これは [PARITY_GUIDE.md §Source-first 例外の canonical registry](./PARITY_GUIDE.md#source-first-例外の-canonical-registry) の #2「Flat-list split」の適用である。
+
+❌ NG（段落が item 内の hard break になる）:
+
+```text
+1. 設定を保存します。\
+右側にパネルが表示されます。
+2. 次の手順
+```
+
+✅ OK:
+
+```text
+1. 設定を保存します。
+
+右側にパネルが表示されます。
+
+2. 次の手順
+```
+
 - **list item 内に `:::callout` directive を書かない**（lint `callout-in-list-item` で強制）。Python の JA parser は line-based state machine で list context を追跡しないため、indented callout は ambiguous に flatten される。callout を使いたい場合は list の外（top-level）に出す。該当ページの EN 原文で `<div class="note">` 等が list item 内にある場合は、list を一旦閉じて callout、その後別 list として再開する構造にする
 
 #### list item の indent 設計 (EN parser 対称化、Issue #368)
