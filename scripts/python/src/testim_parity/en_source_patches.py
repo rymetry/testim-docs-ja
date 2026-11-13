@@ -29,7 +29,7 @@ patch を追加・更新する。700+ 行の HTML fragment を Python dict に i
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-001",  // tracker link
       "addedAt": "2026-04-17",               // ISO date
       "lastVerifiedAt": "2026-11-13",        // optional: 更新時にライブ上流で欠陥残存を確認した日
-      "reviewAfter": "2027-05-13"            // review due date (lastVerifiedAt があれば +184 日以内)
+      "reviewAfter": "2027-05-13"            // lastVerifiedAt + 184 日以内
     }
   ]
 }
