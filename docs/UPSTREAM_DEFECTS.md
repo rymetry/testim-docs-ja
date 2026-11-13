@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-10-23 確認済み、補正30件を維持）
+- **Status**: Active（2026-10-23 確認済み、補正26件を維持）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -16,15 +16,15 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-002 | Salesforce Steps "Log out" href miswire | `href-miswire` | applied | (initial v1) |
 | UD-003 | broken-table-row-as-paragraph (predefined-properties) | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-004 | legacy `help.testim.io` stale-reference (scheduler pages) | `stale-reference` | recovered / archived | 2026-04-25 整理 |
-| UD-005 | hooks / parameters の旧参照と index リンク | `stale-reference` (A–D), `madcap-artifact` (E–F) | applied | 2026-04-18 登録 |
+| UD-005 | hooks / parameters の旧参照と index リンク | `stale-reference` (A–D), `madcap-artifact` (E–F) | applied (A–D) / recovered / archived (E–F, absorbed by extractor) | 2026-04-18 登録 |
 | UD-006 | Search limitations の `-variable` 誤記 | `typo` | applied | 2026-04-18 登録 |
 | UD-007 | Random data の `step.This` 誤記 | `typo` | applied | 2026-04-18 登録 |
-| UD-008 | Chrome マイク設定の CLI index 自己リンク | `madcap-artifact` | applied | 2026-04-18 登録 |
+| UD-008 | Chrome マイク設定の CLI index 自己リンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-18 登録 |
 | UD-009 | `index.htm` self-link miswire in grid-management child pages | `href-miswire` | applied | M2 PR D |
 | UD-010 | MadCap authoring-artifact family (ZWSP / escaped-detail fragment / broken-table-row variants) | `madcap-artifact` | applied | M2 UD-010 bundle (codeship broken h2 + parameters-for-groups broken step-5 + VSTS broken step-2/3 extension) |
 | UD-012 | データ駆動テストのセクション相互参照 | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-013 | Hidden parameters の親ページへのリンク | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-014 | Auto grouping の親ページへのリンク | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-013 | Hidden parameters の親ページへのリンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
+| UD-014 | Auto grouping の親ページへのリンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 | UD-015 | Run hooks の ZWSP だけを含む空段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 | UD-016 | Subscription plans の localhost トークンのマークアップ | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-017 | API assertion の段落内改行による余分な段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
@@ -33,6 +33,7 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-020 | Salesforce トラブルシューティングの画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-021 | Validate download の壊れた PDF 表行 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-022 | Jenkins Docker の末尾にある ZWSP 段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
+| UD-024 | Agentic Test Automation for Salesforce の壊れた `index.htm/#/` リンク | `href-miswire` | applied | 2026-11-13 登録 |
 
 UD-011 に対応する有効なレジストリ項目はない。今回の確認では、この ID の割当・再利用は行わない。
 
@@ -178,9 +179,10 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   - UD-005B: analogous fix for `configuration-file-parameters` display-text in the same paragraph (fragment stripped — `normalizeUrlForParity` retains fragments on `https://...#frag` URLs whereas `extractInvariantTokens` strips them on `/docs/...` paths, so preserving the fragment would introduce an asymmetric token that JA — which has the fragment-stripped href-derived form — would not match)
   - UD-005C: analogous fix for `loops` display-text on `advanced-editing/parameters` (fragment stripped, same rationale as UD-005B)
   - UD-005D: `doc:https://help.testim.io/docs/exports-parameters` → `exports-parameters.htm` (sibling path)
-  - UD-005E: `and the <a href="index.htm">Params file</a>` → `and the <a href="../parameters/index.htm">Params file</a>` (preamble-disambiguated in preface paragraph)
-  - UD-005F: `<a href="index.htm">params-file's parameters</a>` → `<a href="../parameters/index.htm">params-file's parameters</a>` (disambiguated by display text in list item)
+  - UD-005E (archived: absorbed by extractor): `and the <a href="index.htm">Params file</a>` → `and the <a href="../parameters/index.htm">Params file</a>` (preamble-disambiguated in preface paragraph)
+  - UD-005F (archived: absorbed by extractor): `<a href="index.htm">params-file's parameters</a>` → `<a href="../parameters/index.htm">params-file's parameters</a>` (disambiguated by display text in list item)
 - **JA side**: JA was already using the canonical `/docs/<category>/<basename>` and `/docs/advanced-editing/parameters` paths per WRITING_GUIDE §91-109. For UD-005F the JA list-item link `/docs/advanced-editing/parameters/json-parameters-file-parameters` was corrected to `/docs/advanced-editing/parameters` to match the EN `index.htm` self-reference semantics (as a companion content-fix).
+- **E/F の状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が親カテゴリ index に解決するため、E/F の補正はレジストリから削除済み）。A–D は active。
 - **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
 - **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
   1. `snapshots/en/content/advanced-editing/hooks.html`, `.../parameters.html`, `.../parameters/parameter-override-rules.html` を再取得
@@ -216,21 +218,17 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
   1. `snapshots/en/content/guides/generate-random-data-with-js.html` を再取得
   2. step と This の文境界が修復され、両方の文が保持されていることを確認する。
 
-### UD-008: `index.htm` CLI self-link in running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone
+### UD-008: Chrome マイク設定の CLI index 自己リンク
 
-- **Patch ID**: `UD-008-allow-chrome-microphone-cli-index-self-link`
-- **Defect class**: `madcap-artifact`
-- **Added**: 2026-04-18
-- **Review after**: 2026-10-18
-- **Affected slugs** (1):
+- **補正 ID**: `UD-008-allow-chrome-microphone-cli-index-self-link`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-04-18 / 2026-10-18
+- **対象 slug**:
   - `running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone`
-- **Defect**: Same class as UD-005E/F — bare `<a href="index.htm">CLI command</a>` self-link to the parent CLI category index page. The parity extractor resolves `index.htm` to the non-existent slug `index`, emitting a bogus `/docs/index` invariant token that JA (once content is restored to include the CLI command link) does not have.
-- **Fix applied**: `read here about the <a href="index.htm">CLI command</a>` → `read here about the <a href="../the-command-line-cli/index.htm">CLI command</a>`
-- **JA side**: JA first paragraph was missing the sentence introducing the CLI command flag; restored as a companion content-fix so JA also emits `/docs/running-tests/the-command-line-cli`.
-- **Tricentis upstream report status**: _pending_ (担当: JA Docs subsystem, 報告 ticket TBD)
-- **Removal SOP**: [共通の削除確認手順](#共通の削除確認手順)に従い、原文の目視確認、対象ページの parity、回帰テストの期待値、台帳のアーカイブ、レジストリ変更時のレビューを実施する。
-  1. `snapshots/en/content/running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone.html` を再取得
-  2. CLI command リンクが意図した親 CLI ページを指していることを確認する。
+- **欠陥 / 補正内容**: 単独の `<a href="index.htm">CLI command</a>` が親 CLI カテゴリ index を指す。補正では `../the-command-line-cli/index.htm` を指定していた。
+- **状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が親カテゴリ index に解決するため、補正はレジストリから削除済み）。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
 ### UD-009: `index.htm` self-link miswire in grid-management child pages
 
@@ -311,9 +309,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `advanced-editing/parameters/hidden-parameters`
 - **欠陥 / 補正内容**: parameters リンクが単独の index.htm を使用している。補正では ../parameters/index.htm を指定し、意図した親 Parameters ページに解決する。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が親カテゴリ index に解決するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
 ### UD-014: Auto grouping の親ページへのリンク
 
@@ -323,9 +321,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `editing-tests/groups/auto-grouping`
 - **欠陥 / 補正内容**: Group リンクが単独の index.htm を使用している。補正では ../groups/index.htm を指定し、意図した親 Groups ページに解決する。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by extractor（`preprocess_en_html` の bare `index.htm` 書き換え規則が親カテゴリ index に解決するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
 ### UD-015: Run hooks の ZWSP だけを含む空段落
 
@@ -422,6 +420,18 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **状態**: `recovered / archived`。理由: absorbed by extractor（`extract_segments_from_html` が空段落を無視するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: 不要（抽出器が吸収したため削除済み）。
+
+### UD-024: Agentic Test Automation for Salesforce の壊れた `index.htm/#/` リンク
+
+- **補正 ID**: `UD-024-agentic-salesforce-manual-steps-malformed-index-link`
+- **欠陥分類**: `href-miswire`
+- **登録日 / 確認期限**: 2026-11-13 / 2027-05-13
+- **対象 slug**:
+  - `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`
+- **欠陥 / 補正内容**: 「manually adding or recording steps」のリンクが `index.htm/#/` という壊れた href を持つ。補正では `index.htm` に直し、後段の bare `index.htm` 書き換え規則が親カテゴリ index に解決する。
+- **状態**: `applied`。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
 
 ## 共通の削除確認手順
 

@@ -23,28 +23,8 @@ from typing import Any
 # MappingProxyType で、意図しない runtime mutation をエラーにする。
 # ``slugs`` は **tuple** で保持する (mjs は Array、JSON serialize 可能にするため
 # frozenset は避ける)。膜判定は ``slug in entry["slugs"]`` で O(n) だが、現行
-# registry は 2 entry × 最大 7 slug なので実用上問題ない。
+# registry は 1 entry × 1 slug なので実用上問題ない。
 _ENTRY_1: MappingProxyType[str, Any] = MappingProxyType(
-    {
-        "slugs": (
-            "editing-tests/conditions/advanced-conditions-settings",
-            "integrations/visual-validation/visual_validation_index",
-            "recording-tests/recording-a-mobile-test/recording-a-local-mobile-test",
-            "salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce",
-            "salesforce-testing/salesforce-steps/sfdc-step-login",
-            "testops/insights/dashboard",
-            "testops/insights/reports",
-        ),
-        "token": "/docs/index",
-        "reason": "en-side-self-index-link-artifact",
-        "note": "EN ページ内 self-link (/docs/index) の artifact",
-        "expectedIssueType": "segment-token-gap",
-        "addedAt": "2026-04-15",
-        "linkedIssue": None,
-    }
-)
-
-_ENTRY_2: MappingProxyType[str, Any] = MappingProxyType(
     {
         "slugs": ("getting-started/creating-your-first-codeless-test",),
         "token": "http://google.com",
@@ -56,7 +36,7 @@ _ENTRY_2: MappingProxyType[str, Any] = MappingProxyType(
     }
 )
 
-ARTIFACT_REGISTRY: tuple[MappingProxyType[str, Any], ...] = (_ENTRY_1, _ENTRY_2)
+ARTIFACT_REGISTRY: tuple[MappingProxyType[str, Any], ...] = (_ENTRY_1,)
 
 
 def is_artifact_excluded(*, slug: str, token: str) -> bool:

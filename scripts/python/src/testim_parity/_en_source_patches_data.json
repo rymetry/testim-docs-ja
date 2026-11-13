@@ -101,32 +101,6 @@
       "reviewAfter": "2026-10-18"
     },
     {
-      "id": "UD-005E-parameter-override-rules-params-file-index-preface",
-      "slugs": [
-        "advanced-editing/parameters/parameter-override-rules"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "and the <a href=\"index.htm\">Params file</a>",
-      "replace": "and the <a href=\"../parameters/index.htm\">Params file</a>",
-      "rationale": "Upstream EN uses a bare \"index.htm\" relative self-link for the parent Parameters category index page. The parity extractor normalizes \"index.htm\" to the literal slug \"index\" (not present in docs), producing a bogus /docs/index invariant token. Patch prepends the explicit ../parameters/ directory hop so normalizeUrlToken resolves to /docs/advanced-editing/parameters matching JA. Literal find is anchored with \"and the\" preamble to disambiguate from the identical href in the list item below (patched by UD-005F).",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
-      "id": "UD-005F-parameter-override-rules-params-file-index-listitem",
-      "slugs": [
-        "advanced-editing/parameters/parameter-override-rules"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<a href=\"index.htm\">params-file's parameters</a>",
-      "replace": "<a href=\"../parameters/index.htm\">params-file's parameters</a>",
-      "rationale": "Same defect class as UD-005E (bare \"index.htm\" → bogus /docs/index token) in the \"Before the test begins:\" list item. Display text \"params-file's parameters\" disambiguates the occurrence from the preface paragraph. After patch, normalizeUrlToken emits /docs/advanced-editing/parameters matching JA.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-005",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
       "id": "UD-006-search-within-a-test-email-variable-typo",
       "slugs": [
         "editing-tests/search-within-a-test"
@@ -136,19 +110,6 @@
       "replace": "<p>Generate email address - variable name</p>",
       "rationale": "Upstream MadCap authoring typo: missing space between \"-\" and \"variable\" in the Search limitations list item \"Generate email address -variable name\". Adjacent list items use the correct \"- variable name\" form (e.g. \"Extract value - variable name\" at index 0). Without the space, extractInvariantTokens flag regex emits a bogus \"-variable\" token that JA (which uses em-dash \"— 変数名\") does not have. Patch adds the missing space to match the adjacent items.",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-006",
-      "addedAt": "2026-04-18",
-      "reviewAfter": "2026-10-18"
-    },
-    {
-      "id": "UD-008-allow-chrome-microphone-cli-index-self-link",
-      "slugs": [
-        "running-tests/the-command-line-cli/allow-chrome-browser-to-use-microphone"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "read here about the <a href=\"index.htm\">CLI command</a>",
-      "replace": "read here about the <a href=\"../the-command-line-cli/index.htm\">CLI command</a>",
-      "rationale": "Same defect class as UD-005E/F (bare \"index.htm\" self-link → bogus /docs/index token). Page links to the parent CLI category index via a bare \"index.htm\"; extractInvariantTokens resolves it to the non-existent slug \"index\". Patch prepends the ../the-command-line-cli/ directory hop so normalizeUrlToken resolves to /docs/running-tests/the-command-line-cli, matching JA once JA content is restored to include the CLI command link.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-008",
       "addedAt": "2026-04-18",
       "reviewAfter": "2026-10-18"
     },
@@ -244,32 +205,6 @@
       "replace": "<a href=\"configuring-data-driven-tests-using-data-from-an-external-source.htm\">Data Driven tests using data from an external source</a>",
       "rationale": "Upstream MadCap cross-reference artifact: the EN callout \"As part of this method...\" links to `index.htm#section-data-driven-tests-using-data-from-an-external-source`, a MadCap TOC-stitched anchor on the non-existent category-index page. The intended target is the sibling page `configuring-data-driven-tests-using-data-from-an-external-source.htm` (which JA correctly references as `/docs/advanced-editing/data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source`). Without this patch, normalizeUrlToken emits `/docs/index` for EN vs the full canonical slug for JA, leaving token-overlap at 0 so the callout-body LCS pair fails (segment-missing + segment-extra). Same defect class as UD-005E/F/008/009 (bare `index.htm` self-reference).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-012",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
-      "id": "UD-013-hidden-parameters-index-parent-link",
-      "slugs": [
-        "advanced-editing/parameters/hidden-parameters"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "When you use <a href=\"index.htm\">parameters</a> in your tests",
-      "replace": "When you use <a href=\"../parameters/index.htm\">parameters</a> in your tests",
-      "rationale": "Upstream MadCap artifact: the preface paragraph links to the bare `index.htm` for the parent Parameters category, producing a bogus `/docs/index` invariant token. JA content correctly links to `/docs/advanced-editing/parameters`. Patch prepends the explicit `../parameters/` hop so normalizeUrlToken resolves to the same canonical `/docs/advanced-editing/parameters` path as JA. Same defect class as UD-005E/F (parameter-override-rules) on the sibling preface.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-013",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
-      "id": "UD-014-auto-grouping-index-parent-link",
-      "slugs": [
-        "editing-tests/groups/auto-grouping"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "When creating a new <a href=\"index.htm\">Group</a>",
-      "replace": "When creating a new <a href=\"../groups/index.htm\">Group</a>",
-      "rationale": "Upstream MadCap artifact: the first ordered-list-item links to the bare `index.htm` for the parent Groups category, producing a bogus `/docs/index` invariant token. JA content correctly links to `/docs/editing-tests/groups`. Patch prepends the explicit `../groups/` hop so normalizeUrlToken resolves to the same canonical `/docs/editing-tests/groups` path as JA. Same defect class as UD-005E/F/008/013.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-014",
       "addedAt": "2026-04-20",
       "reviewAfter": "2026-10-20"
     },
@@ -402,6 +337,19 @@
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-021",
       "addedAt": "2026-04-20",
       "reviewAfter": "2026-10-20"
+    },
+    {
+      "id": "UD-024-agentic-salesforce-manual-steps-malformed-index-link",
+      "slugs": [
+        "salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce"
+      ],
+      "defectClass": "href-miswire",
+      "find": "href=\"index.htm/#/\"",
+      "replace": "href=\"index.htm\"",
+      "rationale": "Upstream MadCap href miswire: the link text \"manually adding or recording steps\" points to the malformed `index.htm/#/` instead of the parent category index `index.htm`. The extractor cannot resolve `index.htm/#/` to a page. Patch restores the bare `index.htm`, which the shared bare-index rule then resolves to the parent category (salesforce-testing/create-a-salesforce-test).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-024",
+      "addedAt": "2026-11-13",
+      "reviewAfter": "2027-05-13"
     }
   ]
 }

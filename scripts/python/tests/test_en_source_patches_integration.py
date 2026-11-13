@@ -165,12 +165,12 @@ class TestBundle1JaMarkdownHygiene:
 
 class TestNoNewMechanism:
     def test_gate12_artifact_registry_shape(self) -> None:
-        """gate #12: ``ARTIFACT_REGISTRY`` は 2 entries / 合計 8 slugs。"""
-        assert len(ARTIFACT_REGISTRY) == 2, (
+        """gate #12: ``ARTIFACT_REGISTRY`` は 1 entry / 合計 1 slug。"""
+        assert len(ARTIFACT_REGISTRY) == 1, (
             "new artifact registry entries are forbidden by ONE-purpose principle"
         )
         total_slugs = sum(len(entry["slugs"]) for entry in ARTIFACT_REGISTRY)
-        assert total_slugs == 8, "slug count drift in artifact registry"
+        assert total_slugs == 1, "slug count drift in artifact registry"
 
     def test_gate13_sync_exclusions_has_no_active_entries(self) -> None:
         """gate #13: recovered source sync exclusions are removed from the registry."""
@@ -226,10 +226,10 @@ class TestStaleDetection:
         assert len(snap["byPatchIdStatus"]) == len(EN_SOURCE_PATCHES)
 
     def test_stale_scan_covers_at_least_30_unique_slugs(self) -> None:
-        """slug-driven scan が 30 slug 以上を覆うこと (回帰 guard)。"""
+        """slug-driven scan が 25 slug 以上を覆うこと (回帰 guard)。"""
         unique_slugs = {s for p in EN_SOURCE_PATCHES for s in p["slugs"]}
-        assert len(unique_slugs) >= 30, (
-            f"expected slug-driven scan to cover >=30 unique slugs (got {len(unique_slugs)})"
+        assert len(unique_slugs) >= 25, (
+            f"expected slug-driven scan to cover >=25 unique slugs (got {len(unique_slugs)})"
         )
 
     def test_every_patch_has_valid_review_after(self) -> None:
