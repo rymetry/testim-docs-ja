@@ -18,3 +18,22 @@ export default function remarkHeadingIds() {
     });
   };
 }
+
+/**
+ * rehype plugin: 同一ページ内の見出し id 重複をビルドエラーにする。`rehypeHeadingIds` の後に置く。
+ * 明示 id は slugger の重複回避を通らず、重複すると検索インデックスの文書 id も重複して
+ * クライアントの検索全体が失敗するため、ここで止める。
+ */
+export function rehypeUniqueHeadingIds() {
+  /**
+   * @param {import('hast').Root} _tree
+   * @param {import('vfile').VFile} file
+   */
+  return (_tree, file) => {
+    const seen = new Set();
+    for (const { slug } of file.data.astro?.headings ?? []) {
+      if (seen.has(slug)) file.fail(`Duplicate heading id "${slug}"`);
+      seen.add(slug);
+    }
+  };
+}

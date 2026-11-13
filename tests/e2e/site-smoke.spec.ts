@@ -134,7 +134,7 @@ test('見出しの明示的な ID 指定が id になり本文に表示されな
   const heading = page.locator('h2#using-parameters');
   await expect(heading).toHaveText('パラメーターの使用');
   await expect(heading).toBeInViewport();
-  await expect(page.getByText('{#using-parameters}')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('{#');
 });
 
 test('検索インデックスとキーボード操作が機能する', async ({ page }) => {

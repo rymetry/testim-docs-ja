@@ -1,13 +1,14 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { createMarkdownProcessor } from '@astrojs/markdown-remark';
+import { createMarkdownProcessor, rehypeHeadingIds } from '@astrojs/markdown-remark';
 
-import remarkHeadingIds from '../../src/lib/remark-heading-ids.mjs';
+import remarkHeadingIds, { rehypeUniqueHeadingIds } from '../../src/lib/remark-heading-ids.mjs';
 
 async function render(markdown) {
   const processor = await createMarkdownProcessor({
     remarkPlugins: [remarkHeadingIds],
+    rehypePlugins: [rehypeHeadingIds, rehypeUniqueHeadingIds],
     syntaxHighlight: false,
   });
   const { code, metadata } = await processor.render(markdown);
@@ -43,5 +44,36 @@ describe('remarkHeadingIds', () => {
     const { headings } = await render('## 前 {#mid} 後\n');
 
     assert.notEqual(headings[0].slug, 'mid');
+  });
+
+  it('ignores a {#id} that contains whitespace', async () => {
+    const { code } = await render('## 見出し {#a b}\n');
+
+    assert.match(code, /<h2 id="見出し-a-b">見出し \{#a b\}<\/h2>/);
+  });
+
+  it('does not take a {#id} written as trailing inline code', async () => {
+    const { code } = await render('## 記法 `{#x}`\n');
+
+    assert.match(code, /<h2 id="記法-x">記法 <code>\{#x\}<\/code><\/h2>/);
+  });
+});
+
+describe('rehypeUniqueHeadingIds', () => {
+  it('fails when two headings share an explicit id', async () => {
+    await assert.rejects(render('## A {#same}\n\n## B {#same}\n'), /Duplicate heading id "same"/);
+  });
+
+  it('fails when an explicit id collides with an automatic slug', async () => {
+    await assert.rejects(render('## setup\n\n## 概要 {#setup}\n'), /Duplicate heading id "setup"/);
+  });
+
+  it('accepts repeated heading text, which gets distinct automatic slugs', async () => {
+    const { headings } = await render('## 手順\n\n## 手順\n');
+
+    assert.deepEqual(
+      headings.map((heading) => heading.slug),
+      ['手順', '手順-1']
+    );
   });
 });
