@@ -17,6 +17,22 @@ def test_empty_paragraph_emits_no_segment(p):
     assert [s["textNorm"] for s in segments] == ["before", "after"]
 
 
+@pytest.mark.parametrize(
+    "p, text",
+    [("<p>Hi</p>", "hi"), ("<p><code>x</code></p>", "x"), ("<p>\u200bHi\u200b</p>", "hi")],
+)
+def test_non_empty_paragraph_still_emits(p, text):
+    segments = extract_segments_from_html(
+        f"<p>Before</p>{p}<p>After</p>", slug="x", callout_allow_slugs=None
+    )
+    assert len(segments) == 3 and text in segments[1]["textNorm"]
+
+
+def test_malformed_index_slash_hash_link_is_not_rewritten():
+    html = '<a href="index.htm/#/">x</a>'
+    assert _rewrite_bare_index_links(html, "a/b/c") == html
+
+
 def test_image_only_paragraph_is_unchanged():
     html = '<p>Before</p><p><img src="a.png"/></p>'
     kinds = [
@@ -100,6 +116,7 @@ def test_grid_management_children_link_to_parent_category(child):
 
 @pytest.mark.real_repo
 def test_no_category_index_snapshot_has_bare_index_link():
+    # Conservative substring guard: also flags `index.htm` hrefs with a fragment or suffix.
     slugs = {
         p.relative_to(_SNAPSHOTS).with_suffix("").as_posix() for p in _SNAPSHOTS.rglob("*.html")
     }
