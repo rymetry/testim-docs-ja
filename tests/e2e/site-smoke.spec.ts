@@ -128,6 +128,15 @@ test('記録ドキュメントの表と主要画像が本番ビルドで描画�
   ).toBeGreaterThan(0);
 });
 
+test('見出しの明示的な ID 指定が id になり本文に表示されない', async ({ page }) => {
+  await page.goto('/docs/advanced-editing/api-testing#using-parameters');
+
+  const heading = page.locator('h2#using-parameters');
+  await expect(heading).toHaveText('パラメーターの使用');
+  await expect(heading).toBeInViewport();
+  await expect(page.getByText('{#using-parameters}')).toHaveCount(0);
+});
+
 test('検索インデックスとキーボード操作が機能する', async ({ page }) => {
   await page.goto('/docs/overview/testim-overview');
 

@@ -15,6 +15,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import expressiveCode from 'astro-expressive-code';
 import rehypeWrapTable from './src/lib/rehype-wrap-table.ts';
+import remarkHeadingIds from './src/lib/remark-heading-ids.mjs';
 import { buildLegacyDocRedirects } from './src/lib/legacy-doc-redirects.mjs';
 
 // .envファイルを手動で読み込む
@@ -74,6 +75,7 @@ export default defineConfig({
       remarkPlugins: [
         remarkGfm, // GitHub Flavored Markdown (テーブル、タスクリスト、脚注など)
         remarkDirective, // カスタムディレクティブ
+        remarkHeadingIds, // 見出し末尾の {#id} を明示的な見出し ID として扱う
         [
           remarkCalloutDirectives,
           {
