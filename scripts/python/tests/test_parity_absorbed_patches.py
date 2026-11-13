@@ -19,5 +19,4 @@ def test_image_only_paragraph_is_unchanged():
         s["segmentKind"]
         for s in extract_segments_from_html(html, slug="x", callout_allow_slugs=None)
     ]
-    print(kinds)
     assert kinds == ["paragraph"]
