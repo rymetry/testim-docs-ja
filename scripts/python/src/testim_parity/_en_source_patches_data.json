@@ -274,19 +274,6 @@
       "reviewAfter": "2026-10-20"
     },
     {
-      "id": "UD-015-config-file-run-hooks-empty-zwsp-paragraph",
-      "slugs": [
-        "running-tests/configuration-file-run-hooks"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​</p>",
-      "replace": "",
-      "rationale": "Upstream MadCap authoring artifact: a stray `<p>​</p>` element (zero-width space only) sits immediately after the \"grid name\" callout in the preface. The turndown-extracted segment survives as an empty paragraph, inflating EN preface body structure to [paragraph, callout-body, paragraph] vs JA [paragraph, callout-body]. The ZWSP has no user-visible content and is an authoring residue (same ZWSP pattern as UD-010A/B/C/D and UD-011). Patch strips it so EN body structure collapses to [paragraph, callout-body] matching JA. No information loss.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-015",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
       "id": "UD-016A-subscription-plans-host-localhost-cli-span",
       "slugs": [
         "administration/subscription-plans"
@@ -413,19 +400,6 @@
       "replace": "<p><code>| expectedText       | JavaScript | 'A Simple PDF File'  |</code></p>",
       "rationale": "Upstream MadCap authoring artifact: the \"PDF files\" example-parameters table in the Validate download page has a broken third-row rendered as a stray `<p>|...|</p>` plain-text line after a proper `<table>` element (rows 1-2 are structured, row 3 leaked out as raw markdown pipe syntax in HTML). Turndown fuses the pipe paragraph into the preceding markdown table so `classifyLine` treats it as `markdown-table` (not counted), while JA authors the same broken-row in backtick-wrapped inline-code form (`\\`|...|\\``) which `classifyLine` correctly classifies as a paragraph-start. Result: EN=5 paragraphs vs JA=6 paragraph-count-mismatch signal. Patch wraps the broken-row `<p>` content in `<code>` so turndown emits matching backtick-inline-code markdown (`\\`|...|\\``), aligning paragraph-counts on both sides. Segment alignment remains intact because backticks are stripped from textNorm on both sides (symmetric), preserving the paragraph textNorm match. Same defect class as UD-015/UD-017 (MadCap authoring artifacts that survive turndown asymmetrically).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-021",
-      "addedAt": "2026-04-20",
-      "reviewAfter": "2026-10-20"
-    },
-    {
-      "id": "UD-022-jenkins-docker-trailing-zwsp-paragraph",
-      "slugs": [
-        "integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​ ​</p>",
-      "replace": "",
-      "rationale": "Upstream MadCap authoring artifact: a trailing `<p>​ ​</p>` element (two ZWSPs with a space between) sits at the end of the \"Now, just follow these steps:\" section after the final ordered-list item + screenshot. `normalizeEnArtifacts` strips ZWSPs per line; the residue for this line is a single space which matches `^[\\s]*$` so the paragraph-count extractor drops it. But `extractSegmentsFromHtml` still emits a `paragraph \"\"` segment for this `<p>`, creating an asymmetry: EN paragraph-count=1 vs JA paragraph-count=2 (JA authors the residue as `​ ​` prose at the end, which the paragraph-count classifier counts because `^[​...]+$` does not match due to the embedded space). Patch strips the stray `<p>` so neither counter nor segment extractor sees it on the EN side. JA content also removes the trailing `​ ​` line (pure authoring residue, no user-visible content). Same pattern as UD-015 (config-file-run-hooks ZWSP-only paragraph) — pure authoring-tool residue with no information loss.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-022",
       "addedAt": "2026-04-20",
       "reviewAfter": "2026-10-20"
     }

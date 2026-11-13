@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-10-23 確認済み、補正32件を維持）
+- **Status**: Active（2026-10-23 確認済み、補正30件を維持）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -25,14 +25,14 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-012 | データ駆動テストのセクション相互参照 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-013 | Hidden parameters の親ページへのリンク | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-014 | Auto grouping の親ページへのリンク | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-015 | Run hooks の ZWSP だけを含む空段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-015 | Run hooks の ZWSP だけを含む空段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 | UD-016 | Subscription plans の localhost トークンのマークアップ | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-017 | API assertion の段落内改行による余分な段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-018 | SeaLights のリスト内 CLI コードスニペット | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-019 | Salesforce 記録手順の画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-020 | Salesforce トラブルシューティングの画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-021 | Validate download の壊れた PDF 表行 | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-022 | Jenkins Docker の末尾にある ZWSP 段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-022 | Jenkins Docker の末尾にある ZWSP 段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 
 UD-011 に対応する有効なレジストリ項目はない。今回の確認では、この ID の割当・再利用は行わない。
 
@@ -335,9 +335,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `running-tests/configuration-file-run-hooks`
 - **欠陥 / 補正内容**: grid-name の callout の後に U+200B だけを含む空段落がある。補正では、この編集時の残骸を削除する。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by extractor（`extract_segments_from_html` が空段落を無視するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
 ### UD-016: Subscription plans の localhost トークンのマークアップ
 
@@ -419,9 +419,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `integrations/integrate-testim-to-your-ci/jenkins-integration-using-docker`
 - **欠陥 / 補正内容**: 末尾の段落は U+200B 2文字と空白1文字を含む。補正では、この本文ではない編集時の残骸を削除する。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by extractor（`extract_segments_from_html` が空段落を無視するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（抽出器が吸収したため削除済み）。
 
 ## 共通の削除確認手順
 

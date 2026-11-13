@@ -20,8 +20,6 @@ keywords:
   - Docker タスク
 ---
 
-​
-
 ![VSTS と TFS のロゴ](/images/ci-integrations/vsts-and-tfs-integration/d30e448-tfs1.png)
 
 ​VSTS/TFS とテストを統合するには、まず VSTS/TFS エージェントに Docker がインストールされている必要があります。
@@ -87,5 +85,3 @@ VSTS/TFS がファイルを使用するには、Publish Test Results タスク�
 11. ビルド設定を保存します
 
 ![VSTS でビルド定義を保存する画面](/images/ci-integrations/vsts-and-tfs-integration/5d80b20-tfs14.png)
-
-​
