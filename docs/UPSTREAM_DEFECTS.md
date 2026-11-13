@@ -465,7 +465,7 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - 各 entry は `reviewAfter` 日付を持つ (通常 addedAt + 6 ヶ月)
 - `reviewAfter` 超過した場合:
   1. Tricentis への報告 status 再確認
-  2. Upstream fix 未完了なら、ライブの上流ページで欠陥が残っていることを再検証した場合に限り更新する。`lastVerifiedAt` に検証日を記録し、`reviewAfter` は `lastVerifiedAt` から最大 184 日後まで（validator が強制）。検証できない entry、欠陥が解消した entry は更新せず削除手順に回す。checker 都合で存在する patch は対象外。検証記録は下記 Registry triage log に残す
+  2. Upstream fix 未完了なら、ライブの上流ページで欠陥が残っていることを再検証した場合に限り更新する。`lastVerifiedAt` に検証日を記録し、`reviewAfter` は `lastVerifiedAt`（未記録なら `addedAt`）から最大 184 日後まで。`lastVerifiedAt` は `addedAt` 以降かつ今日以前で、未知の key は拒否される（いずれも validator が強制）。検証できない entry、欠陥が解消した entry は更新せず削除手順に回す。checker 都合で存在する patch は対象外。検証記録は下記 Registry triage log に残す
   3. Upstream fix 完了なら[共通の削除確認手順](#共通の削除確認手順)を実行する。overdue は実際の負債解消まで残す
 - Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 

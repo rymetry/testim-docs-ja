@@ -102,7 +102,7 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 ### 禁止事項
 
 - 第 3 の許容機構 (新 registry / 新 ack 経路) を追加すること
-- 最新の検証なしに `reviewAfter` を延期すること。更新（renewal）は、ライブの上流ページで欠陥が残っていることを再検証した場合に限り許可する。entry に `lastVerifiedAt` を記録し、`reviewAfter` は `lastVerifiedAt` から最大 184 日後まで（validator が強制）。検証できない entry、欠陥が解消した entry は更新せず、削除手順に回す。上流の実欠陥ではなく checker 都合で存在する patch は更新の対象外
+- 最新の検証なしに `reviewAfter` を延期すること。更新（renewal）は、ライブの上流ページで欠陥が残っていることを再検証した場合に限り許可する。entry に `lastVerifiedAt` を記録し、`reviewAfter` は `lastVerifiedAt`（未記録なら `addedAt`）から最大 184 日後まで。`lastVerifiedAt` は `addedAt` 以降かつ今日以前で、未知の key は拒否される（いずれも validator が強制）。検証できない entry、欠陥が解消した entry は更新せず、削除手順に回す。上流の実欠陥ではなく checker 都合で存在する patch は更新の対象外
 - entry 削除前に upstream 修正を目視確認しないこと (`statusA: 'stale'` は signal であって confirmation ではない)。吸収による削除 (上記 4.) はこの限りでないが、証明なしの削除は不可
 
 ### Status 判定と graceful degradation
