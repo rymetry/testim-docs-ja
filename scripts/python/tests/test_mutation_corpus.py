@@ -571,6 +571,32 @@ def test_drop_invariant_token_skips_image_lines() -> None:
     assert drop_invariant_token("![alt](https://example.com/img.png)\n\nテキスト") is None
 
 
+def test_drop_invariant_token_skips_image_urls_in_table_cells() -> None:
+    md = "| a | ![x](https://example.com/i.png) | https://example.com/doc |"
+    tokens = {r["metadata"]["originalText"] for n in range(3) if (r := drop_invariant_token(md, n))}
+    assert tokens == {"https://example.com/doc"}
+
+
+@pytest.mark.real_repo
+@pytest.mark.parametrize("change", ["https://example.com/other.png", ""])
+def test_table_image_url_change_is_detected_by_image_parity(change: str) -> None:
+    from pathlib import Path
+
+    from testim_parity.checks import image_parity_issues
+
+    repo = Path(__file__).resolve().parents[3]
+    slug = "running-tests/running-tests-overview"
+    en = (repo / "snapshots/en/content" / f"{slug}.html").read_bytes().decode("utf-8")
+    ja = (repo / "src/content/docs" / f"{slug}.md").read_text(encoding="utf-8")
+    url = "https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png"
+    row = next(line for line in ja.split("\n") if line.startswith("|") and url in line)
+    assert image_parity_issues(en, ja) == []
+    mutated = ja.replace(
+        row, row.replace(url, change) if change else row.replace(f"![suites]({url})", "")
+    )
+    assert [i["type"] for i in image_parity_issues(en, mutated)] == ["image-mismatch"]
+
+
 # ---------------------------------------------------------------------------
 # swap_section_bodies
 # ---------------------------------------------------------------------------
