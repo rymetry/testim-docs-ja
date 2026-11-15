@@ -276,7 +276,7 @@ def check_links(
             return
         # ブラウザと同じく、そのままの id と percent-decode した id の両方で探す
         if fragment_id not in headings and unquote(fragment_id) not in headings:
-            reporter.warn(
+            reporter.err(
                 "link-fragment-missing",
                 f'Fragment "{fragment}" not found in {display_path}',
                 line,

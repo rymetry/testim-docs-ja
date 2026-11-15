@@ -469,7 +469,7 @@ class TestInternalLinkTargets:
         assert hit is not None
         assert hit["level"] == "error"
 
-    def test_path_based_link_with_bad_fragment_warning(self) -> None:
+    def test_path_based_link_with_bad_fragment_error(self) -> None:
         issues = lint_content(
             _make_doc(
                 body="See [section](/docs/overview/testim-overview#nonexistent-section) here.\n"
@@ -480,7 +480,7 @@ class TestInternalLinkTargets:
         )
         hit = next((i for i in issues if i["rule"] == "link-fragment-missing"), None)
         assert hit is not None
-        assert hit["level"] == "warning"
+        assert hit["level"] == "error"
 
     def test_path_based_link_with_valid_fragment_clean(self) -> None:
         issues = lint_content(
@@ -520,12 +520,12 @@ class TestInternalLinkTargets:
             pytest.param("## Setup\n\nSee [below](#%E6%A6%82%E8%A6%81).\n", id="percent-encoded"),
         ],
     )
-    def test_previously_skipped_link_with_bad_fragment_warning(self, body: str) -> None:
+    def test_previously_skipped_link_with_bad_fragment_error(self, body: str) -> None:
         issues = lint_content(
             _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
         )
         hits = _rules(issues, "link-fragment-missing")
-        assert [hit["level"] for hit in hits] == ["warning"]
+        assert [hit["level"] for hit in hits] == ["error"]
 
     @pytest.mark.parametrize(
         "body",
