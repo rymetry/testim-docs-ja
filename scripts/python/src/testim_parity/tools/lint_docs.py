@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -32,6 +33,7 @@ __all__ = [
     "check_links",
     "lint_content",
     "main",
+    "heading_ids",
     "to_kebab",
 ]
 
@@ -59,8 +61,8 @@ _FEATURE_NAME_RULES: tuple[tuple[re.Pattern[str], str], ...] = (
 
 _LEGACY_FA_ICON_RE = re.compile(r":fa-[a-z][a-z-]*:")
 _HEADING_LEVEL_RE = re.compile(r"^#{2,4}\s+(.+)")
-_EXPLICIT_HEADING_ID_RE = re.compile(r"\{#([^}]+)\}\s*$")
-_HEADING_ID_STRIP_RE = re.compile(r"\s*\{#[^}]+\}\s*$")
+# src/lib/remark-heading-ids.mjs と同じ条件 (空白を含む {#...} は明示 id にならない)
+_EXPLICIT_HEADING_ID_RE = re.compile(r"\s*\{#([^}\s]+)\}\s*$")
 
 _CODE_FENCE_RE = re.compile(r"^```")
 _CODE_BLOCK_RE = re.compile(r"```[\s\S]*?```")
@@ -147,17 +149,50 @@ class _Reporter:
         )
 
 
+def _is_slug_char(ch: str) -> bool:
+    """github-slugger が slug に残す文字か (文字・結合記号・数字・``_`` 類・``-``・半角スペース)。
+
+    残さない文字は消すだけで、半角スペース以外の空白も ``-`` にはならない。
+    """
+    # shortcut: Unicode 一般カテゴリで近似。github-slugger 2.0.0 の regex (Unicode 13 固定) との
+    # 差は Unicode 14 以降の追加文字と丸囲み・四角囲み英字 130 字のみ (全コードポイントで照合済み)。
+    # それらが見出しに現れたら regex.js の範囲表に置き換える。
+    category = unicodedata.category(ch)
+    return ch in "- " or category[0] in "LM" or category in {"Nd", "Nl", "Pc"}
+
+
 def to_kebab(text: str) -> str:
-    """見出し text を kebab-case slug に変換 (Astro / GitHub と互換、mjs 等価)。"""
+    """見出し text を、サイトが見出し id に使う github-slugger と同じ slug に変換する。
+
+    記号は消すだけで、半角スペースだけを ``-`` にする。連続した ``-`` は潰さない。
+    """
     s = re.sub(r"`([^`]*)`", r"\1", text)
     s = re.sub(r"\*{1,2}([^*]+)\*{1,2}", r"\1", s)
     s = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", s)
-    s = s.lower()
-    s = re.sub(r"[^\w\s\-\u3000-\u9fff\uff00-\uffef]", "", s)
-    s = re.sub(r"[\s\u3000]+", "-", s)
-    s = re.sub(r"-+", "-", s)
-    s = s.strip("-")
-    return s
+    s = s.strip().lower()
+    return "".join(ch for ch in s if _is_slug_char(ch)).replace(" ", "-")
+
+
+def heading_ids(body: str) -> set[str]:
+    """Markdown body の見出しにサイトが付ける id の集合を返す。"""
+    ids: set[str] = set()
+    for line in body.split("\n"):
+        match = _HEADING_LEVEL_RE.match(line)
+        if not match:
+            continue
+        heading_text = match.group(1).strip()
+        explicit = _EXPLICIT_HEADING_ID_RE.search(heading_text)
+        if explicit:
+            # 明示 id は slug 化も重複回避も通らず、自動 id は付かない
+            ids.add(explicit.group(1))
+            continue
+        base = slug = to_kebab(heading_text)
+        suffix = 0
+        while slug in ids:  # 同じ見出しが続くと -1, -2 ... が付く
+            suffix += 1
+            slug = f"{base}-{suffix}"
+        ids.add(slug)
+    return ids
 
 
 def check_frontmatter(fm: dict[str, Any], reporter: _Reporter) -> None:
@@ -542,22 +577,8 @@ def _build_heading_index(
         slug = file_path_to_slug(file_path, DOCS_DIR)
         raw = file_path.read_text(encoding="utf-8")
         _, body, _ = _parse_frontmatter_with_lines(raw)
-        headings: set[str] = set()
-
-        for line in body.split("\n"):
-            match = _HEADING_LEVEL_RE.match(line)
-            if not match:
-                continue
-            heading_text = match.group(1).strip()
-            explicit = _EXPLICIT_HEADING_ID_RE.search(heading_text)
-            if explicit:
-                headings.add(explicit.group(1))
-                headings.add(to_kebab(_HEADING_ID_STRIP_RE.sub("", heading_text)))
-                continue
-            headings.add(to_kebab(heading_text))
-
         all_slugs.add(slug)
-        headings_by_slug[slug] = headings
+        headings_by_slug[slug] = heading_ids(body)
 
     return all_slugs, headings_by_slug
 

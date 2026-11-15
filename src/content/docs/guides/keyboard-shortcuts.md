@@ -301,7 +301,7 @@ Testim には、テスト作成を高速化するために使用できる一連�
   </tr>
   <tr>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（web）">
+    <a href="/docs/advanced-editing/wait-for#要素の表示を待つweb">
      要素の表示を待機
     </a>
    </td>

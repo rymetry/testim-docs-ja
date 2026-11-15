@@ -115,7 +115,7 @@ keywords:
     Add custom wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）">
+    <a href="/docs/advanced-editing/wait-for#要素の表示を待つモバイル">
      Custom Wait for
     </a>
    </td>
@@ -135,7 +135,7 @@ keywords:
     Wait for download
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/wait-for#ダウンロード待機（web）">
+    <a href="/docs/advanced-editing/wait-for#ダウンロード待機web">
      Wait for Download
     </a>
    </td>

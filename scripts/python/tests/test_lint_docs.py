@@ -11,7 +11,7 @@ from typing import Any
 
 import pytest
 
-from testim_parity.tools.lint_docs import lint_content, to_kebab
+from testim_parity.tools.lint_docs import heading_ids, lint_content, to_kebab
 
 _TEST_PATH = Path("src/content/docs/test.md")
 
@@ -531,16 +531,43 @@ class TestToKebab:
             ("**Bold** and *italic*", "bold-and-italic"),
             ("See [Testim](https://example.com)", "see-testim"),
             ("ルールの説明", "ルールの説明"),
-            ("要素の表示を待つ（web）", "要素の表示を待つ（web）"),
+            # サイト (github-slugger) は全角括弧・全角記号を落とす
+            ("要素の表示を待つ（web）", "要素の表示を待つweb"),
+            ("TTM for Jira とは？", "ttm-for-jira-とは"),
             ("DOM で最も大きい要素を選ぶ", "dom-で最も大きい要素を選ぶ"),
+            # 記号を消した跡の連続ハイフンは潰さない
             (
-                "Add Custom Validation / Add Custom Action ステップの追加",
-                "add-custom-validation-add-custom-action-ステップの追加",
+                "**Add custom validation** / **Add custom action** ステップの追加",
+                "add-custom-validation--add-custom-action-ステップの追加",
             ),
+            ("同期検証の成功/失敗例", "同期検証の成功失敗例"),
+            ("snake_case と kebab-case", "snake_case-と-kebab-case"),
+            # 全角スペースは区切りにならず消える (半角スペースだけが - になる)
+            ("前\u3000後", "前後"),
         ],
     )
     def test_conversion(self, raw: str, expected: str) -> None:
         assert to_kebab(raw) == expected
+
+
+class TestHeadingIds:
+    """``heading_ids`` はサイトが見出しに付ける id の集合を返す。"""
+
+    def test_auto_ids(self) -> None:
+        body = "## 概要\n\n本文\n\n### スリープ（Web）\n"
+        assert heading_ids(body) == {"概要", "スリープweb"}
+
+    def test_duplicate_headings_get_numeric_suffix(self) -> None:
+        body = "### 例\n\n### 例\n\n### 例\n"
+        assert heading_ids(body) == {"例", "例-1", "例-2"}
+
+    def test_explicit_id_replaces_auto_id(self) -> None:
+        body = "## パラメーターの使用 {#using-parameters}\n"
+        assert heading_ids(body) == {"using-parameters"}
+
+    def test_explicit_id_with_whitespace_is_plain_text(self) -> None:
+        # サイトの remark plugin は空白を含む {#...} を明示 id として扱わない
+        assert heading_ids("## 見出し {#a b}\n") == {"見出し-a-b"}
 
 
 # ---------------------------------------------------------------------------
