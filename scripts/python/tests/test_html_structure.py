@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 from testim_parity.html_structure import compare_html_structure
+from testim_parity.ja_render import render_ja_markdown
 
 
 def issues(en: str, ja: str) -> list[dict[str, Any]]:
@@ -60,6 +61,41 @@ def test_block_boundary_in_cell_does_not_fuse_tokens():
     en = "<table><tr><td>run step.<br /><p>To learn</p></td></tr></table>"
     ja = "<table><tr><td>ステップ</td></tr></table>"
     assert "table-cell-token-mismatch" not in types(en, ja)
+
+
+def test_block_boundary_without_br_in_cell_does_not_fuse_tokens():
+    en = "<table><tr><td>run step.<p>To learn</p></td></tr></table>"
+    ja = "<table><tr><td>ステップ</td></tr></table>"
+    assert "table-cell-token-mismatch" not in types(en, ja)
+
+
+def test_h1_after_content_is_a_section_not_the_title():
+    en = "<p>intro</p><h1>T</h1><p>x</p>"
+    assert types(en, "<p>intro</p><h2>T</h2><p>x</p>") == []
+    assert "section-count-mismatch" in types(en, "<p>intro</p><p>x</p>")
+
+
+def test_callout_nesting_depth_two_vs_one_is_not_reported():
+    en = '<ol><li>a<ul><li>b<div class="note"><p>x</p></div></li></ul></li></ol>'
+    ja = '<ol><li>a<div class="callout-note" data-line="3"><p>x</p></div></li></ol>'
+    assert "callout-nesting-mismatch" not in types(en, ja)
+
+
+def test_dropped_continuation_paragraph_in_step_is_detected():
+    en = "<h2>A</h2><ol><li><p>a</p><p>b</p></li></ol>"
+    assert "paragraph-count-mismatch" in types(en, render_ja_markdown("## A\n\n1. a\n"))
+    assert types(en, render_ja_markdown("## A\n\n1. a\n\n   b\n")) == []
+
+
+def test_tight_list_item_text_is_not_a_continuation_paragraph():
+    en = "<h2>A</h2><ol><li><p>a</p></li><li>b</li></ol>"
+    assert types(en, render_ja_markdown("## A\n\n1. a\n2. b\n")) == []
+
+
+def test_continuation_paragraph_after_leading_text_counts():
+    en = "<h2>A</h2><ul><li>a<p>b</p></li></ul>"
+    ja = "<h2>A</h2><ul><li><p>a</p></li></ul>"
+    assert types(en, ja) == ["paragraph-count-mismatch"]
 
 
 # --- one test per issue type -----------------------------------------------------

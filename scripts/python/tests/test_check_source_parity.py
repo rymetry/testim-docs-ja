@@ -1412,3 +1412,40 @@ def test_mask_coverage_stays_empty_when_ja_body_has_no_glossary_terms(
     assert mask_coverage["summary"]["segmentsMasked"] == 0
     assert mask_coverage["summary"]["byGlossaryEntry"] == {}
     assert mask_coverage["maskedSegments"] == []
+
+
+def test_structure_comparison_failure_is_reported_per_page_and_run_continues(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from testim_parity.detection import check_source_parity as module
+
+    root = _setup_empty_repo(tmp_path)
+    for name in ("one", "two"):
+        (root / "src" / "content" / "docs" / "a").mkdir(exist_ok=True)
+        (root / "src" / "content" / "docs" / "a" / f"{name}.md").write_text(
+            f"---\ntitle: {name}\ncategory: A\n---\n\n## S\n\nx\n", encoding="utf-8"
+        )
+        (root / "snapshots" / "en" / "content" / "a").mkdir(exist_ok=True)
+        (root / "snapshots" / "en" / "content" / "a" / f"{name}.html").write_text(
+            "<h1>T</h1><h2>S</h2><p>x</p><p>y</p>", encoding="utf-8"
+        )
+    real = module.compare_html_structure
+
+    def flaky(en_html: str, ja_html: str, *, slug: str) -> list:
+        if slug == "a/one":
+            raise RuntimeError("boom")
+        return real(en_html, ja_html, slug=slug)
+
+    monkeypatch.setattr(module, "compare_html_structure", flaky)
+    err = io.StringIO()
+    output_path = root / "parity-check-status.json"
+    check_source_parity(
+        root_dir=root, output_path=output_path, stdout=io.StringIO(), stderr=err, json_out=True
+    )
+    files = {
+        f["file"].rsplit("/", 1)[-1]: [i["type"] for i in f["issues"]]
+        for f in json.loads(output_path.read_text(encoding="utf-8"))["files"]
+    }
+    assert "source-fetch-error" in files["one.md"]
+    assert "paragraph-count-mismatch" in files["two.md"]
+    assert "structure comparison failed for a/one: boom" in err.getvalue()

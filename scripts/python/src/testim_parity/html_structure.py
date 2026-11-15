@@ -13,11 +13,21 @@ issue type / severity / detail wording は同一契約で、``code-block-count-m
   数える)。table cell 内の list は JA で ``<br>`` 区切りに書かれるため cell 比較に任せる。
 - 段落: ``li`` / ``table`` / ``blockquote`` / ``details`` / callout の外にある
   ``<p>`` のうち、テキストを持つもの (空・画像のみ・zero-width のみは除外)。
+  加えて list item 内の継続段落 (item 直下の ``<p>`` のうち、item 本文を包む先頭
+  ``<p>`` を除いたもの) も段落として数える。
 - コードブロック: ``table`` の外にある ``<pre>``。
 - table: ``extract_html_tables`` + 既存の cell 比較。cell 内の
   ``span.FileOrFilePath`` は ``<code>`` と同じく token 化し、``<br>`` と block
   境界には空白を入れて隣接テキストの融合を防ぐ。
-- callout nesting: callout div の ``li`` 祖先数。JA の ``data-line`` を ``line`` に載せる。
+- callout nesting: callout div が ``li`` 内か否か (top-level / nested の 2 値)。JA の
+  ``data-line`` を ``line`` に載せる。
+
+旧 Markdown checker との意図的な差分:
+
+- nested ``ol`` の step も数える (旧は column-0 の番号行のみ)。
+- callout / blockquote 内の list と、callout 内の見出しも数える (旧は callout 内を skip)。
+- table cell 内の list item は数えない (旧も table 行を skip していたので実質同じ)。
+- list item 内の継続段落は上記の規則で数える (旧はインデントされた段落行として数えていた)。
 """
 
 from __future__ import annotations
@@ -99,6 +109,8 @@ def _counts(root: Tag, headings: list[tuple[int, str, Tag]]) -> dict[str, dict[s
         parent = node.parent.name if node.parent is not None else None
         if node.name == "li" and parent in ("ol", "ul") and not _inside(node, _TABLE, False):
             kind = "step" if parent == "ol" else "bullet"
+            if not _inside(node, _PARAGRAPH_EXCLUDED - {"li"}, True):
+                counts["para"][section] = counts["para"].get(section, 0) + _continuations(node)
         elif node.name == "p" and _text(node) and not _inside(node, _PARAGRAPH_EXCLUDED, True):
             kind = "para"
         elif node.name == "pre" and not _inside(node, _TABLE, False):
@@ -106,6 +118,16 @@ def _counts(root: Tag, headings: list[tuple[int, str, Tag]]) -> dict[str, dict[s
         if kind:
             counts[kind][section] = counts[kind].get(section, 0) + 1
     return counts
+
+
+def _continuations(item: Tag) -> int:
+    """list item 内の継続段落数。item 本文を包む先頭 ``<p>`` (loose list / MadCap) は除く。"""
+    paragraphs = [p for p in item.find_all("p", recursive=False) if isinstance(p, Tag)]
+    count = sum(1 for p in paragraphs if _text(p))
+    first = next((c for c in item.children if not (isinstance(c, str) and not c.strip())), None)
+    if paragraphs and first is paragraphs[0] and _text(paragraphs[0]):
+        count -= 1
+    return count
 
 
 def _artifacts(root: Tag) -> list[str]:
@@ -126,8 +148,9 @@ def _callout_nesting_issues(en_root: Tag, ja_root: Tag) -> list[dict[str, Any]]:
         return []
     issues: list[dict[str, Any]] = []
     for index, (en, ja) in enumerate(zip(en_callouts, ja_callouts, strict=True)):
-        en_depth = len(en.find_parents("li"))
-        ja_depth = len(ja.find_parents("li"))
+        # old contract は top-level / nested の 2 値 (extract_callout_positions の depth 0/1)
+        en_depth = min(len(en.find_parents("li")), 1)
+        ja_depth = min(len(ja.find_parents("li")), 1)
         if en_depth == ja_depth:
             continue
         line = ja.get("data-line")

@@ -132,6 +132,24 @@ def _build_segment_inconclusive_issue(
     }
 
 
+def _structure_issues(en_html: str, ja_body: str, slug: str, err: TextIO) -> list[dict[str, Any]]:
+    """DOM 構造比較。失敗はその page の ``source-fetch-error`` にして run を続ける。
+
+    segment 抽出失敗の fallback からも呼ばれ、同じ BS4 / markdown-it 経路で再失敗し得る。
+    """
+    try:
+        return compare_html_structure(en_html, render_ja_markdown(ja_body), slug=slug)
+    except Exception as exc:  # noqa: BLE001 — 1 page の失敗で run 全体を止めない
+        print(f"structure comparison failed for {slug}: {exc}.", file=err)
+        return [
+            {
+                "type": "source-fetch-error",
+                "detail": f"構造比較失敗: {exc}",
+                "severity": ISSUE_SEVERITY["source-fetch-error"],
+            }
+        ]
+
+
 def compute_exit_code(summary: Any, fail_on: str | None) -> int:
     """summary から CLI exit code を決める (mjs ``computeExitCode`` 等価)。
 
@@ -526,7 +544,6 @@ def check_source_parity(
                         masks=mask_info.get("masks") or [],
                     )
 
-                ja_html = render_ja_markdown(doc["body"])
                 usability_issue = detect_source_usability(
                     raw_en_html=raw_en_html,
                     en_segments=en_segments,
@@ -542,7 +559,7 @@ def check_source_parity(
                             str(extract_error), "align-exception", None
                         )
                     )
-                    issues.extend(compare_html_structure(en_html, ja_html, slug=file_slug))
+                    issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
                 else:
                     alignment: dict[str, Any] | None = None
                     try:
@@ -561,7 +578,7 @@ def check_source_parity(
                         issues.append(
                             _build_segment_inconclusive_issue(str(exc), "align-exception", None)
                         )
-                        issues.extend(compare_html_structure(en_html, ja_html, slug=file_slug))
+                        issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
 
                     if alignment is not None:
                         segment_issues = parity_diffs_to_issues(alignment["diffs"])
@@ -574,10 +591,10 @@ def check_source_parity(
                                     alignment.get("inconclusiveMeta"),
                                 )
                             )
-                            issues.extend(compare_html_structure(en_html, ja_html, slug=file_slug))
+                            issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
                         else:
                             issues.extend(segment_issues)
-                            issues.extend(compare_html_structure(en_html, ja_html, slug=file_slug))
+                            issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
 
                 if not usability_issue:
                     # EN 基準の画像 枚数 / 重複 / 順序 検証。compare_html_structure と
