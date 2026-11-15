@@ -178,13 +178,18 @@ def heading_ids(body: str) -> set[str]:
     期待値は scripts/__tests__/fixtures/heading-ids.json でサイトの実パイプラインと共有している。
     """
     # shortcut: Markdown を行単位の正規表現で読む。見出し内のインライン HTML・文字参照・画像・
-    # ``_強調_``・参照リンク・``:name`` ディレクティブ、setext 見出し、引用やリスト内の見出し、
-    # ``~~~`` フェンスはサイトと id がずれる (現行コンテンツに該当なし)。使い始めたら
-    # fixture にケースを足し、ここを Markdown パーサーに置き換える。
+    # ``_強調_``・参照リンク・``:name`` ディレクティブ・空白で囲んだコードスパン、setext 見出し、
+    # 引用やリスト内の見出し、HTML コメント/ブロック内の ``## ``、``~~~`` や 4 連以上のフェンスは
+    # サイトと id がずれる (現行コンテンツに該当なし)。使い始めたら fixture にケースを足し、
+    # ここを Markdown パーサーに置き換える。
     ids: set[str] = set()
     occurrences: dict[str, int] = {}  # github-slugger と同じ重複カウンタ
-    for line in _CODE_BLOCK_RE.sub("", body).split("\n"):
-        match = _HEADING_LEVEL_RE.match(line)
+    in_code_block = False
+    for line in body.split("\n"):
+        if _CODE_FENCE_RE.match(line.strip()):
+            in_code_block = not in_code_block
+            continue
+        match = None if in_code_block else _HEADING_LEVEL_RE.match(line)
         if not match:
             continue
         heading_text = match.group(1).rstrip()

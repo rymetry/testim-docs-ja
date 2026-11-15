@@ -3,14 +3,17 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import { createMarkdownProcessor, rehypeHeadingIds } from '@astrojs/markdown-remark';
+import remarkDirective from 'remark-directive';
+import remarkGfm from 'remark-gfm';
 
 import remarkHeadingIds, { rehypeUniqueHeadingIds } from '../../src/lib/remark-heading-ids.mjs';
 
-async function render(markdown) {
+async function render(markdown, options = {}) {
   const processor = await createMarkdownProcessor({
     remarkPlugins: [remarkHeadingIds],
     rehypePlugins: [rehypeHeadingIds, rehypeUniqueHeadingIds],
     syntaxHighlight: false,
+    ...options,
   });
   const { code, metadata } = await processor.render(markdown);
   return { code, headings: metadata.headings };
@@ -81,13 +84,20 @@ describe('rehypeUniqueHeadingIds', () => {
 
 // lint:docs (scripts/python/tests/test_lint_docs.py) も同じ fixture を読む。
 // サイトの id 規則が変わるとここが落ち、fixture を直すと Python 側が落ちる。
+// astro.config.mjs の markdown 設定のうち、見出しテキストを変えるものをそろえる。
+const SITE_MARKDOWN_OPTIONS = {
+  gfm: false,
+  smartypants: false,
+  remarkPlugins: [remarkGfm, remarkDirective, remarkHeadingIds],
+};
+
 describe('heading ids shared with lint:docs', () => {
   const cases = JSON.parse(
     readFileSync(new URL('./fixtures/heading-ids.json', import.meta.url), 'utf8')
   );
   for (const { name, markdown, ids } of cases) {
     it(name, async () => {
-      const { headings } = await render(markdown);
+      const { headings } = await render(markdown, SITE_MARKDOWN_OPTIONS);
       assert.deepEqual(
         headings.map((heading) => heading.slug),
         ids

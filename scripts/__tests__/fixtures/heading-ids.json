@@ -73,5 +73,30 @@
     "name": "lines inside a code fence are not headings",
     "markdown": "```bash\n## not a heading\n```\n\n## 本物\n",
     "ids": ["本物"]
+  },
+  {
+    "name": "double hyphen is kept as typed (smartypants is off on the site)",
+    "markdown": "## A -- B\n",
+    "ids": ["a----b"]
+  },
+  {
+    "name": "hashes need a space or tab after them, and at most six",
+    "markdown": "##\u3000全角スペース\n\n####### seven\n\n##tag\n\n##\tタブ区切り\n\n## 本物\n",
+    "ids": ["タブ区切り", "本物"]
+  },
+  {
+    "name": "a literal suffix before the repeated heading",
+    "markdown": "## 例-1\n\n## 例\n\n## 例\n",
+    "ids": ["例-1", "例", "例-2"]
+  },
+  {
+    "name": "circled digits go, letter numbers and combining marks stay",
+    "markdown": "## ① 手順\n\n## Ⅳ 章\n\n## か\u3099\n",
+    "ids": ["-手順", "ⅳ-章", "か\u3099"]
+  },
+  {
+    "name": "backticks inside a line do not open a fence",
+    "markdown": "Use ``` to open.\n\n## 実在\n\n```bash\n## in fence\n```\n\n## Using ```code``` here\n",
+    "ids": ["実在", "using-code-here"]
   }
 ]
