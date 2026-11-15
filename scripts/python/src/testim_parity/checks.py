@@ -205,7 +205,8 @@ def _compare_section_counts(
 
     **Precondition (python-reviewer HIGH 指摘)**: ``en_map`` / ``ja_map`` は同じ
     document 走査順で作られた dict であること (``html_structure`` の step / bullet /
-    paragraph count は全て同一の linear scan で dict を build するため契約を満たす)。mjs ``Map.entries()`` 順と同じく
+    paragraph count は全て同一の linear scan で dict を build するため契約を満たす)。
+    mjs ``Map.entries()`` 順と同じく
     Python 3.7+ dict の挿入順を両側で信頼する。異なる source から aggregate
     された map を渡すと per-section zip が silently 誤 diff を emit するため、
     caller は同一 scan で生成した map だけを渡すこと。
