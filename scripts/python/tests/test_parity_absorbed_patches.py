@@ -271,3 +271,17 @@ def test_absorbed_patch_mutation_is_detected(slug, ja_change, en_change):
     mutated = _page_issues(slug, ja_change, en_change)
     assert clean == []
     assert [i for i in mutated if i not in clean]
+
+
+@pytest.mark.real_repo
+@pytest.mark.parametrize(
+    "slug",
+    [
+        "integrations/test-management-integrations/testrail-integration",  # UD-026 + URL token
+        "advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file",
+        "results/test-results/network-logs",  # bare text paragraph
+        "overview/changelog",  # MCDropDownHead paragraphs
+    ],
+)
+def test_ruling_pages_have_no_issues(slug):
+    assert _page_issues(slug) == []

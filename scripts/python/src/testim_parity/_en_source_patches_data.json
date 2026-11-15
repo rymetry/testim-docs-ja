@@ -375,6 +375,32 @@
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-023",
       "addedAt": "2026-11-15",
       "reviewAfter": "2027-05-15"
+    },
+    {
+      "id": "UD-026-testrail-domain-placeholder-double-escaped",
+      "slugs": [
+        "integrations/test-management-integrations/testrail-integration"
+      ],
+      "defectClass": "madcap-artifact",
+      "find": "https://&amp;lt;projectName&amp;gt;.testrail.io/",
+      "replace": "https://&lt;projectName&gt;.testrail.io/",
+      "rationale": "Upstream MadCap artifact: the TestRail URL placeholder in Setting TestRail integration step 3 is double-escaped (`&amp;lt;projectName&amp;gt;`), so the live page shows `&lt;projectName&gt;` literally instead of `<projectName>`. Patch removes one level of escaping so the EN text reads `https://<projectName>.testrail.io/` like the JA page.",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-026",
+      "addedAt": "2026-11-15",
+      "reviewAfter": "2027-05-15"
+    },
+    {
+      "id": "UD-027-config-file-empty-code-snippet",
+      "slugs": [
+        "advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file"
+      ],
+      "defectClass": "madcap-artifact",
+      "find": "<div class=\"codeSnippet\"><a class=\"codeSnippetCopyButton\" role=\"button\" href=\"javascript:void(0);\">Copy</a>\r\n                                            <div class=\"codeSnippetBody\"><pre><code></code></pre>\r\n                                            </div>\r\n                                        </div>",
+      "replace": "",
+      "rationale": "Upstream MadCap artifact: an empty codeSnippet (`<pre><code></code></pre>`) follows the `testim -c \"testimConfig.js\"` example in the overrideTestData section, so the live page shows an empty code box. Patch removes the empty snippet; JA has no such block.",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-027",
+      "addedAt": "2026-11-15",
+      "reviewAfter": "2027-05-15"
     }
   ]
 }

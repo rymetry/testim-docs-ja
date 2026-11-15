@@ -73,7 +73,9 @@ def _normalize_url_token(url: str) -> str | None:
 # :func:`extract_invariant_tokens` をタイトに保つため、module load 時に全 regex を
 # コンパイルする。mjs と同じ pattern を使っている。
 _CODE_RE = re.compile(r"`([^`]+)`")
-_URL_RE = re.compile(r"https?://[^\s)>\]]+")
+# ``<name>`` placeholder (``https://<projectName>.testrail.io/``) は URL の一部として扱う。
+# 先に placeholder を試し、それ以外の ``<`` は従来どおり 1 文字として URL に含める。
+_URL_RE = re.compile(r"https?://(?:<[\w-]+>|[^\s)>\]])+")
 _LINK_DEST_RE = re.compile(
     r"(?:\]\(|(?:^|\s)\[)"
     r"((?:/docs/[\w-]+(?:/[\w-]+)*(?:#[^\]\)\s]+)?"

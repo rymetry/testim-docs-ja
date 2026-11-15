@@ -86,6 +86,16 @@ class TestUrlsAreBlankedAfterCapture:
         assert "docs.tricentis.com" not in tokens
 
 
+class TestUrlPlaceholder:
+    def test_angle_bracket_placeholder_stays_inside_one_url_token(self):
+        tokens = extract_invariant_tokens("is https://<projectName>.testrail.io/, where")
+        assert tokens == ["https://<projectName>.testrail.io/,"]
+
+    def test_url_followed_by_non_placeholder_angle_text_is_unchanged(self):
+        tokens = extract_invariant_tokens("see https://example.com/a<b c> here")
+        assert tokens == ["https://example.com/a<b"]
+
+
 class TestNormalizeUrlToken:
     """``_normalize_url_token`` の各分岐を直接 exercise する。"""
 

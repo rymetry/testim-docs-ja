@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-11-15 更新、有効な補正27件）
+- **Status**: Active（2026-11-15 更新、有効な補正29件）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -36,6 +36,8 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-023 | Running tests overview の表セルにある壊れた画像マークアップ | `madcap-artifact` | applied | 2026-11-15 登録 |
 | UD-024 | Agentic Test Automation for Salesforce の壊れた `index.htm/#/` リンク | `href-miswire` | applied | 2026-11-13 登録 |
 | UD-025 | Local mobile test の補足アクションへの `index.htm#supported-mobile-actions` miswire | `href-miswire` | applied | 2026-11-13 登録 |
+| UD-026 | TestRail ドメイン URL の placeholder の二重エスケープ | `madcap-artifact` | applied | 2026-11-15 登録 |
+| UD-027 | Data-driven config file の空のコードスニペット | `madcap-artifact` | applied | 2026-11-15 登録 |
 
 UD-011 に対応する有効なレジストリ項目はない。今回の確認では、この ID の割当・再利用は行わない。
 
@@ -454,6 +456,32 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
 
+### UD-026: TestRail ドメイン URL の placeholder の二重エスケープ
+
+- **補正 ID**: `UD-026-testrail-domain-placeholder-double-escaped`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-11-15 / 2027-05-15
+- **対象 slug**:
+  - `integrations/test-management-integrations/testrail-integration`
+- **欠陥 / 補正内容**: 「Setting TestRail integration」手順 3 の URL 構造 `https://&amp;lt;projectName&amp;gt;.testrail.io/` が二重にエスケープされており、公式ページでは `&lt;projectName&gt;` がそのまま表示される。補正ではエスケープを 1 段にして `https://<projectName>.testrail.io/` と読めるようにする。
+- **JA 側**: JA は `https://&lt;projectName&gt;.testrail.io/` と書き、`<projectName>` と正しく表示される（変更なし）。
+- **状態**: `applied`。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
+### UD-027: Data-driven config file の空のコードスニペット
+
+- **補正 ID**: `UD-027-config-file-empty-code-snippet`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-11-15 / 2027-05-15
+- **対象 slug**:
+  - `advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file`
+- **欠陥 / 補正内容**: 「Test level - adding an overrideTestData object」の `testim -c "testimConfig.js"` の例の直後に、中身のない codeSnippet（`<pre><code></code></pre>`）があり、公式ページに空のコード枠が表示される。補正ではこの空のスニペットを削除する。
+- **JA 側**: JA に空のコードブロックはない（変更なし）。
+- **状態**: `applied`。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
 ## 共通の削除確認手順
 
 1. `npm run check:snapshots:fetch -- --slug=<slug>` で対象の全 slug を再取得する。
@@ -489,8 +517,8 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 ### 2026-11-15 — HTML 比較経路への移行に伴う補正の整理
 
 - 削除: UD-016A, UD-016B, UD-017（HTML 比較経路が吸収）、UD-018A, UD-018B, UD-018C, UD-019, UD-020（JA の構造修正で吸収）。いずれも checker が EN と JA を別の方法で読んでいたために必要だった補正で、上流の欠陥自体は残っている。
-- 追加: UD-023 の 9 件（`running-tests/running-tests-overview` の表セルにある `!<a href>` 画像マークアップ）。
-- 結果: 有効な補正は 26 − 8 + 9 = 27 件。
+- 追加: UD-023 の 9 件（`running-tests/running-tests-overview` の表セルにある `!<a href>` 画像マークアップ）、UD-026（TestRail URL placeholder の二重エスケープ）、UD-027（config file の空のコードスニペット）。UD-011 は既存の判断どおり再利用しない。
+- 結果: 有効な補正は 26 − 8 + 9 + 2 = 29 件。
 
 ### 2026-11-13 — 検証済み補正の更新
 
