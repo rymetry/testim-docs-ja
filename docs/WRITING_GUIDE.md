@@ -391,7 +391,7 @@ top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約�
 
 - 画像・callout・コードブロック: 出現順序と配置を原文に合わせる
 - 段落: 原文の段落構造を維持（diff >= 1 で検出）
-- `paragraph-count-mismatch` / `bullet-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
+- `paragraph-count-mismatch` / `bullet-count-mismatch` / `code-block-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
 
 ### 原文準拠の source-first 例外（operationalized / Security P2 対応）
 

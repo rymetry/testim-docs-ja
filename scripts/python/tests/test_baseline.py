@@ -138,6 +138,7 @@ def test_eligible_types_contain_all_actionable_types(type_: str) -> None:
         "source-unusable",
         "source-page-missing-local",
         "paragraph-count-mismatch",
+        "code-block-count-mismatch",
         "untranslated",
     ],
 )
@@ -202,7 +203,13 @@ def test_validate_rejects_missing_entries_array() -> None:
 
 @pytest.mark.parametrize(
     "bad_type",
-    ["paragraph-count-mismatch", "segment-inconclusive", "snapshot-incomplete", "source-unusable"],
+    [
+        "paragraph-count-mismatch",
+        "code-block-count-mismatch",
+        "segment-inconclusive",
+        "snapshot-incomplete",
+        "source-unusable",
+    ],
 )
 def test_validate_rejects_ineligible_issue_type(bad_type: str) -> None:
     entry = _missing_entry(issueType=bad_type)

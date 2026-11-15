@@ -135,6 +135,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 | `step-count-mismatch`         | 番号付きステップ数の不一致                         | audit-only  |
 | `bullet-count-mismatch`       | 箇条書き数の不一致                                 | audit-only  |
 | `paragraph-count-mismatch`    | 段落数の不一致（diff >= 1）                        | audit-only  |
+| `code-block-count-mismatch`   | コードブロック (`<pre>`) 数の不一致                | audit-only  |
 | `heading-mismatch`            | 見出しレベル / テキストの不一致                    | audit-only  |
 | `table-shape-mismatch`        | テーブル行数・列数の不一致                         | audit-only  |
 | `table-cell-english-residual` | テーブルセルの英語残留                             | audit-only  |
@@ -146,7 +147,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 | `snapshot-incomplete`         | EN snapshot が shallow/extractor-empty で比較不能  | advisory    |
 | `source-unusable`             | EN snapshot が malformed details で復元不能        | advisory    |
 
-**audit-only signals**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `testim_parity.detection.source_parity_types` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
+**audit-only signals**: 上記の `audit-only` 印が付いた 10 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `testim_parity.detection.source_parity_types` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
 
 **structure comparator**: `alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに canonical block sequence を比較する。block 単位の語彙は `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種に凍結されており、segment 単位の list item / table cell は比較前に対応する list / table block に畳まれる。
 
@@ -175,7 +176,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 acknowledgement の対象外:
 
 - `NON_ACKNOWLEDGEABLE_TYPES` (`source-page-missing-local`, `segment-missing`, `segment-untranslated`, `segment-token-gap`, `segment-inconclusive`) — gate を suppress すべきでない hard gap
-- `COARSE_SIGNAL_TYPES` (audit-only 9 種) — そもそも gate に乗らないため、ack をつけても no-op になる。validation は `validateAcknowledgements` で reject する
+- `COARSE_SIGNAL_TYPES` (audit-only 10 種) — そもそも gate に乗らないため、ack をつけても no-op になる。validation は `validateAcknowledgements` で reject する
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
@@ -536,7 +537,7 @@ Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移
 
 **Runtime wiring (primary gate)**:
 
-`testim_parity.detection.check_source_parity` は `align_segments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compare_snapshot_structure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-\* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
+`testim_parity.detection.check_source_parity` は `align_segments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、DOM 構造比較 `compare_html_structure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-\* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
 
 runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`scripts/python/tests/test_align.py`、`scripts/python/tests/test_check_source_parity.py`、`scripts/python/tests/test_detection_reports.py` が facade re-export、`parity_diffs_to_issues` の shape、`summarize_parity_results` の primary-gate / baseline 集計、`npm run check:parity -- --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
 
@@ -666,7 +667,8 @@ table-cell signals** は audit-only 経路に降格されている。`segment-*`
 gate と重複した noise を `parity-regression` issue body と gate exit code
 から取り除き、`deep-audit` workflow からのみ閲覧可能にする運用契約。
 
-**降格対象 (9 種, allowlist)**: `paragraph-count-mismatch` /
+**降格対象 (10 種, allowlist)**: `paragraph-count-mismatch` /
+`code-block-count-mismatch` /
 `bullet-count-mismatch` / `step-count-mismatch` / `section-count-mismatch` /
 `heading-mismatch` / `table-shape-mismatch` / `table-cell-english-residual` /
 `table-cell-empty-mismatch` / `table-cell-token-mismatch`

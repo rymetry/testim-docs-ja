@@ -96,6 +96,11 @@ def _sample_status() -> dict[str, Any]:
                         "severity": "signal",
                         "detail": "段落数 EN=2 JA=3",
                     },
+                    {
+                        "type": "code-block-count-mismatch",
+                        "severity": "signal",
+                        "detail": "コードブロック数 EN=2 JA=1",
+                    },
                 ],
             }
         ],

@@ -30,6 +30,7 @@ ISSUE_SEVERITY: MappingProxyType[str, str] = MappingProxyType(
         "step-count-mismatch": "signal",
         "bullet-count-mismatch": "signal",
         "paragraph-count-mismatch": "signal",
+        "code-block-count-mismatch": "signal",
         "heading-mismatch": "signal",
         "section-count-mismatch": "signal",
         "table-shape-mismatch": "signal",
@@ -62,6 +63,7 @@ ISSUE_SEVERITY: MappingProxyType[str, str] = MappingProxyType(
 COARSE_SIGNAL_TYPES: frozenset[str] = frozenset(
     {
         "paragraph-count-mismatch",
+        "code-block-count-mismatch",
         "bullet-count-mismatch",
         "step-count-mismatch",
         "section-count-mismatch",

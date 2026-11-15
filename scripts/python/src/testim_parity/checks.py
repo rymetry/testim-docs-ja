@@ -306,9 +306,14 @@ def _normalize_for_compare(value: str) -> str:
 
 def _compare_table_structure(en_body: str, ja_body: str) -> list[dict[str, Any]]:
     """table shape + cell token + untranslated cell を比較する (mjs 等価)。"""
+    return _compare_tables(extract_table_structure(en_body), extract_table_structure(ja_body))
+
+
+def _compare_tables(
+    en_tables: list[dict[str, Any]], ja_tables: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """抽出済み ``[{rows, line}]`` 同士を比較する (``html_structure`` と共有)。"""
     issues: list[dict[str, Any]] = []
-    en_tables = extract_table_structure(en_body)
-    ja_tables = extract_table_structure(ja_body)
 
     if len(en_tables) != len(ja_tables) and (len(en_tables) > 0 or len(ja_tables) > 0):
         issues.append(

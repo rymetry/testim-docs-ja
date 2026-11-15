@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from testim_parity.summary import summarize_parity_results
 
 
@@ -222,15 +224,16 @@ def test_valid_ack_excludes_source_unusable_from_counter() -> None:
     assert summary["snapshotUnusableByType"] == {}
 
 
-def test_coarse_signal_flows_only_into_audit_channel() -> None:
-    """``paragraph-count-mismatch`` は ``auditSignal*`` にのみ流れる
+@pytest.mark.parametrize("coarse_type", ["paragraph-count-mismatch", "code-block-count-mismatch"])
+def test_coarse_signal_flows_only_into_audit_channel(coarse_type: str) -> None:
+    """coarse count signal は ``auditSignal*`` にのみ流れる
     (``structureMismatch*`` や ``snapshotUnusable*`` には無関係)。3 channel
     cross-check で disjoint 契約を pin。"""
-    issue = {"type": "paragraph-count-mismatch", "severity": "signal"}
+    issue = {"type": coarse_type, "severity": "signal"}
     summary = summarize_parity_results([_result(issue)])
     # audit channel のみ populated
     assert summary["auditSignalIssues"] == 1
-    assert summary["auditSignalsByType"] == {"paragraph-count-mismatch": 1}
+    assert summary["auditSignalsByType"] == {coarse_type: 1}
     assert summary["auditSignalFiles"] == 1
     # structureMismatch / snapshotUnusable channel は 0 (cross-channel leak guard)
     assert summary["structureMismatchIssues"] == 0

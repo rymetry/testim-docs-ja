@@ -78,6 +78,7 @@ def test_frozen_by_baseline():
 def test_coarse_audit_signal_matches_type():
     # COARSE_SIGNAL_TYPES に含まれる型
     assert is_coarse_audit_signal({"type": "paragraph-count-mismatch"}) is True
+    assert is_coarse_audit_signal({"type": "code-block-count-mismatch"}) is True
     assert is_coarse_audit_signal({"type": "heading-mismatch"}) is True
     # 含まれない型
     assert is_coarse_audit_signal({"type": "segment-missing"}) is False
