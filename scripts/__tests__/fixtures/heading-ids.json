@@ -1,0 +1,102 @@
+[
+  {
+    "name": "full-width parentheses are dropped",
+    "markdown": "## スリープ（Web）\n",
+    "ids": ["スリープweb"]
+  },
+  {
+    "name": "hyphens left by removed symbols are not collapsed",
+    "markdown": "## **Add custom validation** / **Add custom action** ステップの追加\n",
+    "ids": ["add-custom-validation--add-custom-action-ステップの追加"]
+  },
+  {
+    "name": "ascii hyphen stays, other dashes go",
+    "markdown": "## 並列化モデル - プラン詳細\n\n## A – B — C\n",
+    "ids": ["並列化モデル---プラン詳細", "a--b--c"]
+  },
+  {
+    "name": "leading and trailing hyphens are kept",
+    "markdown": "## foo ?\n\n## 🚀 Start\n",
+    "ids": ["foo-", "-start"]
+  },
+  {
+    "name": "underscore, digits and colon",
+    "markdown": "## snake_case と Step 1: Install\n",
+    "ids": ["snake_case-と-step-1-install"]
+  },
+  {
+    "name": "inline code, bold and link text",
+    "markdown": "## Using `testim` CLI\n\n## See [Testim](https://example.com) **now**\n",
+    "ids": ["using-testim-cli", "see-testim-now"]
+  },
+  {
+    "name": "only ascii space becomes a hyphen",
+    "markdown": "## 前\u3000後\n\n## a\u00a0b\n",
+    "ids": ["前後", "ab"]
+  },
+  {
+    "name": "every heading level gets an id",
+    "markdown": "# One\n\n## Two\n\n### Three\n\n#### Four\n\n##### Five\n\n###### Six\n",
+    "ids": ["one", "two", "three", "four", "five", "six"]
+  },
+  {
+    "name": "repeated headings get numeric suffixes",
+    "markdown": "### 例\n\n### 例\n\n#### 例\n",
+    "ids": ["例", "例-1", "例-2"]
+  },
+  {
+    "name": "a literal heading that collides with a generated suffix",
+    "markdown": "## 例\n\n## 例\n\n## 例-1\n\n## 例\n",
+    "ids": ["例", "例-1", "例-1-1", "例-2"]
+  },
+  {
+    "name": "explicit id replaces the auto id and is used verbatim",
+    "markdown": "## パラメーターの使用 {#using-parameters}\n\n## 別の見出し{#Custom.ID}\n",
+    "ids": ["using-parameters", "Custom.ID"]
+  },
+  {
+    "name": "explicit id does not take part in duplicate numbering",
+    "markdown": "## 例 {#first}\n\n## 例\n",
+    "ids": ["first", "例"]
+  },
+  {
+    "name": "{#...} with whitespace or in the middle is plain text",
+    "markdown": "## 見出し {#a b}\n\n## 前 {#mid} 後\n",
+    "ids": ["見出し-a-b", "前-mid-後"]
+  },
+  {
+    "name": "closing hashes are not part of the heading",
+    "markdown": "## Foo ##\n\n## Bar {#bar-id} ##\n",
+    "ids": ["foo", "bar-id"]
+  },
+  {
+    "name": "lines inside a code fence are not headings",
+    "markdown": "```bash\n## not a heading\n```\n\n## 本物\n",
+    "ids": ["本物"]
+  },
+  {
+    "name": "double hyphen is kept as typed (smartypants is off on the site)",
+    "markdown": "## A -- B\n",
+    "ids": ["a----b"]
+  },
+  {
+    "name": "hashes need a space or tab after them, and at most six",
+    "markdown": "##\u3000全角スペース\n\n####### seven\n\n##tag\n\n##\tタブ区切り\n\n## 本物\n",
+    "ids": ["タブ区切り", "本物"]
+  },
+  {
+    "name": "a literal suffix before the repeated heading",
+    "markdown": "## 例-1\n\n## 例\n\n## 例\n",
+    "ids": ["例-1", "例", "例-2"]
+  },
+  {
+    "name": "circled digits go, letter numbers and combining marks stay",
+    "markdown": "## ① 手順\n\n## Ⅳ 章\n\n## か\u3099\n",
+    "ids": ["-手順", "ⅳ-章", "か\u3099"]
+  },
+  {
+    "name": "backticks inside a line do not open a fence",
+    "markdown": "Use ``` to open.\n\n## 実在\n\n```bash\n## in fence\n```\n\n## Using ```code``` here\n",
+    "ids": ["実在", "using-code-here"]
+  }
+]

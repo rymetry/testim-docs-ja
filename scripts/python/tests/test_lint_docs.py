@@ -1,17 +1,20 @@
 """lint_docs の unit test — WRITING_GUIDE 準拠ルールを function 単位で exercise する。
 
 Python 版 ``lint_content(content, file_path, *, all_slugs=None, headings_by_slug=None)`` と
-``to_kebab(text)`` の契約を pin する。
+``heading_slug(text)`` / ``heading_ids(body)`` の契約を pin する。
 """
 
 from __future__ import annotations
 
+import json
+import time
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from testim_parity.tools.lint_docs import lint_content, to_kebab
+from testim_parity.project import PROJECT_ROOT
+from testim_parity.tools.lint_docs import heading_ids, heading_slug, lint_content
 
 _TEST_PATH = Path("src/content/docs/test.md")
 
@@ -517,11 +520,11 @@ class TestInternalLinkTargets:
 
 
 # ---------------------------------------------------------------------------
-# I. to_kebab helper
+# I. heading_slug / heading_ids
 # ---------------------------------------------------------------------------
 
 
-class TestToKebab:
+class TestHeadingSlug:
     @pytest.mark.parametrize(
         ("raw", "expected"),
         [
@@ -531,16 +534,50 @@ class TestToKebab:
             ("**Bold** and *italic*", "bold-and-italic"),
             ("See [Testim](https://example.com)", "see-testim"),
             ("ルールの説明", "ルールの説明"),
-            ("要素の表示を待つ（web）", "要素の表示を待つ（web）"),
+            # サイト (github-slugger) は全角括弧・全角記号を落とす
+            ("要素の表示を待つ（web）", "要素の表示を待つweb"),
+            ("TTM for Jira とは？", "ttm-for-jira-とは"),
             ("DOM で最も大きい要素を選ぶ", "dom-で最も大きい要素を選ぶ"),
+            # 記号を消した跡の連続ハイフンは潰さない
             (
-                "Add Custom Validation / Add Custom Action ステップの追加",
-                "add-custom-validation-add-custom-action-ステップの追加",
+                "**Add custom validation** / **Add custom action** ステップの追加",
+                "add-custom-validation--add-custom-action-ステップの追加",
             ),
+            ("同期検証の成功/失敗例", "同期検証の成功失敗例"),
+            ("snake_case と kebab-case", "snake_case-と-kebab-case"),
+            # 全角スペースは区切りにならず消える (半角スペースだけが - になる)
+            ("前\u3000後", "前後"),
         ],
     )
     def test_conversion(self, raw: str, expected: str) -> None:
-        assert to_kebab(raw) == expected
+        assert heading_slug(raw) == expected
+
+
+# 同じ fixture をサイトの実パイプラインでも検証している
+# (scripts/__tests__/remark_heading_ids.test.mjs)。
+# linter の id 規則がサイトとずれると、どちらかのテストが落ちる。
+_HEADING_ID_CASES: list[dict[str, Any]] = json.loads(
+    (PROJECT_ROOT / "scripts/__tests__/fixtures/heading-ids.json").read_text(encoding="utf-8")
+)
+
+
+class TestHeadingIdsMatchSite:
+    @pytest.mark.parametrize("case", _HEADING_ID_CASES, ids=lambda case: case["name"])
+    def test_same_ids_as_site(self, case: dict[str, Any]) -> None:
+        assert heading_ids(case["markdown"]) == set(case["ids"])
+
+    def test_many_repeated_headings_stay_linear(self) -> None:
+        # 連番を毎回 -1 から探し直すと二次時間になる (2 万見出しで 20 秒超)
+        started = time.perf_counter()
+        ids = heading_ids("## a\n" * 20_000)
+        assert len(ids) == 20_000
+        assert time.perf_counter() - started < 5
+
+    def test_long_whitespace_run_stays_linear(self) -> None:
+        # 明示 id の正規表現を \s* で始めると空白の連続で二次時間になる (100KB で 10 秒超)
+        started = time.perf_counter()
+        assert heading_ids("## a" + " " * 100_000 + "b\n") == {"a" + "-" * 100_000 + "b"}
+        assert time.perf_counter() - started < 5
 
 
 # ---------------------------------------------------------------------------

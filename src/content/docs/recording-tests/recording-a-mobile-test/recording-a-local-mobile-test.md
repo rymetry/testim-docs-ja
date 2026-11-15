@@ -316,9 +316,9 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **[Wait for element visible](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
 
-- **[Wait for element text](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
+- **[Wait for element text](/docs/advanced-editing/wait-for#要素テキストの表示を待つモバイル)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
 
-- **[Sleep](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/advanced-editing/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
+- **[Sleep](/docs/advanced-editing/wait-for#スリープモバイル)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/advanced-editing/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
 
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 

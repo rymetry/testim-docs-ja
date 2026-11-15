@@ -201,7 +201,7 @@ keywords:
     Add custom wait for
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#カスタム待機（web）">カスタム待機</a>
+    <a href="/docs/advanced-editing/wait-for#カスタム待機web">カスタム待機</a>
    </td>
   </tr>
   <tr>
@@ -217,7 +217,7 @@ keywords:
     Wait for element visible
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（web）">要素が表示されるまで待機</a>
+    <a href="/docs/advanced-editing/wait-for#要素の表示を待つweb">要素が表示されるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -225,7 +225,7 @@ keywords:
     Wait for element not visible
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#要素の非表示を待つ（web）">要素が非表示になるまで待機</a>
+    <a href="/docs/advanced-editing/wait-for#要素の非表示を待つweb">要素が非表示になるまで待機</a>
    </td>
   </tr>
   <tr>
@@ -233,7 +233,7 @@ keywords:
     Wait for element text
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#要素テキストの表示を待つ（web）">要素のテキストを待機</a>
+    <a href="/docs/advanced-editing/wait-for#要素テキストの表示を待つweb">要素のテキストを待機</a>
    </td>
   </tr>
   <tr>
@@ -241,7 +241,7 @@ keywords:
     Wait for download
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#ダウンロード待機（web）">ダウンロードを待機</a>
+    <a href="/docs/advanced-editing/wait-for#ダウンロード待機web">ダウンロードを待機</a>
    </td>
   </tr>
   <tr>
@@ -249,7 +249,7 @@ keywords:
     Sleep
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#スリープ（web）">スリープ</a>
+    <a href="/docs/advanced-editing/wait-for#スリープweb">スリープ</a>
    </td>
   </tr>
   <tr>
