@@ -32,9 +32,9 @@ __all__ = [
     "check_structure_signature",
     "check_links",
     "lint_content",
-    "main",
     "heading_ids",
-    "to_kebab",
+    "heading_slug",
+    "main",
 ]
 
 
@@ -60,9 +60,10 @@ _FEATURE_NAME_RULES: tuple[tuple[re.Pattern[str], str], ...] = (
 )
 
 _LEGACY_FA_ICON_RE = re.compile(r":fa-[a-z][a-z-]*:")
-_HEADING_LEVEL_RE = re.compile(r"^#{2,4}\s+(.+)")
-# src/lib/remark-heading-ids.mjs と同じ条件 (空白を含む {#...} は明示 id にならない)
-_EXPLICIT_HEADING_ID_RE = re.compile(r"\s*\{#([^}\s]+)\}\s*$")
+_HEADING_LEVEL_RE = re.compile(r"^#{1,6}[ \t]+(.+)")
+# src/lib/remark-heading-ids.mjs と同じ条件 (空白を含む {#...} は明示 id にならない)。
+# 先頭に \s* を置くと空白の連続で二次時間になるので、id だけを取り出す形にしている。
+_EXPLICIT_HEADING_ID_RE = re.compile(r"\{#([^}\s]+)\}\s*$")
 
 _CODE_FENCE_RE = re.compile(r"^```")
 _CODE_BLOCK_RE = re.compile(r"```[\s\S]*?```")
@@ -161,36 +162,45 @@ def _is_slug_char(ch: str) -> bool:
     return ch in "- " or category[0] in "LM" or category in {"Nd", "Nl", "Pc"}
 
 
-def to_kebab(text: str) -> str:
+def heading_slug(text: str) -> str:
     """見出し text を、サイトが見出し id に使う github-slugger と同じ slug に変換する。
 
-    記号は消すだけで、半角スペースだけを ``-`` にする。連続した ``-`` は潰さない。
+    記号は消すだけで、半角スペースだけを ``-`` にする。連続・先頭・末尾の ``-`` はそのまま残す。
     """
-    s = re.sub(r"`([^`]*)`", r"\1", text)
-    s = re.sub(r"\*{1,2}([^*]+)\*{1,2}", r"\1", s)
-    s = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", s)
+    s = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", text)
     s = s.strip().lower()
     return "".join(ch for ch in s if _is_slug_char(ch)).replace(" ", "-")
 
 
 def heading_ids(body: str) -> set[str]:
-    """Markdown body の見出しにサイトが付ける id の集合を返す。"""
+    """Markdown body の見出しにサイトが付ける id の集合を返す。
+
+    期待値は scripts/__tests__/fixtures/heading-ids.json でサイトの実パイプラインと共有している。
+    """
+    # shortcut: Markdown を行単位の正規表現で読む。見出し内のインライン HTML・文字参照・画像・
+    # ``_強調_``・参照リンク・``:name`` ディレクティブ、setext 見出し、引用やリスト内の見出し、
+    # ``~~~`` フェンスはサイトと id がずれる (現行コンテンツに該当なし)。使い始めたら
+    # fixture にケースを足し、ここを Markdown パーサーに置き換える。
     ids: set[str] = set()
-    for line in body.split("\n"):
+    occurrences: dict[str, int] = {}  # github-slugger と同じ重複カウンタ
+    for line in _CODE_BLOCK_RE.sub("", body).split("\n"):
         match = _HEADING_LEVEL_RE.match(line)
         if not match:
             continue
-        heading_text = match.group(1).strip()
+        heading_text = match.group(1).rstrip()
+        without_hashes = heading_text.rstrip("#")
+        if without_hashes != heading_text and without_hashes[-1:] in ("", " ", "\t"):
+            heading_text = without_hashes.rstrip()  # ATX の閉じ ``##``
         explicit = _EXPLICIT_HEADING_ID_RE.search(heading_text)
         if explicit:
             # 明示 id は slug 化も重複回避も通らず、自動 id は付かない
             ids.add(explicit.group(1))
             continue
-        base = slug = to_kebab(heading_text)
-        suffix = 0
-        while slug in ids:  # 同じ見出しが続くと -1, -2 ... が付く
-            suffix += 1
-            slug = f"{base}-{suffix}"
+        base = slug = heading_slug(heading_text)
+        while slug in occurrences:  # 同じ見出しが続くと -1, -2 ... が付く
+            occurrences[base] += 1
+            slug = f"{base}-{occurrences[base]}"
+        occurrences[slug] = 0
         ids.add(slug)
     return ids
 

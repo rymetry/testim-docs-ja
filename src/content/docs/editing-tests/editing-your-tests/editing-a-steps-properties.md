@@ -489,7 +489,7 @@ keywords:
     このプロパティは、次のステップに進む前にテストが待機する時間を設定します。デフォルトは 1 秒（1,000 ms）です。この値を変更するには、フィールド内をクリックして、新しいスリープ値（ms）を編集します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つモバイル">待機（Wait for）</a>
+    <a href="/docs/advanced-editing/wait-for#スリープweb">待機（Wait for）</a>
    </td>
   </tr>
   <tr>

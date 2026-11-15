@@ -1,17 +1,20 @@
 """lint_docs の unit test — WRITING_GUIDE 準拠ルールを function 単位で exercise する。
 
 Python 版 ``lint_content(content, file_path, *, all_slugs=None, headings_by_slug=None)`` と
-``to_kebab(text)`` の契約を pin する。
+``heading_slug(text)`` / ``heading_ids(body)`` の契約を pin する。
 """
 
 from __future__ import annotations
 
+import json
+import time
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from testim_parity.tools.lint_docs import heading_ids, lint_content, to_kebab
+from testim_parity.project import PROJECT_ROOT
+from testim_parity.tools.lint_docs import heading_ids, heading_slug, lint_content
 
 _TEST_PATH = Path("src/content/docs/test.md")
 
@@ -517,11 +520,11 @@ class TestInternalLinkTargets:
 
 
 # ---------------------------------------------------------------------------
-# I. to_kebab helper
+# I. heading_slug / heading_ids
 # ---------------------------------------------------------------------------
 
 
-class TestToKebab:
+class TestHeadingSlug:
     @pytest.mark.parametrize(
         ("raw", "expected"),
         [
@@ -547,27 +550,34 @@ class TestToKebab:
         ],
     )
     def test_conversion(self, raw: str, expected: str) -> None:
-        assert to_kebab(raw) == expected
+        assert heading_slug(raw) == expected
 
 
-class TestHeadingIds:
-    """``heading_ids`` はサイトが見出しに付ける id の集合を返す。"""
+# 同じ fixture をサイトの実パイプラインでも検証している
+# (scripts/__tests__/remark_heading_ids.test.mjs)。
+# linter の id 規則がサイトとずれると、どちらかのテストが落ちる。
+_HEADING_ID_CASES: list[dict[str, Any]] = json.loads(
+    (PROJECT_ROOT / "scripts/__tests__/fixtures/heading-ids.json").read_text(encoding="utf-8")
+)
 
-    def test_auto_ids(self) -> None:
-        body = "## 概要\n\n本文\n\n### スリープ（Web）\n"
-        assert heading_ids(body) == {"概要", "スリープweb"}
 
-    def test_duplicate_headings_get_numeric_suffix(self) -> None:
-        body = "### 例\n\n### 例\n\n### 例\n"
-        assert heading_ids(body) == {"例", "例-1", "例-2"}
+class TestHeadingIdsMatchSite:
+    @pytest.mark.parametrize("case", _HEADING_ID_CASES, ids=lambda case: case["name"])
+    def test_same_ids_as_site(self, case: dict[str, Any]) -> None:
+        assert heading_ids(case["markdown"]) == set(case["ids"])
 
-    def test_explicit_id_replaces_auto_id(self) -> None:
-        body = "## パラメーターの使用 {#using-parameters}\n"
-        assert heading_ids(body) == {"using-parameters"}
+    def test_many_repeated_headings_stay_linear(self) -> None:
+        # 連番を毎回 -1 から探し直すと二次時間になる (2 万見出しで 20 秒超)
+        started = time.perf_counter()
+        ids = heading_ids("## a\n" * 20_000)
+        assert len(ids) == 20_000
+        assert time.perf_counter() - started < 5
 
-    def test_explicit_id_with_whitespace_is_plain_text(self) -> None:
-        # サイトの remark plugin は空白を含む {#...} を明示 id として扱わない
-        assert heading_ids("## 見出し {#a b}\n") == {"見出し-a-b"}
+    def test_long_whitespace_run_stays_linear(self) -> None:
+        # 明示 id の正規表現を \s* で始めると空白の連続で二次時間になる (100KB で 10 秒超)
+        started = time.perf_counter()
+        assert heading_ids("## a" + " " * 100_000 + "b\n") == {"a" + "-" * 100_000 + "b"}
+        assert time.perf_counter() - started < 5
 
 
 # ---------------------------------------------------------------------------

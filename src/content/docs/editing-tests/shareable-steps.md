@@ -115,7 +115,7 @@ keywords:
     Add custom wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つモバイル">
+    <a href="/docs/advanced-editing/wait-for#カスタム待機web">
      Custom Wait for
     </a>
    </td>

@@ -1,5 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import { createMarkdownProcessor, rehypeHeadingIds } from '@astrojs/markdown-remark';
 
@@ -76,4 +77,21 @@ describe('rehypeUniqueHeadingIds', () => {
       ['手順', '手順-1']
     );
   });
+});
+
+// lint:docs (scripts/python/tests/test_lint_docs.py) も同じ fixture を読む。
+// サイトの id 規則が変わるとここが落ち、fixture を直すと Python 側が落ちる。
+describe('heading ids shared with lint:docs', () => {
+  const cases = JSON.parse(
+    readFileSync(new URL('./fixtures/heading-ids.json', import.meta.url), 'utf8')
+  );
+  for (const { name, markdown, ids } of cases) {
+    it(name, async () => {
+      const { headings } = await render(markdown);
+      assert.deepEqual(
+        headings.map((heading) => heading.slug),
+        ids
+      );
+    });
+  }
 });
