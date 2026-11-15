@@ -119,7 +119,7 @@ def test_en_patch_status_stale_when_snapshot_present_but_no_hit(tmp_path: Path) 
 def test_en_patch_status_preserves_crlf_find_strings(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # No live patch has a CRLF find string any more, so register a synthetic one.
+    # A synthetic patch keeps this test independent of the live registry.
     patch = {**_PATCH, "slugs": ["fake-slug"], "find": "<p>broken</p>\r\n<p>row</p>"}
     monkeypatch.setattr("testim_parity.en_source_patches.EN_SOURCE_PATCHES", [patch])
     snapshot = tmp_path / "fake-slug.html"
