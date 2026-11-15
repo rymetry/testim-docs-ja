@@ -1,7 +1,7 @@
 """``testim_parity.turndown`` の unit test。
 
 conformance test は node 不在環境で skip するため、Python 単独での回帰検出用
-に golden fixture を pin する。fixture は mjs ``turndown.turndown`` / ``convertEnHtmlToMd``
+に golden fixture を pin する。fixture は mjs ``turndown.turndown``
 の実出力を 2026-04-22 時点でキャプチャしたもの (``test_turndown_parity.py`` の
 conformance で mjs と自動比較される)。
 """
@@ -10,10 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from testim_parity.turndown import (
-    convert_en_html_to_md,
-    html_to_md,
-)
+from testim_parity.turndown import html_to_md
 
 
 @pytest.mark.parametrize(
@@ -111,24 +108,6 @@ def test_madcap_table_pipe_format() -> None:
 def test_html_details_summary_converts_to_h2() -> None:
     html = "<details><summary><b>Question?</b></summary><p>Answer.</p></details>"
     assert html_to_md(html) == "## **Question?**\n\nAnswer."
-
-
-def test_convert_en_html_to_md_applies_preprocess() -> None:
-    """escaped callout pattern が preprocess で ``<div class="note">`` に正規化される。"""
-    html = "<p>&gt; Title &gt; &gt; Body text</p>"
-    # preprocessEnHtml で <div class="note"><p>Body text</p></div> に rewrite、
-    # その後 turndown で :::note directive に変換される
-    assert convert_en_html_to_md(html) == ":::note\nBody text\n:::"
-
-
-def test_convert_en_html_to_md_plain_passthrough() -> None:
-    """preprocess 対象外の平易な HTML は turndown default と同じ結果。"""
-    assert convert_en_html_to_md("<p>Plain text.</p>") == "Plain text."
-
-
-def test_convert_en_html_to_md_rejects_non_str() -> None:
-    with pytest.raises(TypeError, match="expected str"):
-        convert_en_html_to_md(123)  # type: ignore[arg-type]
 
 
 # ----------------------------------------------------------------------

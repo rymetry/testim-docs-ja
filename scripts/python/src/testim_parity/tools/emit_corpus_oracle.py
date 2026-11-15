@@ -2,20 +2,20 @@
 
 Phase 6a 期間中は ``scripts/python/tools/emit_corpus_oracle.mjs`` が mjs authority
 を呼び出して JSONL を生成していたが、Phase 6b atomic cutover で mjs harness
-を削除したため、Python 実装に切替える。segments_en / turndown / align は
+を削除したため、Python 実装に切替える。segments_en / align は
 Python 側が mjs byte-identical を保証している (Phase 6a committed golden が
 authoritative で、Python 実装はそれを pin している)。
 
 Usage:
     uv run python -m testim_parity.tools.emit_corpus_oracle \
         --out tests/conformance/__oracle__/corpus_golden.jsonl \
-        [--suite segments_en,turndown,align|all]
+        [--suite segments_en,align|all]
 
 Output format (JSONL, 1 row per line)::
 
     {
       "schemaVersion": 1,
-      "suite": "segments_en" | "turndown" | "align",
+      "suite": "segments_en" | "align",
       "slug": "<relative path without extension>",
       "sha256": "<hex digest of canonical-JSON(expected)>",
       "expected": <suite-specific JSON value>
@@ -45,14 +45,13 @@ from ..align import align_segments
 from ..project import ROOT_DIR
 from ..segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_html
 from ..segments_ja import extract_segments_from_markdown
-from ..turndown import convert_en_html_to_md
 
 __all__ = ["main"]
 
 _EN_SNAPSHOT_ROOT = ROOT_DIR / "snapshots" / "en" / "content"
 _JA_DOCS_ROOT = ROOT_DIR / "src" / "content" / "docs"
 
-_VALID_SUITES: frozenset[str] = frozenset({"segments_en", "turndown", "align"})
+_VALID_SUITES: frozenset[str] = frozenset({"segments_en", "align"})
 
 
 def _parse_args(argv: list[str] | None) -> tuple[Path, frozenset[str]]:
@@ -62,8 +61,8 @@ def _parse_args(argv: list[str] | None) -> tuple[Path, frozenset[str]]:
     parser.add_argument("--out", required=True, help="output JSONL path (absolute or cwd-relative)")
     parser.add_argument(
         "--suite",
-        default="segments_en,turndown,align",
-        help="comma-separated suite names; ``all`` for everything (default: all 3 suites)",
+        default="segments_en,align",
+        help="comma-separated suite names; ``all`` for everything (default: all 2 suites)",
     )
     args = parser.parse_args(argv)
 
@@ -131,10 +130,6 @@ def _compute_segments_en(slug: str, html: str) -> list[dict[str, Any]]:
     )
 
 
-def _compute_turndown(_slug: str, html: str) -> str:
-    return convert_en_html_to_md(html)
-
-
 def _compute_align(slug: str, html: str) -> dict[str, Any] | None:
     ja_body = _load_ja_body_if_exists(slug)
     if ja_body is None:
@@ -177,20 +172,6 @@ def main(argv: list[str] | None = None) -> int:
                 )
             except Exception as exc:  # noqa: BLE001
                 failures.append(f"segments_en/{slug}: {exc}")
-        if "turndown" in suites:
-            try:
-                expected_md = _compute_turndown(slug, html)
-                rows.append(
-                    {
-                        "schemaVersion": 1,
-                        "suite": "turndown",
-                        "slug": slug,
-                        "sha256": _canonical_sha256(expected_md),
-                        "expected": expected_md,
-                    }
-                )
-            except Exception as exc:  # noqa: BLE001
-                failures.append(f"turndown/{slug}: {exc}")
         if "align" in suites:
             try:
                 align_result = _compute_align(slug, html)

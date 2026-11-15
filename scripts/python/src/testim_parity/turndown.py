@@ -1,6 +1,6 @@
 """``scripts/lib/turndown.mjs`` の Python port。
 
-``convertEnHtmlToMd(html)`` と ``preprocessEnHtml(html, options)`` を提供する。
+``turndown.turndown(html)`` 相当の ``html_to_md`` を提供する。
 mjs 版は ``turndown`` npm package + 5 つの custom rule (madcap-callout /
 madcap-code-snippet-copy / madcap-ordered-list / madcap-table / html-details+summary)
 で構成されている。
@@ -49,11 +49,7 @@ fenced code with language) を replicate する。
   fence 外側のみ適用する必要がある (round-4 P1 対応)
 
 **byte-parity 戦略**: 39 代表 MadCap pattern を unit test で mjs turndown
-出力と byte 比較 + 288-page corpus 全体を
-``tests/conformance/test_turndown_288_matrix.py`` で byte 比較
-(Phase 4b.1 で全 pass)。
-
-``preprocess_en_html`` は既存の ``preprocess_en`` module の re-export。
+出力と byte 比較 (288-page corpus との byte 比較は Phase 4b.1 で全 pass 済)。
 """
 
 from __future__ import annotations
@@ -72,9 +68,7 @@ from bs4 import (
 )
 from markdownify import MarkdownConverter
 
-from .preprocess_en import preprocess_en_html
-
-__all__ = ["convert_en_html_to_md", "html_to_md", "preprocess_en_html"]
+__all__ = ["html_to_md"]
 
 
 _CALLOUT_CLASS_MAP: dict[str, str] = {
@@ -861,7 +855,7 @@ def html_to_md(html: str) -> str:
     """Preprocess-skip 版。``turndown.turndown(html)`` 相当。
 
     ``preprocess_en_html`` を通さないので callout/details 等の MadCap
-    artifact 正規化は caller 責務。通常は ``convert_en_html_to_md`` を使う。
+    artifact 正規化は caller 責務。
 
     **Pipeline (5 step, Phase 4b.1)**:
 
@@ -883,19 +877,6 @@ def html_to_md(html: str) -> str:
     """
     converter = _TurndownConverter()
     return _run_pipeline(html, converter)
-
-
-def convert_en_html_to_md(html: str) -> str:
-    """mjs ``convertEnHtmlToMd`` 相当。preprocess + turndown を 1 step で実行。
-
-    ``preprocessEnHtml(html)`` を既存 Python port 経由で呼び (slug 未指定 =
-    patches 適用なし、mjs default と一致)、その後 Turndown 等価 converter で
-    Markdown へ変換する。
-    """
-    if not isinstance(html, str):
-        raise TypeError(f"convert_en_html_to_md expected str, got {type(html).__name__}")
-    preprocessed = preprocess_en_html(html)
-    return html_to_md(preprocessed)
 
 
 # ``convert`` 後の空行過多 / 末尾改行を turndown 出力形式に揃える。

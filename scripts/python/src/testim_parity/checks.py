@@ -1,15 +1,8 @@
-"""EN / JA body の count・shape・heuristics 比較 (``source_parity_checks.mjs`` port)。
+"""EN / JA body の count・shape・heuristics 比較 (``source_parity_checks.mjs`` port の残部)。
 
-Phase 3 M3 の後半。``extract.py`` の関数を消費して section 別 count /
-table structure / heading 列を比較し、coarse audit signal 系 issue
-(bullet-count / paragraph-count / section-count / heading-mismatch /
-table-* / callout-nesting 等) を emit する。``compare_snapshot_structure`` の
-issue 列は mjs と byte-identical な契約。
-
-なお ``image_parity_issues`` は mjs port 完了後に追加した **Python-only** の
-画像パリティ検出器 (image-mismatch / image-order-mismatch) で、byte-parity
-契約の対象外。EN を生 HTML から抽出する点が ``compare_snapshot_structure``
-(turndown markdown 入力) と異なる。
+``html_structure`` が再利用する section count / table 比較 helper と、
+``local_check`` (JA 単体検査) と、Python-only の画像パリティ検出器
+``image_parity_issues`` を保持する。
 """
 
 from __future__ import annotations
@@ -20,19 +13,9 @@ from collections.abc import Iterable, Mapping
 from typing import Any
 
 from .extract import (
-    detect_en_artifacts,
-    extract_bullet_counts,
-    extract_callout_positions,
-    extract_heading_sequence,
     extract_invariant_tokens,
-    extract_paragraph_counts,
-    extract_step_counts,
-    extract_table_structure,
     is_untranslated_cell,
-    normalize_en_artifacts,
-    normalize_numeric_period_spacing,
     strip_markdown,
-    strip_title_h1,
 )
 from .madcap_toc import extract_slug as _extract_slug_from_url
 from .madcap_toc import match_all_tricentis_urls
@@ -46,7 +29,6 @@ from .types import (
 )
 
 __all__ = [
-    "compare_snapshot_structure",
     "image_parity_issues",
     "is_english_only_line",
     "load_sidebar_slugs",
@@ -222,12 +204,11 @@ def _compare_section_counts(
     """section 別 count map を比較して per-section または total diff を emit (mjs 等価)。
 
     **Precondition (python-reviewer HIGH 指摘)**: ``en_map`` / ``ja_map`` は同じ
-    document 走査順で作られた dict であること (``extract_step_counts`` /
-    ``extract_bullet_counts`` / ``extract_paragraph_counts`` は全て同一の linear
-    scan で dict を build するため契約を満たす)。mjs ``Map.entries()`` 順と同じく
+    document 走査順で作られた dict であること (``html_structure`` の step / bullet /
+    paragraph count は全て同一の linear scan で dict を build するため契約を満たす)。mjs ``Map.entries()`` 順と同じく
     Python 3.7+ dict の挿入順を両側で信頼する。異なる source から aggregate
     された map を渡すと per-section zip が silently 誤 diff を emit するため、
-    caller は上記 3 関数で生成した map だけを渡すこと。
+    caller は同一 scan で生成した map だけを渡すこと。
     """
     issues: list[dict[str, Any]] = []
     en_sections = [(k, v) for k, v in en_map.items() if k != "__top__"]
@@ -302,11 +283,6 @@ def _normalize_for_compare(value: str) -> str:
     text = text.strip()
     text = _MULTI_WS_RE.sub(" ", text)
     return text.lower()
-
-
-def _compare_table_structure(en_body: str, ja_body: str) -> list[dict[str, Any]]:
-    """table shape + cell token + untranslated cell を比較する (mjs 等価)。"""
-    return _compare_tables(extract_table_structure(en_body), extract_table_structure(ja_body))
 
 
 def _compare_tables(
@@ -440,26 +416,6 @@ def _compare_tables(
                     )
 
     return issues
-
-
-# ---------------------------------------------------------------------------
-# compare_snapshot_structure (main API)
-# ---------------------------------------------------------------------------
-
-_SECTION_HEADING_RE = re.compile(r"^#{2,4}\s+")
-
-
-def _count_section_headings(body: str) -> int:
-    """H2-H4 見出しの数を数える (code fence 内は除外)。"""
-    count = 0
-    in_code = False
-    for line in body.split("\n"):
-        if FENCE_LINE_RE.match(line):
-            in_code = not in_code
-            continue
-        if not in_code and _SECTION_HEADING_RE.match(line):
-            count += 1
-    return count
 
 
 # ---------------------------------------------------------------------------
@@ -603,63 +559,6 @@ def image_parity_issues(en_html: str, ja_body: str) -> list[dict[str, Any]]:
     return issues
 
 
-def _callout_nesting_issues(en_body: str, ja_body: str) -> list[dict[str, Any]]:
-    """callout 深さ不一致を検出する (mjs 等価)。"""
-    issues: list[dict[str, Any]] = []
-    en_callouts = extract_callout_positions(en_body)
-    ja_callouts = extract_callout_positions(ja_body)
-
-    if len(en_callouts) != len(ja_callouts) or len(en_callouts) == 0:
-        return issues
-
-    for index in range(len(en_callouts)):
-        if en_callouts[index]["depth"] == ja_callouts[index]["depth"]:
-            continue
-        en_level = "トップレベル" if en_callouts[index]["depth"] == 0 else "ネスト"
-        ja_level = "トップレベル" if ja_callouts[index]["depth"] == 0 else "ネスト"
-        issues.append(
-            _with_severity(
-                {
-                    "type": "callout-nesting-mismatch",
-                    "line": ja_callouts[index]["line"],
-                    "detail": f"callout #{index + 1}: EN={en_level} → JA={ja_level}",
-                }
-            )
-        )
-
-    return issues
-
-
-def _heading_level_mismatches(
-    en_headings: list[dict[str, Any]], ja_headings: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    """heading level 不一致を最大 3 件まで example として emit (mjs 等価)。"""
-    compare_length = min(len(en_headings), len(ja_headings))
-    if compare_length == 0:
-        return []
-
-    mismatches: list[dict[str, Any]] = []
-    for index in range(compare_length):
-        if en_headings[index]["level"] != ja_headings[index]["level"]:
-            mismatches.append({"en": en_headings[index], "ja": ja_headings[index]})
-
-    if not mismatches:
-        return []
-
-    examples = "; ".join(
-        f"EN H{m['en']['level']} '{m['en']['text']}' → JA H{m['ja']['level']}"
-        for m in mismatches[:3]
-    )
-    return [
-        _with_severity(
-            {
-                "type": "heading-mismatch",
-                "detail": f"見出しレベル不一致 ({len(mismatches)}件): {examples}",
-            }
-        )
-    ]
-
-
 def _apply_artifacts(
     issues: Iterable[dict[str, Any]], artifacts: list[str]
 ) -> list[dict[str, Any]]:
@@ -667,83 +566,3 @@ def _apply_artifacts(
     if not artifacts:
         return list(issues)
     return [{**issue, "artifacts": artifacts} for issue in issues]
-
-
-def compare_snapshot_structure(en_body: str, ja_body: str) -> list[dict[str, Any]]:
-    """EN / JA body の shape / count heuristic 比較 (mjs ``compareSnapshotStructure`` 等価)。
-
-    発火する issue type:
-
-    - ``callout-nesting-mismatch`` (callout 深さ差)
-    - ``table-shape-mismatch`` / ``table-cell-*`` (テーブル形状と中身)
-    - ``section-count-mismatch`` (H2-H4 見出し数)
-    - ``heading-mismatch`` (heading level 不一致)
-    - ``step-count-mismatch`` / ``bullet-count-mismatch`` /
-      ``paragraph-count-mismatch`` (section 別 count)
-
-    画像の枚数 / 重複 / 順序は ``image_parity_issues`` (EN 生 HTML 基準) が担当する。
-
-    EN artifact (`<details>` 使用 / code-fence-wrapped) が検出されたら全 issue
-    に ``artifacts`` field を付与する。
-    """
-    issues: list[dict[str, Any]] = []
-    en_artifacts = detect_en_artifacts(en_body)
-
-    issues.extend(_callout_nesting_issues(en_body, ja_body))
-    issues.extend(_compare_table_structure(en_body, ja_body))
-
-    normalized_en_body = normalize_en_artifacts(strip_title_h1(en_body))
-    # WRITING_GUIDE §5.3.5: JA 側にも同じ `\d+\.\S` space 挿入を適用し、paragraph /
-    # step count の asymmetric drift を避ける。
-    normalized_ja_body = normalize_numeric_period_spacing(ja_body)
-
-    en_section_count = _count_section_headings(normalized_en_body)
-    ja_section_count = _count_section_headings(normalized_ja_body)
-    if en_section_count > 0 and en_section_count != ja_section_count:
-        issues.append(
-            _with_severity(
-                {
-                    "type": "section-count-mismatch",
-                    "detail": f"H2-H4 セクション数: EN={en_section_count}, JA={ja_section_count}",
-                }
-            )
-        )
-
-    en_headings = extract_heading_sequence(normalized_en_body)
-    ja_headings = extract_heading_sequence(normalized_ja_body)
-    issues.extend(_heading_level_mismatches(en_headings, ja_headings))
-
-    en_steps = extract_step_counts(normalized_en_body)
-    ja_steps = extract_step_counts(normalized_ja_body)
-    en_bullets = extract_bullet_counts(normalized_en_body)
-    ja_bullets = extract_bullet_counts(normalized_ja_body)
-    en_paragraphs = extract_paragraph_counts(normalized_en_body)
-    ja_paragraphs = extract_paragraph_counts(normalized_ja_body)
-
-    en_step_total = sum(en_steps.values())
-    ja_step_total = sum(ja_steps.values())
-    if en_step_total > 0 and ja_step_total > 0 and en_step_total != ja_step_total:
-        diff = ja_step_total - en_step_total
-        direction = "多い" if diff > 0 else "少ない"
-        issues.append(
-            _with_severity(
-                {
-                    "type": "step-count-mismatch",
-                    "detail": (
-                        f"番号付きステップ数が原文と異なります: "
-                        f"EN={en_step_total}, JA={ja_step_total} "
-                        f"({abs(diff)} {direction})"
-                    ),
-                }
-            )
-        )
-
-    issues.extend(_compare_section_counts(en_steps, ja_steps, "step-count-mismatch", "ステップ数"))
-    issues.extend(
-        _compare_section_counts(en_bullets, ja_bullets, "bullet-count-mismatch", "箇条書き数")
-    )
-    issues.extend(
-        _compare_section_counts(en_paragraphs, ja_paragraphs, "paragraph-count-mismatch", "段落数")
-    )
-
-    return _apply_artifacts(issues, en_artifacts)
