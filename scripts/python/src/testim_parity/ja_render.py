@@ -8,6 +8,9 @@ marker の行頭インデントは div にそのまま付けるので、list ite
 
 閉じられていない callout は、次の column-0 ATX heading 行の直前で閉じる
 (heading は callout 内に書けない前提)。入力末尾の未閉 div は HTML parser が閉じる。
+未閉の indented callout はその list item / page の終わりまで続く (indented callout は
+lint_docs が ``callout-in-list-item`` で拒否する)。callout が開いていない ``:::`` 行は
+literal text のまま残す。
 """
 
 from __future__ import annotations
@@ -19,6 +22,8 @@ from markdown_it import MarkdownIt
 __all__ = ["render_ja_markdown"]
 
 _MD = MarkdownIt("commonmark", {"html": True}).enable("table").enable("strikethrough")
+# shortcut: a 4-space indented code block outside a list is not detected, so a marker in it
+# becomes literal <div> text in the code; upgrade if such a page appears in the corpus.
 _OPEN = re.compile(r"^(\s*):::(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$")
 _CLOSE = re.compile(r"^(\s*):::\s*$")
 _HEADING = re.compile(r"^#{1,6}\s")
@@ -56,9 +61,9 @@ def render_ja_markdown(body: str) -> str:
         elif (o := _OPEN.match(line)) is not None:
             out += [f'{o[1]}<div class="callout-{o[2]}" data-line="{n + 1}">', ""]
             open_callouts += 1
-        elif (c := _CLOSE.match(line)) is not None:
+        elif open_callouts and (c := _CLOSE.match(line)) is not None:
             out += ["", f"{c[1]}</div>", ""]
-            open_callouts = max(open_callouts - 1, 0)
+            open_callouts -= 1
         elif first_content and _H1.match(line):
             pass  # title H1 は frontmatter 直後の最初の非空行のみ
         else:

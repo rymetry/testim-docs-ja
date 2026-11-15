@@ -110,3 +110,24 @@ def test_data_line_counts_frontmatter_lines():
 def test_thematic_break_without_frontmatter_keeps_both_paragraphs():
     html = render_ja_markdown("a\n\n---\n\nb\n")
     assert "<hr" in html and "<p>a</p>" in html and "<p>b</p>" in html
+
+
+def test_stray_callout_close_stays_literal_text():
+    html = render_ja_markdown("a\n\n:::\n\nb\n")
+    assert "</div>" not in html and "<p>:::</p>" in html
+
+
+def test_callout_close_after_closed_callout_stays_literal_text():
+    html = render_ja_markdown(":::note\nx\n:::\n\n:::\n")
+    assert html.count("</div>") == 1 and "<p>:::</p>" in html
+
+
+def test_indented_callout_in_list_item_nests_in_li():
+    html = render_ja_markdown("1. a\n\n   :::note\n   body\n   :::\n")
+    assert '<li>\n<p>a</p>\n<div class="callout-note"' in html
+
+
+def test_marker_in_indented_code_block_outside_list_is_pinned_limit():
+    # shortcut の既知制限を pin: indented code block 内の marker は <div> 文字列になる
+    html = render_ja_markdown("para\n\n    :::note\n    x\n    :::\n")
+    assert "<pre><code>&lt;div class=&quot;callout-note&quot;" in html
