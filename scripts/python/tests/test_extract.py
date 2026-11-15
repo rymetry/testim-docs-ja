@@ -17,6 +17,9 @@ class TestCliFlags:
         assert "-v" in tokens
         assert "--verbose" in tokens
 
+    def test_flag_followed_by_colon(self):
+        assert extract_invariant_tokens("--token: 認証トークン") == ["--token"]
+
     def test_flags_adjacent_to_code_spans_not_duplicated(self):
         # `--proxy` はバッククォート経由で既に抽出されているはず
         tokens = extract_invariant_tokens("use `--proxy`")

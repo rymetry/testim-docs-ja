@@ -83,7 +83,7 @@ _LINK_DEST_RE = re.compile(
     r"|[^\s)\]]*\.htm(?:#[^\]\)\s]*)?))"
     r"\]?\)?"
 )
-_FLAG_RE = re.compile(r"(?:^|\s)(--?[a-zA-Z][\w-]*)(?=\s|$)")
+_FLAG_RE = re.compile(r"(?:^|\s)(--?[a-zA-Z][\w-]*)(?=\s|:|$)")
 _DOT_RE = re.compile(r"\b([a-zA-Z_]\w*(?:\.\w+)+)\b")
 _IPV4_CIDR_RE = re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?:/\d{1,2})?(?![\w./])")
 _VERSION_RE = re.compile(r"\bv?\d+\.\d+\.\d+\b")
