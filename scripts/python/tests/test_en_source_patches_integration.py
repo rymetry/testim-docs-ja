@@ -226,10 +226,10 @@ class TestStaleDetection:
         assert len(snap["byPatchIdStatus"]) == len(EN_SOURCE_PATCHES)
 
     def test_stale_scan_covers_expected_unique_slugs(self) -> None:
-        """slug-driven scan が 24 slug を覆うこと (回帰 guard)。"""
+        """slug-driven scan が 20 slug を覆うこと (回帰 guard)。"""
         unique_slugs = {s for p in EN_SOURCE_PATCHES for s in p["slugs"]}
-        assert len(unique_slugs) == 24, (
-            f"expected slug-driven scan to cover 24 unique slugs (got {len(unique_slugs)})"
+        assert len(unique_slugs) == 20, (
+            f"expected slug-driven scan to cover 20 unique slugs (got {len(unique_slugs)})"
         )
 
     def test_every_patch_has_valid_review_after(self) -> None:

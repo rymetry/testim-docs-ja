@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-11-13 確認済み、有効な補正26件）
+- **Status**: Active（2026-11-15 更新、有効な補正27件）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -26,13 +26,14 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-013 | Hidden parameters の親ページへのリンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 | UD-014 | Auto grouping の親ページへのリンク | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
 | UD-015 | Run hooks の ZWSP だけを含む空段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
-| UD-016 | Subscription plans の localhost トークンのマークアップ | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-017 | API assertion の段落内改行による余分な段落 | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-018 | SeaLights のリスト内 CLI コードスニペット | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-019 | Salesforce 記録手順の画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
-| UD-020 | Salesforce トラブルシューティングの画像だけのリスト項目 | `madcap-artifact` | applied | 2026-04-20 登録 |
+| UD-016 | Subscription plans の localhost トークンのマークアップ | `madcap-artifact` | recovered / archived (absorbed by HTML comparison path) | 2026-04-20 登録 |
+| UD-017 | API assertion の段落内改行による余分な段落 | `madcap-artifact` | recovered / archived (absorbed by HTML comparison path) | 2026-04-20 登録 |
+| UD-018 | SeaLights のリスト内 CLI コードスニペット | `madcap-artifact` | recovered / archived (absorbed by JA source-form edit) | 2026-04-20 登録 |
+| UD-019 | Salesforce 記録手順の画像だけのリスト項目 | `madcap-artifact` | recovered / archived (absorbed by JA source-form edit) | 2026-04-20 登録 |
+| UD-020 | Salesforce トラブルシューティングの画像だけのリスト項目 | `madcap-artifact` | recovered / archived (absorbed by JA source-form edit) | 2026-04-20 登録 |
 | UD-021 | Validate download の壊れた PDF 表行 | `madcap-artifact` | applied | 2026-04-20 登録 |
 | UD-022 | Jenkins Docker の末尾にある ZWSP 段落 | `madcap-artifact` | recovered / archived (absorbed by extractor) | 2026-04-20 登録 |
+| UD-023 | Running tests overview の表セルにある壊れた画像マークアップ | `madcap-artifact` | applied | 2026-11-15 登録 |
 | UD-024 | Agentic Test Automation for Salesforce の壊れた `index.htm/#/` リンク | `href-miswire` | applied | 2026-11-13 登録 |
 | UD-025 | Local mobile test の補足アクションへの `index.htm#supported-mobile-actions` miswire | `href-miswire` | applied | 2026-11-13 登録 |
 
@@ -339,9 +340,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `administration/subscription-plans`
 - **欠陥 / 補正内容**: 2つの表セルで host=localhost/127.0.0.1 が FileOrFilePath の span に囲まれている。補正では code マークアップを使い、URL に似た文字列をリテラルトークンとして保持する。CLI と Grid のセルは CRLF を含む前後の文脈で区別する。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by HTML comparison path（DOM 構造比較 `compare_html_structure` が表セル内の `span.FileOrFilePath` を `<code>` と同じく扱い、セグメント比較も描画済み HTML 同士で行うため、補正はレジストリから削除済み）。JA の変更なし。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（HTML 比較経路が吸収したため削除済み）。
 
 ### UD-017: API assertion の段落内改行による余分な段落
 
@@ -351,9 +352,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `advanced-editing/api-testing`
 - **欠陥 / 補正内容**: assertion の1段落内にある二重の br が、Markdown 抽出時に余分な段落を生む。補正では本文をすべて保持し、余分な表示上の改行を取り除く。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by HTML comparison path（EN の二重 `<br />` は 1 つの `<p>` 内に留まり、描画済み JA と DOM 上で比較されるため、補正はレジストリから削除済み）。JA は EN の改行位置に合わせ、`設定手順:` の前に行末 `\` の hard break を置いた。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（HTML 比較経路が吸収したため削除済み）。
 
 ### UD-018: SeaLights のリスト内 CLI コードスニペット
 
@@ -363,9 +364,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `integrations/sealights-integration`
 - **欠陥 / 補正内容**: 単一フラグのリスト項目3つが codeSnippet の全体構造を使用している。補正では各フラグをインラインコードのリスト項目として保持し、リストとセグメントの件数を整合させる。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by JA source-form edit（JA の 3 か所をインラインコードの箇条書きから、リスト項目内のフェンス付きコードブロックに変更し、EN の `<li>` 内 codeSnippet と同じ構造にしたため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（JA の構造修正で吸収したため削除済み）。
 
 ### UD-019: Salesforce 記録手順の画像だけのリスト項目
 
@@ -375,9 +376,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `salesforce-testing/create-a-salesforce-test`
 - **欠陥 / 補正内容**: 記録手順の step 5 はログイン後のスクリーンショットだけを含む。補正では画像を消さずにリスト項目の外へ移し、前後の独立したスクリーンショットと同じ構造にする。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by JA source-form edit（JA のスクリーンショット行を EN の画像だけの `<li value="5">` に合わせて手順 5 とし、後続を 6・7 に振り直したため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（JA の構造修正で吸収したため削除済み）。
 
 ### UD-020: Salesforce トラブルシューティングの画像だけのリスト項目
 
@@ -387,9 +388,9 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **対象 slug**:
   - `salesforce-testing/troubleshoot`
 - **欠陥 / 補正内容**: Grid のトラブルシューティング一覧にスクリーンショットだけの項目がある。補正では画像をリスト直後の段落に保持する。
-- **状態**: `applied`。2026-10-23 に取得した公式 HTML で、対象範囲の全補正が引き続き一致する。
+- **状態**: `recovered / archived`。理由: absorbed by JA source-form edit（JA の画像を EN の画像だけの `<li>` に合わせて箇条書き項目にしたため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
-- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+- **削除手順**: 不要（JA の構造修正で吸収したため削除済み）。
 
 ### UD-021: Validate download の壊れた PDF 表行
 
@@ -414,6 +415,19 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **状態**: `recovered / archived`。理由: absorbed by extractor（`extract_segments_from_html` が空段落を無視するため、補正はレジストリから削除済み）。
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: 不要（抽出器が吸収したため削除済み）。
+
+### UD-023: Running tests overview の表セルにある壊れた画像マークアップ
+
+- **補正 ID**: `UD-023-running-tests-overview-broken-image-anchor-<画像名>` の 9 件（`obwoaogsvcsoy09mlx2q`, `xqzcvrixxh7klhttxcvv`, `zkherwmreutdvdcaxxmw`, `tasdwyoeqgku3dgbb4yl`, `etuuumjl8mnaf6yi8swg`, `aliqt4hzl7exfzihlyhr`, `butca7hm2m9ynmildilk`, `jjslea2li1v9c3dfg9yn`, `tt27za73qdynpxbl58o8`）
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-11-15 / 2027-05-15
+- **対象 slug**:
+  - `running-tests/running-tests-overview`
+- **欠陥 / 補正内容**: 「How are test runs counted towards a Test Runs model plan」表の 9 セルで、Markdown の画像記法が `!<a href="URL">alt</a>` に変換されており、公式ページでは画像ではなく「!test」などの文字列が表示される。補正では各セルを `<img src="URL" alt="alt" />` に戻す（URL ごとに 1 件、9 件の URL はすべて異なる）。
+- **JA 側**: JA は既に各セルに `![alt](URL)` の画像を持つ。
+- **状態**: `applied`。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
 
 ### UD-024: Agentic Test Automation for Salesforce の壊れた `index.htm/#/` リンク
 
@@ -471,6 +485,12 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
+
+### 2026-11-15 — HTML 比較経路への移行に伴う補正の整理
+
+- 削除: UD-016A, UD-016B, UD-017（HTML 比較経路が吸収）、UD-018A, UD-018B, UD-018C, UD-019, UD-020（JA の構造修正で吸収）。いずれも checker が EN と JA を別の方法で読んでいたために必要だった補正で、上流の欠陥自体は残っている。
+- 追加: UD-023 の 9 件（`running-tests/running-tests-overview` の表セルにある `!<a href>` 画像マークアップ）。
+- 結果: 有効な補正は 26 − 8 + 9 = 27 件。
 
 ### 2026-11-13 — 検証済み補正の更新
 
