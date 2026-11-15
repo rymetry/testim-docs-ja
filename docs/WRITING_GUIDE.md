@@ -341,29 +341,25 @@ EN snapshot           →  JA 翻訳
 2. 次の手順
 ```
 
-- **list item 内に `:::callout` directive を書かない**（lint `callout-in-list-item` で強制）。Python の JA parser は line-based state machine で list context を追跡しないため、indented callout は ambiguous に flatten される。callout を使いたい場合は list の外（top-level）に出す。該当ページの EN 原文で `<div class="note">` 等が list item 内にある場合は、list を一旦閉じて callout、その後別 list として再開する構造にする
+- **list item 内に `:::callout` directive を書かない**（lint `callout-in-list-item` で強制）。`ja_render` は `:::` 行を行単位で `<div>` に置換するため、indented callout の閉じ位置は list item / ページ末尾まで延びて曖昧になる。callout を使いたい場合は list の外（top-level）に出す。該当ページの EN 原文で `<div class="note">` 等が list item 内にある場合は、list を一旦閉じて callout、その後別 list として再開する構造にする
 
-#### list item の indent 設計 (EN parser 対称化、Issue #368)
+#### list item の indent 設計
 
-JA parser は EN `collectInlineText` と対称化するため、list item 内の nested marker を
-`markerIndent >= bodyIndent` で active list item に flatten する。EN の HTML 構造に
+JA Markdown は HTML にレンダリングされ EN と同じ extractor を通る。list item 内の nested marker は
+content offset 以上のインデントで親 list item に入り、1 segment に flatten される。EN の HTML 構造に
 合わせて JA の indent を選ぶ:
 
 - **sibling list** — 独立した segment にしたい場合は、子 marker を親 item の
   marker indent まで outdent する
   - 例: `1. outer\n- sibling` (ordered の body_indent=3、`-` の indent=0)
   - 想定対応 EN 構造: `<ol><li>outer</li><ul><li>sibling</li></ul></ol>` (MadCap fragment の `<ul>` が `<li>` 直下ではなく sibling として配置される)
-- **nested list** — `markerIndent >= bodyIndent` の marker は active list item に
+- **nested list** — content offset 以上のインデントの marker は親 list item に
   **flatten される**
   - 例: `1. outer\n   - nested` (ordered の body_indent=3、`-` の indent=3)
-  - 想定対応 EN 構造: `<ol><li>outer<ul><li>nested</li></ul></li></ol>` (`<li>` 直下に nested `<ul>` が入り、EN `collectInlineText` が "outer nested" の 1 segment に flatten)
-
-PR #389 では旧 sibling 表現 (`markerIndent == bodyIndent`) を使っていた既存 corpus を
-top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約を parser 側で
-実装済み。
+  - 想定対応 EN 構造: `<ol><li>outer<ul><li>nested</li></ul></li></ol>` (`<li>` 直下に nested `<ul>` が入り、extractor が "outer nested" の 1 segment に flatten)
 
 **continuation paragraph** / **indented image** / **indented code fence** も同じく
-`leadingWs >= bodyIndent` のとき active list item に flatten される:
+content offset 以上のインデントのとき親 list item に flatten される:
 
 - `1. item\n\n   continuation` → 1 segment "item continuation"
 - `1. item\n   ![alt](img)` → 1 segment "item" (image は space 1 個に縮退)

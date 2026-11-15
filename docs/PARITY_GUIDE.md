@@ -111,16 +111,16 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 - `statusB`: `reviewAfter` が UTC 00:00 を過ぎた瞬間に `overdue`
 - `source-sync-status.json` 不在時 (local dev / PR CI) は全 exclusion entry が `statusA: 'unknown'` になり、stale 判定には使われない (fail-safe)
 
-## JA parser 制約と運用 SOP
+## JA レンダリング制約と運用 SOP
 
-Issue #368 以降、JA parser は EN `collectInlineText` と対称になるよう list item 内の継続要素を flatten する。
+JA Markdown は `ja_render.render_ja_markdown` で HTML にレンダリングされ、EN と同じ extractor (`segments_en.extract_segments_from_html`) を通る。list item 内の継続要素は EN と同じ規則で 1 つの item segment に flatten される。
 
-- nested marker は `markerIndent >= bodyIndent` のとき親 list item に吸収する
-- continuation paragraph / indented image / indented code fence / blank-line continuation は `leadingWs >= bodyIndent` のとき親 list item に吸収する
+- nested marker は content offset (marker + 後続スペースの幅) 以上のインデントのとき親 list item に吸収する (CommonMark の list item 規則)
+- continuation paragraph / indented image / indented code fence / blank-line continuation は content offset 以上のインデントのとき親 list item に吸収する
 - EN が MadCap fragmented sibling list (`<ol>` / `<ul>` の sibling) を持つ場合、JA では子 marker を親 item の marker indent まで outdent して独立 segment にする
 - list item 内の `:::callout` directive は禁止。callout は list の外に出し、必要なら list を分割する
 - `npm run lint` は EN snapshot と JA markdown の structure signature を比較し、list continuation / image / code-block の分離を `structure-signature-mismatch` として早期検知する
-- `structure-signature-mismatch` は baseline 追加で隠さず、JA content / parser / source-side debt のどれが正しいかを特定して修正する
+- `structure-signature-mismatch` は baseline 追加で隠さず、JA content / extractor / source-side debt のどれが正しいかを特定して修正する
 
 ### 絶対原則: 許容機構は broken EN snapshot 退避にのみ正当化される
 

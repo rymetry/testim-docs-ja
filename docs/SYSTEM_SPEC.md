@@ -87,7 +87,7 @@ Issue #417 / PR #432 で決定した設計。詳細な計測値は PR #432 を�
 
 ### パリティチェック (`testim_parity.detection.check_source_parity`)
 
-Section-anchored exact diff engine。EN snapshot と JA Markdown を canonical segment に分解し、weighted LCS で比較する。
+Section-anchored exact diff engine。EN snapshot (HTML) と JA Markdown を canonical segment に分解し、weighted LCS で比較する。JA Markdown は `ja_render.render_ja_markdown` で HTML にレンダリングし、EN と同じ `segments_en.extract_segments_from_html` で抽出する。
 
 **segment kind**: `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種 (凍結)。
 
@@ -102,7 +102,7 @@ Section-anchored exact diff engine。EN snapshot と JA Markdown を canonical s
 | `segment-shifted`      | section body swap (symmetric destination evidence 必須) |
 | `segment-inconclusive` | 自動判定の限界ケース (advisory)                         |
 
-**補助検出**: `section-structure-mismatch` / `segment-order-mismatch` (structure comparator, 3 段階 fall-through)。
+**補助検出**: `section-structure-mismatch` / `segment-order-mismatch` (structure comparator, 3 段階 fall-through)。step / bullet / paragraph / code-block / heading / table の count 系 signal は `html_structure.compare_html_structure` が EN / JA の DOM を直接比較して出す (数え方は同モジュールの docstring が正)。
 
 **baseline**: `parity-baseline.json` (schema v2)。`entries[]` で既知 drift を凍結し、active 集計から除外する。
 
@@ -248,7 +248,7 @@ EN 上流欠陥を JA 側に伝搬させない抑制は以下の 2 mechanism の
 | 8   | `SIDEBAR_URLS.md`       | マスターページリスト、288 URL                  | データ |
 | 9   | `DOCS_DATE_TRACKING.md` | snapshot ベース変更検知、diff 分類、CI フロー  | 仕様   |
 | 10  | `WRITING_FEATURES.md`   | Markdown 拡張機能リファレンス                  | 参照   |
-| 11  | `UPSTREAM_DEFECTS.md`   | 上流欠陥レジストリ (UD-001..UD-010+)           | 運用   |
+| 11  | `UPSTREAM_DEFECTS.md`   | 上流欠陥レジストリ (UD-001..UD-027)            | 運用   |
 
 ## スクリプトリファレンス
 
