@@ -628,6 +628,8 @@ EN に `<br />` がある場合は `。  \n→ **Xするには:**` (trailing 2-s
 
 Canonical sentinel: `editing-tests/editing-your-tests/editing-target-element-properties`
 
+この hard break は EN が同一ブロック内に `<br />` を持つ場合に限る。EN が list item の間に独立した段落を置いている場合は `\` を使わず、空行で分離する（`WRITING_GUIDE.md` の「リスト」参照）。
+
 #### パターン 2: Flat-list split（単一リストの複数分割）
 
 EN の単一 `<ol>` / `<ul>` に orphan `<p>` + `<img>` / `<div class="note">` が interleave する場合、JA 側でリストを複数に分割し、sibling 要素をリスト外に出す。番号は EN の `<li value="N">` に合わせて手動指定する。これは mechanical exception (plan §5.2 #1) であり JA 独自構造の追加ではない（kind-multiset fingerprint 上で検知器が許容する既知 pattern）。

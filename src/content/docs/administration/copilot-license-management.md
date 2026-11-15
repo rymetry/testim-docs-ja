@@ -36,7 +36,8 @@ keywords:
 
 ユーザーにシートを割り当てるには:
 
-1. Copilot User Licenses の下で、**Assign Seats** をクリックします。\
+1. Copilot User Licenses の下で、**Assign Seats** をクリックします。
+
 **Assign Copilot Seats to Teammates** が表示されます:
 
 ![Assign Copilot Seats ダイアログでユーザーを選択する画面](/images/project-user-management/copilot-license-management/88be1cb-assign.png)

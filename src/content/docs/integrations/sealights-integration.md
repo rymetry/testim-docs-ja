@@ -53,8 +53,10 @@ Sealights 統合は無料プランのお客様にはご利用いただけませ�
 
 ![Sealights の Integration 設定で Testim 統合にログインする画面](/images/other-integrations/sealights-integration/9f2f531-sealightsintegrationslogin.png)
 
-6. **Sealights Agent Token**に、取得した**Sealights Agent Token**を貼り付けます。\
+6. **Sealights Agent Token**に、取得した**Sealights Agent Token**を貼り付けます。
+
 **Sealights URL**フィールドは、**Sealights Agent Token**に基づいて自動的に入力されます。
+
 7. **Connect**をクリックします。
 
 ## Sealights 統合でテストを実行する

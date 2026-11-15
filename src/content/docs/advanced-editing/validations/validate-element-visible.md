@@ -40,12 +40,14 @@ keywords:
 
 ![Play Scenario ボタン](/images/validations/validate-element-visible/a703f11-Screen_Shot_2021-04-18_at_6.39.03.png)
 
-4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。\
+4. もう一度同じ位置にカーソルを合わせ、**"M"**（Testim の事前定義ステップ）をクリックします。
+
 Predefined steps メニューが開きます。
 
 ![検証](/images/validations/validate-element-visible/4f77381-Testim_034_r.png)
 
-5. **Validations** をクリックします。\
+5. **Validations** をクリックします。
+
 Validations セクションが展開されます。
 
 ![検証](/images/validations/validate-element-visible/dcef564-Testim_035_r.png)
@@ -56,7 +58,8 @@ Validations セクションが展開されます。
 メニュー上部の検索ボックスで **Validate element visible** を検索することもできます。
 :::
 
-7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。\
+7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。
+
 ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
 ![作成された検証ステップ](/images/validations/validate-element-visible/aa9d9b2-Testim_088.png)
@@ -97,7 +100,8 @@ Validations セクションが展開されます。
 メニュー上部の検索ボックスで **Validate element visible** を検索することもできます。
 :::
 
-7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。\
+7. AUT ウィンドウで検証したい要素を特定し、クリックして選択します。
+
 ステップが作成され、選択した要素のサムネイルがステップに表示されます。
 
 ![作成された検証ステップ](/images/validations/validate-element-visible/604aa0a-7.png)

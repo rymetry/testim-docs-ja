@@ -53,12 +53,14 @@ _Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
 
 ![ステップ追加アイコン](/images/validations/add-cli-validations-and-actions/f982ee3-Testim_329a.png)
 
-2. **"M"**（Testim の事前定義ステップ）をクリックします。\
+2. **"M"**（Testim の事前定義ステップ）をクリックします。
+
 **Predefined steps** メニューが開きます。
 
 ![検証](/images/validations/add-cli-validations-and-actions/2d8835c-Testim_270_r2.png)
 
-3. **Validations**（または **Actions**）をクリックします。\
+3. **Validations**（または **Actions**）をクリックします。
+
 **Validations**（または **Actions**）メニューが展開されます。
 
 ![検証](/images/validations/add-cli-validations-and-actions/6485d77-Testim_271_r2.png)
@@ -74,15 +76,19 @@ _Add CLI action_ / _Add CLI validation_ のどちらも手順は同じです。
 ![ステップ追加](/images/validations/add-cli-validations-and-actions/62c3379-Testim_215_r.png)
 
 5. **Name the new step** にステップ名を入力します。
-6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンにし、**Select shared step** で保存先フォルダーを選びます（デフォルトはオン）。共有しない場合はオフにします。\
+6. このステップを共有ステップとして再利用可能にする場合は **Shared step** をオンにし、**Select shared step** で保存先フォルダーを選びます（デフォルトはオン）。共有しない場合はオフにします。
+
 共有ステップの詳細は [Groups](/docs/editing-tests/groups) を参照してください。
-7. **Create Step** をクリックします。\
+
+7. **Create Step** をクリックします。
+
 **function** エディターと右側の **Properties** パネルが開きます。
 
 ![検証](/images/validations/add-cli-validations-and-actions/3c8168d-Testim_330.png)
 
 8. **Properties** パネルの **Description** に必要なら説明を入力します（既定値: “Run CLI validation” / “Run CLI action”）。
 9. パラメーターを定義します。
+
 まず **+ PARAMS** をクリックします。次に **JS parameter** の場合はドロップダウンを **JS** にして JavaScript パラメーターを入力します。**Package parameter** の場合はドロップダウンを **Package** にして NPM パッケージ変数を入力します。
 
 :::warning

@@ -78,12 +78,17 @@ Element 条件は要素の可視性に基づいてステップを実行します
 
 ![Play Scenario ボタン](/images/conditions/conditions/3fd74ed-Testim_129a.png)
 
-4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\
+4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。
+
 右側に **Properties** パネルが開きます。
-5. **Properties** パネルで **When to run step** をクリックします。\
+
+5. **Properties** パネルで **When to run step** をクリックします。
+
 オプションが表示されます。
+
 6. **Element** を選択します。
-7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。\
+7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。
+
 選択した要素は **When to run step** セクションの **Target Element** に表示されます。
 
 ![Element 条件の設定画面](/images/conditions/conditions/a8a3d48-TestimConditions01_r.png)
@@ -124,13 +129,19 @@ Element text 条件は Element 条件に類似していますが、指定した�
 
 ![Play Scenario ボタン](/images/conditions/conditions/176b48a-Testim_129a.png)
 
-4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\
+4. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。
+
 右側に **Properties** パネルが開きます。
-5. **Properties** パネルで **When to run step** をクリックします。\
+
+5. **Properties** パネルで **When to run step** をクリックします。
+
 オプションが表示されます。
+
 6. **Element Text** を選択します。
-7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。\
+7. AUT ウィンドウで対象要素にマウスを合わせてクリックし、要素を選択します。
+
 現在の要素の値が **Expected value** ボックスに表示されます。
+
 8. 選択した要素は **When to run step** セクションの **Target Element** ボックスに表示されます。
 9. 現在の値以外の値を指定したい場合は、**Expected value** ボックスに値を入力します。値の範囲を設定したい場合は、正規表現、JavaScript 式、またはパラメーターを入力します。
 
@@ -164,10 +175,14 @@ HTML パラメーターや JavaScript パラメーターを条件内で定義し
 以下のステップ 5 で HTML 要素をパラメーターとして定義する場合は、先に AUT を開いておく必要があります。手順は次のとおりです: 1. ステップの左側にある **>（矢印）** にカーソルを合わせます。2. **Toggle Breakpoint** をクリックします。3. **Play Scenario** をクリックして、ブレークポイントまでテストを実行します。
 :::
 
-1. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。\
+1. 条件を追加したいステップにカーソルを合わせ、**Show Properties** をクリックします。
+
 右側に **Properties** パネルが開きます。
-2. **Properties** パネルで **When to run step** をクリックします。\
+
+2. **Properties** パネルで **When to run step** をクリックします。
+
 オプションが表示されます。
+
 3. **Custom** を選択します。
 4. **Set condition** ウィンドウが開きます。
 
@@ -216,11 +231,18 @@ AUT を開いて HTML 要素をパラメーターとして定義した場合は�
 Never (skip) 条件は、テストステップを一時的に無効化しつつ、将来の再利用に備えてステップ自体は保持しておきたい場合に使用します。\
 **Never run step 条件を設定するには:**
 
-1. 対象のステップをクリックします。\
+1. 対象のステップをクリックします。
+
 青いボックスでハイライトされます。
-2. **Show Properties** をクリックします。\
+
+2. **Show Properties** をクリックします。
+
 右側に **Properties** パネルが開きます。
-3. **Properties** パネルで **When to run step** をクリックします。\
+
+3. **Properties** パネルで **When to run step** をクリックします。
+
 オプションが表示されます。
-4. **Never (skip)** を選択します。\
+
+4. **Never (skip)** を選択します。
+
 再設定するまで、テスト実行時にこのステップはスキップされます。菱形アイコンは **When to run step** オプションが有効であることを示します。
