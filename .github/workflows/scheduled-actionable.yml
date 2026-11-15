@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   scheduled-actionable:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # pinned: Python 3.14.4 has no ubuntu-26.04 build (actions/python-versions)
 
     steps:
       - name: Checkout repository

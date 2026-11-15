@@ -32,14 +32,14 @@ keywords:
 
 高度な JS エディターを利用できるステップ:
 
-- [Custom action](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)
+- [Custom action](/docs/advanced-editing/validations/custom-code#add-custom-validation--add-custom-action-ステップの追加)
 - [CLI action](/docs/advanced-editing/validations/add-cli-validations-and-actions)
-- [Custom validation](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)
+- [Custom validation](/docs/advanced-editing/validations/custom-code#add-custom-validation--add-custom-action-ステップの追加)
 - [CLI validation](/docs/advanced-editing/validations/add-cli-validations-and-actions)
 - [Download validation](/docs/advanced-editing/validations/validate-download)
 - [Email validation](/docs/advanced-editing/validations/email-validation)
 - [Network validation](/docs/advanced-editing/validations/add-network-validation)
-- [Custom wait for](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)
+- [Custom wait for](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)
 - CLI の wait ステップ
 - ダウンロード完了待機ステップ
 

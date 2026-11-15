@@ -157,7 +157,7 @@ AUT ブラウザが開き、テストが記録中であることを示すメッ�
 
 ![事前定義ステップメニュー](/images/steps-editing-tests/editing-your-tests/ab56d53-Testim_034_r.png)
 
-3. メニューから多数のオプションの中から 1 つを選択して目的のステップを作成し、ドキュメントの他の箇所で説明されているようにステップを編集します。例えば、カスタムアクションを追加する場合は、[カスタムアクションの作成](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)を参照してください。
+3. メニューから多数のオプションの中から 1 つを選択して目的のステップを作成し、ドキュメントの他の箇所で説明されているようにステップを編集します。例えば、カスタムアクションを追加する場合は、[カスタムアクションの作成](/docs/advanced-editing/validations/custom-code#add-custom-validation--add-custom-action-ステップの追加)を参照してください。
 
 ## ステップの削除
 

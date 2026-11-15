@@ -30,8 +30,8 @@ TTM for Jira は[Atlassian Marketplace](https://marketplace.atlassian.com/apps/1
 
 TTM for Jira 統合により、Testim のテストを TTM for Jira のテストケースにリンクできます。Testim でテストを実行すると、テスト結果が自動的に TTM for Jira の実行結果に表示され、Testim と TTM for Jira で実行されたテストを一元的に表示できます。Testim テストを TTM for Jira にマッピングする方法は 2 つあります：
 
-- [Testim テストを TTM for Jira に手動でマッピング](#testimのテストをttm-for-jiraに手動でマッピングする)
-- [Testim テストグループ/フォルダーを TTM for Jira に一括作成およびマッピング](#ttm-for-jiraへのテストケースの一括作成とマッピング)
+- [Testim テストを TTM for Jira に手動でマッピング](#testim-のテストを-ttm-for-jira-に手動でマッピングする)
+- [Testim テストグループ/フォルダーを TTM for Jira に一括作成およびマッピング](#ttm-for-jira-へのテストケースの一括作成とマッピング)
 
 ## TTM for Jira 統合の設定
 
@@ -81,7 +81,7 @@ Testim と TTM for Jira の統合を設定した後、Testim の特定のテス�
 既存の Testim アプリに大量のテストがあり、TTM for Jira との連携を開始したいお客様向けに、一括作成およびマッピング機能が便利なソリューションを提供します。お客様は Testim テストライブラリからテストグループを選択でき、Testim が TTM for Jira でテストケースを自動的に作成し、Testim テストケースを新しく作成された Jira テストケースにマッピングします。
 
 :::info{title="注意"}
-_この一括マッピングオプションは、現在 TTM for Jira にテストがないお客様に最適ですが、一括マッピング機能を使用するための要件ではありません。_ 既に TTM for Jira に手動でマッピングしたテストがある場合、この一括マッピング機能は既にマッピングされたテストをスキップします。一括マッピングプロセスに含めたい場合は、[手動でテストのマッピングを解除](#ttm-for-jiraにマッピング済みのテストのマッピング解除)できます。
+_この一括マッピングオプションは、現在 TTM for Jira にテストがないお客様に最適ですが、一括マッピング機能を使用するための要件ではありません。_ 既に TTM for Jira に手動でマッピングしたテストがある場合、この一括マッピング機能は既にマッピングされたテストをスキップします。一括マッピングプロセスに含めたい場合は、[手動でテストのマッピングを解除](#ttm-for-jira-にマッピング済みのテストのマッピング解除)できます。
 :::
 
 → **Testim テストケースを自動的に一括マッピングするには:**
