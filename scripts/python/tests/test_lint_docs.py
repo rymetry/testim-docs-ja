@@ -500,6 +500,86 @@ class TestInternalLinkTargets:
         )
         assert _rules(issues, "link-target-missing") == []
 
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("## Setup\n\nSee [below](#missing).\n", id="same-page-markdown"),
+            pytest.param('## Setup\n\nSee <a href="#missing">below</a>.\n', id="same-page-html"),
+            pytest.param(
+                'See <a\n  href="/docs/overview/testim-overview#missing"\n>overview</a>.\n',
+                id="html-href-on-later-line",
+            ),
+            pytest.param(
+                "See [section](/docs/overview/testim-overview/#missing).\n",
+                id="markdown-trailing-slash",
+            ),
+            pytest.param(
+                'See <a href="/docs/overview/testim-overview/#missing">overview</a>.\n',
+                id="html-trailing-slash",
+            ),
+            pytest.param("## Setup\n\nSee [below](#%E6%A6%82%E8%A6%81).\n", id="percent-encoded"),
+        ],
+    )
+    def test_previously_skipped_link_with_bad_fragment_warning(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        hits = _rules(issues, "link-fragment-missing")
+        assert [hit["level"] for hit in hits] == ["warning"]
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("## Setup\n\nSee [below](#setup).\n", id="same-page-markdown"),
+            pytest.param('## Setup\n\nSee <a href="#setup">below</a>.\n', id="same-page-html"),
+            pytest.param("## 概要\n\nSee [below](#%E6%A6%82%E8%A6%81).\n", id="percent-encoded"),
+            pytest.param('## Setup\n\n<a href="#">top</a> [top](#)\n', id="empty-fragment"),
+            pytest.param(
+                'See <a\n  href="/docs/overview/testim-overview#features"\n>overview</a>.\n',
+                id="html-href-on-later-line",
+            ),
+            pytest.param(
+                "See [section](/docs/overview/testim-overview/#features).\n",
+                id="markdown-trailing-slash",
+            ),
+            pytest.param(
+                "See [section](/docs/overview/testim-overview#%66eatures).\n",
+                id="cross-page-percent-encoded",
+            ),
+        ],
+    )
+    def test_previously_skipped_link_with_valid_fragment_clean(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        assert _rules(issues, "link-fragment-missing", "link-target-missing") == []
+
+    def test_same_page_fragment_checked_without_slug_index(self) -> None:
+        issues = lint_content(_make_doc(body="## Setup\n\nSee [below](#missing).\n"), _TEST_PATH)
+        assert len(_rules(issues, "link-fragment-missing")) == 1
+
+    def test_trailing_slash_link_to_missing_page_is_error(self) -> None:
+        issues = lint_content(
+            _make_doc(body="See [page](/docs/overview/nonexistent/).\n"),
+            _TEST_PATH,
+            all_slugs=_SLUGS,
+            headings_by_slug=_HEADINGS,
+        )
+        assert len(_rules(issues, "link-target-missing")) == 1
+
+    def test_multiline_html_link_reports_line_of_tag(self) -> None:
+        body = 'line one\n\nSee <a\n  href="/docs/overview/testim-overview#missing"\n>x</a>.\n'
+        doc = _make_doc(body=body)
+        issues = lint_content(doc, _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS)
+        (hit,) = _rules(issues, "link-fragment-missing")
+        assert doc.split("\n")[hit["line"] - 1].startswith("See <a")
+
+    def test_many_unclosed_a_tags_stay_linear(self) -> None:
+        # <a の属性部が次の <a をまたぐと、閉じない <a の列で二次時間になる
+        started = time.perf_counter()
+        lint_content(_make_doc(body="<a " * 100_000), _TEST_PATH)
+        assert time.perf_counter() - started < 5
+
     def test_ambiguous_basename(self) -> None:
         ambiguous = {"folder-a/shared-name", "folder-b/shared-name"}
         issues = lint_content(

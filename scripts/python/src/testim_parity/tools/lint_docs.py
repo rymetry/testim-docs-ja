@@ -13,6 +13,7 @@ import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 import frontmatter
 
@@ -77,9 +78,14 @@ _CALLOUT_RE = re.compile(r"^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$", re.
 _LIST_NESTED_CALLOUT_RE = re.compile(
     r"^[ \t]+:{3,}\s*[a-zA-Z][a-zA-Z-]*(?:\{[^}]*\})?\s*$", re.MULTILINE
 )
-_MARKDOWN_LINK_RE = re.compile(r"\]\(/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^)]+)?\)")
+# リンク先は ``/docs/<slug>`` (末尾 ``/`` 可)、``/docs/<slug>#frag``、同一ページの ``#frag``。
+# どちらの group も空なら内部リンクではない。
+_LINK_TARGET = r"(?:/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)/?)?"
+_MARKDOWN_LINK_RE = re.compile(rf"\]\({_LINK_TARGET}(#[^)\n]*)?\)")
+# body 全体に当てるので ``href`` が ``<a`` より後の行にあっても拾う。属性部から ``<`` を
+# 除くのは、閉じない ``<a`` が並んだときに走査が二次時間になるのを防ぐため。
 _HTML_LINK_RE = re.compile(
-    r"""<a\b[^>]*href=["']/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^\s"']*)?\s*["'][^>]*>""",
+    rf"""<a\b[^<>]*href=["']{_LINK_TARGET}(#[^\s"']*)?\s*["'][^>]*>""",
     re.IGNORECASE,
 )
 _IMAGE_RE = re.compile(r"""!\[[^\]]*]\((/images/[^)]+)\)|<img[^>]+src=["'](/images/[^"']+)["']""")
@@ -246,37 +252,42 @@ def check_links(
     all_slugs: set[str] | None = None,
     headings_by_slug: dict[str, set[str]] | None = None,
 ) -> None:
-    if not all_slugs:
-        return
     body_stripped = _strip_code(body)
-    stripped_lines = body_stripped.split("\n")
+    own_headings = heading_ids(body)
 
-    def _validate(slug_path: str, fragment: str | None, line: int) -> None:
-        display_path = f"/docs/{slug_path}"
-        if slug_path not in all_slugs:
-            reporter.err(
-                "link-target-missing",
-                f"Internal link target does not exist: {display_path}",
-                line,
-            )
+    def _validate(slug_path: str | None, fragment: str | None, line: int) -> None:
+        headings: set[str] | None
+        if slug_path is None:  # 同一ページの ``#frag``
+            headings, display_path = own_headings, "this page"
+        elif not all_slugs:
             return
-        if not fragment or headings_by_slug is None:
+        else:
+            display_path = f"/docs/{slug_path}"
+            if slug_path not in all_slugs:
+                reporter.err(
+                    "link-target-missing",
+                    f"Internal link target does not exist: {display_path}",
+                    line,
+                )
+                return
+            headings = (headings_by_slug or {}).get(slug_path)
+        fragment_id = (fragment or "")[1:]
+        if headings is None or not fragment_id:
             return
-        fragment_id = fragment[1:]
-        headings = headings_by_slug.get(slug_path)
-        if headings is not None and fragment_id not in headings:
+        # ブラウザと同じく、そのままの id と percent-decode した id の両方で探す
+        if fragment_id not in headings and unquote(fragment_id) not in headings:
             reporter.warn(
                 "link-fragment-missing",
                 f'Fragment "{fragment}" not found in {display_path}',
                 line,
             )
 
-    for index, line in enumerate(stripped_lines):
-        line_number = _to_absolute_line(index + 1, body_start)
-        for match in _MARKDOWN_LINK_RE.finditer(line):
-            _validate(match.group(1), match.group(2), line_number)
-        for match in _HTML_LINK_RE.finditer(line):
-            _validate(match.group(1), match.group(2), line_number)
+    matches = [*_MARKDOWN_LINK_RE.finditer(body_stripped), *_HTML_LINK_RE.finditer(body_stripped)]
+    for match in sorted(matches, key=lambda m: m.start()):
+        if match.group(1) is None and match.group(2) is None:
+            continue
+        body_line = body_stripped.count("\n", 0, match.start()) + 1
+        _validate(match.group(1), match.group(2), _to_absolute_line(body_line, body_start))
 
 
 def check_feature_names(body: str, body_start: int, reporter: _Reporter) -> None:
