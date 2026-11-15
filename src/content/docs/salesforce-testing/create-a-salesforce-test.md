@@ -177,7 +177,7 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
      Edit
     </strong>
     ボタンをクリックして新しい設定を作成します。詳細については、
-    <a href="/docs/test-management/shared-configuration#既存の構成を表示する">
+    <a href="/docs/test-management/shared-configuration#test-editorでテスト構成を作成および変更する">
      テスト設定
     </a>
     を参照してください

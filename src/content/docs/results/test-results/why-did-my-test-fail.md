@@ -113,7 +113,7 @@ Testim は、次のような異なる警告タイプを識別します。
 
 - サイドバイサイドのスクリーンショットを比較して、テスト内でフレームが表示されていたかどうかを判断します。
 - [DOM](/docs/results/test-results/debug-console-errors-access-dom)を検査して、期待されたフレームが読み込まれたことを検証します。
-- ターゲット要素が iframe 内になくなった場合は、失敗したテストステップの[ターゲット要素を再割り当て](/docs/editing-tests/editing-your-tests/editing-target-element-properties#ターゲット要素のハイライト)します。
+- ターゲット要素が iframe 内になくなった場合は、失敗したテストステップの[ターゲット要素を再割り当て](/docs/editing-tests/editing-your-tests/editing-target-element-properties#ターゲット要素の再割り当て)します。
 
 ### 5. JavaScript Error
 
@@ -160,7 +160,7 @@ Testim は、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 - ブラウザがグリッド上に存在することを確認します。存在しない場合は、追加のヘルプについてグリッドプロバイダーに連絡できます。
-- IE、Edge、Firefox、Safari ブラウザは、[selenium モードで実行](/docs/running-tests/the-command-line-cli#前提条件)する必要があります。CLI に「--mode selenium」が含まれていることを確認してください。
+- IE、Edge、Firefox、Safari ブラウザは、[selenium モードで実行](/docs/running-tests/the-command-line-cli)する必要があります。CLI に「--mode selenium」が含まれていることを確認してください。
 
 ### 8. Page is not Available
 
