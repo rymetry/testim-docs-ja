@@ -126,7 +126,7 @@ Testim は、次のような異なる警告タイプを識別します。
 
 **どうすればよいか？**
 
-- [カスタムステップ/アクション](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)または標準ステップの[JS パラメーター](/docs/advanced-editing/parameters)の JavaScript コードを確認します。
+- [カスタムステップ/アクション](/docs/advanced-editing/validations/custom-code#add-custom-validation--add-custom-action-ステップの追加)または標準ステップの[JS パラメーター](/docs/advanced-editing/parameters)の JavaScript コードを確認します。
 - アサーションが失敗した場合は、このメッセージをより有益なエラーに置き換えます。詳細については、[カスタム検証とアクションの追加](/docs/advanced-editing/validations/custom-code)を参照してください。
 
 ### 6. Could not get Browser
@@ -205,7 +205,7 @@ Testim は、次のような異なる警告タイプを識別します。
 **どうすればよいか？**
 
 - テストを手動で実行して、ターゲット要素がクリックできることを確認します。
-- クリックステップの前に短い[「スリープステップ」](/docs/advanced-editing/wait-for#スリープ（web）)または[「待機ステップ」](/docs/advanced-editing/wait-for)を追加して、ページが完全に読み込まれ、クリック/テキスト設定イベントがトリガーされる準備ができていることを確認します。
+- クリックステップの前に短い[「スリープステップ」](/docs/advanced-editing/wait-for#スリープweb)または[「待機ステップ」](/docs/advanced-editing/wait-for)を追加して、ページが完全に読み込まれ、クリック/テキスト設定イベントがトリガーされる準備ができていることを確認します。
 - テキスト設定/クリックステップのプロパティを更新して、「Native Events」を許可/削除します。
 
 ### 11. Concurrency Limit Reached

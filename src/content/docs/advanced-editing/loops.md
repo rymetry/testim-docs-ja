@@ -287,7 +287,7 @@ keywords:
 :::
 
 ステップの追加ウィンドウが開きます。\
-カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)を参照してください。
+カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/advanced-editing/validations/custom-code#add-custom-validation--add-custom-action-ステップの追加)を参照してください。
 
 ![カスタムアクションを追加](/images/handling-ui-actions/loops/967959b-Testim_Image_013_r.png)
 
@@ -482,7 +482,7 @@ TESTIM_ITERATOR を使用して、ループステップの条件を定義でき�
 または、メニュー上部の検索ボックスを使用して「カスタムアクションを追加」を検索できます。
 :::
 
-カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/advanced-editing/validations/custom-code#add-custom-validation-add-custom-action-ステップの追加)を参照してください。\
+カスタムアクションの追加の詳細については、[カスタムアクションの作成](/docs/advanced-editing/validations/custom-code#add-custom-validation--add-custom-action-ステップの追加)を参照してください。\
 ステップの追加ウィンドウが開きます。
 
 ![カスタムアクションを追加](/images/handling-ui-actions/loops/61f003a-Testim_Image_019_r.png)

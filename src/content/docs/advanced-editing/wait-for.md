@@ -20,13 +20,13 @@ keywords:
 
 次のステップへ進む前に、あるイベントの発生を待ちたい場面があります。要素の表示待ち、テキストの表示待ち、数秒の待機など、さまざまです。Testim には待機のためのビルトイン機能があります。提供される待機の種類:
 
-- 要素の表示待機（[Web](#wait-for-element-visible-web)、[モバイル](#wait-for-element-visible-mobile)）
-- 要素の非表示待機（[Web](#wait-for-element-not-visible-web)）
-- 要素テキストの表示待機（[Web](#wait-for-element-text-web)、[モバイル](#wait-for-element-text-mobile)）
-- スリープ（[Web](#sleep-web)、[モバイル](#sleep-mobile)）
-- カスタム待機（JavaScript）（[Web](#custom-wait-for-web)）
-- 要素のビジュアル待機（[Web](#wait-for-element-visualization-web)）
-- ダウンロード待機（[Web](#wait-for-download-web)）
+- 要素の表示待機（[Web](#要素の表示を待つweb)、[モバイル](#要素の表示を待つモバイル)）
+- 要素の非表示待機（[Web](#要素の非表示を待つweb)）
+- 要素テキストの表示待機（[Web](#要素テキストの表示を待つweb)、[モバイル](#要素テキストの表示を待つモバイル)）
+- スリープ（[Web](#スリープweb)、[モバイル](#スリープモバイル)）
+- カスタム待機（JavaScript）（[Web](#カスタム待機web)）
+- 要素のビジュアル待機（[Web](#要素のビジュアル待機web)）
+- ダウンロード待機（[Web](#ダウンロード待機web)）
 
 ## 要素の表示を待つ（Web）
 
