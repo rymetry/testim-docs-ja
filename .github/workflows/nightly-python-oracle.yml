@@ -28,7 +28,7 @@ permissions:
 jobs:
   oracle-snapshot:
     # Python-based nightly oracle drift safety net (Phase 6b cutover 後の新設計)。
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # pinned: Python 3.14.4 has no ubuntu-26.04 build (actions/python-versions)
     defaults:
       run:
         working-directory: scripts/python
@@ -93,7 +93,7 @@ jobs:
   parity-smoke:
     # Phase 6b cutover 後も required CI へ昇格させず nightly 維持する scope
     # (python-fast と coverage / runtime を分ける設計)。
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # pinned: Python 3.14.4 has no ubuntu-26.04 build (actions/python-versions)
     defaults:
       run:
         working-directory: scripts/python
@@ -121,7 +121,7 @@ jobs:
     # cutover 後も node 不要で動く (segments_en / segments_ja / align は Python
     # 完結)。将来 ``test_recall`` を parametrize + xdist で並列化する improvement は
     # Phase 6b 以降の別 PR で行う。
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # pinned: Python 3.14.4 has no ubuntu-26.04 build (actions/python-versions)
     defaults:
       run:
         working-directory: scripts/python
