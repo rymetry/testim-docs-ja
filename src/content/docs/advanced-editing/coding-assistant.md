@@ -24,7 +24,7 @@ Copilot コーディングアシスタントは、以下のステップで用い
 
 - [Add Custom Action](/docs/advanced-editing/validations/custom-code)
 - [Add Custom Validation](/docs/advanced-editing/validations/custom-code)
-- [Add Custom Wait For](/docs/advanced-editing/wait-for#カスタム待機（web）)
+- [Add Custom Wait For](/docs/advanced-editing/wait-for#カスタム待機web)
 - [Add Network validation](/docs/advanced-editing/validations/add-network-validation)
 - [Add CLI Validation](/docs/advanced-editing/validations/add-cli-validations-and-actions)
 - [Validate Download](/docs/advanced-editing/validations/validate-download)

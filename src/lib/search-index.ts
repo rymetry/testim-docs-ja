@@ -3,12 +3,6 @@ import type { SearchDocument } from '../types/search';
 import type { DocEntry } from './docs';
 import { extractSlug } from './docs';
 
-const EXPLICIT_HEADING_ID_RE = /\s*\$?\{#[^}]+\}\s*$/u;
-
-function normalizeHeadingTitle(text: string): string {
-  return text.replace(EXPLICIT_HEADING_ID_RE, '');
-}
-
 async function buildSearchDocumentsForDoc(doc: DocEntry): Promise<SearchDocument[]> {
   try {
     const { headings } = await render(doc);
@@ -28,7 +22,7 @@ async function buildSearchDocumentsForDoc(doc: DocEntry): Promise<SearchDocument
     const headingDocuments: SearchDocument[] = headings.map((heading) => ({
       id: `${doc.id}#${heading.slug}`,
       type: 'heading',
-      title: normalizeHeadingTitle(heading.text),
+      title: heading.text,
       slug,
       description: '',
       category: doc.data.category,

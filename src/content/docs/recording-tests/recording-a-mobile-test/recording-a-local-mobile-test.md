@@ -314,11 +314,11 @@ Simulator ソフトウェアがシステムトレイで開きます。
 
 - **[Validate element text](/docs/advanced-editing/validations/validate-element-text)** - 要素テキスト検証は、要素の存在に依存するという点で要素可視性検証に似ています。ただし、要素テキスト検証では、指定された要素に表示される必要がある特定のテキスト値も指定します。
 
-- **[Wait for element visible](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
+- **[Wait for element visible](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)** - wait for element visible を使用して、要素がページに表示されるまで待機します。
 
-- **[Wait for element text](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
+- **[Wait for element text](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)** - wait for element text を使用して、テストを続行する前に特定のテキストが表示されることを確認します。
 
-- **[Sleep](/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/advanced-editing/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
+- **[Sleep](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)** - ステップ間で一定期間待機できるようにします。 - **[Add extract value step](/docs/advanced-editing/extract-text)** - アプリケーションから値を直接コピーして、後のステップで使用できるようにします。
 
 - **Add set text step** - 選択したターゲット要素に指定されたテキストを追加します。
 

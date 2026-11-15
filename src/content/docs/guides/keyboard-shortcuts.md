@@ -318,4 +318,4 @@ Testim には、テスト作成を高速化するために使用できる一連�
  </tbody>
 </table>
 
-\| [要素テキストを待機](/docs/advanced-editing/wait-for#要素テキストの表示を待つ（web）)              \| Alt + T           \| Option + T        \| エディター       \|
+\| [要素テキストを待機](/docs/advanced-editing/wait-for#要素テキストの表示を待つweb)              \| Alt + T           \| Option + T        \| エディター       \|
