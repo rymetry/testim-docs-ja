@@ -278,3 +278,39 @@ def test_no_image_order_issue():
     en = '<p><img src="/img/aaa1111-a.png"/></p><p><img src="/img/bbb2222-b.png"/></p>'
     ja = '<p><img src="/img/bbb2222-b.png"/></p><p><img src="/img/aaa1111-a.png"/></p>'
     assert issues(en, ja) == []
+
+
+# --- MadCap shapes that hold paragraph text outside <p> -----------------------
+
+_DROPDOWN_EN = (
+    "<h2>Archive</h2>"
+    '<div class="MCDropDown"><span class="MCDropDownHead dropDownHead">'
+    '<a href="#" class="MCDropDownHotSpot">2024</a></span>'
+    '<div class="MCDropDownBody"><h3>Item</h3><p>Added</p></div></div>'
+)
+_BARE_TEXT_EN = (
+    "<h2>Filter</h2><p>Intro</p><ol><li><p>Step</p></li></ol>"
+    '<img src="images/a.png" />The results are filtered.\r\n<p>Next</p>'
+)
+
+
+def test_dropdown_head_matches_bold_paragraph():
+    ja = render_ja_markdown("## アーカイブ\n\n**2024**\n\n### 項目\n\n追加\n")
+    assert types(_DROPDOWN_EN, ja) == []
+
+
+def test_missing_dropdown_head_paragraph_is_detected():
+    ja = render_ja_markdown("## アーカイブ\n\n### 項目\n\n追加\n")
+    assert types(_DROPDOWN_EN, ja) == ["paragraph-count-mismatch"]
+
+
+def test_bare_text_after_image_matches_paragraph():
+    ja = render_ja_markdown(
+        "## Filter\n\n導入\n\n1. 手順\n\n![a](/images/a.png)\n\n結果が絞り込まれます。\n\n次へ\n"
+    )
+    assert types(_BARE_TEXT_EN, ja) == []
+
+
+def test_missing_bare_text_paragraph_is_detected():
+    ja = render_ja_markdown("## Filter\n\n導入\n\n1. 手順\n\n![a](/images/a.png)\n\n次へ\n")
+    assert types(_BARE_TEXT_EN, ja) == ["paragraph-count-mismatch"]

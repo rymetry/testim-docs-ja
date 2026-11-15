@@ -14,7 +14,10 @@ issue type / severity / detail wording は同一契約で、``code-block-count-m
 - 段落: ``li`` / ``table`` / ``blockquote`` / ``details`` / callout の外にある
   ``<p>`` のうち、テキストを持つもの (空・画像のみ・zero-width のみは除外)。
   加えて list item 内の継続段落 (item 直下の ``<p>`` のうち、item 本文を包む先頭
-  ``<p>`` を除いたもの) も段落として数える。
+  ``<p>`` を除いたもの) も段落として数える。MadCap の ``<p>`` を持たない本文も
+  同じ位置にあれば段落とする: ``.MCDropDownHead`` 1 つ、および block container
+  直下で block 要素に区切られた bare text の run 1 つ (どちらも segment 抽出では
+  paragraph になる)。
 - コードブロック: ``table`` の外にある ``<pre>``。
 - table: ``extract_html_tables`` + 既存の cell 比較。cell 内の
   ``span.FileOrFilePath`` は ``<code>`` と同じく token 化し、``<br>`` と block
@@ -36,7 +39,7 @@ import html
 import re
 from typing import Any
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 from .checks import _apply_artifacts, _compare_section_counts, _compare_tables, _with_severity
 from .extract import extract_html_tables
@@ -48,6 +51,12 @@ _HEADING_RE = re.compile(r"^h[1-6]$")
 _CELL_BLOCK_TAGS = ("p", "div", "ul", "ol", "li", "pre", "blockquote", "h1", "h2", "h3", "h4")
 _TABLE = frozenset({"table"})
 _PARAGRAPH_EXCLUDED = frozenset({"li", "table", "blockquote", "details"})
+# 段落を直接持ち得る block container と、その中で inline run を区切る block 要素。
+_BARE_TEXT_CONTAINERS = frozenset({"body", "div", "section", "article", "main", "ol", "ul"})
+_BLOCK_TAGS = frozenset(
+    {"p", "div", "ol", "ul", "li", "table", "pre", "blockquote", "details", "figure", "hr"}
+    | {f"h{n}" for n in range(1, 7)}
+)
 _ZERO_WIDTH = dict.fromkeys(map(ord, "\u200b\u200c\u200d\ufeff"))
 
 
@@ -90,7 +99,7 @@ def _headings(root: Tag) -> list[tuple[int, str, Tag]]:
     return out
 
 
-def _inside(node: Tag, names: frozenset[str], callouts: bool) -> bool:
+def _inside(node: Tag | NavigableString, names: frozenset[str], callouts: bool) -> bool:
     return any(p.name in names or (callouts and _is_callout_div(p)) for p in node.parents)
 
 
@@ -99,7 +108,13 @@ def _counts(root: Tag, headings: list[tuple[int, str, Tag]]) -> dict[str, dict[s
     section_of = {id(node): text for level, text, node in headings if level <= 4}
     counts: dict[str, dict[str, int]] = {k: {} for k in ("step", "bullet", "para", "code")}
     section = "__top__"
-    for node in root.find_all(True):
+    for node in root.descendants:
+        if isinstance(node, NavigableString):
+            if _starts_bare_text_paragraph(node):
+                counts["para"][section] = counts["para"].get(section, 0) + 1
+            continue
+        if not isinstance(node, Tag):
+            continue
         if id(node) in section_of:
             section = section_of[id(node)]
             for per_section in counts.values():
@@ -113,11 +128,40 @@ def _counts(root: Tag, headings: list[tuple[int, str, Tag]]) -> dict[str, dict[s
                 counts["para"][section] = counts["para"].get(section, 0) + _continuations(node)
         elif node.name == "p" and _text(node) and not _inside(node, _PARAGRAPH_EXCLUDED, True):
             kind = "para"
+        elif (
+            "MCDropDownHead" in (node.get("class") or [])
+            and _text(node)
+            and not _inside(node, _PARAGRAPH_EXCLUDED, True)
+        ):
+            kind = "para"  # MadCap dropdown head: 段落 segment として抽出される見出しテキスト
         elif node.name == "pre" and not _inside(node, _TABLE, False):
             kind = "code"
         if kind:
             counts[kind][section] = counts[kind].get(section, 0) + 1
     return counts
+
+
+def _starts_bare_text_paragraph(text: NavigableString) -> bool:
+    """block container 直下の bare text run (MadCap が ``<p>`` を落とした本文) の先頭か。
+
+    run は block 要素で区切られた inline 兄弟の並び。run 内の最初の非空白 text だけが
+    True を返すので、1 run = 1 段落になる。
+    """
+    parent = text.parent
+    if type(text) is not NavigableString:  # Comment / Doctype 等は本文ではない
+        return False
+    if parent is None or parent.name not in _BARE_TEXT_CONTAINERS:
+        return False
+    if not str(text).translate(_ZERO_WIDTH).strip():
+        return False
+    if _is_callout_div(parent) or _inside(text, _PARAGRAPH_EXCLUDED, True):
+        return False
+    for sibling in text.previous_siblings:
+        if isinstance(sibling, Tag) and sibling.name in _BLOCK_TAGS:
+            return True
+        if type(sibling) is NavigableString and str(sibling).translate(_ZERO_WIDTH).strip():
+            return False
+    return True
 
 
 def _continuations(item: Tag) -> int:

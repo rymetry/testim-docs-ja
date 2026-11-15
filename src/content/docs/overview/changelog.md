@@ -53,7 +53,7 @@ Labels に基づいてリストをフィルタリングする際、フィルタ�
 
 ## アーカイブ
 
-<div>2024</div>
+**2024**
 
 ### Generate PDF Run Report
 
@@ -85,7 +85,7 @@ Testim テストを Playwright コードとしてエクスポートできます�
 
 モバイルテストでテスト入力後にキーボードを非表示にする機能です。
 
-<div>2023</div>
+**2023**
 
 ### Tricentis qTest および TestRail の Testim Mobile 向け統合
 
@@ -255,7 +255,7 @@ Testim Mobile で iOS および Android アプリのサポートを追加しま�
 
 Hooks Visualization 機能を追加しました。
 
-<div>2022</div>
+**2022**
 
 ### IE 11 および Edge のサポート終了
 
