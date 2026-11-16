@@ -215,7 +215,7 @@ class TestLinkFragmentMismatchThroughMain:
         monkeypatch: pytest.MonkeyPatch,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
-        """上流の誤ったアンカーは EN source patch (Mechanism 2) で直した形と比較する。"""
+        """EN は、他のチェックと同じく EN source patch 適用後の HTML と比較する。"""
         self._setup(tmp_path, monkeypatch)
         original = lint_docs.preprocess_en_html
 

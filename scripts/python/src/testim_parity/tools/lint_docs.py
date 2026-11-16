@@ -407,8 +407,9 @@ def check_link_fragment_intent(
 
     ``check_links`` は id の存在しか見ず、パリティチェックはアンカーを比較しない。ここでは
     リンク先ページの並びで EN / JA のリンクを対応付け、アンカーが指す見出しの「ページ内での
-    順番」を比べる。EN は patch 適用後の HTML なので、上流の誤ったアンカーは
-    EN source patch で直せる。
+    順番」を比べる。EN は、他のチェックと同じく EN source patch 適用後の HTML を読む。
+    上流のアンカーが誤っているために出る warning は、英語原文が直るまで残す
+    (docs/WRITING_GUIDE.md)。
     """
     # shortcut: 見出しの順番で比べるので、EN / JA で見出しの数が違うリンク先は比較しない
     # (その食い違いは structure-signature-mismatch が拾う)。EN に対応するリンクが無い
