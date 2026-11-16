@@ -11,10 +11,13 @@ import argparse
 import re
 import sys
 import unicodedata
+from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
+from urllib.parse import unquote, urljoin, urlsplit
 
 import frontmatter
+from bs4 import BeautifulSoup, Tag
 
 from ..preprocess_en import preprocess_en_html
 from ..project import DOCS_DIR, PROJECT_ROOT, file_path_to_slug
@@ -24,12 +27,15 @@ from ..segments_shared import GATE_ELIGIBLE_KINDS
 from ..sidebar import get_section_slug_set
 
 __all__ = [
+    "SourceAnchors",
+    "build_source_anchors",
     "check_callouts",
     "check_code_blocks",
     "check_feature_names",
     "check_frontmatter",
     "check_images",
     "check_structure_signature",
+    "check_link_fragment_intent",
     "check_links",
     "lint_content",
     "heading_ids",
@@ -113,7 +119,12 @@ def _parse_frontmatter_with_lines(content: str) -> tuple[dict[str, Any], str, in
 
 
 def _strip_code(body: str) -> str:
-    return _INLINE_CODE_RE.sub("", _CODE_BLOCK_RE.sub("", body))
+    """コードブロックとインラインコードを消す。報告する行番号がずれないよう改行は残す。"""
+
+    def _newlines_only(match: re.Match[str]) -> str:
+        return "\n" * match.group().count("\n")
+
+    return _INLINE_CODE_RE.sub(_newlines_only, _CODE_BLOCK_RE.sub(_newlines_only, body))
 
 
 def _to_absolute_line(body_line_number: int, body_start_line: int) -> int:
@@ -177,13 +188,18 @@ def heading_ids(body: str) -> set[str]:
 
     期待値は scripts/__tests__/fixtures/heading-ids.json でサイトの実パイプラインと共有している。
     """
+    return set(_heading_id_list(body))
+
+
+def _heading_id_list(body: str) -> list[str]:
+    """:func:`heading_ids` と同じ id を、見出しの出現順に返す。"""
     # shortcut: Markdown を行単位の正規表現で読む。見出し内のインライン HTML・文字参照・画像・
     # ``_強調_``・参照リンク・``:name`` ディレクティブ・空白で囲んだコードスパン、setext 見出し、
     # 引用やリスト内の見出し、HTML コメント/ブロック内の ``## ``、``~~~`` や 4 連以上のフェンス、
     # リストマーカーと同じ行で開くフェンス、行頭がインラインの 3 連バッククォートは
     # サイトと id がずれる (現行コンテンツに該当なし)。使い始めたら fixture にケースを足し、
     # ここを Markdown パーサーに置き換える。
-    ids: set[str] = set()
+    ids: list[str] = []
     occurrences: dict[str, int] = {}  # github-slugger と同じ重複カウンタ
     in_code_block = False
     for line in body.split("\n"):
@@ -200,14 +216,14 @@ def heading_ids(body: str) -> set[str]:
         explicit = _EXPLICIT_HEADING_ID_RE.search(heading_text)
         if explicit:
             # 明示 id は slug 化も重複回避も通らず、自動 id は付かない
-            ids.add(explicit.group(1))
+            ids.append(explicit.group(1))
             continue
         base = slug = heading_slug(heading_text)
         while slug in occurrences:  # 同じ見出しが続くと -1, -2 ... が付く
             occurrences[base] += 1
             slug = f"{base}-{occurrences[base]}"
         occurrences[slug] = 0
-        ids.add(slug)
+        ids.append(slug)
     return ids
 
 
@@ -277,6 +293,156 @@ def check_links(
             _validate(match.group(1), match.group(2), line_number)
         for match in _HTML_LINK_RE.finditer(line):
             _validate(match.group(1), match.group(2), line_number)
+
+
+# ``/docs/<slug>``、``/docs/<slug>#frag``、同一ページの ``#frag`` を、Markdown リンクと
+# 生 ``<a href>`` の両方から拾う。属性部から ``<`` を除くのは、閉じない ``<a`` が並んだときの
+# 二次時間を防ぐため。
+_INTERNAL_LINK_TARGET = r"(?:/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)/?)?(#[^)\s\"']*)?"
+_INTERNAL_LINK_RE = re.compile(
+    rf"""\]\({_INTERNAL_LINK_TARGET}\)|<a\b[^<>]*?href=["']{_INTERNAL_LINK_TARGET}\s*["']""",
+    re.IGNORECASE,
+)
+_EN_CONTENT_URL_RE = re.compile(
+    r"^https://docs\.tricentis\.com/testim/content/(.+?)(?:/index)?\.htm$"
+)
+_EN_HEADING_TAGS = ("h1", "h2", "h3", "h4", "h5", "h6")
+
+
+class SourceAnchors(NamedTuple):
+    """1 ページ分の、アンカーを英語原文と照合するための材料。"""
+
+    ja_heading_ids: list[str]  # JA 見出し id (出現順)
+    en_links: list[tuple[str, str | None]]  # EN の内部リンク (リンク先 slug, アンカー) (出現順)
+    en_anchor_positions: dict[str, int]  # EN アンカー名 → 見出しの順番 (ページタイトルは数えない)
+    en_heading_count: int
+
+
+def build_source_anchors(body: str, en_html: str, source_url: str) -> SourceAnchors:
+    """JA Markdown body と、その英語原文 HTML (URL は ``source_url``) から照合材料を作る。"""
+    soup = BeautifulSoup(en_html, "lxml")
+
+    links: list[tuple[str, str | None]] = []
+    for anchor in soup.find_all("a", href=True):
+        # 相対 href は英語ページの URL を基準に解決する (同一ページの ``#frag`` は自ページになる)
+        parts = urlsplit(urljoin(source_url, str(anchor["href"])))
+        match = _EN_CONTENT_URL_RE.match(f"{parts.scheme}://{parts.netloc}{parts.path}")
+        if match:
+            links.append((match.group(1), parts.fragment or None))
+
+    title = soup.find("h1")  # 最初の h1 はページタイトル。本文の h1 はセクション見出し
+    headings = [h for h in soup.find_all(_EN_HEADING_TAGS) if h is not title]
+    positions: dict[str, int] = {}
+    for position, heading in enumerate(headings):
+        named = heading.find_all("a", attrs={"name": True})
+        previous = heading.find_previous_sibling()
+        if isinstance(previous, Tag) and previous.name == "a" and previous.get("name"):
+            named.append(previous)
+        for anchor in named:
+            positions.setdefault(str(anchor["name"]), position)
+
+    return SourceAnchors(_heading_id_list(body), links, positions, len(headings))
+
+
+def _anchor_key(name: str) -> str:
+    """上流に多い綴りの揺れをならしたアンカー名。
+
+    ``section-`` 接頭辞 (ReadMe 由来)、``&`` を綴った ``amp``、連続ハイフン、``/#name`` 形を
+    吸収する。
+    """
+    tokens = [t for t in name.rsplit("#", 1)[-1].lower().split("-") if t and t != "amp"]
+    if len(tokens) > 1 and tokens[0] == "section":
+        tokens = tokens[1:]
+    return "-".join(tokens)
+
+
+def _en_heading_positions(fragment: str, positions: dict[str, int]) -> set[int]:
+    """EN アンカーが指す見出しの順番の候補。どの見出しにも解決しなければ空。"""
+    if fragment in positions:
+        return {positions[fragment]}
+    key = _anchor_key(fragment)
+    if not key:
+        return set()
+    keyed = [(_anchor_key(name), position) for name, position in positions.items()]
+    same = {position for name, position in keyed if name == key}
+    # 見出しが接尾辞付きに改名・分割され、古いアンカーが残った形
+    # (sleep → sleep-web / sleep-mobile)。どれを指すかは EN からは決まらないので、
+    # 候補のどれかに着地していればよい。
+    return same or {position for name, position in keyed if name.startswith(f"{key}-")}
+
+
+def check_link_fragment_intent(
+    body: str,
+    body_start: int,
+    reporter: _Reporter,
+    *,
+    slug: str,
+    source_anchors: dict[str, SourceAnchors],
+) -> None:
+    """アンカーが、英語原文の同じ位置のリンクとは別のセクションを指すリンクを報告する。
+
+    ``check_links`` は id の存在しか見ず、パリティチェックはアンカーを比較しない。ここでは
+    リンク先ページの並びで EN / JA のリンクを対応付け、アンカーが指す見出しの「ページ内での
+    順番」を比べる。EN は patch 適用後の HTML なので、上流の誤ったアンカーは
+    EN source patch で直せる。
+    """
+    # shortcut: 見出しの順番で比べるので、EN / JA で見出しの数が違うリンク先は比較しない
+    # (その食い違いは structure-signature-mismatch が拾う)。EN に対応するリンクが無い
+    # JA リンクと、EN にアンカーがあるのに JA に無いリンク (ページ先頭に着地) も対象外。
+    # 必要になったら別ルールにする。
+    own = source_anchors.get(slug)
+    if own is None:
+        return
+
+    ja_links: list[tuple[str, str | None, int]] = []
+    for index, line in enumerate(_strip_code(body).split("\n")):
+        for match in _INTERNAL_LINK_RE.finditer(line):
+            target = match.group(1) or match.group(3)
+            fragment = unquote((match.group(2) or match.group(4) or "")[1:])
+            if target or fragment:
+                line_number = _to_absolute_line(index + 1, body_start)
+                ja_links.append((target or slug, fragment or None, line_number))
+
+    matcher = SequenceMatcher(
+        None, [target for target, _ in own.en_links], [link[0] for link in ja_links], autojunk=False
+    )
+    for en_start, ja_start, size in matcher.get_matching_blocks():
+        for offset in range(size):
+            target, en_fragment = own.en_links[en_start + offset]
+            _, ja_fragment, line_number = ja_links[ja_start + offset]
+            page = source_anchors.get(target)
+            # id が存在しないアンカーは link-fragment-missing の担当
+            if page is None or ja_fragment not in page.ja_heading_ids:
+                continue
+            expected = (
+                _en_heading_positions(en_fragment, page.en_anchor_positions)
+                if en_fragment
+                else set()
+            )
+            if not expected:
+                reason = (
+                    f'English anchor "#{en_fragment}" matches no English heading'
+                    if en_fragment
+                    else "the English link has no anchor"
+                )
+                reporter.warn(
+                    "link-fragment-mismatch",
+                    f'Fragment "#{ja_fragment}" on a link to /docs/{target} has no counterpart '
+                    f"in the English source ({reason}); check that it is the section the link "
+                    "text means (docs/WRITING_GUIDE.md)",
+                    line_number,
+                )
+            elif (
+                page.en_heading_count == len(page.ja_heading_ids)
+                and page.ja_heading_ids.index(ja_fragment) not in expected
+            ):
+                wanted = " or ".join(f'"#{page.ja_heading_ids[p]}"' for p in sorted(expected))
+                reporter.warn(
+                    "link-fragment-mismatch",
+                    f'Fragment "#{ja_fragment}" lands on a different section of /docs/{target} '
+                    f'than the English link "#{en_fragment}" (expected {wanted})',
+                    line_number,
+                )
 
 
 def check_feature_names(body: str, body_start: int, reporter: _Reporter) -> None:
@@ -546,6 +712,7 @@ def lint_content(
     headings_by_slug: dict[str, set[str]] | None = None,
     en_snapshot_path: Path | None = None,
     slug: str | None = None,
+    source_anchors: dict[str, SourceAnchors] | None = None,
 ) -> list[dict[str, Any]]:
     """1 document を lint する (mjs ``lintContent`` 等価)。"""
     reporter = _Reporter(file_path)
@@ -553,6 +720,10 @@ def lint_content(
 
     check_frontmatter(fm, reporter)
     check_links(body, body_start, reporter, all_slugs=all_slugs, headings_by_slug=headings_by_slug)
+    if source_anchors is not None and slug is not None:
+        check_link_fragment_intent(
+            body, body_start, reporter, slug=slug, source_anchors=source_anchors
+        )
     check_feature_names(body, body_start, reporter)
     check_code_blocks(body, body_start, reporter)
     check_callouts(body, body_start, reporter)
@@ -599,6 +770,30 @@ def _build_heading_index(
     return all_slugs, headings_by_slug
 
 
+def _en_snapshot_path(slug: str) -> Path:
+    return PROJECT_ROOT / "snapshots" / "en" / "content" / f"{slug}.html"
+
+
+def _build_source_anchor_index(files: list[Path]) -> dict[str, SourceAnchors]:
+    """EN snapshot がある全 doc の照合材料を構築する (``check_link_fragment_intent`` 用)。"""
+    index: dict[str, SourceAnchors] = {}
+    for file_path in files:
+        slug = file_path_to_slug(file_path, DOCS_DIR)
+        fm, body, _ = _parse_frontmatter_with_lines(file_path.read_text(encoding="utf-8"))
+        source_url = fm.get("sourceUrl")
+        if not isinstance(source_url, str):
+            continue
+        try:
+            raw_en_html = _en_snapshot_path(slug).read_bytes().decode("utf-8")
+        except OSError:  # snapshot 無し・読めない場合は structure lint 側が扱う
+            continue
+        # check_structure_signature と同じく EN source patch 適用後の HTML を見る
+        index[slug] = build_source_anchors(
+            body, preprocess_en_html(raw_en_html, slug=slug), source_url
+        )
+    return index
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI エントリポイント (error あれば exit 1、その他は 0)。"""
     parser = argparse.ArgumentParser(description="Lint docs for WRITING_GUIDE compliance")
@@ -614,6 +809,7 @@ def main(argv: list[str] | None = None) -> int:
         files = [p for p in files if file_path_to_slug(p, DOCS_DIR) in slug_set]
 
     all_slugs, headings_by_slug = _build_heading_index(all_files)
+    source_anchors = _build_source_anchor_index(all_files)
 
     total_errors = 0
     total_warnings = 0
@@ -622,7 +818,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             content = file_path.read_text(encoding="utf-8")
             slug = file_path_to_slug(file_path, DOCS_DIR)
-            en_snapshot_path = PROJECT_ROOT / "snapshots" / "en" / "content" / f"{slug}.html"
+            en_snapshot_path = _en_snapshot_path(slug)
             issues = lint_content(
                 content,
                 file_path,
@@ -630,6 +826,7 @@ def main(argv: list[str] | None = None) -> int:
                 headings_by_slug=headings_by_slug,
                 en_snapshot_path=en_snapshot_path,
                 slug=slug,
+                source_anchors=source_anchors,
             )
             for issue in issues:
                 location = f":{issue['line']}" if issue.get("line") else ""
