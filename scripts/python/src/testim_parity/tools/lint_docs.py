@@ -8,6 +8,7 @@ lint rule を適用する。
 from __future__ import annotations
 
 import argparse
+import glob
 import re
 import sys
 import unicodedata
@@ -823,7 +824,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     all_files = _collect_doc_files()
-    files: list[Path] = [Path(args.path).resolve()] if args.path else list(all_files)
+    files: list[Path] = list(all_files)
+    if args.path:
+        # npm script は scripts/python に cd するので、cwd で一致しなければ repo root 基準で探す。
+        # 一致なしは元の path を残し、read 時の "Failed to lint" で exit 1 にする。
+        matches = (
+            glob.glob(args.path, recursive=True)
+            or glob.glob(str(PROJECT_ROOT / args.path), recursive=True)
+            or [args.path]
+        )
+        files = [Path(p).resolve() for p in sorted(matches)]
 
     if args.section:
         slug_set = get_section_slug_set(args.section)

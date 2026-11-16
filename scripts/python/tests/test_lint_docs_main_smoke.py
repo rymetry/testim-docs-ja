@@ -86,6 +86,72 @@ class TestLintDocsMainSmoke:
         # 実装によって rule 名 / message 形式は異なるが、最低 1 error が console に出る
         assert "❌" in out or "error" in out.lower()
 
+    def _two_ok_docs_from_other_cwd(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+        """OK doc 2 本を作り、``npm run lint:docs`` と同じく cwd を ``scripts/python`` に移す。"""
+        docs_dir = tmp_path / "src" / "content" / "docs"
+        (docs_dir / "overview").mkdir(parents=True)
+        (docs_dir / "overview" / "a.md").write_text(_OK_DOC, encoding="utf-8")
+        (docs_dir / "overview" / "b.md").write_text(_OK_DOC, encoding="utf-8")
+        cwd = tmp_path / "scripts" / "python"
+        cwd.mkdir(parents=True)
+        monkeypatch.setattr(lint_docs, "DOCS_DIR", docs_dir)
+        monkeypatch.setattr(lint_docs, "PROJECT_ROOT", tmp_path)
+        monkeypatch.chdir(cwd)
+        return docs_dir
+
+    def test_path_relative_to_repo_root_from_other_cwd(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """cwd に無い相対 ``--path`` は repo root 基準で解決する (documented command)。"""
+        self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+
+        rc = lint_docs.main(["--path", "src/content/docs/overview/a.md"])
+        assert rc == 0
+        assert "in 1 file(s)" in capsys.readouterr().out
+
+    def test_path_glob_relative_to_repo_root(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """``--path`` の glob は一致した全 file を lint する。"""
+        self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+
+        rc = lint_docs.main(["--path", "src/content/docs/overview/*.md"])
+        assert rc == 0
+        assert "in 2 file(s)" in capsys.readouterr().out
+
+    def test_path_relative_to_cwd_still_works(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """cwd 基準で存在する相対 ``--path`` は従来どおり cwd 基準で解決する。"""
+        docs_dir = self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+        monkeypatch.chdir(docs_dir)
+
+        rc = lint_docs.main(["--path", "overview/a.md"])
+        assert rc == 0
+        assert "in 1 file(s)" in capsys.readouterr().out
+
+    def test_path_without_match_returns_one(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """どこにも一致しない ``--path`` は黙って 0 件成功にせず exit 1 にする。"""
+        self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+
+        rc = lint_docs.main(["--path", "src/content/docs/overview/missing-*.md"])
+        assert rc == 1
+        assert "Failed to lint" in capsys.readouterr().err
+
     def test_no_args_walks_all_docs(
         self,
         tmp_path: Path,
