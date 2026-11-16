@@ -48,7 +48,7 @@ keywords:
     Add CLI validation
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download">
      Adding a CLI step
     </a>
    </td>
@@ -58,7 +58,7 @@ keywords:
     Validate download
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download#validate-download-ステップの追加">
      Adding a Validate download validation step
     </a>
    </td>
@@ -78,7 +78,7 @@ keywords:
     Validate API
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">
+    <a href="/docs/advanced-editing/api-testing#validate-api-ステップの追加">
      API Validation
     </a>
    </td>
@@ -125,7 +125,7 @@ keywords:
     Add CLI wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download">
      Adding a CLI step
     </a>
    </td>
@@ -172,7 +172,7 @@ keywords:
     Add CLI action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download#前提条件">
+    <a href="/docs/advanced-editing/validations/validate-download">
      Adding a CLI step
     </a>
    </td>
@@ -182,7 +182,7 @@ keywords:
     Add API action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">
+    <a href="/docs/advanced-editing/api-testing#adding-an-api-action-step">
      API Action
     </a>
    </td>

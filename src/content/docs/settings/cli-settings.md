@@ -17,7 +17,7 @@ keywords:
 
 **Settings > CLI** タブでは、コマンドラインインターフェース（CLI）を使用してテストを実行するために必要な基本コードを生成できます。CLI を使用してテストを実行する方法は 2 つあります:
 
-- 継続的インテグレーション（CI）プラットフォームとテストを統合できます。以下の[CI 統合](/docs/settings/cli-settings#ローカルシェル)を参照してください。
+- 継続的インテグレーション（CI）プラットフォームとテストを統合できます。以下の[CI 統合](/docs/settings/cli-settings#ci-統合)を参照してください。
 - ローカルシェルを使用できます。以下の[ローカルシェル](/docs/settings/cli-settings#ローカルシェル)を参照してください。
 
 CLI の使用方法と利用可能なパラメーターの詳細については、[コマンドラインインターフェース（CLI）](/docs/running-tests/the-command-line-cli)を参照してください。CI との統合の詳細については、[CI 統合](/docs/integrations/integrate-testim-to-your-ci)を参照してください。

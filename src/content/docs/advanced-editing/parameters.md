@@ -28,7 +28,7 @@ keywords:
 - [JSON パラメーターファイル](/docs/advanced-editing/parameters/json-parameters-file-parameters) - JSON ファイルで定義し、実行時に受け渡します。
 - [設定ファイルのパラメーター](/docs/advanced-editing/parameters/configuration-file-parameters) - 設定ファイルで定義し、実行時に受け渡します。
 - [テストデータ](/docs/advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor) - テストデータ内で定義し、各ステップから参照します。
-- 値生成ステップ - [日付の生成](/docs/editing-tests/generating-a-date#生成日付ステップを追加する)、[メールアドレスの生成](/docs/advanced-editing/validations/email-validation#テストの関連ステップで恒久的メールを使用する)、[値の抽出](/docs/advanced-editing/extract-text)、[乱数の生成](/docs/editing-tests/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
+- 値生成ステップ - [日付の生成](/docs/editing-tests/generating-a-date#生成日付ステップを追加する)、[メールアドレスの生成](/docs/advanced-editing/validations/email-validation#generate-email-address-ステップの追加)、[値の抽出](/docs/advanced-editing/extract-text)、[乱数の生成](/docs/editing-tests/generating-a-random-value) などでは、既定の変数名（例: Generate Date の `dateValue`）が用意されます。必要に応じてプロパティパネルの「変数名」で変更できます。
 
 ## 事前定義（標準）パラメーター
 

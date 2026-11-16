@@ -83,7 +83,7 @@ keywords:
 
 ![ターゲット要素](/images/handling-ui-actions/loops/45c5627-Testim_Loops_Image_012_r.png)
 
-9. 選択した要素の設定を表示、置換、または調整したい場合は、[プロパティパネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)で説明されている手順を使用してください。
+9. 選択した要素の設定を表示、置換、または調整したい場合は、[プロパティパネルを使用したテストの変更](/docs/editing-tests/editing-your-tests)で説明されている手順を使用してください。
 
 10. 適用する**要素条件**のタイプを指定します。オプションは次のとおりです:
 
@@ -148,7 +148,7 @@ keywords:
 
 ![期待値](/images/handling-ui-actions/loops/9681edd-Testim_Image_063_r.png)
 
-10. 選択した要素の設定を表示、置換、または調整したい場合は、[プロパティパネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)で説明されている手順を使用してください。
+10. 選択した要素の設定を表示、置換、または調整したい場合は、[プロパティパネルを使用したテストの変更](/docs/editing-tests/editing-your-tests)で説明されている手順を使用してください。
 
 11. Testim が条件を真または偽と宣言する前にチェックする時間の設定を調整したい場合は、[高度な条件設定](/docs/editing-tests/conditions/advanced-conditions-settings)で説明されている手順を使用してください。
 
@@ -204,7 +204,7 @@ keywords:
 
 ![最大項目数](/images/handling-ui-actions/loops/599ba05-Testim_Image_024.png)
 
-9. 選択した要素の設定を表示、置換、または調整したい場合は、[プロパティパネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)で説明されている手順を使用してください。
+9. 選択した要素の設定を表示、置換、または調整したい場合は、[プロパティパネルを使用したテストの変更](/docs/editing-tests/editing-your-tests)で説明されている手順を使用してください。
 
 10. Testim が条件を真または偽と宣言する前にチェックする時間の設定を調整したい場合は、[高度な条件設定](/docs/editing-tests/conditions/advanced-conditions-settings)で説明されている手順を使用してください。
 
