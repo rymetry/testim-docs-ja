@@ -39,7 +39,7 @@ AUT ブラウザが開き、テストが記録中であることを示すメッ�
 
 ![記録中の AUT ブラウザ](/images/steps-editing-tests/editing-your-tests/934bfe8-Testim_Editing_Tests_002.png)
 
-2. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/recording-tests/how-to-record-a-test#テスト構成のパラメーター)を参照してください。
+2. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/recording-tests/how-to-record-a-test#ステップ-4-テストを記録する)を参照してください。
 
 3. 新しいステップの記録が完了したら、**Stop Recording** ボタンをクリックします。
 
@@ -65,7 +65,7 @@ AUT ブラウザが開き、テストが記録中であることを示すメッ�
 
 ![記録中の AUT ブラウザ](/images/steps-editing-tests/editing-your-tests/804671e-Testim_Editing_Tests_002.png)
 
-3. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/recording-tests/how-to-record-a-test#テスト構成のパラメーター)を参照してください。
+3. 新しいテストを記録する場合と同じように、テストに新しいステップを記録します。[テストの記録](/docs/recording-tests/how-to-record-a-test#ステップ-4-テストを記録する)を参照してください。
 
 4. 新しいステップの記録が完了したら、**Stop Recording** ボタンをクリックします。
 

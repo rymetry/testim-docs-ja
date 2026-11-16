@@ -264,7 +264,7 @@ Headers ウィンドウの 3 つのセクションはそれぞれ、各セクシ
 
 > この機能は Chrome ブラウザでのみサポートされています。
 > プライバシーとセキュリティ上の理由から、HAR ファイルにはレスポンスボディは含まれません。
-> 完全な HAR を作成してダウンロードするには、[モックネットワーク](/docs/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file#カスタム-har-ファイルのアップロード) を使用してください。
+> 完全な HAR を作成してダウンロードするには、[モックネットワーク](/docs/running-tests/mock-network-responses/mocking-all-the-network-traffic-using-a-har-file#オプション-1---testim-を使用して-har-ファイルを作成) を使用してください。
 
 ## HAR ファイルのダウンロード
 
