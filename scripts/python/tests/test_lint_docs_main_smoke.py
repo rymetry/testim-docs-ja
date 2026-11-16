@@ -209,3 +209,89 @@ class TestLintDocsMainSmoke:
         assert rc == 1
         out = capsys.readouterr().out
         assert "Lint complete" in out
+
+
+_LINKING_DOC = """---
+title: リンク元
+description: アンカー付きリンクを持つページ
+category: overview
+updated: '2025-10-01'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/linking.htm'
+---
+
+[次の節](/docs/overview/target#最初の節)を参照。
+"""
+
+_TARGET_DOC = """---
+title: リンク先
+description: 見出しを 2 つ持つページ
+category: overview
+updated: '2025-10-01'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/target.htm'
+---
+
+## 最初の節
+
+本文。
+
+## 次の節
+
+本文。
+"""
+
+_LINKING_EN = '<h1>Linking</h1><p>See <a href="target.htm#second-section">Second section</a>.</p>'
+_TARGET_EN = (
+    "<h1>Target</h1>"
+    '<h2><a name="first-section"></a>First section</h2><p>Body.</p>'
+    '<h2><a name="second-section"></a>Second section</h2><p>Body.</p>'
+)
+
+
+class TestLinkFragmentMismatchThroughMain:
+    def _setup(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        docs_dir = tmp_path / "src" / "content" / "docs" / "overview"
+        snapshots = tmp_path / "snapshots" / "en" / "content" / "overview"
+        docs_dir.mkdir(parents=True)
+        snapshots.mkdir(parents=True)
+        (docs_dir / "linking.md").write_text(_LINKING_DOC, encoding="utf-8")
+        (docs_dir / "target.md").write_text(_TARGET_DOC, encoding="utf-8")
+        (snapshots / "linking.html").write_text(_LINKING_EN, encoding="utf-8")
+        (snapshots / "target.html").write_text(_TARGET_EN, encoding="utf-8")
+        monkeypatch.setattr(lint_docs, "DOCS_DIR", docs_dir.parent)
+        monkeypatch.setattr(lint_docs, "PROJECT_ROOT", tmp_path)
+
+    def test_mismatch_is_a_warning_and_keeps_exit_zero(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        self._setup(tmp_path, monkeypatch)
+
+        rc = lint_docs.main([])
+
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "linking.md:9 [link-fragment-mismatch]" in out
+        assert "0 error(s), 1 warning(s) in 2 file(s)" in out
+
+    def test_english_source_patch_is_applied_before_comparing(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """EN は、他のチェックと同じく EN source patch 適用後の HTML と比較する。"""
+        self._setup(tmp_path, monkeypatch)
+        original = lint_docs.preprocess_en_html
+
+        def patched(html: str, slug: str | None = None) -> str:
+            fixed = html.replace("target.htm#second-section", "target.htm#first-section")
+            return original(fixed, slug=slug)
+
+        monkeypatch.setattr(lint_docs, "preprocess_en_html", patched)
+
+        rc = lint_docs.main([])
+
+        assert rc == 0
+        assert "0 error(s), 0 warning(s) in 2 file(s)" in capsys.readouterr().out
