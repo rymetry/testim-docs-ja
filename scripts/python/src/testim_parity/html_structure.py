@@ -103,11 +103,16 @@ def _inside(node: Tag | NavigableString, names: frozenset[str], callouts: bool) 
     return any(p.name in names or (callouts and _is_callout_div(p)) for p in node.parents)
 
 
-def _counts(root: Tag, headings: list[tuple[int, str, Tag]]) -> dict[str, dict[str, int]]:
+def _counts(
+    root: Tag, headings: list[tuple[int, str, Tag]]
+) -> dict[str, dict[tuple[int, str], int]]:
     """section 見出し別の step / bullet / paragraph / code 数 (key 順は文書順)。"""
-    section_of = {id(node): text for level, text, node in headings if level <= 4}
-    counts: dict[str, dict[str, int]] = {k: {} for k in ("step", "bullet", "para", "code")}
-    section = "__top__"
+    sections = [(text, node) for level, text, node in headings if level <= 4]
+    section_of = {id(node): (index, text) for index, (text, node) in enumerate(sections, 1)}
+    counts: dict[str, dict[tuple[int, str], int]] = {
+        k: {} for k in ("step", "bullet", "para", "code")
+    }
+    section = (0, "")
     for node in root.descendants:
         if isinstance(node, NavigableString):
             if _starts_bare_text_paragraph(node):
@@ -243,7 +248,9 @@ def _heading_issues(
     return issues
 
 
-def _count_issues(en: dict[str, dict[str, int]], ja: dict[str, dict[str, int]]) -> list[Any]:
+def _count_issues(
+    en: dict[str, dict[tuple[int, str], int]], ja: dict[str, dict[tuple[int, str], int]]
+) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
     en_steps, ja_steps = sum(en["step"].values()), sum(ja["step"].values())
     if en_steps > 0 and ja_steps > 0 and en_steps != ja_steps:

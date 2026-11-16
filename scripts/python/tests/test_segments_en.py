@@ -8,33 +8,8 @@ from __future__ import annotations
 
 from testim_parity.segments_en import (
     CALLOUT_NORMALIZATION_SLUGS,
-    decode_entities,
     extract_segments_from_html,
 )
-
-
-class TestDecodeEntities:
-    def test_named_entities(self):
-        assert decode_entities("&amp;&lt;&gt;") == "&<>"
-
-    def test_numeric_entity(self):
-        assert decode_entities("&#8217;") == "\u2019"
-
-    def test_hex_entity(self):
-        assert decode_entities("&#x2019;") == "\u2019"
-
-    def test_unknown_entity_preserved(self):
-        assert decode_entities("&unknown;") == "&unknown;"
-
-    def test_non_string_returns_empty(self):
-        assert decode_entities(None) == ""  # type: ignore[arg-type]
-        assert decode_entities(123) == ""  # type: ignore[arg-type]
-
-    def test_out_of_range_numeric_entity_preserved(self):
-        """``chr()`` が OverflowError を投げるほど巨大な code point は原文保持。"""
-        # Unicode 範囲外の巨大な整数は chr() で OverflowError。原文がそのまま返る。
-        oversized = "&#9999999999999999999;"
-        assert decode_entities(oversized) == oversized
 
 
 class TestExtractSegmentsBasic:

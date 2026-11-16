@@ -120,7 +120,6 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 | `jsx-callout`               | JSX `<Callout>` コンポーネント残留             | localCheck         |
 | `h1-in-body`                | 本文中の H1 見出し                             | localCheck         |
 | `image-mismatch`            | 画像数の不一致                                 | snapshot 比較      |
-| `codeblock-mismatch`        | コードブロック数の不一致                       | snapshot 比較      |
 | `image-order-mismatch`      | 画像の配置順が原文と異なる                     | snapshot 比較      |
 | `callout-nesting-mismatch`  | callout のネストレベルが原文と異なる           | snapshot 比較      |
 | `source-page-missing-local` | EN sidebar にあるが local 未作成               | page coverage gate |

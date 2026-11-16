@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from testim_parity.ja_render import render_ja_markdown
-from testim_parity.segments_en import extract_segments_from_html
+from testim_parity.segments_ja import extract_segments_from_markdown
 
 
 def _segs(md: str) -> list[dict]:
-    return extract_segments_from_html(render_ja_markdown(md), slug="x", callout_allow_slugs=None)
+    return extract_segments_from_markdown(md)
 
 
 def kinds(md: str) -> list[str]:
@@ -26,6 +26,10 @@ def test_callout_title_attribute_is_accepted():
     assert kinds(':::warning{title="T"}\nbody\n:::\n') == ["callout-body"]
 
 
+def test_four_colon_callout_keeps_body_and_later_paragraph_separate():
+    assert kinds("::::note\n補足\n::::\n\n本文\n") == ["callout-body", "paragraph"]
+
+
 def test_callout_data_line_is_body_line_of_opening_marker():
     html = render_ja_markdown("para\n\n:::note\nbody\n:::\n")
     assert '<div class="callout-note" data-line="3">' in html
@@ -40,6 +44,11 @@ def test_details_with_markdown_body():
         "details-summary",
         "paragraph",
     ]
+
+
+def test_escaped_details_is_literal_in_ja_document():
+    assert kinds("&lt;details&gt; を入力します。\n") == ["paragraph"]
+    assert "を入力します" in texts("&lt;details&gt; を入力します。\n")[0]
 
 
 def test_heading_anchor_stripped():

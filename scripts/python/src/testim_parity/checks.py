@@ -12,6 +12,8 @@ from collections import Counter
 from collections.abc import Iterable, Mapping
 from typing import Any
 
+from bs4 import BeautifulSoup
+
 from .extract import (
     extract_invariant_tokens,
     is_untranslated_cell,
@@ -195,39 +197,29 @@ def local_check(doc: Mapping[str, Any]) -> list[dict[str, Any]]:
 
 
 def _compare_section_counts(
-    en_map: dict[str, int],
-    ja_map: dict[str, int],
+    en_map: dict[tuple[int, str], int],
+    ja_map: dict[tuple[int, str], int],
     issue_type: str,
     label: str,
-    min_diff: int = 1,
 ) -> list[dict[str, Any]]:
-    """section 別 count map を比較して per-section または total diff を emit (mjs 等価)。
-
-    **Precondition (python-reviewer HIGH 指摘)**: ``en_map`` / ``ja_map`` は同じ
-    document 走査順で作られた dict であること (``html_structure`` の step / bullet /
-    paragraph count は全て同一の linear scan で dict を build するため契約を満たす)。
-    mjs ``Map.entries()`` 順と同じく
-    Python 3.7+ dict の挿入順を両側で信頼する。異なる source から aggregate
-    された map を渡すと per-section zip が silently 誤 diff を emit するため、
-    caller は同一 scan で生成した map だけを渡すこと。
-    """
+    """文書順に並んだ節別の集計を比較する。節の数が異なる場合は総数を比較する。"""
     issues: list[dict[str, Any]] = []
-    en_sections = [(k, v) for k, v in en_map.items() if k != "__top__"]
-    ja_sections = [(k, v) for k, v in ja_map.items() if k != "__top__"]
+    en_sections = [(key, count) for key, count in en_map.items() if key[0]]
+    ja_sections = [(key, count) for key, count in ja_map.items() if key[0]]
 
-    if len(en_sections) > 0 and len(en_sections) == len(ja_sections):
-        for index in range(len(en_sections)):
-            en_heading, en_count = en_sections[index]
-            _, ja_count = ja_sections[index]
+    if en_sections and len(en_sections) == len(ja_sections):
+        for ((index, en_heading), en_count), (_, ja_count) in zip(
+            en_sections, ja_sections, strict=True
+        ):
             diff = ja_count - en_count
-            if abs(diff) >= min_diff and (en_count > 0 or ja_count > 0):
+            if diff:
                 sign = "+" if diff > 0 else ""
                 issues.append(
                     _with_severity(
                         {
                             "type": issue_type,
                             "detail": (
-                                f'セクション #{index + 1} "{en_heading}": {label} '
+                                f'セクション #{index} "{en_heading}": {label} '
                                 f"EN={en_count}, JA={ja_count} ({sign}{diff})"
                             ),
                         }
@@ -240,11 +232,7 @@ def _compare_section_counts(
 
     en_total = sum(en_map.values())
     ja_total = sum(ja_map.values())
-    if (
-        en_total != ja_total
-        and (en_total > 0 or ja_total > 0)
-        and abs(ja_total - en_total) >= min_diff
-    ):
+    if en_total != ja_total:
         diff = ja_total - en_total
         sign = "+" if diff > 0 else ""
         issues.append(
@@ -270,6 +258,10 @@ def _compare_section_counts(
 _DOC_LINK_FRAGMENT_RE = re.compile(r"^(/docs/[\w-]+)#.*$")
 _MARKDOWN_LINK_BRACKET_RE = re.compile(r"\s*\[[^\]]*\]\s*")
 _MULTI_WS_RE = re.compile(r"\s+")
+_HEADER_INSTRUCTION_RE = re.compile(
+    r"^(?:click|enter|choose|select|type|specify|hover over|press|open|set|use) "
+    r"(?:the|a|an|your|this|these|each)\b"
+)
 
 
 def _normalize_doc_link(token: str) -> str:
@@ -398,11 +390,14 @@ def _compare_tables(
                                 )
                             )
 
-                if (
-                    not ja_empty
-                    and _normalize_for_compare(en_cell) != _normalize_for_compare(ja_cell)
-                    and is_untranslated_cell(ja_cell)
-                ):
+                if not ja_empty and is_untranslated_cell(ja_cell):
+                    ja_text = _normalize_for_compare(ja_cell)
+                    same_text = _normalize_for_compare(en_cell) == ja_text
+                    header_sentence = (row_index, column_index) in ja_table["header_cells"] and (
+                        ja_text.endswith((".", "?", "!")) or _HEADER_INSTRUCTION_RE.match(ja_text)
+                    )
+                    if same_text and not header_sentence:
+                        continue
                     issues.append(
                         _with_severity(
                             {
@@ -422,11 +417,7 @@ def _compare_tables(
 # ---------------------------------------------------------------------------
 # image_parity_issues — EN 基準の画像 枚数 / 重複 / 順序 比較
 #
-# EN を en_body (turndown markdown) から抽出すると ``![alt](src "title")`` の
-# title が basename に混入し、title を持たない JA md と不一致になる。そのため
-# EN は生 HTML (`en_html`) の ``src`` / ``href`` から直接抽出し、JA md と対称な
-# basename 列を得る (この title 混入が原因で旧 ``_image_order_issues`` は事実上
-# 機能しなかったため、本関数に統合・置換した)。
+# EN は既存の src / href 契約に従い、JA はレンダリング済みの画像要素を使う。
 #
 # 判定はすべて **EN を基準** とする multiset / 順序比較:
 #   - EN に元々ある重複・順序は「正」とみなし、JA がそれを忠実にミラーすれば
@@ -442,18 +433,6 @@ _IMAGE_EXT_GROUP = r"(?:png|jpe?g|gif|svg|webp)"
 _EN_IMAGE_SRC_RE = re.compile(
     r"(?<![\w:-])(?:src|href)\b\s*=\s*([\"'])"
     r"([^\"']+\." + _IMAGE_EXT_GROUP + r"(?:[?#][^\"']*)?)\1",
-    re.IGNORECASE,
-)
-# markdown ``![alt](src)`` / HTML ``<img src>`` / Astro ``<Image src>`` の 3 形式。
-# HTML 形式はクォート ``"`` / ``'`` 両対応 (backref ``\2``)、``(?<![\w:-])`` の
-# 属性境界で ``data-src`` 等の誤一致を排除する。属性走査は ``[^<>]*?`` で次の
-# ``<`` / ``>`` (= タグ境界) までに bound する。``[^>]*?`` だと閉じ ``>`` の無い
-# 不正な ``<img`` 連続で各開始位置が EOL まで走査し O(n^2) になるため、``<`` も
-# 境界に含めて線形性を保証する。
-# 既知の制限: markdown の山括弧 destination (``![](<path>)``) は対象外 (JA 未使用)。
-_JA_IMAGE_RE = re.compile(
-    r"!\[[^\]]*\]\(\s*([^)\s]+)"
-    r"|<(?:img|image)\b[^<>]*?(?<![\w:-])src\s*=\s*([\"'])([^\"']+)\2",
     re.IGNORECASE,
 )
 _IMAGE_EXT_SUFFIX_RE = re.compile(r"\." + _IMAGE_EXT_GROUP + r"$", re.IGNORECASE)
@@ -482,28 +461,20 @@ def _en_image_tokens(en_html: str) -> list[str]:
     return [_normalize_image_token(url) for _quote, url in _EN_IMAGE_SRC_RE.findall(en_html)]
 
 
-def _ja_image_tokens(ja_body: str) -> list[str]:
-    """JA markdown から画像 (``![](...)`` / ``<img src>`` / ``<Image src>``) を出現順に抽出する。
-
-    code fence 内は除外し、markdown の title (``"..."``) は drop する。
-    """
+def _ja_image_tokens(ja_html: str) -> list[str]:
+    """比較用 HTML から画像を出現順に抽出する。"""
     tokens: list[str] = []
-    in_code_block = False
-    for line in ja_body.split("\n"):
-        if FENCE_LINE_RE.match(line):
-            in_code_block = not in_code_block
+    for image in BeautifulSoup(ja_html, "lxml").find_all(("img", "image")):
+        src = image.get("src")
+        if not isinstance(src, str):
             continue
-        if in_code_block:
-            continue
-        for md_src, _quote, tag_src in _JA_IMAGE_RE.findall(line):
-            src = md_src or tag_src
-            cleaned = src.split("?", 1)[0].split("#", 1)[0]
-            if _IMAGE_EXT_SUFFIX_RE.search(cleaned):
-                tokens.append(_normalize_image_token(src))
+        cleaned = src.split("?", 1)[0].split("#", 1)[0]
+        if _IMAGE_EXT_SUFFIX_RE.search(cleaned):
+            tokens.append(_normalize_image_token(src))
     return tokens
 
 
-def image_parity_issues(en_html: str, ja_body: str) -> list[dict[str, Any]]:
+def image_parity_issues(en_html: str, ja_html: str) -> list[dict[str, Any]]:
     """EN (生 HTML) 基準で JA 画像の 枚数 / 重複 / 順序 を検証する。
 
     - multiset 不一致 (余剰 / 不足 / 重複) → ``image-mismatch``
@@ -514,7 +485,7 @@ def image_parity_issues(en_html: str, ja_body: str) -> list[dict[str, Any]]:
     """
     issues: list[dict[str, Any]] = []
     en_tokens = _en_image_tokens(en_html)
-    ja_tokens = _ja_image_tokens(ja_body)
+    ja_tokens = _ja_image_tokens(ja_html)
 
     en_counts = Counter(en_tokens)
     ja_counts = Counter(ja_tokens)
