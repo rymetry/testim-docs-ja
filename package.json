@@ -117,6 +117,12 @@
   "overrides": {
     "@vercel/routing-utils": {
       "path-to-regexp": "6.3.0"
+    },
+    "markdownlint-cli": {
+      "minimatch": "^11.0.5"
+    },
+    "micromark-extension-math": {
+      "katex": "^0.19.1"
     }
   }
 }
