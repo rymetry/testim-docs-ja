@@ -240,8 +240,9 @@ def is_untranslated_cell(cell: str) -> bool:
 
 # HTML table 抽出
 _HTML_TABLE_RE = re.compile(r"<table\b[^>]*>([\s\S]*?)</table>", re.IGNORECASE)
+_HTML_THEAD_RE = re.compile(r"<thead\b[^>]*>[\s\S]*?</thead>", re.IGNORECASE)
 _HTML_TR_RE = re.compile(r"<tr\b[^>]*>([\s\S]*?)</tr>", re.IGNORECASE)
-_HTML_CELL_RE = re.compile(r"<(?:td|th)\b[^>]*>([\s\S]*?)</(?:td|th)>", re.IGNORECASE)
+_HTML_CELL_RE = re.compile(r"<(td|th)\b[^>]*>([\s\S]*?)</(?:td|th)>", re.IGNORECASE)
 _HTML_TAG_STRIP_RE = re.compile(r"<[^>]*>")
 _HTML_WHITESPACE_RUN_RE = re.compile(r"\s+")
 _HTML_CODE_RE = re.compile(r"<code\b[^>]*>([\s\S]*?)</code>", re.IGNORECASE)
@@ -262,7 +263,7 @@ def _html_a_replace(match: re.Match[str]) -> str:
 
 
 def extract_html_tables(body: str) -> list[dict[str, Any]]:
-    """``<table>`` block を ``[{rows, line}]`` で抽出する (mjs 等価)。
+    """``<table>`` block を抽出し、ヘッダーセルの (行, 列) を記録する。
 
     ``<code>`` は backtick、``<a href>`` は ``text [href]`` に置換してから
     tag strip する。行番号は body 先頭からの ``\\n`` 数 + 1。
@@ -273,11 +274,16 @@ def extract_html_tables(body: str) -> list[dict[str, Any]]:
         table_html = match.group(1)
         line = body[: match.start()].count("\n") + 1
         rows: list[list[str]] = []
+        header_cells: set[tuple[int, int]] = set()
+        thead = _HTML_THEAD_RE.search(table_html)
 
         for row_match in _HTML_TR_RE.finditer(table_html):
+            in_thead = thead is not None and thead.start() < row_match.start() < thead.end()
             cells: list[str] = []
             for cell_match in _HTML_CELL_RE.finditer(row_match.group(1)):
-                cell_html = cell_match.group(1)
+                tag, cell_html = cell_match.groups()
+                if in_thead or tag.lower() == "th":
+                    header_cells.add((len(rows), len(cells)))
                 cell_html = _HTML_CODE_RE.sub(_html_code_replace, cell_html)
                 cell_html = _HTML_A_RE.sub(_html_a_replace, cell_html)
                 cell_html = _HTML_TAG_STRIP_RE.sub("", cell_html).strip()
@@ -286,7 +292,7 @@ def extract_html_tables(body: str) -> list[dict[str, Any]]:
                 rows.append(cells)
 
         if len(rows) > 0:
-            tables.append({"rows": rows, "line": line})
+            tables.append({"rows": rows, "line": line, "header_cells": header_cells})
 
     return tables
 

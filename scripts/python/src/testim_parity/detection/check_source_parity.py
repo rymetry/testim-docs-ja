@@ -72,8 +72,7 @@ from ..project import (
     read_doc_file,
     resolve_slug,
 )
-from ..segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_html
-from ..segments_ja import extract_segments_from_markdown
+from ..segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_document_html
 from ..source_usability import detect_source_usability
 from ..summary import summarize_parity_results
 from ..summary_format import format_source_unusable_section
@@ -132,13 +131,13 @@ def _build_segment_inconclusive_issue(
     }
 
 
-def _structure_issues(en_html: str, ja_body: str, slug: str, err: TextIO) -> list[dict[str, Any]]:
+def _structure_issues(en_html: str, ja_html: str, slug: str, err: TextIO) -> list[dict[str, Any]]:
     """DOM 構造比較。失敗はその page の ``source-fetch-error`` にして run を続ける。
 
-    segment 抽出失敗の fallback からも呼ばれ、同じ BS4 / markdown-it 経路で再失敗し得る。
+    segment 抽出に失敗した場合も比較用 HTML があれば構造比較を行う。
     """
     try:
-        return compare_html_structure(en_html, render_ja_markdown(ja_body), slug=slug)
+        return compare_html_structure(en_html, ja_html, slug=slug)
     except Exception as exc:  # noqa: BLE001 — 1 page の失敗で run 全体を止めない
         print(f"structure comparison failed for {slug}: {exc}.", file=err)
         return [
@@ -502,19 +501,31 @@ def check_source_parity(
                     }
                 )
 
+            ja_html: str | None = None
             if en_html is not None:
+                try:
+                    ja_html = render_ja_markdown(doc["body"])
+                except Exception as exc:  # noqa: BLE001 — continue with the remaining pages
+                    print(f"JA HTML rendering failed for {file_slug}: {exc}.", file=err)
+                    issues.append(
+                        {
+                            "type": "source-fetch-error",
+                            "detail": f"JA HTML レンダリング失敗: {exc}",
+                            "severity": ISSUE_SEVERITY["source-fetch-error"],
+                        }
+                    )
+
+            if en_html is not None and ja_html is not None:
                 en_segments: list[Any] = []
                 ja_segments: list[Any] = []
                 extract_error: Exception | None = None
                 try:
-                    en_segments = list(
-                        extract_segments_from_html(
-                            en_html,
-                            slug=file_slug,
-                            callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS,
-                        )
+                    en_segments = extract_segments_from_document_html(
+                        en_html,
+                        slug=file_slug,
+                        callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS,
                     )
-                    ja_segments = list(extract_segments_from_markdown(doc["body"]))
+                    ja_segments = extract_segments_from_document_html(ja_html)
                 except Exception as exc:  # noqa: BLE001
                     extract_error = exc
                     print(
@@ -559,7 +570,6 @@ def check_source_parity(
                             str(extract_error), "align-exception", None
                         )
                     )
-                    issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
                 else:
                     alignment: dict[str, Any] | None = None
                     try:
@@ -578,12 +588,11 @@ def check_source_parity(
                         issues.append(
                             _build_segment_inconclusive_issue(str(exc), "align-exception", None)
                         )
-                        issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
 
                     if alignment is not None:
                         segment_issues = parity_diffs_to_issues(alignment["diffs"])
+                        issues.extend(segment_issues)
                         if alignment.get("inconclusive"):
-                            issues.extend(segment_issues)
                             issues.append(
                                 _build_segment_inconclusive_issue(
                                     alignment.get("inconclusiveReason") or "unknown reason",
@@ -591,16 +600,10 @@ def check_source_parity(
                                     alignment.get("inconclusiveMeta"),
                                 )
                             )
-                            issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
-                        else:
-                            issues.extend(segment_issues)
-                            issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
 
                 if not usability_issue:
-                    # EN 基準の画像 枚数 / 重複 / 順序 検証。compare_html_structure と
-                    # 同じ非 usability ケースで実行する。EN は en_html (生 HTML) の
-                    # src / href から抽出し、turndown の title 混入を回避する。
-                    issues.extend(image_parity_issues(en_html, doc["body"]))
+                    issues.extend(_structure_issues(en_html, ja_html, file_slug, err))
+                    issues.extend(image_parity_issues(en_html, ja_html))
 
         issues = tag_issues_with_acknowledgements(
             file_slug, issues, ack_data["entries"], snapshot_fingerprint, today

@@ -12,7 +12,7 @@ dependencies = [
   "beautifulsoup4~=4.12",
   "lxml~=6.0",
   "html5lib~=1.1",
-  "markdown-it-py[plugins]~=4.0",
+  "markdown-it-py~=4.0",
   "httpx>=0.27",
   "pydantic>=2.0",
   "click>=8.0",
@@ -199,14 +199,11 @@ disable_error_code = ["name-defined", "attr-defined", "no-any-return", "misc"]
 #   - lxml → lxml-stubs あり (dev extras へ追加)
 #   - python-frontmatter → スタブなし、override 維持
 #   - markdown-it-py → スタブなし、override 維持 (Phase 2)
-#   - mdit_py_plugins → スタブなし、override 維持 (Phase 2)
 module = [
   "frontmatter",
   "frontmatter.*",
   "markdown_it",
   "markdown_it.*",
-  "mdit_py_plugins",
-  "mdit_py_plugins.*",
   "markdownify",
   "markdownify.*",
 ]

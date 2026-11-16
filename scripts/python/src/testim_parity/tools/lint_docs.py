@@ -21,9 +21,10 @@ from urllib.parse import unquote, urljoin, urlsplit
 import frontmatter
 from bs4 import BeautifulSoup, Tag
 
+from ..ja_render import ATX_HEADING_RE, CALLOUT_CLOSE_RE, CALLOUT_OPEN_RE, fenced_lines
 from ..preprocess_en import preprocess_en_html
 from ..project import DOCS_DIR, PROJECT_ROOT, file_path_to_slug
-from ..segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_html
+from ..segments_en import CALLOUT_NORMALIZATION_SLUGS, extract_segments_from_document_html
 from ..segments_ja import extract_segments_from_markdown
 from ..segments_shared import GATE_ELIGIBLE_KINDS
 from ..sidebar import get_section_slug_set
@@ -510,19 +511,29 @@ def check_code_blocks(body: str, body_start: int, reporter: _Reporter) -> None:
 
 
 def check_callouts(body: str, body_start: int, reporter: _Reporter) -> None:
-    # Code fence 内の ``:::callout`` 風 literal は meta-documentation (反例示)
-    # として lint しない。``check_images`` と同じ state machine で fence を
-    # 追跡し、fence 内の行を skip する。fence 閉じ後は通常の検出に戻る。
+    if ":::" not in body:
+        return
     sorted_types = ", ".join(sorted(_VALID_CALLOUT_TYPES))
-    in_code_block = False
+    code_lines = fenced_lines(body)
+    open_callouts: list[tuple[int, int]] = []
     for index, line in enumerate(body.split("\n")):
-        if _FENCE_LINE_RE.match(line.strip()):
-            in_code_block = not in_code_block
-            continue
-        if in_code_block:
+        if index in code_lines:
             continue
 
         line_number = _to_absolute_line(index + 1, body_start)
+
+        if (opening := CALLOUT_OPEN_RE.match(line)) and not opening[1]:
+            open_callouts.append((line_number, len(opening[2])))
+        elif open_callouts:
+            closing = CALLOUT_CLOSE_RE.match(line)
+            if closing and not closing[1] and len(closing[2]) >= open_callouts[-1][1]:
+                open_callouts.pop()
+            elif ATX_HEADING_RE.match(line):
+                for start_line, _ in open_callouts:
+                    reporter.err(
+                        "callout-unclosed", "Close the callout before the heading", start_line
+                    )
+                open_callouts.clear()
 
         top_match = _CALLOUT_RE.match(line)
         if top_match:
@@ -546,6 +557,9 @@ def check_callouts(body: str, body_start: int, reporter: _Reporter) -> None:
                 "Keep callouts at top level — see docs/WRITING_GUIDE.md.",
                 line_number,
             )
+
+    for start_line, _ in open_callouts:
+        reporter.err("callout-unclosed", "Close the callout before the end of the page", start_line)
 
 
 def check_images(body: str, body_start: int, reporter: _Reporter) -> None:
@@ -701,14 +715,12 @@ def check_structure_signature(
         return
     try:
         en_html = preprocess_en_html(raw_en_html, slug=slug)
-        en_segments = list(
-            extract_segments_from_html(
-                en_html,
-                slug=slug,
-                callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS,
-            )
+        en_segments = extract_segments_from_document_html(
+            en_html,
+            slug=slug,
+            callout_allow_slugs=CALLOUT_NORMALIZATION_SLUGS,
         )
-        ja_segments = list(extract_segments_from_markdown(body))
+        ja_segments = extract_segments_from_markdown(body)
     except Exception as err:  # noqa: BLE001 - lint should surface parser/extractor failures
         reporter.err(
             "structure-signature-mismatch",

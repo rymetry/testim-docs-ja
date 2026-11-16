@@ -1487,7 +1487,8 @@ def test_ja_render_failure_is_reported_per_page_and_run_continues(
     files, err = _run_two_pages(root)
     assert "source-fetch-error" in files["one.md"]
     assert "paragraph-count-mismatch" in files["two.md"]
-    assert "structure comparison failed for a/one: boom" in err
+    assert "JA HTML rendering failed for a/one: boom" in err
+    assert len(calls) == 2
 
 
 def test_structure_failure_after_segment_extract_failure_is_reported_and_run_continues(
@@ -1498,8 +1499,8 @@ def test_structure_failure_after_segment_extract_failure_is_reported_and_run_con
     root = _two_page_repo(tmp_path)
     monkeypatch.setattr(
         module,
-        "extract_segments_from_html",
-        _fail_for_page_one(module.extract_segments_from_html, lambda a, k: k["slug"]),
+        "extract_segments_from_document_html",
+        _fail_for_page_one(module.extract_segments_from_document_html, lambda a, k: k.get("slug")),
     )
     monkeypatch.setattr(
         module,

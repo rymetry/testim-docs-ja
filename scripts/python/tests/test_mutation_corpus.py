@@ -583,6 +583,7 @@ def test_table_image_url_change_is_detected_by_image_parity(change: str) -> None
     from pathlib import Path
 
     from testim_parity.checks import image_parity_issues
+    from testim_parity.ja_render import render_ja_markdown
 
     repo = Path(__file__).resolve().parents[3]
     slug = "running-tests/running-tests-overview"
@@ -590,11 +591,13 @@ def test_table_image_url_change_is_detected_by_image_parity(change: str) -> None
     ja = (repo / "src/content/docs" / f"{slug}.md").read_text(encoding="utf-8")
     url = "https://res.cloudinary.com/dl74xtazm/image/upload/v1692609814/zkherwmreutdvdcaxxmw.png"
     row = next(line for line in ja.split("\n") if line.startswith("|") and url in line)
-    assert image_parity_issues(en, ja) == []
+    assert image_parity_issues(en, render_ja_markdown(ja)) == []
     mutated = ja.replace(
         row, row.replace(url, change) if change else row.replace(f"![suites]({url})", "")
     )
-    assert [i["type"] for i in image_parity_issues(en, mutated)] == ["image-mismatch"]
+    assert [i["type"] for i in image_parity_issues(en, render_ja_markdown(mutated))] == [
+        "image-mismatch"
+    ]
 
 
 # ---------------------------------------------------------------------------
