@@ -535,6 +535,10 @@ class TestInternalLinkTargets:
             pytest.param("## 概要\n\nSee [below](#%E6%A6%82%E8%A6%81).\n", id="percent-encoded"),
             pytest.param('## Setup\n\n<a href="#">top</a> [top](#)\n', id="empty-fragment"),
             pytest.param("## Setup\n\n[上へ](#top) [上へ](#TOP)\n", id="top-of-page"),
+            pytest.param(
+                "## Using `testim` CLI\n\nSee [below](#using-testim-cli).\n",
+                id="heading-with-code-span",
+            ),
             pytest.param("## Setup\n\nSee [below]( #setup ).\n", id="spaces-around-target"),
             pytest.param(
                 'See <a\n  href="/docs/overview/testim-overview#features"\n>overview</a>.\n',
@@ -555,6 +559,32 @@ class TestInternalLinkTargets:
             _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
         )
         assert _rules(issues, "link-fragment-missing", "link-target-missing") == []
+
+    def test_cross_page_fragment_skipped_without_heading_index(self) -> None:
+        issues = lint_content(
+            _make_doc(body="See [section](/docs/overview/testim-overview#missing).\n"),
+            _TEST_PATH,
+            all_slugs=_SLUGS,
+        )
+        assert _rules(issues, "link-fragment-missing", "link-target-missing") == []
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("See [page](/docs/overview/nonexistent#).\n", id="markdown"),
+            pytest.param('See <a href="/docs/overview/nonexistent#">page</a>.\n', id="html"),
+        ],
+    )
+    def test_empty_fragment_link_to_missing_page_is_error(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        assert len(_rules(issues, "link-target-missing")) == 1
+
+    def test_issues_are_reported_in_document_order(self) -> None:
+        body = '## Setup\n\n<a href="#first">x</a> [y](#second)\n\n[z](#third)\n'
+        issues = _rules(lint_content(_make_doc(body=body), _TEST_PATH), "link-fragment-missing")
+        assert [i["message"].split('"')[1] for i in issues] == ["#first", "#second", "#third"]
 
     def test_same_page_fragment_checked_without_slug_index(self) -> None:
         issues = lint_content(_make_doc(body="## Setup\n\nSee [below](#missing).\n"), _TEST_PATH)
