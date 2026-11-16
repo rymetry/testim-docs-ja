@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from testim_parity.html_structure import compare_html_structure
 from testim_parity.ja_render import render_ja_markdown
 
@@ -35,7 +37,18 @@ def test_code_block_replaced_by_inline_code_is_detected():
 
 
 def test_br_br_is_one_paragraph():
-    assert types("<p>a<br/><br/>b</p>", "<p>ab</p>") == []
+    assert types("<h2>A</h2><p>a<br/><br/>b</p>", "<h2>A</h2><p>ab</p>") == []
+    assert "paragraph-count-mismatch" in types("<h2>A</h2><p>a</p><p>b</p>", "<h2>A</h2><p>ab</p>")
+
+
+def test_br_in_table_cell_is_a_space_not_a_fusion():
+    def table(cell: str) -> str:
+        return f"<table><tr><td>{cell}</td></tr></table>"
+
+    assert types(table("a<br>b"), table("a b")) == []
+    # words split by <br> stay separate words, so the English-residual check still sees them
+    words = "Press<br>this<br>button<br>to<br>begin<br>running"
+    assert "table-cell-english-residual" in types(table("ボタン"), table(words))
 
 
 def test_later_h1_counts_as_section():
@@ -164,18 +177,28 @@ def test_paragraph_count_mismatch():
     assert [i["detail"] for i in found] == ["段落数の総数が原文と異なります: EN=2, JA=1 (-1)"]
 
 
-def test_paragraphs_in_excluded_containers_are_not_counted():
-    en = (
-        "<p>a</p><ul><li><p>x</p></li></ul><table><tr><td><p>y</p></td></tr></table>"
-        "<blockquote><p>q</p></blockquote><details><summary>s</summary><p>d</p></details>"
-        '<div class="note"><p>n</p></div><p></p><p><img src="i.png"/></p>'
-    )
-    ja = (
-        "<p>a</p><ul><li>x</li></ul><table><tr><td>y</td></tr></table>"
-        '<details><summary>s</summary></details><div class="callout-note" data-line="3"></div>'
-        '<p><img src="i.png"/></p>'
-    )
-    assert "paragraph-count-mismatch" not in types(en, ja)
+_EXCLUDED_CONTAINERS = {
+    "li": "<ul><li>{}</li></ul>",
+    "table": "<table><tr><td>{}</td></tr></table>",
+    "blockquote": "<blockquote>{}</blockquote>",
+    "details": "<details><summary>s</summary>{}</details>",
+    "callout": '<div class="note">{}</div>',
+}
+
+
+@pytest.mark.parametrize("container", _EXCLUDED_CONTAINERS)
+def test_paragraph_in_excluded_container_is_not_counted(container):
+    wrap = _EXCLUDED_CONTAINERS[container]
+    ja = "<h2>A</h2>" + wrap.format("x").replace('class="note"', 'class="callout-note"')
+    inside = "<h2>A</h2>" + wrap.format("<p>x</p>")
+    assert "paragraph-count-mismatch" not in types(inside, ja)
+    outside = "<h2>A</h2>" + wrap.format("x") + "<p>x</p>"
+    assert "paragraph-count-mismatch" in types(outside, ja)
+
+
+def test_empty_and_image_only_paragraphs_are_not_counted():
+    en = '<h2>A</h2><p>a</p><p></p><p><img src="i.png"/></p>'
+    assert "paragraph-count-mismatch" not in types(en, "<h2>A</h2><p>a</p>")
 
 
 def test_code_block_count_mismatch_detail_and_severity():
@@ -314,3 +337,39 @@ def test_bare_text_after_image_matches_paragraph():
 def test_missing_bare_text_paragraph_is_detected():
     ja = render_ja_markdown("## Filter\n\n導入\n\n1. 手順\n\n![a](/images/a.png)\n\n次へ\n")
     assert types(_BARE_TEXT_EN, ja) == ["paragraph-count-mismatch"]
+
+
+# --- guards on JA-only / count-mismatch inputs ---------------------------------
+
+
+def test_html_comment_in_ja_is_ignored():
+    en = "<h2>A</h2><p>x</p>"
+    assert types(en, "<h2>A</h2><!-- note --><p>x</p>") == []
+    assert types(en, "<!-- note --><h2>A</h2><p>x</p>") == []
+
+
+def test_h1_after_image_is_a_section_not_the_title():
+    en = '<p><img src="a.png"/></p><h1>T</h1><p>x</p>'
+    assert types(en, '<p><img src="a.png"/></p><h2>T</h2><p>x</p>') == []
+    assert "section-count-mismatch" in types(en, '<p><img src="a.png"/></p><p>x</p>')
+
+
+def test_callout_count_mismatch_is_not_a_nesting_issue():
+    en = '<div class="note"><p>x</p></div><div class="note"><p>y</p></div>'
+    ja = '<div class="callout-note" data-line="1"><p>x</p></div>'
+    assert "callout-nesting-mismatch" not in types(en, ja)
+
+
+def test_callout_nesting_reverse_direction_is_detected():
+    en = '<ol><li>a<div class="note"><p>x</p></div></li></ol>'
+    ja = '<ol><li>a</li></ol><div class="callout-note" data-line="4"><p>x</p></div>'
+    nesting = [i for i in issues(en, ja) if i["type"] == "callout-nesting-mismatch"]
+    assert [i["detail"] for i in nesting] == ["callout #1: EN=ネスト → JA=トップレベル"]
+    assert [i["line"] for i in nesting] == [4]
+
+
+def test_callout_nesting_without_ja_line_has_no_line():
+    en = '<div class="note"><p>x</p></div>'
+    ja = '<ol><li>a<div class="callout-note"><p>x</p></div></li></ol>'
+    nesting = [i for i in issues(en, ja) if i["type"] == "callout-nesting-mismatch"]
+    assert [i["line"] for i in nesting] == [None]

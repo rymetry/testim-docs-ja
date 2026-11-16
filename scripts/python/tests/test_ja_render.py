@@ -92,6 +92,16 @@ def test_fence_inside_list_item_keeps_callout_marker_as_code():
     assert "<div" not in html and "<pre>" in html and ":::note" in html
 
 
+def test_shorter_fence_of_same_char_does_not_close_fence():
+    html = render_ja_markdown("````\n```\n:::note\n````\n")
+    assert "data-line" not in html and "<pre>" in html and ":::note" in html
+
+
+def test_fence_of_other_char_does_not_close_fence():
+    html = render_ja_markdown("~~~\n```\n:::note\n~~~\n")
+    assert "data-line" not in html and "<pre>" in html and ":::note" in html
+
+
 def test_info_string_line_does_not_close_fence():
     html = render_ja_markdown("```\n```js\n:::note\n```\n")
     assert "data-line" not in html and "<pre>" in html
