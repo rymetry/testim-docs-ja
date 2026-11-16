@@ -148,7 +148,7 @@ def _starts_bare_text_paragraph(text: NavigableString) -> bool:
     True を返すので、1 run = 1 段落になる。
     """
     parent = text.parent
-    if type(text) is not NavigableString:  # Comment / Doctype 等は本文ではない
+    if type(text) is not NavigableString:  # 防御的: コメントは _clean_soup が先に除去する
         return False
     if parent is None or parent.name not in _BARE_TEXT_CONTAINERS:
         return False
