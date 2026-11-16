@@ -81,12 +81,18 @@ _LIST_NESTED_CALLOUT_RE = re.compile(
 # リンク先は ``/docs/<slug>`` (末尾 ``/`` 可)、``/docs/<slug>#frag``、同一ページの ``#frag``。
 # どちらの group も空なら内部リンクではない。
 _LINK_TARGET = r"(?:/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)/?)?"
-_MARKDOWN_LINK_RE = re.compile(rf"\]\({_LINK_TARGET}(#[^)\n]*)?\)")
-# body 全体に当てるので ``href`` が ``<a`` より後の行にあっても拾う。属性部から ``<`` を
-# 除くのは、閉じない ``<a`` が並んだときに走査が二次時間になるのを防ぐため。
+# shortcut: リンクを body 全体への正規表現で拾う。どの量指定子も次の ``(``・``<``・引用符で
+# 止まる形にして、閉じないリンクが並んでも線形時間に収めている。その代わり、括弧を含む
+# フラグメント ``(#a(b))`` と、``href`` より前の属性値に ``<`` がある ``<a>`` は検査されない。
+# 参照形式 ``[t][ref]``、``(<#frag>)``、引用符なしの ``href`` も対象外で、HTML コメント内や
+# ``~~~`` フェンス内のリンク、画像 ``![alt](#frag)`` は検査される (いずれも現行コンテンツに
+# 該当なし)。使い始めたら Markdown パーサーに置き換える。
+_MARKDOWN_LINK_RE = re.compile(
+    rf"""\]\([ \t]*{_LINK_TARGET}(#[^()\s]*)?(?:[ \t]+(?:"[^"\n]*"|'[^'\n]*'))?[ \t]*\)"""
+)
+# ``\shref`` は ``data-href`` などを除くため。``href`` が ``<a`` より後の行にあっても拾う。
 _HTML_LINK_RE = re.compile(
-    rf"""<a\b[^<>]*href=["']{_LINK_TARGET}(#[^\s"']*)?\s*["'][^>]*>""",
-    re.IGNORECASE,
+    rf"""<a\b[^<>]*\shref=["']{_LINK_TARGET}(#[^\s"']*)?\s*["']""", re.IGNORECASE
 )
 _IMAGE_RE = re.compile(r"""!\[[^\]]*]\((/images/[^)]+)\)|<img[^>]+src=["'](/images/[^"']+)["']""")
 
@@ -119,7 +125,12 @@ def _parse_frontmatter_with_lines(content: str) -> tuple[dict[str, Any], str, in
 
 
 def _strip_code(body: str) -> str:
-    return _INLINE_CODE_RE.sub("", _CODE_BLOCK_RE.sub("", body))
+    """コードブロックとインラインコードを消す。報告する行番号がずれないよう改行は残す。"""
+
+    def _newlines_only(match: re.Match[str]) -> str:
+        return "\n" * match.group().count("\n")
+
+    return _INLINE_CODE_RE.sub(_newlines_only, _CODE_BLOCK_RE.sub(_newlines_only, body))
 
 
 def _to_absolute_line(body_line_number: int, body_start_line: int) -> int:
@@ -274,7 +285,10 @@ def check_links(
         fragment_id = (fragment or "")[1:]
         if headings is None or not fragment_id:
             return
-        # ブラウザと同じく、そのままの id と percent-decode した id の両方で探す
+        # ブラウザと同じく、そのままの id と percent-decode した id の両方で探す。
+        # どちらにも無い ``#top`` (大文字小文字を問わない) はページ先頭を指す。
+        if fragment_id.lower() == "top":
+            return
         if fragment_id not in headings and unquote(fragment_id) not in headings:
             reporter.err(
                 "link-fragment-missing",
@@ -283,10 +297,13 @@ def check_links(
             )
 
     matches = [*_MARKDOWN_LINK_RE.finditer(body_stripped), *_HTML_LINK_RE.finditer(body_stripped)]
+    body_line, counted_to = 1, 0
     for match in sorted(matches, key=lambda m: m.start()):
         if match.group(1) is None and match.group(2) is None:
             continue
-        body_line = body_stripped.count("\n", 0, match.start()) + 1
+        # 毎回先頭から数え直すとリンク数 x 本文長になるので、前回位置からの差分だけ数える
+        body_line += body_stripped.count("\n", counted_to, match.start())
+        counted_to = match.start()
         _validate(match.group(1), match.group(2), _to_absolute_line(body_line, body_start))
 
 
