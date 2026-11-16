@@ -24,13 +24,23 @@ __all__ = ["render_ja_markdown"]
 _MD = MarkdownIt("commonmark", {"html": True}).enable("table").enable("strikethrough")
 # shortcut: a 4-space indented code block outside a list is not detected, so a marker in it
 # becomes literal <div> text in the code; upgrade if such a page appears in the corpus.
-_OPEN = re.compile(r"^(\s*):::(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$")
-_CLOSE = re.compile(r"^(\s*):::\s*$")
-_HEADING = re.compile(r"^#{1,6}\s")
-# list marker の直後に始まる fence (``- ```) も fence として扱う。
-_FENCE = re.compile(r"^\s*(?:[-*+]\s+|\d+\.\s+)?(`{3,}|~{3,})(.*)$")
+CALLOUT_OPEN_RE = re.compile(
+    r"^([ \t]*)(:{3,})(note|warning|info|tip|caution|danger)(?:\{[^}]*\})?\s*$"
+)
+CALLOUT_CLOSE_RE = re.compile(r"^([ \t]*)(:{3,})\s*$")
+ATX_HEADING_RE = re.compile(r"^#{1,6}\s")
 _ANCHOR = re.compile(r"^(#{1,6}\s.*?)\s*\{#[^}]*\}\s*$")
 _H1 = re.compile(r"^#\s")
+
+
+def fenced_lines(body: str) -> set[int]:
+    """Return zero-based lines covered by CommonMark code fences."""
+    return {
+        line
+        for token in _MD.parse(body)
+        if token.type == "fence" and token.map is not None
+        for line in range(*token.map)
+    }
 
 
 def render_ja_markdown(body: str) -> str:
@@ -43,33 +53,29 @@ def render_ja_markdown(body: str) -> str:
                 start = i + 1
                 break
     out: list[str] = []
-    fence: str | None = None  # 開いている fence の文字列 (文字 x 長さ)
+    code_lines = fenced_lines("\n".join(lines[start:]))
     first_content = True
-    open_callouts = 0
+    open_callouts: list[int] = []
     for n in range(start, len(lines)):
         line = lines[n]
-        m = _FENCE.match(line)
-        if m:
-            # CommonMark: closer は同じ文字で opener 以上の長さ、info string なし
-            if fence is None:
-                fence = m[1]
-            elif m[1][0] == fence[0] and len(m[1]) >= len(fence) and not m[2].strip():
-                fence = None
+        if n - start in code_lines:
             out.append(line)
-        elif fence is not None:
-            out.append(line)
-        elif (o := _OPEN.match(line)) is not None:
-            out += [f'{o[1]}<div class="callout-{o[2]}" data-line="{n + 1}">', ""]
-            open_callouts += 1
-        elif open_callouts and (c := _CLOSE.match(line)) is not None:
+        elif (o := CALLOUT_OPEN_RE.match(line)) is not None:
+            out += [f'{o[1]}<div class="callout-{o[3]}" data-line="{n + 1}">', ""]
+            open_callouts.append(len(o[2]))
+        elif (
+            open_callouts
+            and (c := CALLOUT_CLOSE_RE.match(line)) is not None
+            and len(c[2]) >= open_callouts[-1]
+        ):
             out += ["", f"{c[1]}</div>", ""]
-            open_callouts -= 1
+            open_callouts.pop()
         elif first_content and _H1.match(line):
             pass  # title H1 は frontmatter 直後の最初の非空行のみ
         else:
-            if open_callouts and _HEADING.match(line):
-                out += ["", *["</div>"] * open_callouts, ""]
-                open_callouts = 0
+            if open_callouts and ATX_HEADING_RE.match(line):
+                out += ["", *["</div>"] * len(open_callouts), ""]
+                open_callouts.clear()
             out.append(_ANCHOR.sub(r"\1", line))
         if line.strip():
             first_content = False

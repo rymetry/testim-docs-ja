@@ -258,6 +258,24 @@ class TestCalloutDirective:
     def test_four_colon_fence_with_title_clean(self) -> None:
         issues = lint_content(_make_doc(body='::::info{title="補足"}\nContent\n::::\n'), _TEST_PATH)
         assert _rules(issues, "callout-unknown-type") == []
+        assert _rules(issues, "callout-unclosed") == []
+
+    @pytest.mark.parametrize("after", ["", "\n## 次の節\n", "\n:::"])
+    def test_unclosed_callout_is_reported_at_the_opening(self, after: str) -> None:
+        doc = _make_doc(body=f"導入\n\n::::info\n本文\n{after}")
+        (issue,) = _rules(lint_content(doc, _TEST_PATH), "callout-unclosed")
+        assert issue["level"] == "error"
+        assert doc.splitlines()[issue["line"] - 1] == "::::info"
+
+    def test_callout_closer_in_code_fence_is_literal(self) -> None:
+        doc = _make_doc(body=":::note\n補足\n\n~~~md\n:::\n~~~\n\n## 次の節\n")
+        assert len(_rules(lint_content(doc, _TEST_PATH), "callout-unclosed")) == 1
+
+    def test_callout_opener_in_list_code_fence_is_literal(self) -> None:
+        doc = _make_doc(body="1) ```md\n   :::note\n   ```\n\n## 次の節\n")
+        issues = lint_content(doc, _TEST_PATH)
+        assert _rules(issues, "callout-unclosed") == []
+        assert _rules(issues, "callout-in-list-item") == []
 
     def test_list_nested_callout_is_error(self) -> None:
         """list item 内に ``:::callout`` を書くと error (plan Phase 2 反映)。"""

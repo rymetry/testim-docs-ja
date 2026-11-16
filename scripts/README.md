@@ -120,7 +120,6 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 | `jsx-callout`               | JSX `<Callout>` コンポーネント残留             | localCheck         |
 | `h1-in-body`                | 本文中の H1 見出し                             | localCheck         |
 | `image-mismatch`            | 画像数の不一致                                 | snapshot 比較      |
-| `codeblock-mismatch`        | コードブロック数の不一致                       | snapshot 比較      |
 | `image-order-mismatch`      | 画像の配置順が原文と異なる                     | snapshot 比較      |
 | `callout-nesting-mismatch`  | callout のネストレベルが原文と異なる           | snapshot 比較      |
 | `source-page-missing-local` | EN sidebar にあるが local 未作成               | page coverage gate |
@@ -151,7 +150,9 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 
 **DOM 構造比較の数え方**: 構造 signal は `testim_parity.html_structure.compare_html_structure(en_html, ja_html, slug=...)` が EN (patched) HTML と JA の rendered HTML を DOM のまま比較して出す (両側同一の規則。詳細はモジュール docstring)。
 
-- section: H2-H4 (先頭の title `<h1>` は除外、以降の `<h1>` は h2 扱い)
+- section: H2-H4 (先頭の title `<h1>` は除外、以降の `<h1>` は h2 扱い)。
+  EN と JA の比較対象の見出し数が一致し、両側に見出しが1つ以上ある場合は、最初の見出しより前も独立した節として比較し、見出し数が異なる場合はページ全体の件数を比較する。
+  見出しが両側に無いページは step 総数と code block 数のみを比較する。
 - step / bullet: `table` の外の `ol > li` / `ul > li` (画像のみの item も数える。nested も数える)
 - 段落: `li` / `table` / `blockquote` / `details` / callout の外でテキストを持つ `<p>`、list item 内の継続段落、`.MCDropDownHead`、block 直下の bare text run
 - コードブロック: `table` の外の `<pre>`

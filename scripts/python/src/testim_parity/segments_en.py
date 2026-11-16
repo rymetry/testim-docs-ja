@@ -31,45 +31,6 @@ mjs は自前 tokenizer + lightweight DOM を使うが、Python port では BS4/
 
 Phase 1 verification gate (288-page matrix) で segment 一致を hard 確認する。
 
-## 既知の latent divergence (Codex review F1 / review M1)
-
-lxml (BS4 parser) は HTML5 仕様に沿って named entity をすべて decode する一方、
-mjs ``decodeEntities`` は ``_NAMED_ENTITIES`` の 17 entry subset のみを扱う。
-したがって ``&euro;`` / ``&hearts;`` / ``&delta;`` などの subset 外 named entity
-を含む HTML を extract すると、Python (``€`` / ``♥`` / ``δ`` に decode) と mjs
-(``&euro;`` 等を原文保持) で textNorm が divergence する。
-
-**現行 288-page corpus ではこの差に該当するページは 0 件** (``_ALLOWLIST`` も
-空)。しかし将来 MadCap EN snapshot に subset 外 entity が混入したとき、
-288-matrix conformance test が即座に検出する契約になっている。見つかった場合の
-対応方針は以下 2 択:
-
-1. mjs 側 ``_NAMED_ENTITIES`` を拡張して subset を mjs でも decode 対象にする
-   (両 runtime で entity を実文字に揃える)
-2. Python 側で subset 外 entity を pre-escape して BS4 に decode させない
-   (両 runtime で entity を原文保持する)
-
-BS4 の auto-decode は tree 構築時に行われるため「decode 済み text から元 entity
-名を復元する」アプローチは **不可能** (例: ``€`` が ``&euro;`` 由来か literal
-由来か判別不能)。Codex F1 の推奨「re-escape entities before buffering」は
-実装不可能だが、上記 2 択のどちらも conformance matrix が先に検出するため
-defer しても silent drift は起きない契約。
-
-## 既知の defensive path (Codex review F2)
-
-``decode_entities`` public API は conformance harness 経由のみ使用され、
-production segment 抽出経路 (``extract_segments_from_html``) では BS4 が
-entity decode を担うため呼ばれない。不正な numeric entity は以下の 2 種類の
-Python 例外を catch して原文保持する:
-
-- ``&#x110000;`` (Unicode 範囲外) → ``chr()`` が ``ValueError``
-- ``&#99999999999999999999;`` (C int オーバーフロー) → ``chr()`` が ``OverflowError``
-
-mjs は ``String.fromCodePoint`` が対応する ``RangeError`` を throw するため、
-harness 経由の byte 比較では **意図的に divergent** にしている
-(``test_segments_en_parity.py`` の ``DECODE_SAMPLES`` は range-out entity を
-含めず、``test_segments_en.py::TestDecodeEntities`` の dedicated test で
-Python 側の lenient 挙動を記録)。production 影響なし。
 """
 
 from __future__ import annotations
@@ -84,7 +45,7 @@ from .segments_shared import build_section_path, create_segment, push_heading
 
 __all__ = [
     "CALLOUT_NORMALIZATION_SLUGS",
-    "decode_entities",
+    "extract_segments_from_document_html",
     "extract_segments_from_html",
 ]
 
@@ -98,51 +59,6 @@ __all__ = [
 #: ``<div class="callout-note">`` に書き換え、JA 側 ``:::note`` と kind-level
 #: parity を揃える (詳細は mjs 側 docstring 参照)。
 CALLOUT_NORMALIZATION_SLUGS: frozenset[str] = frozenset({"administration/api-access"})
-
-
-# ---------------------------------------------------------------------------
-# HTML entity decoding — mjs が扱う subset を完全再現
-# ---------------------------------------------------------------------------
-
-_NAMED_ENTITIES: dict[str, str] = {
-    "amp": "&",
-    "lt": "<",
-    "gt": ">",
-    "quot": '"',
-    "apos": "'",
-    "nbsp": "\u00a0",
-    "hellip": "\u2026",
-    "rsquo": "\u2019",
-    "lsquo": "\u2018",
-    "rdquo": "\u201d",
-    "ldquo": "\u201c",
-    "ndash": "\u2013",
-    "mdash": "\u2014",
-    "copy": "\u00a9",
-    "reg": "\u00ae",
-    "trade": "\u2122",
-}
-
-_ENTITY_RE = re.compile(r"&(#x?[0-9a-f]+|[a-z][a-z0-9]*);", re.IGNORECASE)
-
-
-def decode_entities(text: object) -> str:
-    """mjs ``decodeEntities`` と同一挙動。未知 entity は原文を保持。"""
-    if not isinstance(text, str):
-        return ""
-
-    def repl(match: re.Match[str]) -> str:
-        inner = match.group(1)
-        if inner.startswith("#"):
-            try:
-                code = int(inner[2:], 16) if inner[1:2] in ("x", "X") else int(inner[1:], 10)
-                return chr(code)
-            except ValueError, OverflowError:
-                return match.group(0)
-        named = _NAMED_ENTITIES.get(inner.lower())
-        return named if named is not None else match.group(0)
-
-    return _ENTITY_RE.sub(repl, text)
 
 
 # ---------------------------------------------------------------------------
@@ -344,7 +260,7 @@ def _render_inline_text(node: Tag | NavigableString | None, buffer: list[str]) -
     markdown-link で wrap して ``extractInvariantTokens`` が拾えるようにする。
 
     **entity 扱いの注意**: BS4/lxml が text 読み込み時に entity を auto-decode
-    するため、ここで ``decode_entities`` を **再適用しない**。再適用すると
+    するため、ここで再 decode すると
     ``&amp;#x73;`` → lxml で ``&#x73;`` になった後、さらに ``decode_entities``
     で ``s`` まで戻されて mjs (single-pass decode) と divergence する。
     mjs は custom tokenizer が raw entity を保持したまま text token を吐き、
@@ -381,7 +297,7 @@ def _render_inline_text(node: Tag | NavigableString | None, buffer: list[str]) -
         label = "".join(inner_a).strip()
         raw_href = node.get("href")
         if isinstance(raw_href, str):
-            # BS4 が href を auto-decode 済みなので decode_entities は呼ばない
+            # BS4 が href を decode 済み
             # (text 側と同じ double-decode regression を回避)。
             href = raw_href
             if href and not href.startswith("#") and not href.startswith("javascript:"):
@@ -484,7 +400,7 @@ def _walk_block_container(node: Tag, state: _WalkState) -> None:
 
     for child in _iter_element_children(node):
         if isinstance(child, NavigableString):
-            # BS4 が text を auto-decode 済みなので decode_entities は呼ばない
+            # BS4 が text を decode 済み
             loose_buffer.append(str(child))
             continue
         if not isinstance(child, Tag):
@@ -675,39 +591,31 @@ def extract_segments_from_html(
     slug: str | None = None,
     callout_allow_slugs: frozenset[str] | None = None,
 ) -> list[dict[str, Any]]:
-    """MadCap Flare HTML から canonical segment list を抽出する。
-
-    mjs ``extractSegmentsFromHtml`` (``source_parity_segments_en.mjs:696``) と
-    同一 shape の segment 辞書を返す。``callout_allow_slugs`` が ``None`` の
-    場合は callout normalization を **一切行わない** (mjs の
-    ``calloutAllowSlugs instanceof Set`` guard と同じ挙動)。production caller は
-    ``CALLOUT_NORMALIZATION_SLUGS`` を明示的に渡す契約。
-
-    Phase 1 verification gate (288-page matrix) で mjs と segment count /
-    segmentKind / sectionPath の一致を hard 確認する契約。
-
-    **html5lib fallback**: lxml で 0 件しか取れず、かつ HTML が
-    ``_HTML5LIB_FALLBACK_MIN_LEN`` バイト以上の場合のみ html5lib parser で
-    再試行する (plan ``Fallback 戦略``)。mjs には対応する経路が無いが、Python
-    の lxml が万一壊れた MadCap HTML で早期終了するシナリオを防ぐ defensive
-    net。現行 288-page corpus ではこの経路に落ちることは無いことを確認済み。
-    """
-    if not isinstance(html, str):
+    """生の EN HTML を正規化してから抽出する。slug 固有の patch は呼び出し側の責務。"""
+    if not isinstance(html, str) or not html.strip():
         return []
+    return extract_segments_from_document_html(preprocess_en_html(html), slug, callout_allow_slugs)
+
+
+def extract_segments_from_document_html(
+    html: str,
+    slug: str | None = None,
+    callout_allow_slugs: frozenset[str] | None = None,
+) -> list[dict[str, Any]]:
+    """比較用の EN または JA HTML から canonical segment を抽出する。
+
+    EN の文字列補正は呼び出し側で済ませる。比較用 JA HTML に同じ補正を適用すると、
+    意図してエスケープしたタグが DOM の要素に変わり、本文を失う。
+    """
     if not html.strip():
         return []
 
-    # turndown 由来の preprocessor (Phase 1.1 実装) — entity-encoded <details> /
-    # escaped callout を real HTML に戻す。slug は渡さない (mjs も内部再帰で
-    # 渡さない契約)。slug-scope patch は呼び出し側 ``preprocess_en_html`` に
-    # 任せる前提。
-    normalized = preprocess_en_html(html)
-    lxml_soup = BeautifulSoup(normalized, "lxml")
+    lxml_soup = BeautifulSoup(html, "lxml")
     segments = _walk_soup(lxml_soup, slug, callout_allow_slugs)
 
-    if not segments and len(normalized) >= _HTML5LIB_FALLBACK_MIN_LEN:
+    if not segments and len(html) >= _HTML5LIB_FALLBACK_MIN_LEN:
         # lxml が壊れた malformed HTML で 0 件を返したとき、html5lib で
         # 再パースする。html5lib は WHATWG 準拠で lxml より寛容。
-        html5lib_soup = BeautifulSoup(normalized, "html5lib")
+        html5lib_soup = BeautifulSoup(html, "html5lib")
         segments = _walk_soup(html5lib_soup, slug, callout_allow_slugs)
     return segments

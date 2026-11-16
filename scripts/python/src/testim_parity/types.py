@@ -24,7 +24,6 @@ ISSUE_SEVERITY: MappingProxyType[str, str] = MappingProxyType(
         "jsx-callout": "actionable",
         "h1-in-body": "actionable",
         "image-mismatch": "actionable",
-        "codeblock-mismatch": "actionable",
         "image-order-mismatch": "actionable",
         "callout-nesting-mismatch": "actionable",
         "step-count-mismatch": "signal",

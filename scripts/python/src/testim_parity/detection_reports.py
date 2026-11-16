@@ -709,7 +709,7 @@ def _with_family_marker(body: str, key: str) -> str:
 def _score_parity_entry(entry: Mapping[str, Any]) -> int:
     """parity entry の sort priority (mjs ``scoreParityEntry`` 等価)。
 
-    image-mismatch / codeblock-mismatch は +3、actionable severity は +2、他は 0。
+    image-mismatch と旧レポートの codeblock-mismatch は +3、actionable は +2、他は 0。
     reportable 判定に通らない issue は加算しない。
     """
     score = 0

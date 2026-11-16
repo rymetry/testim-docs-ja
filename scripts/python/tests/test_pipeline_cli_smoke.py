@@ -34,7 +34,7 @@ from testim_parity.pipeline import (
 
 class TestPipelineMain:
     def test_main_runs_all_steps_no_checkpoint(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """checkpoint 無しで ``--mode=full`` を実行すると 5 step 全て試みる。
 
@@ -42,9 +42,11 @@ class TestPipelineMain:
         pipeline entry の success path だけ covered する。
         """
         monkeypatch.setattr(pipeline_mod, "_DEFAULT_CHECKPOINT_PATH", tmp_path / "cp.json")
-        monkeypatch.setattr(pipeline_mod, "_run_step", lambda step, *a, **kw: None)
+        steps: list[str] = []
+        monkeypatch.setattr(pipeline_mod, "_run_step", lambda step, *_: steps.append(step))
         rc = pipeline_mod.main(["--mode=full", "--no-resume"])
         assert rc == 0
+        assert steps == list(pipeline_mod.PIPELINE_STEPS)
 
     def test_main_resumes_from_checkpoint(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -54,27 +56,37 @@ class TestPipelineMain:
             cp,
             {
                 "mode": "diff",
-                "completed_step": "url_collect",
+                "step": "url_collect_done",
                 "timestamp": pipeline_mod.js_iso_timestamp(),
             },
         )
         monkeypatch.setattr(pipeline_mod, "_DEFAULT_CHECKPOINT_PATH", cp)
-        monkeypatch.setattr(pipeline_mod, "_run_step", lambda step, *a, **kw: None)
+        steps: list[str] = []
+        monkeypatch.setattr(pipeline_mod, "_run_step", lambda step, *_: steps.append(step))
         rc = pipeline_mod.main(["--mode=diff"])
         assert rc == 0
+        assert steps == list(pipeline_mod.PIPELINE_STEPS[1:])
 
     def test_main_section_filter_passed_through(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setattr(pipeline_mod, "_DEFAULT_CHECKPOINT_PATH", tmp_path / "cp.json")
-        calls: list[tuple] = []
-        monkeypatch.setattr(
-            pipeline_mod, "_run_step", lambda step, *a, **kw: calls.append((step, a, kw))
-        )
+        calls: list[tuple[str, list[str]]] = []
+
+        def run_substep(module: str, args: list[str]) -> int:
+            calls.append((module, args))
+            return 0
+
+        monkeypatch.setattr(pipeline_mod, "_run_substep", run_substep)
         rc = pipeline_mod.main(["--mode=full", "--no-resume", "--section=Overview"])
         assert rc == 0
-        # 5 step called
-        assert len(calls) >= 1
+        assert calls == [
+            ("update_sidebar_urls_from_live", []),
+            ("generate_untranslated_placeholders", ["--section=Overview"]),
+            ("fetch_translate_images", ["--mode=full", "--section=Overview"]),
+            ("prepare_llm_tasks", ["--section=Overview"]),
+            ("apply_llm_translations", ["--section=Overview"]),
+        ]
 
 
 # ---------------------------------------------------------------------------
@@ -147,9 +159,23 @@ class TestPrepareLLMTasks:
         err = capsys.readouterr().err
         assert "Unknown slug" in err
 
-    def test_happy_path_writes_task_files(self, tmp_path: Path) -> None:
-        # prepare_llm_tasks の default _TASKS_DIR は ROOT_DIR / llm / tasks なので
-        # production index を使って dry-run 的に走らせるが、1 slug だけで早い。
-        # 代表的な slug を指定する。
-        rc = prepare_llm_tasks.main(["--slug=overview/testim-overview"])
+    def test_happy_path_writes_task_files(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        slug = "overview/testim-overview"
+        source = tmp_path / "source.md"
+        source.write_text("---\ntitle: Sample\n---\n\nSample body.\n", encoding="utf-8")
+        monkeypatch.setattr(
+            prepare_llm_tasks,
+            "build_slug_index",
+            lambda: {
+                slug: {"filePath": source},
+            },
+        )
+        output = tmp_path / "tasks"
+        monkeypatch.setattr(prepare_llm_tasks, "_TASKS_DIR", output)
+        rc = prepare_llm_tasks.main([f"--slug={slug}"])
         assert rc == 0
+        task = (output / f"{slug}.md").read_text(encoding="utf-8")
+        assert task.startswith(f"# 翻訳タスク ({slug})")
+        assert task.rstrip().endswith("Sample body.")

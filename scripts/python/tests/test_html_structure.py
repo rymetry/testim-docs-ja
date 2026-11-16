@@ -241,9 +241,35 @@ def test_table_count_mismatch():
     assert [i["detail"] for i in found] == ["テーブル数: EN=1, JA=0"]
 
 
+def test_code_blocks_moved_between_sections_with_identical_headings():
+    en = "<h2>Web</h2><h3>Setup</h3><pre>web()</pre><h2>Mobile</h2><h3>Setup</h3>"
+    ja = "<h2>ウェブ</h2><h3>設定</h3><h2>モバイル</h2><h3>設定</h3><pre>web()</pre>"
+    found = issues(en, ja)
+    assert [i["type"] for i in found] == ["code-block-count-mismatch"] * 2
+    assert all(i["severity"] == "signal" for i in found)
+    assert '#2 "Setup"' in found[0]["detail"]
+    assert '#4 "Setup"' in found[1]["detail"]
+
+
 def test_table_header_rows_are_compared():
     en = "<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>"
     ja = "<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>"
+    assert types(en, ja) == []
+
+
+def test_untranslated_instruction_copied_into_markdown_table_header():
+    text = "Click this button to begin the operation"
+    en = f"<table><thead><tr><th>{text}</th></tr></thead></table>"
+    ja = render_ja_markdown(f"| {text} |\n| --- |")
+    assert types(en, ja) == ["table-cell-english-residual"]
+
+
+def test_unchanged_ui_label_and_code_in_table_headers():
+    en = (
+        "<table><tr><th>Step Timeout (milliseconds)</th>"
+        "<th><code>testim --label</code></th></tr></table>"
+    )
+    ja = render_ja_markdown("| Step Timeout (milliseconds) | `testim --label` |\n| --- | --- |")
     assert types(en, ja) == []
 
 
@@ -373,3 +399,25 @@ def test_callout_nesting_without_ja_line_has_no_line():
     ja = '<ol><li>a<div class="callout-note"><p>x</p></div></li></ol>'
     nesting = [i for i in issues(en, ja) if i["type"] == "callout-nesting-mismatch"]
     assert [i["line"] for i in nesting] == [None]
+
+
+def test_content_before_the_first_heading_is_compared():
+    en = "<p>intro</p><p>more</p><h2>A</h2><p>x</p>"
+    ja = "<p>導入</p><h2>A</h2><p>x</p>"
+    found = issues(en, ja)
+    assert [i["type"] for i in found] == ["paragraph-count-mismatch"]
+    assert found[0]["detail"] == "冒頭 (最初の見出しより前): 段落数 EN=2, JA=1 (-1)"
+
+
+def test_content_before_the_first_heading_with_repeated_headings():
+    en = "<ul><li>a</li><li>b</li></ul><h2>Try it</h2><p>x</p><h2>Try it</h2><p>y</p>"
+    ja = "<ul><li>a</li></ul><h2>試す 1</h2><p>x</p><h2>試す 2</h2><p>y</p>"
+    found = issues(en, ja)
+    assert [i["type"] for i in found] == ["bullet-count-mismatch"]
+    assert found[0]["detail"] == "冒頭 (最初の見出しより前): 箇条書き数 EN=2, JA=1 (-1)"
+
+
+def test_equal_content_before_the_first_heading_raises_nothing():
+    en = "<p>intro</p><ul><li>a</li></ul><h2>A</h2><p>x</p>"
+    ja = "<p>導入</p><ul><li>あ</li></ul><h2>A</h2><p>x</p>"
+    assert types(en, ja) == []

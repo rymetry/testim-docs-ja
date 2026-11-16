@@ -13,6 +13,7 @@ from testim_parity.checks import (
     load_sidebar_slugs,
     local_check,
 )
+from testim_parity.ja_render import render_ja_markdown
 
 # --- is_english_only_line ---------------------------------------------------
 
@@ -87,10 +88,20 @@ def test_local_check_detects_jsx_callout():
 # --- image_parity_issues (EN 基準の画像枚数 / 重複 / 順序) -------------------
 
 
+def image_issues(en_html: str, ja: str) -> list[dict]:
+    return image_parity_issues(en_html, render_ja_markdown(ja))
+
+
+def test_image_parity_ja_reference_image_counted():
+    en = '<img src="images/example.png">'
+    ja = "![画像][screenshot]\n\n[screenshot]: /images/example.png"
+    assert image_issues(en, ja) == []
+
+
 def test_image_parity_clean_identical():
     en_html = '<img src="images/aaa1111-foo.png" /><img src="images/bbb2222-bar.png" />'
     ja = "![foo](/images/x/aaa1111-foo.png)\n\n![bar](/images/x/bbb2222-bar.png)"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_en_side_duplicate_mirrored_ok():
@@ -105,7 +116,7 @@ def test_image_parity_en_side_duplicate_mirrored_ok():
         "![bar](/images/x/bbb2222-bar.png)\n\n"
         "![foo again](/images/x/aaa1111-foo.png)"
     )
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_ja_extra_duplicate_flagged():
@@ -116,7 +127,7 @@ def test_image_parity_ja_extra_duplicate_flagged():
         "![bar](/images/x/bbb2222-bar.png)\n\n"
         "![foo dup](/images/x/aaa1111-foo.png)"
     )
-    issues = image_parity_issues(en_html, ja)
+    issues = image_issues(en_html, ja)
     assert [i["type"] for i in issues] == ["image-mismatch"]
     assert issues[0]["severity"] == "actionable"
     assert "aaa1111-foo" in issues[0]["detail"]
@@ -126,7 +137,7 @@ def test_image_parity_ja_missing_image_flagged():
     # EN に bar があるが JA に無い → image-mismatch (JA 不足)
     en_html = '<img src="images/aaa1111-foo.png" /><img src="images/bbb2222-bar.png" />'
     ja = "![foo](/images/x/aaa1111-foo.png)"
-    issues = image_parity_issues(en_html, ja)
+    issues = image_issues(en_html, ja)
     assert [i["type"] for i in issues] == ["image-mismatch"]
     assert "bbb2222-bar" in issues[0]["detail"]
 
@@ -135,7 +146,7 @@ def test_image_parity_reorder_flagged_as_order():
     # 同一 multiset・順序のみ EN と相違 → image-order-mismatch
     en_html = '<img src="images/aaa1111-foo.png" /><img src="images/bbb2222-bar.png" />'
     ja = "![bar](/images/x/bbb2222-bar.png)\n\n![foo](/images/x/aaa1111-foo.png)"
-    issues = image_parity_issues(en_html, ja)
+    issues = image_issues(en_html, ja)
     assert [i["type"] for i in issues] == ["image-order-mismatch"]
 
 
@@ -143,35 +154,35 @@ def test_image_parity_case_and_hash_length_tolerant():
     # 大文字小文字差 + ハッシュ長差 (7桁 vs フル SHA) は同一画像として扱う
     en_html = '<img src="images/abc1234-Pic_One.png" />'
     ja = "![pic](/images/x/abc1234ef567890-pic_one.png)"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_en_href_image_counted():
     # EN が <a href> で画像を持つ (cloudinary 等) ケースも EN 側として数える
     en_html = '<a href="https://res.cloudinary.com/x/abc1234-diagram.png">図</a>'
     ja = "![diagram](/images/x/abc1234-diagram.png)"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_ja_code_fence_ignored():
     # JA のコードフェンス内 ![](...) は画像として数えない (誤検知防止)
     en_html = '<img src="images/aaa1111-foo.png" />'
     ja = "![foo](/images/x/aaa1111-foo.png)\n\n```\n![sample](example.png)\n```"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_ja_html_img_tag_counted():
     # JA が <img> タグで画像参照しても EN と一致すれば検知しない
     en_html = '<img src="images/aaa1111-foo.png" />'
     ja = '<img src="/images/x/aaa1111-foo.png" alt="foo" />'
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_ja_astro_image_tag_counted():
     # JA が Astro <Image> コンポーネントで画像参照しても EN と一致すれば検知しない
     en_html = '<img src="images/aaa1111-foo.png" />'
     ja = '<Image src="/images/x/aaa1111-foo.png" alt="foo" />'
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_en_query_string_counted():
@@ -179,7 +190,7 @@ def test_image_parity_en_query_string_counted():
     # (旧 regex は ``.ext"`` 末尾固定で query 付きを取りこぼし、JA 余剰の誤検知を出した)
     en_html = '<img src="images/aaa1111-foo.png?width=800" />'
     ja = "![foo](/images/x/aaa1111-foo.png?width=800)"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_en_data_src_not_double_counted():
@@ -187,18 +198,18 @@ def test_image_parity_en_data_src_not_double_counted():
     # (旧 regex は data-src の ``src`` 部にも一致し EN で 2 枚計上 → JA 不足の誤検知)
     en_html = '<img data-src="images/aaa1111-foo.png" src="images/aaa1111-foo.png" />'
     ja = "![foo](/images/x/aaa1111-foo.png)"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_ja_single_quoted_img_counted():
     # JA の単引用符 <img src='...'> も拾う (両クォート対応)。
     en_html = '<img src="images/aaa1111-foo.png" />'
     ja = "<img src='/images/x/aaa1111-foo.png' alt='foo' />"
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
 
 
 def test_image_parity_ja_data_src_not_double_counted():
     # JA の lazy-load ``data-src`` も ``src`` と二重計上しない (属性境界)。
     en_html = '<img src="images/aaa1111-foo.png" />'
     ja = '<img data-src="/images/x/aaa1111-foo.png" src="/images/x/aaa1111-foo.png" />'
-    assert image_parity_issues(en_html, ja) == []
+    assert image_issues(en_html, ja) == []
