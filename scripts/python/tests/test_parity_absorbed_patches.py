@@ -143,6 +143,9 @@ _DOCS = _REPO / "src" / "content" / "docs"
 _SL = "integrations/sealights-integration"
 _SF = "salesforce-testing/create-a-salesforce-test"
 _TS = "salesforce-testing/troubleshoot"
+_PG = "advanced-editing/parameters/parameters-for-groups"
+_VSTS = "integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration"
+_VD = "advanced-editing/validations/validate-download"
 _SL_FLAG = "--sealights-build-session-id [sealights-suid-session-id]"
 _SL_BULLET = f"- ```shell\n  {_SL_FLAG}\n  ```\n"
 
@@ -264,6 +267,27 @@ def _page_issues(slug, ja_change=None, en_change=None):
             ),
             id="en-sealights-add-code-bullet",
         ),
+        pytest.param(
+            _PG,
+            _sub(
+                "パラメーター名の下の欄に値を入力します。",
+                "5. パラメーター名の下の欄に値を入力します。",
+            ),
+            None,
+            id="groups-paragraph-into-list-item",
+        ),
+        pytest.param(
+            _VSTS,
+            _sub("\n新しいビルドを作成します\n", "\n2. 新しいビルドを作成します\n"),
+            None,
+            id="vsts-paragraph-into-numbered-item",
+        ),
+        pytest.param(
+            _VD,
+            _sub("`| expectedText | JavaScript | 'A Simple PDF File' |`\n", ""),
+            None,
+            id="validate-download-delete-pipe-paragraph",
+        ),
     ],
 )
 def test_absorbed_patch_mutation_is_detected(slug, ja_change, en_change):
@@ -281,6 +305,9 @@ def test_absorbed_patch_mutation_is_detected(slug, ja_change, en_change):
         "advanced-editing/data-driven-testing/configuring-data-driven-tests-using-the-config-file",
         "results/test-results/network-logs",  # bare text paragraph
         "overview/changelog",  # MCDropDownHead paragraphs
+        _PG,  # UD-010B: orphan "5. " paragraph between list items
+        _VSTS,  # UD-010C/D: orphan "2. " / "3. " paragraphs
+        _VD,  # UD-021: stray "|...|" paragraph after a table
     ],
 )
 def test_ruling_pages_have_no_issues(slug):

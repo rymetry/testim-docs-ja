@@ -150,48 +150,6 @@
       "reviewAfter": "2027-05-13"
     },
     {
-      "id": "UD-010B-parameters-for-groups-broken-step-paragraph",
-      "slugs": [
-        "advanced-editing/parameters/parameters-for-groups"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​5. Enter a value in the field below the parameter name. If the value is a constant string value use ' ' around it. For example, 'guest'. This value will be available in this test only (i.e., the value will not be shared across tests.</p>",
-      "replace": "<p>Enter a value in the field below the parameter name. If the value is a constant string value use ' ' around it. For example, 'guest'. This value will be available in this test only (i.e., the value will not be shared across tests.</p>",
-      "rationale": "Upstream MadCap authoring artifact: step 5 of the \"Adding Parameters to a Group\" ordered list was serialized as an orphan <p> element interleaved between <li value=\"4\"> and <li value=\"5\"> (where the list item with value=\"5\" carries different content — \"Repeat steps 4-5 to add additional parameters\"). The orphan <p> begins with a zero-width space (U+200B) followed by a literal \"5. \" step-number prefix, which turndown converts to a Markdown paragraph whose first line matches `extractStepCounts` \"^\\d+\\.\\s\" regex, inflating the EN step count from 6 (the correct <li value> count) to 7. JA is already correctly structured as 6 numbered steps with the translated value-entry guidance folded into a prose paragraph between steps, so the symptom surfaces as a `step-count-mismatch` audit signal (EN=7, JA=6) for section #2. Patch strips the leading \"​5. \" prefix so the content remains as prose (matching JA) but is no longer counted as a numbered step by extractStepCounts.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
-      "addedAt": "2026-04-20",
-      "lastVerifiedAt": "2026-11-13",
-      "reviewAfter": "2027-05-13"
-    },
-    {
-      "id": "UD-010C-vsts-broken-step-paragraph-2",
-      "slugs": [
-        "integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​2. Create a new build</p>",
-      "replace": "<p>Create a new build</p>",
-      "rationale": "Upstream MadCap authoring artifact (2nd \"broken step\" variant in the VSTS/TFS integration page): an orphan <p> begins with a zero-width space (U+200B) followed by a literal \"2. \" step-number prefix. Unlike UD-010B (parameters-for-groups), this ZWSP-step <p> sits inside a sequence of <img> + <p> + <img> siblings between <li value=\"1\"> (\"Go to Build page\") and the next real <li> items — the authoring intent appears to have been to present \"Create a new build\" and \"Select your repository\" as sub-labels under step 1, not as top-level list items. But turndown still maps them to Markdown paragraphs whose first line matches `extractStepCounts` \"^\\d+\\.\\s\" regex after normalizeEnArtifacts strips the ZWSP, inflating the EN total step count from 11 (actual <li value> count) to 13. JA mirrors the EN structure but normalizeNumericPeriodSpacing does not strip ZWSP, so JA counts 11. This patch strips the leading \"​2. \" prefix in EN so both sides converge to 11 after normalization. JA content is updated in the same PR to remove the matching \"​2. \" prefix so segment-level comparison lines up (plain paragraph = plain paragraph).",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
-      "addedAt": "2026-04-20",
-      "lastVerifiedAt": "2026-11-13",
-      "reviewAfter": "2027-05-13"
-    },
-    {
-      "id": "UD-010D-vsts-broken-step-paragraph-3",
-      "slugs": [
-        "integrations/integrate-testim-to-your-ci/vsts-and-tfs-integration"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>​3. Select your repository</p>",
-      "replace": "<p>Select your repository</p>",
-      "rationale": "Paired with UD-010C — same defect pattern (ZWSP + \"N. \" step-number prefix on an orphan <p>), just the adjacent occurrence for \"Select your repository\" (step-sub-label 3). Without this patch, UD-010C alone would still leave a 1-step EN=12 / JA=11 mismatch. Both patches together bring step-count to 11/11. Rationale, impact, and JA-side sync strategy are identical to UD-010C.",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-010",
-      "addedAt": "2026-04-20",
-      "lastVerifiedAt": "2026-11-13",
-      "reviewAfter": "2027-05-13"
-    },
-    {
       "id": "UD-012-ddt-visual-editor-index-section-cross-ref",
       "slugs": [
         "advanced-editing/data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor"
@@ -215,20 +173,6 @@
       "replace": "",
       "rationale": "Upstream MadCap authoring artifact: a broken table row `<p>| globalParameters | | |</p>` sits immediately after the After Test Predefined Properties `</table>` close. The author intended another table row, but MadCap serialized it as a raw paragraph whose first character is the pipe separator. Turndown re-emits the same text as a paragraph line `| globalParameters | | |`; the coarse `extractParagraphCounts` heuristic treats pipe-leading lines as markdown-table (EN=0 paragraphs for the section), while the JA mirror backtick-wraps the leading pipe to preserve source-first fidelity (`` `|` globalParameters | | | ``) and IS counted as a paragraph (JA=1), producing a paragraph-count-mismatch signal. alignSegments also extracts the EN `<p>` as a segment-paragraph that has no semantically meaningful JA counterpart. Patch strips the broken paragraph at the HTML boundary (UPSTREAM_DEFECTS.md UD-003 Option A). JA side drops the mirror line so both bodies converge to \"section ends at `</table>`\". Same defect class as UD-017 (MadCap authoring residue with no user-visible content).",
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-003",
-      "addedAt": "2026-04-20",
-      "lastVerifiedAt": "2026-11-13",
-      "reviewAfter": "2027-05-13"
-    },
-    {
-      "id": "UD-021-validate-download-pdf-broken-row-as-code",
-      "slugs": [
-        "advanced-editing/validations/validate-download"
-      ],
-      "defectClass": "madcap-artifact",
-      "find": "<p>| expectedText       | JavaScript | 'A Simple PDF File'  |</p>",
-      "replace": "<p><code>| expectedText       | JavaScript | 'A Simple PDF File'  |</code></p>",
-      "rationale": "Upstream MadCap authoring artifact: the \"PDF files\" example-parameters table in the Validate download page has a broken third-row rendered as a stray `<p>|...|</p>` plain-text line after a proper `<table>` element (rows 1-2 are structured, row 3 leaked out as raw markdown pipe syntax in HTML). Turndown fuses the pipe paragraph into the preceding markdown table so `classifyLine` treats it as `markdown-table` (not counted), while JA authors the same broken-row in backtick-wrapped inline-code form (`\\`|...|\\``) which `classifyLine` correctly classifies as a paragraph-start. Result: EN=5 paragraphs vs JA=6 paragraph-count-mismatch signal. Patch wraps the broken-row `<p>` content in `<code>` so turndown emits matching backtick-inline-code markdown (`\\`|...|\\``), aligning paragraph-counts on both sides. Segment alignment remains intact because backticks are stripped from textNorm on both sides (symmetric), preserving the paragraph textNorm match. Same defect class as UD-017 (MadCap authoring artifacts that survive turndown asymmetrically).",
-      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-021",
       "addedAt": "2026-04-20",
       "lastVerifiedAt": "2026-11-13",
       "reviewAfter": "2027-05-13"
