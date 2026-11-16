@@ -39,7 +39,7 @@ keywords:
 - [API](#api-での実行)
 - ユーザーが手動でテストを実行する場合
 
-[Editor](/docs/running-tests/running-tests-overview) — ローカルおよびリモート（"run on grid"）実行。Libraries — [Test Library](/docs/running-tests/running-tests-overview)、[Suite Library](/docs/running-tests/running-tests-overview)、[Test Plans Library](/docs/running-tests/running-tests-overview)。テスト実行中にシステムが暗号化された認証情報を含むことを検出すると、フラグが表示されます。
+[Editor](/docs/running-tests/running-tests-overview) — ローカルおよびリモート（"run on grid"）実行。Libraries — [Test Library](/docs/running-tests/running-tests-overview#testim-ui-でテストリストを通じて単一または複数のテストを実行する-web-のみ)、[Suite Library](/docs/running-tests/running-tests-overview#testim-ui-でスイート画面を通じてテストを実行する-web-のみ)、[Test Plans Library](/docs/running-tests/running-tests-overview#testim-ui-でプラン画面を通じてテストを実行する-web-のみ)。テスト実行中にシステムが暗号化された認証情報を含むことを検出すると、フラグが表示されます。
 
 ## Encrypted Credentials の設定
 
@@ -231,7 +231,7 @@ User Access Key フラグは、暗号化された認証情報を使用したテ�
 権限のあるユーザーは、Editor、CLI、REST API を通じて Test Data の暗号化された認証情報を含むテストを実行できます。
 
 - **[Editor](/docs/running-tests/running-tests-overview)** — ローカルおよびリモート（"run on grid"）実行。**Run test** ボタンをクリックするか、ドロップダウンからリモートテストを実行します。
-- **Libraries** — [Test Library](/docs/running-tests/running-tests-overview)、[Suite Library](/docs/running-tests/running-tests-overview)、[Test Plans Library](/docs/running-tests/running-tests-overview)。**Play** ボタンをクリックします。
+- **Libraries** — [Test Library](/docs/running-tests/running-tests-overview#testim-ui-でテストリストを通じて単一または複数のテストを実行する-web-のみ)、[Suite Library](/docs/running-tests/running-tests-overview#testim-ui-でスイート画面を通じてテストを実行する-web-のみ)、[Test Plans Library](/docs/running-tests/running-tests-overview#testim-ui-でプラン画面を通じてテストを実行する-web-のみ)。**Play** ボタンをクリックします。
 - **CLI** — 上記で説明した特別な `--user-access-key` フラグを追加して、通常のコマンドを使用します。
 
 ```bash

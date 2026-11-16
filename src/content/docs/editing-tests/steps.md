@@ -48,7 +48,7 @@ keywords:
     Add CLI validation
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/validate-download">CLI ステップを追加</a>
+    <a href="/docs/advanced-editing/validations/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -136,7 +136,7 @@ keywords:
     Validate element visualization
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for">要素のビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/advanced-editing/validations/validate-element-visualization#要素のビジュアル検証ステップの追加">要素のビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -144,7 +144,7 @@ keywords:
     Validate viewport visualization
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/advanced-editing/validations/validate-viewport-visualization#ビューポートのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -152,7 +152,7 @@ keywords:
     Validate full-page visualization
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
+    <a href="/docs/advanced-editing/validations/validate-full-page-visualization#フルページのビジュアル検証ステップの追加">ビューポートまたはフルページのビジュアライゼーションを検証するステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -209,7 +209,7 @@ keywords:
     Add CLI wait for
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/validate-download">CLI ステップを追加</a>
+    <a href="/docs/advanced-editing/validations/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
@@ -257,7 +257,7 @@ keywords:
     Wait for element visualization
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for">要素のビジュアライゼーションを待機するステップを追加</a>
+    <a href="/docs/advanced-editing/validations/wait-for-element-visualization#要素のビジュアライゼーション待機ステップの追加">要素のビジュアライゼーションを待機するステップを追加</a>
    </td>
   </tr>
  </tbody>
@@ -338,7 +338,7 @@ keywords:
     Add CLI action
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/validate-download">CLI ステップを追加</a>
+    <a href="/docs/advanced-editing/validations/add-cli-validations-and-actions#cli-ステップの追加">CLI ステップを追加</a>
    </td>
   </tr>
   <tr>
