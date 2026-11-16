@@ -11,6 +11,7 @@ import argparse
 import re
 import sys
 import unicodedata
+from collections.abc import Iterator
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, NamedTuple
@@ -83,10 +84,21 @@ _CALLOUT_RE = re.compile(r"^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$", re.
 _LIST_NESTED_CALLOUT_RE = re.compile(
     r"^[ \t]+:{3,}\s*[a-zA-Z][a-zA-Z-]*(?:\{[^}]*\})?\s*$", re.MULTILINE
 )
-_MARKDOWN_LINK_RE = re.compile(r"\]\(/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^)]+)?\)")
+# リンク先は ``/docs/<slug>`` (末尾 ``/`` 可)、``/docs/<slug>#frag``、同一ページの ``#frag``。
+# どちらの group も空なら内部リンクではない。
+_LINK_TARGET = r"(?:/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)/?)?"
+# shortcut: リンクを body 全体への正規表現で拾う。どの量指定子も次の ``(``・``<``・引用符で
+# 止まる形にして、閉じないリンクが並んでも線形時間に収めている。その代わり、括弧を含む
+# フラグメント ``(#a(b))`` と、``href`` より前の属性値に ``<`` がある ``<a>`` は検査されない。
+# 参照形式 ``[t][ref]``、``(<#frag>)``、引用符なしの ``href`` も対象外で、HTML コメント内や
+# ``~~~`` フェンス内のリンク、画像 ``![alt](#frag)`` は検査される (いずれも現行コンテンツに
+# 該当なし)。使い始めたら Markdown パーサーに置き換える。
+_MARKDOWN_LINK_RE = re.compile(
+    rf"""\]\([ \t]*{_LINK_TARGET}(#[^()\s]*)?(?:[ \t]+(?:"[^"\n]*"|'[^'\n]*'))?[ \t]*\)"""
+)
+# ``\shref`` は ``data-href`` などを除くため。``href`` が ``<a`` より後の行にあっても拾う。
 _HTML_LINK_RE = re.compile(
-    r"""<a\b[^>]*href=["']/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^\s"']*)?\s*["'][^>]*>""",
-    re.IGNORECASE,
+    rf"""<a\b[^<>]*\shref=["']{_LINK_TARGET}(#[^\s"']*)?\s*["']""", re.IGNORECASE
 )
 _IMAGE_RE = re.compile(r"""!\[[^\]]*]\((/images/[^)]+)\)|<img[^>]+src=["'](/images/[^"']+)["']""")
 
@@ -254,6 +266,23 @@ def check_frontmatter(fm: dict[str, Any], reporter: _Reporter) -> None:
             reporter.err(f"{field}-required", f"frontmatter: {field} is required")
 
 
+def _internal_links(body: str, body_start: int) -> Iterator[tuple[str | None, str | None, int]]:
+    """本文の内部リンクを出現順に (リンク先 slug、``#frag``、行番号) で返す。
+
+    slug が ``None`` なら同一ページ内リンク。コード内のリンクは含めない。
+    """
+    body_stripped = _strip_code(body)
+    matches = [*_MARKDOWN_LINK_RE.finditer(body_stripped), *_HTML_LINK_RE.finditer(body_stripped)]
+    body_line, counted_to = 1, 0
+    for match in sorted(matches, key=lambda m: m.start()):
+        if match.group(1) is None and match.group(2) is None:
+            continue
+        # 毎回先頭から数え直すとリンク数 x 本文長になるので、前回位置からの差分だけ数える
+        body_line += body_stripped.count("\n", counted_to, match.start())
+        counted_to = match.start()
+        yield match.group(1), match.group(2), _to_absolute_line(body_line, body_start)
+
+
 def check_links(
     body: str,
     body_start: int,
@@ -262,47 +291,42 @@ def check_links(
     all_slugs: set[str] | None = None,
     headings_by_slug: dict[str, set[str]] | None = None,
 ) -> None:
-    if not all_slugs:
-        return
-    body_stripped = _strip_code(body)
-    stripped_lines = body_stripped.split("\n")
+    own_headings = heading_ids(body)
 
-    def _validate(slug_path: str, fragment: str | None, line: int) -> None:
-        display_path = f"/docs/{slug_path}"
-        if slug_path not in all_slugs:
+    def _validate(slug_path: str | None, fragment: str | None, line: int) -> None:
+        headings: set[str] | None
+        if slug_path is None:  # 同一ページの ``#frag``
+            headings, display_path = own_headings, "this page"
+        elif not all_slugs:
+            return
+        else:
+            display_path = f"/docs/{slug_path}"
+            if slug_path not in all_slugs:
+                reporter.err(
+                    "link-target-missing",
+                    f"Internal link target does not exist: {display_path}",
+                    line,
+                )
+                return
+            headings = (headings_by_slug or {}).get(slug_path)
+        fragment_id = (fragment or "")[1:]
+        if headings is None or not fragment_id:
+            return
+        # ブラウザと同じく、そのままの id と percent-decode した id の両方で探す。
+        # どちらにも無い ``#top`` (大文字小文字を問わない) はページ先頭を指す。
+        if fragment_id.lower() == "top":
+            return
+        if fragment_id not in headings and unquote(fragment_id) not in headings:
             reporter.err(
-                "link-target-missing",
-                f"Internal link target does not exist: {display_path}",
-                line,
-            )
-            return
-        if not fragment or headings_by_slug is None:
-            return
-        fragment_id = fragment[1:]
-        headings = headings_by_slug.get(slug_path)
-        if headings is not None and fragment_id not in headings:
-            reporter.warn(
                 "link-fragment-missing",
                 f'Fragment "{fragment}" not found in {display_path}',
                 line,
             )
 
-    for index, line in enumerate(stripped_lines):
-        line_number = _to_absolute_line(index + 1, body_start)
-        for match in _MARKDOWN_LINK_RE.finditer(line):
-            _validate(match.group(1), match.group(2), line_number)
-        for match in _HTML_LINK_RE.finditer(line):
-            _validate(match.group(1), match.group(2), line_number)
+    for slug_path, fragment, line in _internal_links(body, body_start):
+        _validate(slug_path, fragment, line)
 
 
-# ``/docs/<slug>``、``/docs/<slug>#frag``、同一ページの ``#frag`` を、Markdown リンクと
-# 生 ``<a href>`` の両方から拾う。属性部から ``<`` を除くのは、閉じない ``<a`` が並んだときの
-# 二次時間を防ぐため。
-_INTERNAL_LINK_TARGET = r"(?:/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)/?)?(#[^)\s\"']*)?"
-_INTERNAL_LINK_RE = re.compile(
-    rf"""\]\({_INTERNAL_LINK_TARGET}\)|<a\b[^<>]*?href=["']{_INTERNAL_LINK_TARGET}\s*["']""",
-    re.IGNORECASE,
-)
 _EN_CONTENT_URL_RE = re.compile(
     r"^https://docs\.tricentis\.com/testim/content/(.+?)(?:/index)?\.htm$"
 )
@@ -394,14 +418,10 @@ def check_link_fragment_intent(
     if own is None:
         return
 
-    ja_links: list[tuple[str, str | None, int]] = []
-    for index, line in enumerate(_strip_code(body).split("\n")):
-        for match in _INTERNAL_LINK_RE.finditer(line):
-            target = match.group(1) or match.group(3)
-            fragment = unquote((match.group(2) or match.group(4) or "")[1:])
-            if target or fragment:
-                line_number = _to_absolute_line(index + 1, body_start)
-                ja_links.append((target or slug, fragment or None, line_number))
+    ja_links = [
+        (target or slug, unquote((fragment or "")[1:]) or None, line_number)
+        for target, fragment, line_number in _internal_links(body, body_start)
+    ]
 
     matcher = SequenceMatcher(
         None, [target for target, _ in own.en_links], [link[0] for link in ja_links], autojunk=False

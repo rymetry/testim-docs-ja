@@ -243,7 +243,7 @@ npm run lint:docs -- --section="概要"
 uv run python -m testim_parity.tools.lint_docs --path="src/content/docs/overview/testim-overview.md"
 ```
 
-**検証項目**: sourceUrl 形式、必須 frontmatter（title, category, updated）、description プレースホルダー残留、内部リンクターゲット存在確認（パスベース `/docs/{folder}/{slug}` 形式のみ）、アンカーが英語原文と同じセクションを指すか（`link-fragment-mismatch`、warning）、Testim 機能名の英語保持、コードブロック言語指定、callout タイプ、画像ファイル存在確認
+**検証項目**: sourceUrl 形式、必須 frontmatter（title, category, updated）、description プレースホルダー残留、内部リンクターゲット存在確認（パスベース `/docs/{folder}/{slug}` 形式のみ）、内部リンクのアンカーと見出し ID の一致（`/docs/...#...` と同一ページ内の `#...`、error）、アンカーが英語原文と同じセクションを指すか（`link-fragment-mismatch`、warning）、Testim 機能名の英語保持、コードブロック言語指定、callout タイプ、画像ファイル存在確認
 
 **終了コード**: エラーあり → `1`
 
