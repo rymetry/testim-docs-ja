@@ -3,7 +3,7 @@
 Phase 6b cutover で mjs ``emit_corpus_oracle.mjs`` を Python 実装に port した
 (SYSTEM_SPEC Phase 6b 「align 288-matrix golden 化」節参照)。本 test は:
 
-1. emit 実装が 3 suite 全てで非空 JSONL を書けること
+1. emit 実装が 2 suite 全てで非空 JSONL を書けること
 2. summarize が JSONL を TSV に正しく整形 + sort すること
 3. 各 tool の CLI arg parse が期待通り動くこと
 
@@ -99,27 +99,16 @@ class TestEmitCorpusOracleFast:
             assert {"schemaVersion", "suite", "slug", "sha256", "expected"} <= r.keys()
 
     def test_all_suites(self, tmp_path: Path, mini_corpus: tuple[Path, Path, list[str]]) -> None:
-        """``--suite all`` で 3 suite × 2 slug = 6 rows が出る (align は JA md 有)。"""
+        """``--suite all`` で 2 suite × 2 slug = 4 rows が出る (align は JA md 有)。"""
         _, _, slugs = mini_corpus
         out = tmp_path / "oracle.jsonl"
         rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "all"])
         assert rc == 0
         rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
         suites = {r["suite"] for r in rows}
-        assert suites == {"segments_en", "turndown", "align"}
-        # 3 suite × 2 slug = 6 rows (各 suite で slug カバレッジが同じ)
-        assert len(rows) == 3 * len(slugs)
-
-    def test_turndown_suite_produces_string_expected(
-        self, tmp_path: Path, mini_corpus: tuple[Path, Path, list[str]]
-    ) -> None:
-        """turndown suite の ``expected`` は string (MD text)。"""
-        out = tmp_path / "oracle.jsonl"
-        rc = emit_corpus_oracle.main(["--out", str(out), "--suite", "turndown"])
-        assert rc == 0
-        rows = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
-        for r in rows:
-            assert isinstance(r["expected"], str)
+        assert suites == {"segments_en", "align"}
+        # 2 suite × 2 slug = 4 rows (各 suite で slug カバレッジが同じ)
+        assert len(rows) == 2 * len(slugs)
 
     def test_align_suite_skipped_when_ja_missing(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

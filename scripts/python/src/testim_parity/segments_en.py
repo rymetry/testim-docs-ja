@@ -530,7 +530,8 @@ def _walk_block(node: Tag, state: _WalkState) -> None:
 
     if tag == "p":
         text = _collect_inline_text(node)
-        if text:
+        # MadCap leaves ZWSP/NBSP-only <p> residue; it carries no content.
+        if text.strip(" \t\r\n\u200b\u00a0"):
             state.emitter.emit(_current_section_path(state), "paragraph", text)
         return
 

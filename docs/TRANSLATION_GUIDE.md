@@ -628,6 +628,8 @@ EN に `<br />` がある場合は `。  \n→ **Xするには:**` (trailing 2-s
 
 Canonical sentinel: `editing-tests/editing-your-tests/editing-target-element-properties`
 
+この hard break は EN が同一ブロック内に `<br />` を持つ場合に限る。EN が list item の間に独立した段落を置いている場合は `\` を使わず、空行で分離する（`WRITING_GUIDE.md` の「リスト」参照）。
+
 #### パターン 2: Flat-list split（単一リストの複数分割）
 
 EN の単一 `<ol>` / `<ul>` に orphan `<p>` + `<img>` / `<div class="note">` が interleave する場合、JA 側でリストを複数に分割し、sibling 要素をリスト外に出す。番号は EN の `<li value="N">` に合わせて手動指定する。これは mechanical exception (plan §5.2 #1) であり JA 独自構造の追加ではない（kind-multiset fingerprint 上で検知器が許容する既知 pattern）。
@@ -684,9 +686,9 @@ EN `<td>` が `<br />` + nested `<p>` で複数行を包む場合、JA で ` / `
 
 Canonical sentinel: `advanced-editing/keyboard-shortcut-step`
 
-#### パターン 7: JA navigation link removal（MadCap self-link artifact の除去）
+#### パターン 7: JA parent-category link（bare `index.htm` は親カテゴリへのリンク）
 
-EN MadCap Flare が吐く `<a href="index.htm">` / `<a href="index.htm/#/">` の self-link artifact が JA にも残存している場合、JA 側でリンクを除去する（text のみ残す）。これは plan §5.3.2 registry の slug-scope extension 対象パターン。
+EN MadCap Flare の bare `<a href="index.htm">` は、そのページの親カテゴリ index を指す。パリティ checker は親カテゴリへ解決するため、JA にも同じ位置に親カテゴリへのリンク（`/docs/<親カテゴリ>`）を置く。リンクを除去してはならない。壊れた `<a href="index.htm/#/">` は UD-024 で `index.htm` に補正され、同じ規則で解決される。
 
 Canonical sentinel: `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce`
 

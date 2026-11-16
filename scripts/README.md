@@ -135,6 +135,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 | `step-count-mismatch`         | 番号付きステップ数の不一致                         | audit-only  |
 | `bullet-count-mismatch`       | 箇条書き数の不一致                                 | audit-only  |
 | `paragraph-count-mismatch`    | 段落数の不一致（diff >= 1）                        | audit-only  |
+| `code-block-count-mismatch`   | コードブロック (`<pre>`) 数の不一致                | audit-only  |
 | `heading-mismatch`            | 見出しレベル / テキストの不一致                    | audit-only  |
 | `table-shape-mismatch`        | テーブル行数・列数の不一致                         | audit-only  |
 | `table-cell-english-residual` | テーブルセルの英語残留                             | audit-only  |
@@ -146,7 +147,16 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 | `snapshot-incomplete`         | EN snapshot が shallow/extractor-empty で比較不能  | advisory    |
 | `source-unusable`             | EN snapshot が malformed details で復元不能        | advisory    |
 
-**audit-only signals**: 上記の `audit-only` 印が付いた 9 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `testim_parity.detection.source_parity_types` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
+**audit-only signals**: 上記の `audit-only` 印が付いた 10 種は coarse counting / shape / table-cell heuristics で、`segment-*` exact diff engine と重複した noise になりがちなため `parity-regression` issue body と gate exit code から除外される。`parity-check-status.json` には引き続き出力され、`deep-audit` workflow と `npm run check:parity -- --include-audit-signals` でのみ詳細を確認できる。`gate signal` 印は新規 / 欠落ページ検知のために gate にとどめる。allowlist は `testim_parity.detection.source_parity_types` の `COARSE_SIGNAL_TYPES` に集約されており、新 issue type を追加するときは review で「audit-only か gate-eligible か」を必ず判断する。
+
+**DOM 構造比較の数え方**: 構造 signal は `testim_parity.html_structure.compare_html_structure(en_html, ja_html, slug=...)` が EN (patched) HTML と JA の rendered HTML を DOM のまま比較して出す (両側同一の規則。詳細はモジュール docstring)。
+
+- section: H2-H4 (先頭の title `<h1>` は除外、以降の `<h1>` は h2 扱い)
+- step / bullet: `table` の外の `ol > li` / `ul > li` (画像のみの item も数える。nested も数える)
+- 段落: `li` / `table` / `blockquote` / `details` / callout の外でテキストを持つ `<p>`、list item 内の継続段落、`.MCDropDownHead`、block 直下の bare text run
+- コードブロック: `table` の外の `<pre>`
+- table: 行数・列数と cell 内容 (cell 内の list は `<br>` 区切りとして cell 比較に任せる)
+- callout nesting: callout が `li` 内か否かの 2 値
 
 **structure comparator**: `alignSegments` が weighted LCS を走らせる前に、heading path が一致する section ごとに canonical block sequence を比較する。block 単位の語彙は `paragraph` / `ordered-list` / `unordered-list` / `callout-body` / `table` / `details-summary` の 6 種に凍結されており、segment 単位の list item / table cell は比較前に対応する list / table block に畳まれる。
 
@@ -175,7 +185,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 acknowledgement の対象外:
 
 - `NON_ACKNOWLEDGEABLE_TYPES` (`source-page-missing-local`, `segment-missing`, `segment-untranslated`, `segment-token-gap`, `segment-inconclusive`) — gate を suppress すべきでない hard gap
-- `COARSE_SIGNAL_TYPES` (audit-only 9 種) — そもそも gate に乗らないため、ack をつけても no-op になる。validation は `validateAcknowledgements` で reject する
+- `COARSE_SIGNAL_TYPES` (audit-only 10 種) — そもそも gate に乗らないため、ack をつけても no-op になる。validation は `validateAcknowledgements` で reject する
 
 → どちらも `validateAcknowledgements()` がロード時にエラーで弾く。
 
@@ -465,7 +475,7 @@ Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移
 | `testim_parity.project`                                  | `lib/project.mjs`                        | repo ルート、docs 探索、slug index、FM 読出し                      |
 | `testim_parity.markdown_utils`                           | `lib/markdown_utils.mjs`                 | Markdown 除去、description 自動生成                                |
 | `testim_parity.madcap_toc`                               | `lib/madcap_toc.mjs`                     | MadCap Flare TOC データ解析、slug 抽出                             |
-| `testim_parity.turndown`                                 | `lib/turndown.mjs`                       | EN HTML → Markdown 変換 (markdownify + MadCap rules)               |
+| `testim_parity.turndown`                                 | `lib/turndown.mjs`                       | EN HTML → Markdown 変換 (翻訳 pipeline 用、markdownify + MadCap)   |
 | `testim_parity.detection.source_parity_types`            | `lib/source_parity_types.mjs`            | parity issue type 定義・検出パターン                               |
 | `testim_parity.detection.source_parity_summary`          | `lib/source_parity_summary.mjs`          | parity 集計・要約生成                                              |
 | `testim_parity.detection.source_parity_acknowledgements` | `lib/source_parity_acknowledgements.mjs` | parity acknowledgement モデル                                      |
@@ -486,7 +496,7 @@ Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移
 `testim_parity.segments_*` は exact diff engine が EN / JA を比較するための最小単位 (segment) を生成する canonical segment extractor。
 
 - **EN extractor**: `testim_parity.segments_en` — MadCap Flare HTML を直接 tokenize → tree → walk して segment を生成する。turndown の markdown 変換層を経由しない。
-- **JA extractor**: `testim_parity.segments_ja` — JA markdown を line-by-line で分類し、pipe table / HTML table / callout / details / image / list を segment にマップする。
+- **JA extractor**: `testim_parity.segments_ja` — JA markdown を `testim_parity.ja_render.render_ja_markdown` (markdown-it-py、CommonMark + table + strikethrough、`:::kind` → `<div class="callout-kind" data-line="N">`) で HTML にレンダリングし、EN と同じ `segments_en.extract_segments_from_html` に渡す。
 - **共通**: `testim_parity.segments_shared` — `Segment` 型、`normalize_segment_text`, `compute_segment_fingerprint`, `push_heading` / `build_section_path`, `create_segment` factory。
 - **境界安定性ベンチマーク**: `scripts/python/tests/test_segments_boundary.py` が代表 10 ページで EN / JA の segment 数を突き合わせ、平均 stability score ≥ 0.95 / 最小 ≥ 0.85 を保証する。headings / ordered-list-item / unordered-list-item は完全一致が必須。
 
@@ -536,7 +546,7 @@ Phase 6b cutover で mjs library 一式は `testim_parity` Python package に移
 
 **Runtime wiring (primary gate)**:
 
-`testim_parity.detection.check_source_parity` は `align_segments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、既存の `compare_snapshot_structure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-\* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
+`testim_parity.detection.check_source_parity` は `align_segments()` を直接呼ぶ。`inconclusive` 時は、alignment がすでに見つけた exact diff を保持したまま `segment-inconclusive` issue を追加し、DOM 構造比較 `compare_html_structure()` にフォールバックする。これは heading count mismatch だけでなく、tokenless free-form section が **near-tie で clean か swap かを判定しきれない** ケースも含む。segment-\* issue は primary gate の actionable / active 集計に入り、cutover 時点の既知 drift は `parity-baseline.json` で `baselined: true` にタグ付けされ active 集計から除外される。
 
 runtime gate は `active*` 集計だけを使い、baseline / advisory queue は follow-up reporting 用に保持する。`scripts/python/tests/test_align.py`、`scripts/python/tests/test_check_source_parity.py`、`scripts/python/tests/test_detection_reports.py` が facade re-export、`parity_diffs_to_issues` の shape、`summarize_parity_results` の primary-gate / baseline 集計、`npm run check:parity -- --slug=...` 経由の JSON / CLI 出力を end-to-end で検証する。
 
@@ -661,12 +671,13 @@ npm run check:parity -- --include-advisory
 
 ## Coarse signal audit demotion
 
-`compareSnapshotStructure` が出していた **coarse counting / shape /
+`testim_parity.html_structure.compare_html_structure` が出す **coarse counting / shape /
 table-cell signals** は audit-only 経路に降格されている。`segment-*` exact
 gate と重複した noise を `parity-regression` issue body と gate exit code
 から取り除き、`deep-audit` workflow からのみ閲覧可能にする運用契約。
 
-**降格対象 (9 種, allowlist)**: `paragraph-count-mismatch` /
+**降格対象 (10 種, allowlist)**: `paragraph-count-mismatch` /
+`code-block-count-mismatch` /
 `bullet-count-mismatch` / `step-count-mismatch` / `section-count-mismatch` /
 `heading-mismatch` / `table-shape-mismatch` / `table-cell-english-residual` /
 `table-cell-empty-mismatch` / `table-cell-token-mismatch`
@@ -779,7 +790,7 @@ Phase 6b atomic cutover (2026-04-24/25) で detection / pipeline / lib / tools �
 npm run test:mjs                                      # 残存 2 mjs tests
 npm run test:py                                       # Python 全 test (default addopts)
 npm run test:py:quick                                 # fast gate only
-(cd scripts/python && uv run pytest -m corpus -n auto)    # 864 corpus matrix (20s)
+(cd scripts/python && uv run pytest -m corpus -n auto)    # 576 corpus matrix (segments_en / align)
 (cd scripts/python && uv run pytest -m 'recall or boundary or real_repo' -o addopts=)
 ```
 
@@ -788,7 +799,6 @@ npm run test:py:quick                                 # fast gate only
 | ファイル                                                                             | 対象                                           |
 | ------------------------------------------------------------------------------------ | ---------------------------------------------- |
 | `conformance/test_segments_en_288_matrix.py`                                         | segments_en vs committed golden                |
-| `conformance/test_turndown_288_matrix.py`                                            | turndown vs committed golden                   |
 | `conformance/test_align_288_matrix.py`                                               | align vs committed golden                      |
 | `test_segments_en.py` / `test_segments_ja.py`                                        | segment extractor unit                         |
 | `test_align.py` / `test_align_scoring.py`                                            | align weighted LCS                             |

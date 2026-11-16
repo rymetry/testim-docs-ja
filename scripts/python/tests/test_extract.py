@@ -17,6 +17,9 @@ class TestCliFlags:
         assert "-v" in tokens
         assert "--verbose" in tokens
 
+    def test_flag_followed_by_colon(self):
+        assert extract_invariant_tokens("--token: 認証トークン") == ["--token"]
+
     def test_flags_adjacent_to_code_spans_not_duplicated(self):
         # `--proxy` はバッククォート経由で既に抽出されているはず
         tokens = extract_invariant_tokens("use `--proxy`")
@@ -84,6 +87,16 @@ class TestUrlsAreBlankedAfterCapture:
         # 抽出に流れない)
         tokens = extract_invariant_tokens("see https://docs.tricentis.com/foo")
         assert "docs.tricentis.com" not in tokens
+
+
+class TestUrlPlaceholder:
+    def test_angle_bracket_placeholder_stays_inside_one_url_token(self):
+        tokens = extract_invariant_tokens("is https://<projectName>.testrail.io/, where")
+        assert tokens == ["https://<projectName>.testrail.io/,"]
+
+    def test_url_followed_by_non_placeholder_angle_text_is_unchanged(self):
+        tokens = extract_invariant_tokens("see https://example.com/a<b c> here")
+        assert tokens == ["https://example.com/a<b"]
 
 
 class TestNormalizeUrlToken:

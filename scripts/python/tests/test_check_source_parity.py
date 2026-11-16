@@ -10,6 +10,7 @@ from __future__ import annotations
 import io
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -1412,3 +1413,101 @@ def test_mask_coverage_stays_empty_when_ja_body_has_no_glossary_terms(
     assert mask_coverage["summary"]["segmentsMasked"] == 0
     assert mask_coverage["summary"]["byGlossaryEntry"] == {}
     assert mask_coverage["maskedSegments"] == []
+
+
+def _two_page_repo(tmp_path: Path) -> Path:
+    root = _setup_empty_repo(tmp_path)
+    for name in ("one", "two"):
+        (root / "src" / "content" / "docs" / "a").mkdir(exist_ok=True)
+        (root / "src" / "content" / "docs" / "a" / f"{name}.md").write_text(
+            f"---\ntitle: {name}\ncategory: A\n---\n\n## S\n\nx\n", encoding="utf-8"
+        )
+        (root / "snapshots" / "en" / "content" / "a").mkdir(exist_ok=True)
+        (root / "snapshots" / "en" / "content" / "a" / f"{name}.html").write_text(
+            "<h1>T</h1><h2>S</h2><p>x</p><p>y</p>", encoding="utf-8"
+        )
+    return root
+
+
+def _run_two_pages(root: Path) -> tuple[dict[str, list[str]], str]:
+    err = io.StringIO()
+    output_path = root / "parity-check-status.json"
+    check_source_parity(
+        root_dir=root, output_path=output_path, stdout=io.StringIO(), stderr=err, json_out=True
+    )
+    files = {
+        f["file"].rsplit("/", 1)[-1]: [i["type"] for i in f["issues"]]
+        for f in json.loads(output_path.read_text(encoding="utf-8"))["files"]
+    }
+    return files, err.getvalue()
+
+
+def _fail_for_page_one(real: Any, arg_slug: Any) -> Any:
+    def flaky(*args: Any, **kwargs: Any) -> Any:
+        if arg_slug(args, kwargs) == "a/one":
+            raise RuntimeError("boom")
+        return real(*args, **kwargs)
+
+    return flaky
+
+
+def test_structure_comparison_failure_is_reported_per_page_and_run_continues(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from testim_parity.detection import check_source_parity as module
+
+    root = _two_page_repo(tmp_path)
+    monkeypatch.setattr(
+        module,
+        "compare_html_structure",
+        _fail_for_page_one(module.compare_html_structure, lambda a, k: k["slug"]),
+    )
+    files, err = _run_two_pages(root)
+    assert "source-fetch-error" in files["one.md"]
+    assert "paragraph-count-mismatch" in files["two.md"]
+    assert "structure comparison failed for a/one: boom" in err
+
+
+def test_ja_render_failure_is_reported_per_page_and_run_continues(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from testim_parity.detection import check_source_parity as module
+
+    root = _two_page_repo(tmp_path)
+    real = module.render_ja_markdown
+    calls: list[str] = []
+
+    def flaky(body: str) -> str:
+        calls.append(body)
+        if len(calls) == 1:  # pages are processed in sorted order: a/one first
+            raise RuntimeError("boom")
+        return real(body)
+
+    monkeypatch.setattr(module, "render_ja_markdown", flaky)
+    files, err = _run_two_pages(root)
+    assert "source-fetch-error" in files["one.md"]
+    assert "paragraph-count-mismatch" in files["two.md"]
+    assert "structure comparison failed for a/one: boom" in err
+
+
+def test_structure_failure_after_segment_extract_failure_is_reported_and_run_continues(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from testim_parity.detection import check_source_parity as module
+
+    root = _two_page_repo(tmp_path)
+    monkeypatch.setattr(
+        module,
+        "extract_segments_from_html",
+        _fail_for_page_one(module.extract_segments_from_html, lambda a, k: k["slug"]),
+    )
+    monkeypatch.setattr(
+        module,
+        "compare_html_structure",
+        _fail_for_page_one(module.compare_html_structure, lambda a, k: k["slug"]),
+    )
+    files, err = _run_two_pages(root)
+    assert "source-fetch-error" in files["one.md"]
+    assert "paragraph-count-mismatch" in files["two.md"]
+    assert "extractSegments failed for a/one: boom" in err
+    assert "structure comparison failed for a/one: boom" in err

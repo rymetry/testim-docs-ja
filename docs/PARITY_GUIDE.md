@@ -94,6 +94,7 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
    - PR trigger: `.github/workflows/ci.yml` の sticky comment が hidden marker `<!-- upstream-recovery: sticky -->` で idempotent upsert
    - Weekly trigger: `.github/workflows/scheduled-actionable.yml` が `upstream-recovery-status.json` を artifact upload し、`testim_parity.detection_reports` が `sourceSyncHealth` family 内の `enPatchRecovery` / `sourceSyncRecovery` section で managed issue に surface
 4. **人手削除**:
+   - 上流修正が確認できなくても、extractor の変更または JA content の変更が entry を吸収することを示せれば entry を削除してよい (吸収による削除)。証明は、該当 entry を無効にした状態で 5 counter が 0 のままであること、recall test が通ることで行う。`docs/UPSTREAM_DEFECTS.md` の理由は `absorbed by extractor` とする
    - registry entry を削除 (seeded pin test があれば併せて解除)
    - `docs/UPSTREAM_DEFECTS.md` の対応 entry を archive 状態に更新
    - 該当 JA file の parity check (`npm run check:parity`) が引き続き 0 issues であることを確認
@@ -101,8 +102,8 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 ### 禁止事項
 
 - 第 3 の許容機構 (新 registry / 新 ack 経路) を追加すること
-- `reviewAfter` を将来の日付に延期して実質的な長期凍結にすること (`priority='high'` + PR paydown schedule で代替)
-- entry 削除前に upstream 修正を目視確認しないこと (`statusA: 'stale'` は signal であって confirmation ではない)
+- 最新の検証なしに `reviewAfter` を延期すること。更新（renewal）は、ライブの上流ページで欠陥が残っていることを再検証した場合に限り許可する。entry に `lastVerifiedAt` を記録し、`reviewAfter` は `lastVerifiedAt`（未記録なら `addedAt`）から最大 184 日後まで。`lastVerifiedAt` は `addedAt` 以降かつ今日以前で、未知の key は拒否される（いずれも validator が強制）。検証できない entry、欠陥が解消した entry は更新せず、削除手順に回す。上流の実欠陥ではなく checker 都合で存在する patch は更新の対象外
+- entry 削除前に upstream 修正を目視確認しないこと (`statusA: 'stale'` は signal であって confirmation ではない)。吸収による削除 (上記 4.) はこの限りでないが、証明なしの削除は不可
 
 ### Status 判定と graceful degradation
 
@@ -110,16 +111,16 @@ EN upstream の欠陥を JA side に mirror させず吸収するため、本 re
 - `statusB`: `reviewAfter` が UTC 00:00 を過ぎた瞬間に `overdue`
 - `source-sync-status.json` 不在時 (local dev / PR CI) は全 exclusion entry が `statusA: 'unknown'` になり、stale 判定には使われない (fail-safe)
 
-## JA parser 制約と運用 SOP
+## JA レンダリング制約と運用 SOP
 
-Issue #368 以降、JA parser は EN `collectInlineText` と対称になるよう list item 内の継続要素を flatten する。
+JA Markdown は `ja_render.render_ja_markdown` で HTML にレンダリングされ、EN と同じ extractor (`segments_en.extract_segments_from_html`) を通る。list item 内の継続要素は EN と同じ規則で 1 つの item segment に flatten される。
 
-- nested marker は `markerIndent >= bodyIndent` のとき親 list item に吸収する
-- continuation paragraph / indented image / indented code fence / blank-line continuation は `leadingWs >= bodyIndent` のとき親 list item に吸収する
+- nested marker は content offset (marker + 後続スペースの幅) 以上のインデントのとき親 list item に吸収する (CommonMark の list item 規則)
+- continuation paragraph / indented image / indented code fence / blank-line continuation は content offset 以上のインデントのとき親 list item に吸収する
 - EN が MadCap fragmented sibling list (`<ol>` / `<ul>` の sibling) を持つ場合、JA では子 marker を親 item の marker indent まで outdent して独立 segment にする
 - list item 内の `:::callout` directive は禁止。callout は list の外に出し、必要なら list を分割する
 - `npm run lint` は EN snapshot と JA markdown の structure signature を比較し、list continuation / image / code-block の分離を `structure-signature-mismatch` として早期検知する
-- `structure-signature-mismatch` は baseline 追加で隠さず、JA content / parser / source-side debt のどれが正しいかを特定して修正する
+- `structure-signature-mismatch` は baseline 追加で隠さず、JA content / extractor / source-side debt のどれが正しいかを特定して修正する
 
 ### 絶対原則: 許容機構は broken EN snapshot 退避にのみ正当化される
 
@@ -227,7 +228,7 @@ P2-2 で burn-down 済の source-first pattern 一覧。各 pattern は `scripts
 | 4   | URL token verbatim mirror           | EN URL が HTTP 200 OK で生きている限り verbatim mirror                                                                   | `integrations/visual-validation/lambdatest_integration`                                  |
 | 5   | Broken-table-row paragraph mirror   | EN MadCap Flare の `<table>` 外 orphan paragraph を backslash-escaped paragraph で mirror                                | `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` |
 | 6   | HTML `<table>` cell `<br />` mirror | EN `<td>` の `<br />` をそのまま保持                                                                                     | `advanced-editing/keyboard-shortcut-step`                                                |
-| 7   | JA navigation link removal          | EN self-link MadCap artifact を JA 側でリンク除去して mirror                                                             | `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` |
+| 7   | JA parent-category link             | EN の bare `index.htm` リンクは親カテゴリを指すため、JA も同位置に親カテゴリへのリンクを置いて mirror                    | `salesforce-testing/create-a-salesforce-test/use-agentic-test-automation-for-salesforce` |
 | 8   | Generic-English-residue translation | 一般英語語は JA 化、Testim / vendor name は英語維持 (GLOSSARY 運用)                                                      | `integrations/grid-management`                                                           |
 
 各 pattern の判定・対処の詳細は sentinel test の slug コメントを canonical reference とする。TRANSLATION_GUIDE §5.5 にも同 8 pattern の翻訳観点を codify している。
@@ -244,7 +245,7 @@ kind-multiset fingerprint 上で検知器が許容する既知 pattern (flat-lis
 
 ### Mechanism-pending carve-outs
 
-content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch / EN self-link artifact 等)。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL]` マーカー経由で提案する (下記 §並列エージェント委任チェックリスト 参照)。
+content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch 等)。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL]` マーカー経由で提案する (下記 §並列エージェント委任チェックリスト 参照)。
 
 ## 並列エージェント委任チェックリスト
 

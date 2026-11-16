@@ -70,7 +70,8 @@ Mobile Test Library の画面。テストライブラリ画面には、次の情
 Filter Test ペインの各セクション内で条件を検索することもできます。**Search**（虫眼鏡）アイコンをクリックし、開いた検索ボックスに検索条件を入力します。
 :::
 
-3. **Apply** をクリックします。\
+3. **Apply** をクリックします。
+
 フィルターが適用され、条件を満たすテストのみが表示されます。このフィルタリングされたビューの保存の詳細については、[Saving a Filtered View](/docs/test-management/saving-a-filtered-view) を参照してください。
 
 :::note

@@ -98,5 +98,10 @@
     "name": "backticks inside a line do not open a fence",
     "markdown": "Use ``` to open.\n\n## 実在\n\n```bash\n## in fence\n```\n\n## Using ```code``` here\n",
     "ids": ["実在", "using-code-here"]
+  },
+  {
+    "name": "a fence opened on a list-marker line closes before the next heading",
+    "markdown": "- ```shell\n  --labid [id]\n  ```\n\n### labIdオプション\n",
+    "ids": ["labidオプション"]
   }
 ]

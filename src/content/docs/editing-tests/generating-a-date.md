@@ -34,12 +34,14 @@ keywords:
 
 ![アクションオプションメニュー](/images/test-utilities/generating-a-date/f22a0db-Testim_083a.png)
 
-2. **"M"**（Testim の事前定義ステップ）をクリックします。\
+2. **"M"**（Testim の事前定義ステップ）をクリックします。
+
 事前定義ステップのメニューが開きます。
 
 ![事前定義ステップメニュー](/images/test-utilities/generating-a-date/bb5ad0a-Testim_034.png)
 
-3. **Actions** をクリックします。\
+3. **Actions** をクリックします。
+
 Actions セクションが展開されます。
 
 ![Actions メニュー](/images/test-utilities/generating-a-date/981810c-Testim_079.png)
@@ -50,8 +52,9 @@ Actions セクションが展開されます。
 代替手順: メニュー上部の検索ボックスで **Generate date** を検索しても構いません。
 :::
 
-「Generate date」ステップがエディターに追加されます。\
-5. 作成したステップで **Show Properties**をクリックし、以下の説明に従ってプロパティを設定します。\
+「Generate date」ステップがエディターに追加されます。
+
+5. 作成したステップで **Show Properties**をクリックし、以下の説明に従ってプロパティを設定します。
 6. **Properties** ペインの **Step Parameters** ドロップダウンをクリックすると、現在の設定で生成された日付を確認できます。
 
 ## Generate Date のプロパティ

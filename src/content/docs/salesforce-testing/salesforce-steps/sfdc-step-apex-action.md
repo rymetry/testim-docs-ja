@@ -26,7 +26,8 @@ Salesforce APEX アクションステップを使用すると、テスト内の�
 **APEX 実行アクションステップを追加するには:**
 
 1. エディターで、**+** ボタンをクリックしてステップを追加します。
-2. **Salesforce ステップ**タブの下で、**API 操作**をクリックし、**APEX を実行**ステップを選択します。\
+2. **Salesforce ステップ**タブの下で、**API 操作**をクリックし、**APEX を実行**ステップを選択します。
+
 **function** エディターが開き、右側に **プロパティ**パネルが開きます:
 
 ![スクリーンショット](/images/salesforce-steps/sfdc-step-apex-action/c0c4dc9-Picture2.png)

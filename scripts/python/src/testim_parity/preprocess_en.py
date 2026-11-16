@@ -16,8 +16,10 @@ extractor) で 1 回だけ行う。こうすることで:
 3. ``_unescape_details`` — ``<p>&lt;details&gt;...&lt;/details&gt;</p>`` の
    legacy single-``<p>`` ケースを real ``<details>`` に復元
 4. ``apply_en_source_patches`` — slug-scope literal find→replace (``slug`` 指定時)
+5. ``_rewrite_bare_index_links`` — bare ``index.htm`` を親カテゴリ index へ
+   (``slug`` 指定時、patch の後)
 
-``slug`` が未指定 / 空文字のときは step 4 を skip する (internal 再帰呼び出しや
+``slug`` が未指定 / 空文字のときは step 4-5 を skip する (internal 再帰呼び出しや
 usability 側は raw を観察する mjs 互換動作)。
 """
 
@@ -223,6 +225,26 @@ def _unescape_details(html: str) -> str:
 # --- Public entry ---------------------------------------------------------
 
 
+_BARE_INDEX_LINK_RE = re.compile(r'href="index\.htm(#[^"]*)?"')
+
+
+def _rewrite_bare_index_links(html: str, slug: str) -> str:
+    """MadCap の bare ``href="index.htm"`` を親カテゴリ index への相対 path に書き換える。
+
+    同フォルダの ``index.htm`` は親カテゴリページそのもの (``a/b/c`` なら ``a/b``)。
+    checker は basename でリンクを解決するため、フォルダ名を ``../<parent>/index.htm`` と
+    明示して ``/docs/<parent の slug>`` に正規化させる。
+    slug が 1 segment のページは親を持たないので触らない。
+    """
+    parts = slug.split("/")
+    if len(parts) < 2:
+        return html
+    parent = parts[-2]
+    return _BARE_INDEX_LINK_RE.sub(
+        lambda m: f'href="../{parent}/index.htm{m.group(1) or ""}"', html
+    )
+
+
 def preprocess_en_html(
     html: str,
     slug: str | None = None,
@@ -232,7 +254,8 @@ def preprocess_en_html(
 
     chain (idempotent):
         ``_normalize_escaped_callouts`` → ``_normalize_escaped_faq_details``
-        → ``_unescape_details`` → ``apply_en_source_patches`` (slug 指定時のみ)
+        → ``_unescape_details`` → ``apply_en_source_patches`` → ``_rewrite_bare_index_links``
+        (後 2 つは slug 指定時のみ)
 
     mjs ``preprocessEnHtml(html, options)`` (turndown.mjs:413) と byte-for-byte
     一致する出力契約。conformance harness で直接比較する。
@@ -244,4 +267,5 @@ def preprocess_en_html(
     )
     if not slug:
         return normalized
-    return apply_en_source_patches(normalized, slug, patch_coverage)
+    patched = apply_en_source_patches(normalized, slug, patch_coverage)
+    return _rewrite_bare_index_links(patched, slug)

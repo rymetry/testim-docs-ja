@@ -34,7 +34,8 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 
 ![SAML2.0 オプション](/images/security-sso/okta-sso-integration/f4ab0a3-Capture1.PNG)
 
-5. **Next**をクリックします。\
+5. **Next**をクリックします。
+
 **General Settings**画面が表示されます。
 
 ![General Settings 画面](/images/security-sso/okta-sso-integration/cf9a206-Capture2.PNG)
@@ -42,8 +43,10 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 6. **App Name**フィールドに、'Testim SSO'などのコネクタアプリの名前を入力します。
 7. **Browse**をクリックして Testim ロゴを選択し、**Upload Logo**をクリックしてアップロードします（オプション）。
 8. ユーザーが Testim について詳しく知るのに役立つ**説明**を追加することもできます（オプション）。
-9. **Next**をクリックします。\
+9. **Next**をクリックします。
+
 **Configure SAML**画面が表示されます。この時点でコネクタが作成されました。次に Testim に接続する必要があります。
+
 10. 別のタブで**Testim Automate**を開き、右上隅にある**ユーザー**アイコンをクリックします。
 
 ![ユーザーアイコン](/images/security-sso/okta-sso-integration/713786e-sso1.png)
@@ -101,5 +104,6 @@ SSO はプレミアム機能です。デプロイメントで SSO 機能が有�
 ![Testim SSO アプリケーション](/images/security-sso/okta-sso-integration/508e2c1-tempsnip1.png)
 
 32. **Settings** ドロップダウンをクリックし、**Assign to Users**を選択します。
-33. 関連するユーザーに割り当てます。\
+33. 関連するユーザーに割り当てます。
+
 新しく作成されたアプリが作成され、指定されたユーザー/グループ/ロールの Okta ポータルに表示されます。これ以降、これらのユーザーは Okta SSO から Testim にログインできるようになります。

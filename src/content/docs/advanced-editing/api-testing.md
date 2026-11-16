@@ -38,10 +38,14 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/eb15a7d-validatestep.gif)
 
 1. **Add API validation** ステップを追加したい位置の （矢印）アイコン、または最後のステップの後ろにある **+** アイコンにカーソルを合わせます。
-2. **“M”**（Testim predefined steps）ボタンをクリックします。\
+2. **“M”**（Testim predefined steps）ボタンをクリックします。
+
 **Predefined steps** メニューが開きます。
-3. **Validations** をクリックします。\
+
+3. **Validations** をクリックします。
+
 **Validations** メニューが展開されます。
+
 4. メニューをスクロールし、**Validate API** を選択します。
 
 :::note
@@ -53,15 +57,19 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/d92c26a-Picture1.png)
 
 5. **Name the new step** フィールドに、このステップの名前を入力します。
-6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step** フォルダーリストから保存先フォルダーを選択します。共有ステップにしない場合はチェックを外します。\
+6. このステップを他のテストでも再利用できる共有ステップとして保存したい場合は、**Shared step** チェックボックス（デフォルトでオン）をそのままにし、**Select shared step** フォルダーリストから保存先フォルダーを選択します。共有ステップにしない場合はチェックを外します。
+
 共有ステップの詳細は [グループ](/docs/editing-tests/groups) を参照してください。
-7. **Create Step** をクリックします。\
+
+7. **Create Step** をクリックします。
+
 **Run Shared API Validation** ウィンドウが開きます。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0442a1d-run_sharred_api_validation.png)
 
 8. **URL** フィールドで使用する HTTP リクエストメソッドを選択し、ルートエンドポイントとパスを入力します。必要に応じて URL にパラメーターを追加します。詳細は後述の [Using Parameters](/docs/advanced-editing/api-testing#using-parameters-in-the-sent-http-request) を参照してください。
-9. **Header** セクションで、API に送信するヘッダーのキーと値を入力します。ヘッダーを個別のキー／値フィールドで入力したい場合は **Key-Value**（デフォルト）を選択し、ブラウザの DevTools Network パネルからコピーした文字列などをそのまま貼り付けたい場合は **Raw** を選択します。\
+9. **Header** セクションで、API に送信するヘッダーのキーと値を入力します。ヘッダーを個別のキー／値フィールドで入力したい場合は **Key-Value**（デフォルト）を選択し、ブラウザの DevTools Network パネルからコピーした文字列などをそのまま貼り付けたい場合は **Raw** を選択します。
+
 複数のヘッダーを定義している場合、左側のチェックボックスをオンにしたヘッダーを使ったリクエストが順に実行されます。ヘッダーを削除したい場合は右端の **X** をクリックします。
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/0277227-header.png)
@@ -81,7 +89,8 @@ API 検証ステップで応答を検証します。ヘッダー／ボディ／�
 
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/ba2e285-body.png)
 
-**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。設定手順:
+**Assertion** セクションでは、コードを書かずにレスポンスのヘッダー／ボディ／ステータスコードに対する検証を追加できます。Assertion は後述の「Run additional code on request results」で記述するコードよりも先に実行され、TRUE なら成功、FALSE なら失敗となります。Assertion が失敗した場合、そのステップとテスト全体が失敗となり、「Run additional code on request results」のコードは実行されません。\
+設定手順:
 
 - 1 つ目のドロップダウンで検証対象（Status code / ヘッダー / Body (JSON) / Body (Text) など）を選択します。
 - 2 つ目のドロップダウンで比較演算子を選択します。
@@ -134,10 +143,14 @@ API アクションステップ（Add API action）は、レスポンスを利�
 ![API テストのスクリーンショット](/images/advanced-features/api-testing/437b054-apiaciton.gif)
 
 1. 追加したい位置の （矢印）または最後のステップ後ろの **+** にカーソルを合わせます。
-2. “M”（Testim predefined steps）をクリックします。\
+2. “M”（Testim predefined steps）をクリックします。
+
 **Predefined steps** メニューが開きます。
-3. **Actions** をクリックします。\
+
+3. **Actions** をクリックします。
+
 **Actions** メニューが展開されます。
+
 4. 一覧から **Add API action** を選択します。
 
 :::note

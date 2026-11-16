@@ -2,7 +2,7 @@
 に一致することを pin する。
 
 * Layer 1 (EN extractor): ``segments_en._CALLOUT_CLASS_RE``
-* Layer 2 (JA extractor): ``segments_ja._CALLOUT_OPEN_RE``
+* Layer 2 (JA renderer):  ``ja_render._OPEN``
 * Layer 3 (renderer):     ``astro.config.mjs`` の ``callouts: { ... }`` block
 * Layer 4 (WRITING_GUIDE): ``docs/WRITING_GUIDE.md`` の callout mapping 表
 
@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import re
 
+from testim_parity.ja_render import _OPEN as _CALLOUT_OPEN_RE
 from testim_parity.project import PROJECT_ROOT
 from testim_parity.segments_en import _CALLOUT_CLASS_RE
-from testim_parity.segments_ja import _CALLOUT_OPEN_RE
 
 EXPECTED: frozenset[str] = frozenset({"note", "caution", "warning", "info", "tip", "danger"})
 
@@ -34,7 +34,7 @@ class TestCalloutContract:
         assert _extract_alternation(_CALLOUT_CLASS_RE) == EXPECTED
 
     def test_layer2_ja_extractor(self) -> None:
-        """Layer 2: segments_ja の ``_CALLOUT_OPEN_RE`` が expected set に一致する。"""
+        """Layer 2: ja_render の ``_OPEN`` が expected set に一致する。"""
         assert _extract_alternation(_CALLOUT_OPEN_RE) == EXPECTED
 
     def test_layer3_renderer_astro_config(self) -> None:

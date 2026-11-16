@@ -13,22 +13,30 @@ from testim_parity.artifact_registry import (
 
 class TestIsArtifactExcluded:
     def test_matching_slug_and_token(self):
-        # UD-001 system: self-index link artifact
-        assert is_artifact_excluded(slug="testops/insights/dashboard", token="/docs/index") is True
+        assert (
+            is_artifact_excluded(
+                slug="getting-started/creating-your-first-codeless-test", token="http://google.com"
+            )
+            is True
+        )
 
     def test_non_matching_slug(self):
-        assert is_artifact_excluded(slug="unrelated/slug", token="/docs/index") is False
+        assert is_artifact_excluded(slug="unrelated/slug", token="http://google.com") is False
 
     def test_non_matching_token(self):
-        assert is_artifact_excluded(slug="testops/insights/dashboard", token="/docs/other") is False
+        assert (
+            is_artifact_excluded(
+                slug="getting-started/creating-your-first-codeless-test", token="/docs/other"
+            )
+            is False
+        )
 
 
 class TestRegistryEntries:
     def test_returns_tuple_of_entries(self):
         entries = registry_entries()
         assert isinstance(entries, tuple)
-        # 初期インベントリは 2 entries
-        assert len(entries) == 2
+        assert len(entries) == 1
 
     def test_entries_are_readonly(self):
         entries = registry_entries()
@@ -42,14 +50,14 @@ class TestRegistryEntries:
 class TestCoverage:
     def test_record_and_snapshot(self):
         cov = create_artifact_coverage()
-        cov["record"](slug="a", token="/docs/index", reason="en-side")
-        cov["record"](slug="a", token="/docs/index", reason="en-side")
-        cov["record"](slug="b", token="/docs/index", reason=None)
+        cov["record"](slug="a", token="http://google.com", reason="en-side")
+        cov["record"](slug="a", token="http://google.com", reason="en-side")
+        cov["record"](slug="b", token="http://google.com", reason=None)
         snap = cov["snapshot"]()
         assert snap["registryEntries"] == len(ARTIFACT_REGISTRY)
         assert snap["matchedHits"] == 3
         assert snap["bySlug"] == {"a": 2, "b": 1}
-        assert snap["byToken"] == {"/docs/index": 3}
+        assert snap["byToken"] == {"http://google.com": 3}
 
     def test_noop_coverage(self):
         snap = NOOP_COVERAGE["snapshot"]()

@@ -74,6 +74,8 @@ _HEADING_LEVEL_RE = re.compile(r"^#{1,6}[ \t]+(.+)")
 _EXPLICIT_HEADING_ID_RE = re.compile(r"\{#([^}\s]+)\}\s*$")
 
 _CODE_FENCE_RE = re.compile(r"^```")
+# fence の開閉行 (strip 済み)。list marker と同じ行で開く fence (``- ```shell``) も含む。
+_FENCE_LINE_RE = re.compile(r"^(?:(?:[-*+]|\d+[.)])\s+)?```")
 _CODE_BLOCK_RE = re.compile(r"```[\s\S]*?```")
 _INLINE_CODE_RE = re.compile(r"`[^`]*`")
 
@@ -209,14 +211,14 @@ def _heading_id_list(body: str) -> list[str]:
     # shortcut: Markdown を行単位の正規表現で読む。見出し内のインライン HTML・文字参照・画像・
     # ``_強調_``・参照リンク・``:name`` ディレクティブ・空白で囲んだコードスパン、setext 見出し、
     # 引用やリスト内の見出し、HTML コメント/ブロック内の ``## ``、``~~~`` や 4 連以上のフェンス、
-    # リストマーカーと同じ行で開くフェンス、行頭がインラインの 3 連バッククォートは
+    # 行頭がインラインの 3 連バッククォートは
     # サイトと id がずれる (現行コンテンツに該当なし)。使い始めたら fixture にケースを足し、
     # ここを Markdown パーサーに置き換える。
     ids: list[str] = []
     occurrences: dict[str, int] = {}  # github-slugger と同じ重複カウンタ
     in_code_block = False
     for line in body.split("\n"):
-        if _CODE_FENCE_RE.match(line.strip()):
+        if _FENCE_LINE_RE.match(line.strip()):
             in_code_block = not in_code_block
             continue
         match = None if in_code_block else _HEADING_LEVEL_RE.match(line)
@@ -514,7 +516,7 @@ def check_callouts(body: str, body_start: int, reporter: _Reporter) -> None:
     sorted_types = ", ".join(sorted(_VALID_CALLOUT_TYPES))
     in_code_block = False
     for index, line in enumerate(body.split("\n")):
-        if _CODE_FENCE_RE.match(line.strip()):
+        if _FENCE_LINE_RE.match(line.strip()):
             in_code_block = not in_code_block
             continue
         if in_code_block:
@@ -549,7 +551,7 @@ def check_callouts(body: str, body_start: int, reporter: _Reporter) -> None:
 def check_images(body: str, body_start: int, reporter: _Reporter) -> None:
     in_code_block = False
     for index, line in enumerate(body.split("\n")):
-        if _CODE_FENCE_RE.match(line.strip()):
+        if _FENCE_LINE_RE.match(line.strip()):
             in_code_block = not in_code_block
             continue
         if in_code_block:

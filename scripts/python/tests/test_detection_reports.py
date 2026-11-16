@@ -1653,6 +1653,7 @@ def test_parity_only_coarse_no_audit_manifest_entry() -> None:
                 "file": "src/content/docs/parity-only.md",
                 "issues": [
                     {"type": "paragraph-count-mismatch", "severity": "signal", "detail": "noise"},
+                    {"type": "code-block-count-mismatch", "severity": "signal", "detail": "noise3"},
                     {"type": "heading-mismatch", "severity": "signal", "detail": "noise2"},
                 ],
             }
@@ -1733,6 +1734,11 @@ def test_mixed_file_filters_coarse_keeps_actionable() -> None:
                         "detail": "noisy coarse",
                     },
                     {"type": "heading-mismatch", "severity": "signal", "detail": "noisy coarse 2"},
+                    {
+                        "type": "code-block-count-mismatch",
+                        "severity": "signal",
+                        "detail": "noisy coarse 3",
+                    },
                 ],
             }
         ],
@@ -1744,6 +1750,7 @@ def test_mixed_file_filters_coarse_keeps_actionable() -> None:
     assert report["parityRegression"]["shouldOpenIssue"] is True
     assert "image-mismatch" in body
     assert "paragraph-count-mismatch" not in body
+    assert "code-block-count-mismatch" not in body
     assert "heading-mismatch" not in body
 
 

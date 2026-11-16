@@ -71,7 +71,8 @@ Jenkins の Execute Shell コマンド
 
 ![Jenkins で Execute Windows batch command ステップを追加する画面](/images/ci-integrations/jenkins-integration/20a3651-File1488700749415.png)
 
-4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。\
+4. [CLI ページ](/docs/running-tests/the-command-line-cli)で説明されているように、適切なパラメーターを使用してコマンドを設定します。
+
 以下は、最新の npm パッケージがあることを確認する最初の部分と、CLI コマンド自体を含む基本的なスクリプトテンプレートです:
 
 ```shell Batch

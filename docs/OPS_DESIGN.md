@@ -65,20 +65,17 @@ queue 全体を消費する。
 
 ### EN スナップショット正規化
 
-比較前に `testim_parity.extract.normalize_en_artifacts()` で EN 側の既知アーティファクトを正規化する:
+構造比較 (`testim_parity.html_structure.compare_html_structure`) は EN / JA を HTML の DOM として比較する。EN 側の既知アーティファクトは次のとおり扱う:
 
 | アーティファクト | 処理 |
 | --- | --- |
-| wrapping code fence (` ```mdx ... ``` `) | fence を strip して中身を比較対象にする |
-| inline ZWS (U+200B 等) | 文字単位で除去 |
-| 番号リストスペース欠落 (`5.Click`) | `5. Click` に修正（`1.1.` サブステップは除外） |
-| ZWS のみの行 | 行ごと除去 |
-| trailing backslash (`\`) | `\` を strip |
-| 末尾改行なし | 改行を補完 |
+| inline ZWS (U+200B 等) | テキスト比較時に文字単位で除去 |
+| ZWS のみ・空の `<p>` | 段落として数えない (segment も生成しない) |
+| bare `href="index.htm[#frag]"` | 親カテゴリの index へ書き換え (EN 前処理) |
 
 ### EN アーティファクト注釈
 
-`testim_parity.extract.detect_en_artifacts()` が EN body の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
+`testim_parity.html_structure` が EN HTML の構造的アーティファクトを検出し、issue の `artifacts` フィールド（`detail` とは別）に付与する。`detail` は acknowledgements の `detailIncludes`/`detailRegex` マッチに使われるため不変。CLI 表示時のみ suffix として表示する。
 
 **`source-unusable` / `snapshot-incomplete` の ack 形式**: `testim_parity.source_usability` の emitter は `detail` 末尾に `[reason=<token>]` を埋め込む。ack 作成時はこの token を `detailIncludes` に指定する:
 
@@ -88,10 +85,10 @@ queue 全体を消費する。
 
 `reason` token は `usabilitySignals.reason` と 1:1 対応で、baseline 側 (`build_baseline_key`) は同じ token を構造化 identity key に使う。`scripts/python/tests/test_usability_ack_integration.py` が detector→matcher round-trip を固定している。
 
-`detect_en_artifacts()` の `artifacts` フィールド種別:
+`artifacts` フィールド種別:
 
 - `EN uses <details> blocks` — EN が `<details>` を使用
-- `EN body largely wrapped in code fence` — EN 本文の 50% 以上がコードフェンス内
+- `EN body largely wrapped in code fence` — EN 本文テキストの 50% 超が `<pre>` 内
 
 ### Structure comparator (canonical block sequence)
 
@@ -190,7 +187,7 @@ npm run test && npm run build
       - どちらも `docs/UPSTREAM_DEFECTS.md` の対応 entry を archive 状態に更新
       - `npm run check:parity` が 0 issues を維持していることを確認
    d. まだ消えていなければ managed issue にコメントで状況記録 (次週 run で再評価)
-3. overdue entry (`statusB: 'overdue'`) は `reviewAfter` 延長でなく **paydown PR** で対応する (`priority='high'` を付与して順位付け)
+3. overdue entry (`statusB: 'overdue'`) は次のいずれかで対応する。(a) ライブの上流ページで欠陥が残っていることを再検証できた場合のみ、`lastVerifiedAt` を記録して `reviewAfter` を更新する（`lastVerifiedAt`（未記録なら `addedAt`）から最大 184 日。`lastVerifiedAt` は `addedAt` 以降かつ今日以前、未知の key は拒否。いずれも validator が強制）。(b) 検証できない、または欠陥が解消した entry は更新せず、削除手順または **paydown PR** で対応する。checker 都合で存在する patch は更新の対象外
 4. 全 stale / overdue 解消後、当該 section が空になり `sourceSyncHealth` が他 signal も無ければ workflow が自動で issue を close
 
 sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstream recovery") も同じ `upstream-recovery-status.json` を読むため、PR 作業中にも stale / overdue entry が可視化される。weekly triage で解消した項目は次の PR run で comment から自動削除される。

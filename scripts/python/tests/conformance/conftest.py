@@ -1,7 +1,7 @@
 """conformance suite 共通 fixtures (288-matrix corpus oracle loader)。
 
 288-page corpus conformance test (``test_segments_en_288_matrix.py`` /
-``test_turndown_288_matrix.py`` / ``test_align_288_matrix.py``) で共有する
+``test_align_288_matrix.py``) で共有する
 oracle JSONL loader を提供する。
 
 ## Oracle JSONL 契約
@@ -54,7 +54,7 @@ def canonical_sha256(value: object) -> str:
     ensure_ascii=False)`` で canonical JSON を生成し、UTF-8 で SHA-256 を取る。
     Phase 6b cutover 前の mjs ``canonicalStringify`` 実装と byte-identical な
     canonical form (Phase 6b で Python 側が authoritative 実装に昇格、
-    ``verify_golden_against_mjs.py`` で byte-identical を pin 済)。
+    Phase 6b 時点で byte-identical を pin 済)。
 
     **主な目的**: "oracle JSONL row の canonical serialization 契約を pin"
     すること (test 内で ``py == expected`` がすでに値一致を保証するため、

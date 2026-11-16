@@ -43,7 +43,7 @@
 > **Source-first 例外の canonical registry**:
 >
 > - **Mechanical exceptions (parser-level)**: kind-multiset fingerprint 上で検知器が許容する既知 pattern (flat-list split / arrow-fusion 段落融合 等) は [PARITY_GUIDE.md §Source-first 例外の canonical registry](./PARITY_GUIDE.md#source-first-例外の-canonical-registry) に登録。個別 PR の自由裁量で追加禁止 (reviewer 承認 + registry 明示登録の security L2 gate)
-> - **Mechanism-pending carve-outs**: content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch / EN self-link artifact 等) は同 registry に登録。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL]` マーカー経由で提案する ([PARITY_GUIDE.md §並列エージェント委任チェックリスト](./PARITY_GUIDE.md#並列エージェント委任チェックリスト) 参照)
+> - **Mechanism-pending carve-outs**: content 修正で 0 到達不能な mechanism-level 残存 (FileOrFilePath paragraph vs code-fence kind-mismatch 等) は同 registry に登録。未登録の mechanism-pending を agent が自主宣言するのは禁止。新 pattern は `[PENDING REVIEWER APPROVAL]` マーカー経由で提案する ([PARITY_GUIDE.md §並列エージェント委任チェックリスト](./PARITY_GUIDE.md#並列エージェント委任チェックリスト) 参照)
 > - **Wave 2 実績 pattern**: P2-2 で確立した 8 pattern の catalog は [PARITY_GUIDE.md §Wave 2 実績 pattern catalog](./PARITY_GUIDE.md#wave-2-実績-pattern-catalog) に一覧化、翻訳観点は [TRANSLATION_GUIDE.md §5.5 Source-first 翻訳パターン](./TRANSLATION_GUIDE.md#55-source-first-翻訳パターンwave-2-確立) 参照
 
 ---
@@ -153,6 +153,7 @@ keywords:
 - `{title="..."}` によるカスタムタイトルは使用可
 - 画像パスは `/images/...` を使い、実ファイルが `public/images/...` に存在しなければならない
 - 画像（`![alt](path)`）の前後には必ず空行を入れる（空行がないと前後の要素と結合してレイアウトが崩れる）
+  - 例外: EN が画像だけの `<li>` を持つ場合は、JA も画像を `5. ![alt](path)` / `- ![alt](path)` の 1 つのリスト項目にする（EN でその画像自体がリスト項目であり、番号や項目数を原文に合わせるため）。同様に EN の `<li>` がコードブロックだけを含む場合は、項目内にフェンス付きコードブロックを置く
 - 原文に callout がある場合は、意味と種類を保ったまま `:::` 記法へ変換する
 
 ### 原文 blockquote → JA callout 変換マッピング
@@ -332,29 +333,45 @@ EN snapshot           →  JA 翻訳
 - 番号付きステップ数は原文に合わせる（merge/split で調整）
 - 原文で step 配下に nested list がある場合、本文へ圧縮せず nested list のまま維持する
 - 箇条書きの内容を 1 paragraph や 1 list item に統合して bullet 数を減らさない
-- **list item 内に `:::callout` directive を書かない**（lint `callout-in-list-item` で強制）。Python の JA parser は line-based state machine で list context を追跡しないため、indented callout は ambiguous に flatten される。callout を使いたい場合は list の外（top-level）に出す。該当ページの EN 原文で `<div class="note">` 等が list item 内にある場合は、list を一旦閉じて callout、その後別 list として再開する構造にする
+- EN が list item の間に独立した段落を置いている場合、JA も `item` / 空行 / 段落 / 空行 / 次の `item` で分離する。item 行末の `\` と、段落を直後の行に続ける書き方は使わない（Markdown では段落が item 内の hard break になり、EN と構造が異なる）。EN が1つのブロック内でテキスト行の間に `<br />` を持つ場合（`<br />` の後に同じ `<p>` または `<li>` のテキストが続く場合）の hard break 保持（`TRANSLATION_GUIDE.md`）はこの規則の対象外。ブロック末尾の `<br />` は例外に当たらない。item 行の直後に画像行を続ける場合も同様に、「Callout 規則」節の「画像の前後には必ず空行を入れる」に従って分離する。これは [PARITY_GUIDE.md §Source-first 例外の canonical registry](./PARITY_GUIDE.md#source-first-例外の-canonical-registry) の #2「Flat-list split」の適用である。
 
-#### list item の indent 設計 (EN parser 対称化、Issue #368)
+❌ NG（段落が item 内の hard break になる）:
 
-JA parser は EN `collectInlineText` と対称化するため、list item 内の nested marker を
-`markerIndent >= bodyIndent` で active list item に flatten する。EN の HTML 構造に
+```text
+1. 設定を保存します。\
+右側にパネルが表示されます。
+2. 次の手順
+```
+
+✅ OK:
+
+```text
+1. 設定を保存します。
+
+右側にパネルが表示されます。
+
+2. 次の手順
+```
+
+- **list item 内に `:::callout` directive を書かない**（lint `callout-in-list-item` で強制）。`ja_render` は `:::` 行を行単位で `<div>` に置換するため、indented callout の閉じ位置は list item / ページ末尾まで延びて曖昧になる。callout を使いたい場合は list の外（top-level）に出す。該当ページの EN 原文で `<div class="note">` 等が list item 内にある場合は、list を一旦閉じて callout、その後別 list として再開する構造にする
+
+#### list item の indent 設計
+
+JA Markdown は HTML にレンダリングされ EN と同じ extractor を通る。list item 内の nested marker は
+content offset 以上のインデントで親 list item に入り、1 segment に flatten される。EN の HTML 構造に
 合わせて JA の indent を選ぶ:
 
 - **sibling list** — 独立した segment にしたい場合は、子 marker を親 item の
   marker indent まで outdent する
   - 例: `1. outer\n- sibling` (ordered の body_indent=3、`-` の indent=0)
   - 想定対応 EN 構造: `<ol><li>outer</li><ul><li>sibling</li></ul></ol>` (MadCap fragment の `<ul>` が `<li>` 直下ではなく sibling として配置される)
-- **nested list** — `markerIndent >= bodyIndent` の marker は active list item に
+- **nested list** — content offset 以上のインデントの marker は親 list item に
   **flatten される**
   - 例: `1. outer\n   - nested` (ordered の body_indent=3、`-` の indent=3)
-  - 想定対応 EN 構造: `<ol><li>outer<ul><li>nested</li></ul></li></ol>` (`<li>` 直下に nested `<ul>` が入り、EN `collectInlineText` が "outer nested" の 1 segment に flatten)
-
-PR #389 では旧 sibling 表現 (`markerIndent == bodyIndent`) を使っていた既存 corpus を
-top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約を parser 側で
-実装済み。
+  - 想定対応 EN 構造: `<ol><li>outer<ul><li>nested</li></ul></li></ol>` (`<li>` 直下に nested `<ul>` が入り、extractor が "outer nested" の 1 segment に flatten)
 
 **continuation paragraph** / **indented image** / **indented code fence** も同じく
-`leadingWs >= bodyIndent` のとき active list item に flatten される:
+content offset 以上のインデントのとき親 list item に flatten される:
 
 - `1. item\n\n   continuation` → 1 segment "item continuation"
 - `1. item\n   ![alt](img)` → 1 segment "item" (image は space 1 個に縮退)
@@ -383,7 +400,7 @@ top-level に outdent し、Issue #368 の `markerIndent >= bodyIndent` 契約�
 
 - 画像・callout・コードブロック: 出現順序と配置を原文に合わせる
 - 段落: 原文の段落構造を維持（diff >= 1 で検出）
-- `paragraph-count-mismatch` / `bullet-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
+- `paragraph-count-mismatch` / `bullet-count-mismatch` / `code-block-count-mismatch` は audit-only signal だが、原文構造を崩してよい意味ではない。主判定は canonical structure comparator、count 系は補助シグナルとして扱う
 
 ### 原文準拠の source-first 例外（operationalized / Security P2 対応）
 

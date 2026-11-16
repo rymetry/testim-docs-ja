@@ -310,9 +310,9 @@ def test_align_with_explicit_coverage_aggregator():
 
     coverage = create_artifact_coverage()
     # registry 登録済みの slug + token の組で artifact-registry suppression path
-    # を通す (``ARTIFACT_REGISTRY`` の ENTRY_1 から最小 fixture を作る)
-    registered_slug = "testops/insights/dashboard"
-    registered_token = "/docs/index"
+    # を通す (``ARTIFACT_REGISTRY`` の entry から最小 fixture を作る)
+    registered_slug = "getting-started/creating-your-first-codeless-test"
+    registered_token = "http://google.com"
     en = [
         _seg("heading", sectionPath="A", textNorm="A"),
         _seg(

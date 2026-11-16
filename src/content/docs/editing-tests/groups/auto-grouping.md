@@ -23,7 +23,8 @@ keywords:
 ![1689](/images/groups/auto-grouping/e63b692-auto-group1.png)
 
 2. **Branch Name** フィールドに作成する新しいブランチ名を入力します。
-3. **Confirm** をクリックします。\
+3. **Confirm** をクリックします。
+
 Testim が自動グループ化を適用したテスト件数を示すメッセージが表示されます。
 
 ![2426](/images/groups/auto-grouping/2a96564-Screen_Shot_2020-07-07_at_13.58.18.png)

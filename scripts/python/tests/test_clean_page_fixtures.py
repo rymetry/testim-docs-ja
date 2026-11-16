@@ -2,7 +2,8 @@
 
 ``source_parity_clean_page_fixtures.test.mjs`` を pytest に移植。実 snapshot と
 実 JA md を読み、structure comparator が 0 件を維持することを全 CLEAN_PAGE_SLUGS
-で pin する。
+で pin する。EN 側は patches + link rewrite を通した入力で、
+``check_source_parity`` が見るものと同じ。
 """
 
 from __future__ import annotations

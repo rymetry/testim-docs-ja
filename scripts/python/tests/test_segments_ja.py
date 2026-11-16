@@ -1,12 +1,13 @@
-"""``testim_parity.segments_ja`` のユニットテスト。
+"""``testim_parity.segments_ja`` のユニットテスト (segment level)。
 
-cross-runtime byte parity は ``tests/conformance/test_segments_ja_parity.py``
-が担保する。こちらは node 不在環境でも動く素早い iteration 用と、mjs
-line-based 挙動の regression guard。
+JA Markdown は ``render_ja_markdown`` で HTML にしてから EN extractor で抽出する。
+レンダリング単体の挙動は ``tests/test_ja_render.py`` が担保する。class 群は旧
+line scanner 時代からの JA 側契約、module-level 関数は HTML 経路移行時の追加分。
 """
 
 from __future__ import annotations
 
+from testim_parity.segments_en import extract_segments_from_html
 from testim_parity.segments_ja import extract_segments_from_markdown
 
 
@@ -207,20 +208,6 @@ class TestListEmitTrueNested:
         assert segs[0]["textNorm"] == "outer nested"
         assert segs[1]["textNorm"] == "sibling"
 
-    def test_hard_break_continuation_absorbs_equal_body_indent(self):
-        """``leading_ws == body_indent`` の text continuation は list item に入る。"""
-        md = (
-            "- 緑のバー - 合格\n"
-            "- 赤のバー - 不合格\\\n"
-            "  バーにカーソルを合わせると、その詳細が表示されます。\n\n"
-        )
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item", "unordered-list-item"]
-        assert segs[1]["textNorm"] == (
-            "赤のバー - 不合格\\ バーにカーソルを合わせると、その詳細が表示されます。"
-        )
-
 
 class TestCallout:
     def test_note_callout_body_kind(self):
@@ -325,11 +312,14 @@ class TestTable:
 
 
 class TestImage:
-    def test_standalone_markdown_image_emits_image(self):
+    def test_standalone_markdown_image_emits_no_segment(self):
+        """``<p><img></p>`` は segment を出さない (旧 ``image`` kind は廃止)。"""
         md = "## X\n\n![alt text](/img.png)\n"
-        segs = extract_segments_from_markdown(md)
-        images = [s for s in segs if s["segmentKind"] == "image"]
-        assert len(images) == 1
+        assert [s["segmentKind"] for s in extract_segments_from_markdown(md)] == ["heading"]
+
+    def test_standalone_image_component_emits_no_segment(self):
+        md = '## X\n\n<Image src="/x.png" alt="A" />\n'
+        assert [s["segmentKind"] for s in extract_segments_from_markdown(md)] == ["heading"]
 
     def test_img_tag_emits_image(self):
         md = '## X\n\n<img src="/img.png" alt="A" />\n'
@@ -388,11 +378,12 @@ class TestListRegionEdgeCases:
         kinds = [s["segmentKind"] for s in segs]
         assert kinds == ["unordered-list-item", "callout-body"]
 
-    def test_list_then_standalone_image_terminates_region(self):
+    def test_list_then_standalone_image_emits_list_item_only(self):
         md = "- item\n\n![alt](/x.png)\n"
         segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item", "image"]
+        assert [(s["segmentKind"], s["textNorm"]) for s in segs] == [
+            ("unordered-list-item", "item")
+        ]
 
     def test_list_then_horizontal_rule_terminates_region(self):
         md = "- item\n\n---\n\nAfter.\n"
@@ -436,68 +427,24 @@ class TestListRegionEdgeCases:
         kinds = [s["segmentKind"] for s in segs]
         assert kinds == ["ordered-list-item", "paragraph"]
 
-    def test_four_space_indent_list_marker_mjs_fallback(self):
-        """4-space indent された list marker は line-based で list-item 化。
-
-        CommonMark は ``    - codeish`` を indented code block として扱うが、
-        ``_UNORDERED_RE = ^(\\s*)[-*+]\\s+(.+)$`` は任意の leading whitespace を
-        許容するため line-based emit で list-item として拾う (mjs 互換)。
-        """
-        md = "    - codeish\n"
-        segs = extract_segments_from_markdown(md)
-        assert len(segs) == 1
-        assert segs[0]["segmentKind"] == "unordered-list-item"
-        assert segs[0]["textNorm"] == "codeish"
-
-    def test_four_space_indent_ordered_marker_mjs_fallback(self):
-        md = "    1. codeish\n"
-        segs = extract_segments_from_markdown(md)
-        assert len(segs) == 1
-        assert segs[0]["segmentKind"] == "ordered-list-item"
-        assert segs[0]["textNorm"] == "codeish"
-
-    def test_fallback_prefix_then_real_list(self):
-        """4-space indent marker + top-level list の混在で両方 emit される。
-
-        ``    - codeish`` は active_list が無い状態で line-based regex が拾い、
-        新 active (body_indent=6) を作る。続く ``- real`` (indent=0) は body_indent=6
-        を下回るため active_list flush + 新 active emit の 2 segment になる。
-        """
-        md = "    - codeish\n- real\n"
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item", "unordered-list-item"]
-        assert [s["textNorm"] for s in segs] == ["codeish", "real"]
-
-    def test_fallback_then_trailing_paragraph(self):
-        """4-space indent marker の後に blank + 1-space indent content は別 segment。
-
-        ``    - codeish\\n\\n x\\n``: ``    - codeish`` が list-item emit を発火、
-        続く blank 行 peek で次の `` x`` を判定。``x`` の leading_ws=1 < body_indent=6
-        → active flush + paragraph emit の 2 segment。
-        """
-        md = "    - codeish\n\n x\n"
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item", "paragraph"]
-        assert segs[0]["textNorm"] == "codeish"
-        assert segs[1]["textNorm"] == "x"
-
-    def test_multi_fallback_prefix_and_real_list(self):
-        """prefix に multiple 4-space fallback markers + 本 list の組合せ。"""
-        md = "    - codeish\n    - more\n- real\n"
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["unordered-list-item"] * 3
-        assert [s["textNorm"] for s in segs] == ["codeish", "more", "real"]
-
-    def test_hard_break_absorbs_equal_body_indent_text(self):
-        """``1. step\\`` + indent == body_indent の next line は flatten。"""
-        md = "1. Step one\\\n   Next sentence.\n"
-        segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        assert kinds == ["ordered-list-item"]
-        assert segs[0]["textNorm"] == "step one\\ next sentence."
+    def test_four_space_indent_markers_are_code_blocks(self):
+        """CommonMark: top-level 4-space indent は indented code block (旧 fallback 廃止)。"""
+        cases = {
+            "    - codeish\n": [("code-block", "- codeish")],
+            "    1. codeish\n": [("code-block", "1. codeish")],
+            "    - codeish\n- real\n": [
+                ("code-block", "- codeish"),
+                ("unordered-list-item", "real"),
+            ],
+            "    - codeish\n\n x\n": [("code-block", "- codeish"), ("paragraph", "x")],
+            "    - codeish\n    - more\n- real\n": [
+                ("code-block", "- codeish - more"),
+                ("unordered-list-item", "real"),
+            ],
+        }
+        for md, expected in cases.items():
+            segs = extract_segments_from_markdown(md)
+            assert [(s["segmentKind"], s["textNorm"]) for s in segs] == expected, md
 
     def test_top_level_fence_still_terminates_list_region(self):
         """top-level (non-indented) fence は list region を終了させる。
@@ -516,20 +463,14 @@ class TestListRegionEdgeCases:
             "unordered-list-item",
         ]
 
-    def test_indented_table_inside_list_mjs_behavior(self):
-        """indent された markdown table は line-based で table-cell emit される。
-
-        ``_TABLE_ROW_RE = ^\\|.+\\|\\s*$`` は trimmed 行で match するため
-        ``  | h1 | h2 |`` は match する。結果 table-cell として emit される
-        (separator row skip、header row は次行が separator のため skip)。
-        """
+    def test_indented_table_inside_list_flattens_into_item(self):
+        """list item 内の table は EN と同じく item text に flatten される (header は除外)。"""
         md = "## X\n\n- item with table\n\n  | h1 | h2 |\n  | - | - |\n  | a | b |\n"
         segs = extract_segments_from_markdown(md)
-        kinds = [s["segmentKind"] for s in segs]
-        # heading + list item + 2 table-cell (data row のみ; header / separator は skip)
-        assert kinds[0] == "heading"
-        assert "unordered-list-item" in kinds
-        assert kinds.count("table-cell") == 2
+        assert [(s["segmentKind"], s["textNorm"]) for s in segs] == [
+            ("heading", "x"),
+            ("unordered-list-item", "item with table a b"),
+        ]
 
     def test_list_with_blank_and_indented_content_line(self):
         """blank 行 + 4-space indent 行 は Issue #368 flatten で吸収される。
@@ -588,3 +529,87 @@ class TestSectionPath:
         paragraphs = [s for s in segs if s["segmentKind"] == "paragraph"]
         assert paragraphs[0]["sectionPath"] == "A > A1"
         assert paragraphs[1]["sectionPath"] == "B"
+
+
+def kinds(md: str) -> list[str]:
+    return [s["segmentKind"] for s in extract_segments_from_markdown(md)]
+
+
+def texts(md: str) -> list[str]:
+    return [s["textNorm"] for s in extract_segments_from_markdown(md)]
+
+
+def test_line_is_none():
+    assert [s["line"] for s in extract_segments_from_markdown("a\n\nb\n")] == [None, None]
+
+
+def test_callout_body_segment():
+    assert kinds(":::note\nbody\n:::\n") == ["callout-body"]
+
+
+def test_callout_marker_inside_fence_stays_code():
+    assert kinds("```\n:::note\n```\n") == ["code-block"]
+
+
+def test_details_with_markdown_body():
+    assert kinds("<details>\n<summary>S</summary>\n\nbody\n\n</details>\n") == [
+        "details-summary",
+        "paragraph",
+    ]
+
+
+def test_heading_anchor_stripped():
+    assert texts("## 見出し {#id}\n") == ["見出し"]
+
+
+def test_image_only_list_item_matches_en():
+    md = extract_segments_from_markdown("1. a\n2. ![x](y.png)\n3. b\n")
+    en = extract_segments_from_html(
+        "<ol><li>a</li><li><img src='y.png'/></li><li>b</li></ol>",
+        slug="x",
+        callout_allow_slugs=None,
+    )
+    assert [s["textNorm"] for s in md] == [s["textNorm"] for s in en]
+
+
+def test_code_block_inside_list_does_not_break_headings():
+    assert kinds("- ```\n  x\n  ```\n\n## h\n")[-1] == "heading"
+
+
+def test_unclosed_callout_does_not_swallow_following_heading():
+    assert "heading" in kinds(":::note\nbody\n\n## h\n")
+    # heading の後ろの本文も callout に吸い込まれない
+    assert kinds(":::note\nbody\n\n## h\n\npara\n") == ["callout-body", "heading", "paragraph"]
+
+
+def test_unclosed_fence_is_reported_as_code_to_end():
+    assert kinds("para\n\n```\nx\n\n## h\n") == ["paragraph", "code-block"]
+
+
+def test_indented_callout_nests_inside_list_item_like_en():
+    md = extract_segments_from_markdown("1. a\n\n   :::note\n   body\n   :::\n")
+    # EN snapshot と同じく block 間に改行を置く (改行なしだと EN extractor は "abody")
+    en = extract_segments_from_html(
+        '<ol><li>a\n<div class="note"><p>body</p></div></li></ol>',
+        slug="x",
+        callout_allow_slugs=None,
+    )
+    assert [s["segmentKind"] for s in md] == ["ordered-list-item"]
+    assert [(s["segmentKind"], s["textNorm"]) for s in md] == [
+        (s["segmentKind"], s["textNorm"]) for s in en
+    ]
+
+
+def test_hard_break_continuation_differs_from_separated_paragraph():
+    # 前 PR で corpus を変換した理由: 前者の b は list item 内、後者は独立 paragraph
+    lazy = extract_segments_from_markdown("4. a\\\nb\n5. c\n")
+    separated = extract_segments_from_markdown("4. a\n\nb\n\n5. c\n")
+    assert [(s["segmentKind"], s["textNorm"]) for s in lazy] == [
+        ("ordered-list-item", "a b"),
+        ("ordered-list-item", "c"),
+    ]
+    assert [(s["segmentKind"], s["textNorm"]) for s in separated] == [
+        ("ordered-list-item", "a"),
+        ("paragraph", "b"),
+        ("ordered-list-item", "c"),
+    ]
