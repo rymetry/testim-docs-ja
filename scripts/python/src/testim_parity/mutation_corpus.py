@@ -574,6 +574,8 @@ _TOKEN_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"--[\w-]+", re.ASCII),
 )
 
+_TABLE_CELL_IMAGE_RE = re.compile(r"!\[[^\]]*\]\([^)]*\)")
+
 _DROP_SKIP_KINDS: frozenset[str] = frozenset(
     {"frontmatter", "code", "code-fence", "blank", "image"}
 )
@@ -592,8 +594,16 @@ def drop_invariant_token(md: str, nth: int = 0) -> dict[str, Any] | None:
         # table separator 行は ``--[\w-]+`` に誤マッチして cascade を起こすため除外
         if _TABLE_SEPARATOR_LINE_RE.match(line["text"]):
             continue
+        # table cell の画像 URL は image_parity_issues が検証するため対象外 (image 行の skip と同じ)
+        image_spans = (
+            [m.span() for m in _TABLE_CELL_IMAGE_RE.finditer(line["text"])]
+            if line["kind"] == "table"
+            else []
+        )
         for pattern in _TOKEN_PATTERNS:
             for match in pattern.finditer(line["text"]):
+                if any(s <= match.start() < e for s, e in image_spans):
+                    continue
                 raw_candidates.append(
                     {
                         "lineIndex": line["index"],

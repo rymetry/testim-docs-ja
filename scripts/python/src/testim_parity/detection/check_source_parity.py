@@ -47,7 +47,6 @@ from ..baseline import (
     tag_issues_with_baseline,
 )
 from ..checks import (
-    compare_snapshot_structure,
     image_parity_issues,
     load_sidebar_slugs,
     load_sidebar_slugs_ordered,
@@ -55,11 +54,13 @@ from ..checks import (
 )
 from ..en_source_patches import create_en_source_patch_coverage
 from ..glossary_mask import create_mask_coverage, mask_segment_text
+from ..html_structure import compare_html_structure
 from ..issue_state import (
     is_advisory_only_parity_issue,
     is_non_blocking_parity_issue,
     is_valid_acknowledged_issue,
 )
+from ..ja_render import render_ja_markdown
 from ..page_coverage import check_page_coverage, check_single_page_snapshot
 from ..preprocess_en import preprocess_en_html
 from ..project import (
@@ -77,7 +78,6 @@ from ..source_usability import detect_source_usability
 from ..summary import summarize_parity_results
 from ..summary_format import format_source_unusable_section
 from ..sync_health import build_run_scope, validate_run_linkage
-from ..turndown import convert_en_html_to_md
 from ..types import ISSUE_SEVERITY
 from .check_patch_review_cadence import (
     collect_overdue_patches,
@@ -130,6 +130,24 @@ def _build_segment_inconclusive_issue(
         "inconclusiveReason": reason,
         "detail": f"alignment inconclusive [{category_str}]: {reason}",
     }
+
+
+def _structure_issues(en_html: str, ja_body: str, slug: str, err: TextIO) -> list[dict[str, Any]]:
+    """DOM 構造比較。失敗はその page の ``source-fetch-error`` にして run を続ける。
+
+    segment 抽出失敗の fallback からも呼ばれ、同じ BS4 / markdown-it 経路で再失敗し得る。
+    """
+    try:
+        return compare_html_structure(en_html, render_ja_markdown(ja_body), slug=slug)
+    except Exception as exc:  # noqa: BLE001 — 1 page の失敗で run 全体を止めない
+        print(f"structure comparison failed for {slug}: {exc}.", file=err)
+        return [
+            {
+                "type": "source-fetch-error",
+                "detail": f"構造比較失敗: {exc}",
+                "severity": ISSUE_SEVERITY["source-fetch-error"],
+            }
+        ]
 
 
 def compute_exit_code(summary: Any, fail_on: str | None) -> int:
@@ -465,7 +483,6 @@ def check_source_parity(
             raw_en_html = snapshot_path.read_bytes().decode("utf-8")
             snapshot_fingerprint = compute_snapshot_fingerprint(raw_en_html)
 
-            en_body: str | None = None
             en_html: str | None = None
             try:
                 en_html = preprocess_en_html(
@@ -486,22 +503,6 @@ def check_source_parity(
                 )
 
             if en_html is not None:
-                try:
-                    en_body = convert_en_html_to_md(en_html)
-                except Exception as exc:  # noqa: BLE001
-                    print(
-                        f"turndown failed for {file_slug}: {exc}. Skipping snapshot comparison.",
-                        file=err,
-                    )
-                    issues.append(
-                        {
-                            "type": "source-fetch-error",
-                            "detail": f"HTML→Markdown 変換失敗: {exc}",
-                            "severity": ISSUE_SEVERITY["source-fetch-error"],
-                        }
-                    )
-
-            if en_body is not None and en_html is not None:
                 en_segments: list[Any] = []
                 ja_segments: list[Any] = []
                 extract_error: Exception | None = None
@@ -558,7 +559,7 @@ def check_source_parity(
                             str(extract_error), "align-exception", None
                         )
                     )
-                    issues.extend(compare_snapshot_structure(en_body, doc["body"]))
+                    issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
                 else:
                     alignment: dict[str, Any] | None = None
                     try:
@@ -577,7 +578,7 @@ def check_source_parity(
                         issues.append(
                             _build_segment_inconclusive_issue(str(exc), "align-exception", None)
                         )
-                        issues.extend(compare_snapshot_structure(en_body, doc["body"]))
+                        issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
 
                     if alignment is not None:
                         segment_issues = parity_diffs_to_issues(alignment["diffs"])
@@ -590,13 +591,13 @@ def check_source_parity(
                                     alignment.get("inconclusiveMeta"),
                                 )
                             )
-                            issues.extend(compare_snapshot_structure(en_body, doc["body"]))
+                            issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
                         else:
                             issues.extend(segment_issues)
-                            issues.extend(compare_snapshot_structure(en_body, doc["body"]))
+                            issues.extend(_structure_issues(en_html, doc["body"], file_slug, err))
 
                 if not usability_issue:
-                    # EN 基準の画像 枚数 / 重複 / 順序 検証。compare_snapshot_structure と
+                    # EN 基準の画像 枚数 / 重複 / 順序 検証。compare_html_structure と
                     # 同じ非 usability ケースで実行する。EN は en_html (生 HTML) の
                     # src / href から抽出し、turndown の title 混入を回避する。
                     issues.extend(image_parity_issues(en_html, doc["body"]))

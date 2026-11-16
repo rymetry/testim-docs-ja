@@ -52,7 +52,8 @@ Testim は、1 つ以上の劣化したロケーターが自動改善された�
 
 ![自動改善されたロケーターの詳細情報が表示された画面](/images/test-management/locators-auto-improve/1599496-Testim_575a.png)
 
-右側に**Filter Test**ペインが開きます。\
+右側に**Filter Test**ペインが開きます。
+
 2. **Filter Test**ペインで、下にスクロールして**Auto Improved**トグルを選択します。
 
 ![自動改善対象のステップに Self healing アイコンが表示されている画面](/images/test-management/locators-auto-improve/bcd9e8a-Testim_583b_r.png)
@@ -76,7 +77,8 @@ Testim は、1 つ以上の劣化したロケーターが自動改善された�
 
 ![自動改善されたロケーターと元のロケーターの差分を比較する画面](/images/test-management/locators-auto-improve/5667d75-Testim_577a.png)
 
-**Pull Requests**タブが表示されます。\
+**Pull Requests**タブが表示されます。
+
 2. **Allow Auto-Improve on master**スイッチを右にトグルします。
 
 ![ロケーター自動改善の結果がテスト実行結果画面に表示されている様子](/images/test-management/locators-auto-improve/f1985b7-Testim_586a.png)

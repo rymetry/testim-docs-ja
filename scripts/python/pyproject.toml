@@ -68,14 +68,14 @@ markers = [
   # exclusion / nightly escalation contract as ``boundary``.
   "recall: mutation recall (9/9 = 100%, full-repo manifest walk)",
   "integration: full pipeline",
-  # 288-page corpus conformance (segments_en + turndown + align 全ページ走査)。
+  # 288-page corpus conformance (segments_en + align 全ページ走査)。
   # PR B (Phase 5 CI 高速化) で slug-parametrize + pytest-xdist ``-n auto
   # --dist load`` で並列化した。Phase 6b cutover で mjs 削除と同時に align を
   # 本 marker に合流させた (committed ``corpus_golden.jsonl`` の ``suite="align"``
   # を load して byte 比較)。``corpus`` は default で CI / local の両方から除外し、
   # pytest-xdist 込みの実行を ``uv run pytest -m corpus -n auto --dist load`` として
   # 別 job (``python-corpus``) で走らせる (docs/SYSTEM_SPEC.md 参照)。
-  "corpus: 288-page corpus conformance (segments_en + turndown + align, xdist 対応)",
+  "corpus: 288-page corpus conformance (segments_en + align, xdist 対応)",
   # Phase 6 atomic cutover の self-enforcing gate。Phase 5 で port 中に
   # 発覚した Python extractor / align drift を Phase 6 cutover PR で解消したかを
   # auto audit する。``_PY_XFAIL_SLUGS`` / ``_PY_EXTRACTOR_DRIFT_SLUGS`` 等の
@@ -109,7 +109,7 @@ markers = [
 # opt-in に寄せる方針。Phase 6b cutover で ``slow`` marker は retire された
 # (align conformance が ``corpus`` に合流)。
 #
-# - ``corpus`` (288-page segments_en + turndown + align conformance, xdist 対応)
+# - ``corpus`` (288-page segments_en + align conformance, xdist 対応)
 #   は ~10s で走る軽量 gate だが ``python-fast`` の coverage 計測とは独立 run
 #   したいため別 job ``python-corpus`` で ``uv run pytest -m corpus -n auto
 #   --dist load`` として走らせる。
@@ -182,7 +182,7 @@ disallow_untyped_defs = false
 # ``turndown.py`` subclasses ``MarkdownConverter`` whose package lacks stubs.
 # Inheriting from Any-typed class + accessing its attrs (``self.options``, nested
 # ``DefaultOptions`` / ``Options``) surfaces multiple name-defined / misc errors.
-# The module is exercised by conformance + unit tests against mjs turndown, so
+# The module is exercised by unit tests against mjs turndown, so
 # runtime correctness is covered; relax mypy here rather than sprinkle ignores.
 module = "testim_parity.turndown"
 disable_error_code = ["name-defined", "attr-defined", "no-any-return", "misc"]

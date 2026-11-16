@@ -2,13 +2,12 @@
 
 conformance test (test_checks_parity.py) が mjs との byte 一致を担当。
 ここでは is_english_only_line の edge case / local_check の line-number 配線 /
-compare_snapshot_structure の issue 発火条件を確認する。
+image_parity_issues の issue 発火条件を確認する。
 """
 
 from __future__ import annotations
 
 from testim_parity.checks import (
-    compare_snapshot_structure,
     image_parity_issues,
     is_english_only_line,
     load_sidebar_slugs,
@@ -83,41 +82,6 @@ def test_local_check_detects_jsx_callout():
     doc = {"body": "## Intro\n\n<Callout type='note'>body</Callout>"}
     issues = local_check(doc)
     assert any(i["type"] == "jsx-callout" for i in issues)
-
-
-# --- compare_snapshot_structure --------------------------------------------
-
-
-def test_compare_snapshot_section_count_mismatch():
-    en = "## A\ntxt\n\n## B\ntxt"
-    ja = "## A\ntxt"
-    issues = compare_snapshot_structure(en, ja)
-    assert any(i["type"] == "section-count-mismatch" for i in issues)
-
-
-def test_compare_snapshot_clean():
-    en = "## A\n\nparagraph content here\n"
-    ja = "## A\n\nparagraph content here\n"
-    issues = compare_snapshot_structure(en, ja)
-    # 同一 body なので issue 無し (artifacts field も不要)
-    assert issues == []
-
-
-def test_compare_snapshot_table_shape_mismatch():
-    en = "| a | b |\n| - | - |\n| 1 | 2 |"
-    ja = "| a |\n| - |\n| 1 |"
-    issues = compare_snapshot_structure(en, ja)
-    assert any(i["type"] == "table-shape-mismatch" for i in issues)
-
-
-def test_compare_snapshot_artifacts_propagate():
-    en = "<details>hi</details>\n\n## Sec\npara"
-    ja = "## Sec\npara"
-    issues = compare_snapshot_structure(en, ja)
-    # EN has <details> → artifacts field が全 issue に乗る
-    if issues:
-        for issue in issues:
-            assert issue.get("artifacts") == ["EN uses <details> blocks"]
 
 
 # --- image_parity_issues (EN 基準の画像枚数 / 重複 / 順序) -------------------
@@ -208,15 +172,6 @@ def test_image_parity_ja_astro_image_tag_counted():
     en_html = '<img src="images/aaa1111-foo.png" />'
     ja = '<Image src="/images/x/aaa1111-foo.png" alt="foo" />'
     assert image_parity_issues(en_html, ja) == []
-
-
-def test_compare_snapshot_no_longer_emits_image_order():
-    # 画像順 / 枚数の検出は image_parity_issues (EN 生 HTML 基準) に統合済み。
-    # compare_snapshot_structure は image-order-mismatch を emit しない。
-    en = "![a](/img/aaa1111-a.png)\n\n![b](/img/bbb2222-b.png)"
-    ja = "![b](/img/bbb2222-b.png)\n\n![a](/img/aaa1111-a.png)"
-    issues = compare_snapshot_structure(en, ja)
-    assert all(issue["type"] != "image-order-mismatch" for issue in issues)
 
 
 def test_image_parity_en_query_string_counted():

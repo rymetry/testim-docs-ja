@@ -35,6 +35,7 @@ class TestIssueSeverity:
     def test_count_mismatches_are_signal(self):
         for t in (
             "paragraph-count-mismatch",
+            "code-block-count-mismatch",
             "bullet-count-mismatch",
             "step-count-mismatch",
             "section-count-mismatch",
@@ -63,6 +64,7 @@ class TestIssueSeverity:
 class TestCoarseSignalTypes:
     def test_contains_only_count_and_shape_mismatches(self):
         assert "paragraph-count-mismatch" in COARSE_SIGNAL_TYPES
+        assert "code-block-count-mismatch" in COARSE_SIGNAL_TYPES
         assert "step-count-mismatch" in COARSE_SIGNAL_TYPES
         assert "table-shape-mismatch" in COARSE_SIGNAL_TYPES
 

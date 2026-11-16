@@ -97,7 +97,9 @@ CLI を使用してテストが実行されると、Sealights はこのコマン
 
 Testim で、[コマンドラインインターフェイス（CLI）](/docs/running-tests/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
 
-- `--sealights-build-session-id [sealights-suid-session-id]`
+- ```shell
+  --sealights-build-session-id [sealights-suid-session-id]
+  ```
 
 ### labIdオプション
 
@@ -121,13 +123,17 @@ Sealights で、`labId`が割り当てられたら、次の画面で見つける
 
 Testim で、[コマンドラインインターフェイス（CLI）](/docs/running-tests/the-command-line-cli)を使用してテストを実行し、実行に次のオプションを追加します:
 
-- `--sealights-lab-id [sealights-lab-id]`
+- ```shell
+  --sealights-lab-id [sealights-lab-id]
+  ```
 
 ### test-stageオプション
 
 通常、Sealights統合ではテストステージ名Testim Automationを使用します。ただし、これをオーバーライドしてカスタム名を使用できます。CLI実行中は常に、タグセクションで`Testim`を送信することをお勧めします。このベストプラクティスにより、テストの起源が識別されます。カスタムテストステージ名を使用する場合は、[コマンドラインインターフェイス(CLI)](/docs/running-tests/the-command-line-cli)を使用し、実行に次のオプションを追加できます:
 
-- `--sealights-test-stage [sealights-test-stage-name]`
+- ```shell
+  --sealights-test-stage [sealights-test-stage-name]
+  ```
 
 ## スケジューラーを使用して Sealights 統合でテストを実行する
 

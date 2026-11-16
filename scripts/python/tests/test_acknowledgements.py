@@ -256,7 +256,12 @@ def test_validate_missing_schema_version() -> None:
 
 @pytest.mark.parametrize(
     "coarse_type",
-    ["paragraph-count-mismatch", "heading-mismatch", "table-cell-token-mismatch"],
+    [
+        "paragraph-count-mismatch",
+        "code-block-count-mismatch",
+        "heading-mismatch",
+        "table-cell-token-mismatch",
+    ],
 )
 def test_validate_rejects_coarse_audit_signal(coarse_type: str) -> None:
     entry = _ack_entry(issueType=coarse_type)
@@ -364,6 +369,7 @@ def test_non_acknowledgeable_types_contains(ack_type: str) -> None:
 
 def test_non_acknowledgeable_types_does_not_contain_coarse() -> None:
     assert "paragraph-count-mismatch" not in NON_ACKNOWLEDGEABLE_TYPES
+    assert "code-block-count-mismatch" not in NON_ACKNOWLEDGEABLE_TYPES
 
 
 # --- snapshot fingerprint format -------------------------------------------

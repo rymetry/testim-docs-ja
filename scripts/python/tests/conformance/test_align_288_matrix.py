@@ -4,7 +4,7 @@ Phase 6b cutover 前は mjs harness を毎回 spawn して align の byte parity
 確認していたが、mjs 削除に伴い **committed golden JSONL 比較** に移行した。
 oracle は ``scripts/python/tests/conformance/__oracle__/corpus_golden.jsonl`` の
 ``suite="align"`` 行を読み、slug 毎に ``align_segments`` の出力を canonical
-SHA-256 で比較する。Phase 6a の segments_en / turndown と同じ契約で ``corpus``
+SHA-256 で比較する。Phase 6a の segments_en と同じ契約で ``corpus``
 marker に合流し、pytest-xdist の worker に均等分散する。
 
 Drift 検知:

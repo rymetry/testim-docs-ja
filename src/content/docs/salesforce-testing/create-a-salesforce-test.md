@@ -265,10 +265,10 @@ Salesforce テストは、接続された Salesforce 環境に接続し、テス
 3. テストを実行して環境にログインし、追加のステップを記録できるようにします。
 4. テストで、目的のステップの隣にある**+**ボタンの上にマウスを移動し、**Record**ボタンをクリックします。レコーダーは、青いクラウドアイコンで示される**Salesforce モード**で自動的に有効になります。これは、アプリケーションとのインタラクションが、関連する場合に Salesforce ステップを生成することを意味します。
 
-![ログイン完了後の Salesforce 画面](/images/salesforce-testing/create-a-salesforce-test/1a9ac07-afterlogin.png)
+5. ![ログイン完了後の Salesforce 画面](/images/salesforce-testing/create-a-salesforce-test/1a9ac07-afterlogin.png)
 
-5. Salesforce アプリケーションとやり取りしてステップを生成します。Salesforce ステップはクラウドアイコンで示されます。
+6. Salesforce アプリケーションとやり取りしてステップを生成します。Salesforce ステップはクラウドアイコンで示されます。
 
 ![Salesforce ステップが並んだテストフロー](/images/salesforce-testing/create-a-salesforce-test/90023bd-salesforcesteps.png)
 
-6. テストの作成が完了したら、**Save**をクリックします。
+7. テストの作成が完了したら、**Save**をクリックします。

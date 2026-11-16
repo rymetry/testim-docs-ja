@@ -9,7 +9,8 @@ name: Deep Audit Docs Checks
 #   sync-detection-issues.cjs would refuse the sync if you wired it
 #   in here, but please do not rely on the guard alone — keep the
 #   sync call out of this file. The audit-only signals
-#   (paragraph-count-mismatch, heading-mismatch, table-cell-* etc.)
+#   (paragraph-count-mismatch, code-block-count-mismatch, heading-mismatch,
+#   table-cell-* etc.)
 #   are visible in the artifacts uploaded below for human review.
 # - Managed issue updates always come from scheduled-actionable.yml.
 
