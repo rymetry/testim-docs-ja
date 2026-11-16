@@ -13,6 +13,7 @@ import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 import frontmatter
 
@@ -77,10 +78,21 @@ _CALLOUT_RE = re.compile(r"^:{3,}\s*([a-zA-Z][a-zA-Z-]*)(?:\{[^}]*\})?\s*$", re.
 _LIST_NESTED_CALLOUT_RE = re.compile(
     r"^[ \t]+:{3,}\s*[a-zA-Z][a-zA-Z-]*(?:\{[^}]*\})?\s*$", re.MULTILINE
 )
-_MARKDOWN_LINK_RE = re.compile(r"\]\(/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^)]+)?\)")
+# リンク先は ``/docs/<slug>`` (末尾 ``/`` 可)、``/docs/<slug>#frag``、同一ページの ``#frag``。
+# どちらの group も空なら内部リンクではない。
+_LINK_TARGET = r"(?:/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)/?)?"
+# shortcut: リンクを body 全体への正規表現で拾う。どの量指定子も次の ``(``・``<``・引用符で
+# 止まる形にして、閉じないリンクが並んでも線形時間に収めている。その代わり、括弧を含む
+# フラグメント ``(#a(b))`` と、``href`` より前の属性値に ``<`` がある ``<a>`` は検査されない。
+# 参照形式 ``[t][ref]``、``(<#frag>)``、引用符なしの ``href`` も対象外で、HTML コメント内や
+# ``~~~`` フェンス内のリンク、画像 ``![alt](#frag)`` は検査される (いずれも現行コンテンツに
+# 該当なし)。使い始めたら Markdown パーサーに置き換える。
+_MARKDOWN_LINK_RE = re.compile(
+    rf"""\]\([ \t]*{_LINK_TARGET}(#[^()\s]*)?(?:[ \t]+(?:"[^"\n]*"|'[^'\n]*'))?[ \t]*\)"""
+)
+# ``\shref`` は ``data-href`` などを除くため。``href`` が ``<a`` より後の行にあっても拾う。
 _HTML_LINK_RE = re.compile(
-    r"""<a\b[^>]*href=["']/docs/([a-z0-9_-]+(?:/[a-z0-9_-]+)*)(#[^\s"']*)?\s*["'][^>]*>""",
-    re.IGNORECASE,
+    rf"""<a\b[^<>]*\shref=["']{_LINK_TARGET}(#[^\s"']*)?\s*["']""", re.IGNORECASE
 )
 _IMAGE_RE = re.compile(r"""!\[[^\]]*]\((/images/[^)]+)\)|<img[^>]+src=["'](/images/[^"']+)["']""")
 
@@ -113,7 +125,12 @@ def _parse_frontmatter_with_lines(content: str) -> tuple[dict[str, Any], str, in
 
 
 def _strip_code(body: str) -> str:
-    return _INLINE_CODE_RE.sub("", _CODE_BLOCK_RE.sub("", body))
+    """コードブロックとインラインコードを消す。報告する行番号がずれないよう改行は残す。"""
+
+    def _newlines_only(match: re.Match[str]) -> str:
+        return "\n" * match.group().count("\n")
+
+    return _INLINE_CODE_RE.sub(_newlines_only, _CODE_BLOCK_RE.sub(_newlines_only, body))
 
 
 def _to_absolute_line(body_line_number: int, body_start_line: int) -> int:
@@ -246,37 +263,48 @@ def check_links(
     all_slugs: set[str] | None = None,
     headings_by_slug: dict[str, set[str]] | None = None,
 ) -> None:
-    if not all_slugs:
-        return
     body_stripped = _strip_code(body)
-    stripped_lines = body_stripped.split("\n")
+    own_headings = heading_ids(body)
 
-    def _validate(slug_path: str, fragment: str | None, line: int) -> None:
-        display_path = f"/docs/{slug_path}"
-        if slug_path not in all_slugs:
+    def _validate(slug_path: str | None, fragment: str | None, line: int) -> None:
+        headings: set[str] | None
+        if slug_path is None:  # 同一ページの ``#frag``
+            headings, display_path = own_headings, "this page"
+        elif not all_slugs:
+            return
+        else:
+            display_path = f"/docs/{slug_path}"
+            if slug_path not in all_slugs:
+                reporter.err(
+                    "link-target-missing",
+                    f"Internal link target does not exist: {display_path}",
+                    line,
+                )
+                return
+            headings = (headings_by_slug or {}).get(slug_path)
+        fragment_id = (fragment or "")[1:]
+        if headings is None or not fragment_id:
+            return
+        # ブラウザと同じく、そのままの id と percent-decode した id の両方で探す。
+        # どちらにも無い ``#top`` (大文字小文字を問わない) はページ先頭を指す。
+        if fragment_id.lower() == "top":
+            return
+        if fragment_id not in headings and unquote(fragment_id) not in headings:
             reporter.err(
-                "link-target-missing",
-                f"Internal link target does not exist: {display_path}",
-                line,
-            )
-            return
-        if not fragment or headings_by_slug is None:
-            return
-        fragment_id = fragment[1:]
-        headings = headings_by_slug.get(slug_path)
-        if headings is not None and fragment_id not in headings:
-            reporter.warn(
                 "link-fragment-missing",
                 f'Fragment "{fragment}" not found in {display_path}',
                 line,
             )
 
-    for index, line in enumerate(stripped_lines):
-        line_number = _to_absolute_line(index + 1, body_start)
-        for match in _MARKDOWN_LINK_RE.finditer(line):
-            _validate(match.group(1), match.group(2), line_number)
-        for match in _HTML_LINK_RE.finditer(line):
-            _validate(match.group(1), match.group(2), line_number)
+    matches = [*_MARKDOWN_LINK_RE.finditer(body_stripped), *_HTML_LINK_RE.finditer(body_stripped)]
+    body_line, counted_to = 1, 0
+    for match in sorted(matches, key=lambda m: m.start()):
+        if match.group(1) is None and match.group(2) is None:
+            continue
+        # 毎回先頭から数え直すとリンク数 x 本文長になるので、前回位置からの差分だけ数える
+        body_line += body_stripped.count("\n", counted_to, match.start())
+        counted_to = match.start()
+        _validate(match.group(1), match.group(2), _to_absolute_line(body_line, body_start))
 
 
 def check_feature_names(body: str, body_start: int, reporter: _Reporter) -> None:
