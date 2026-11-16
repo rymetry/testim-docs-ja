@@ -39,7 +39,7 @@ Testim では次の種類の検証を利用できます。
 - **[Validate HTML attribute](/docs/advanced-editing/validations/html-attribute-validation)** — アプリ内の任意の HTML 属性を検証します。
 - **[Validate checkbox](/docs/advanced-editing/validations/checkbox-and-radio-button-validation)** — チェックボックスがオン/オフであることを検証します。
 - **[Validate radio button](/docs/advanced-editing/validations/checkbox-and-radio-button-validation)** — ラジオボタンがオン/オフであることを検証します。
-- **[Validate API](/docs/advanced-editing/api-testing)** — UI の要素と API レスポンス値を突き合わせて検証します。
+- **[Validate API](/docs/advanced-editing/api-testing#validate-api-ステップの追加)** — UI の要素と API レスポンス値を突き合わせて検証します。
 - **[Visual validation](/docs/advanced-editing/validations/pixel-validation-and-pixel-wait-for)** — 要素／ビューポート／全ページのビジュアル差異を、ピクセル単位で比較検証します。
 - **[Add network validation](/docs/advanced-editing/validations/add-network-validation)** — ネットワークリクエストが期待どおりに実行されたかを検証します。
 - **[Add CLI validations and actions](/docs/advanced-editing/validations/add-cli-validations-and-actions)** — テスト内から Node.js スクリプトを実行します。

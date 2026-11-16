@@ -428,6 +428,128 @@
       "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-022",
       "addedAt": "2026-04-20",
       "reviewAfter": "2026-10-20"
+    },
+    {
+      "id": "UD-028A-steps-cli-step-href-miswire",
+      "slugs": [
+        "editing-tests/steps",
+        "editing-tests/shareable-steps"
+      ],
+      "defectClass": "href-miswire",
+      "find": "<a href=\"../advanced-editing/validations/validate-download.htm#adding-a-cli-step\">Adding a CLI step</a>",
+      "replace": "<a href=\"../advanced-editing/validations/add-cli-validations-and-actions.htm#adding-a-cli-step\">Adding a CLI step</a>",
+      "rationale": "Upstream href miswire in the step-reference table: the link text names a section that does not exist on the linked page (validate-download.htm); `<a name=\"adding-a-cli-step\">` exists only on `add-cli-validations-and-actions.htm`. JA links to the page that holds the section, so without the patch the EN/JA link-path tokens differ (segment-missing + segment-extra + table-cell-token-mismatch).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-028",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-028B-steps-validate-element-visualization-href-miswire",
+      "slugs": [
+        "editing-tests/steps"
+      ],
+      "defectClass": "href-miswire",
+      "find": "<a href=\"../advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm#adding-a-validate-element-visualization-step\">",
+      "replace": "<a href=\"../advanced-editing/validations/validate-element-visualization.htm#adding-a-validate-element-visualization-step\">",
+      "rationale": "Upstream href miswire in the step-reference table: the link text names a section that does not exist on the linked page (pixel-validation-and-pixel-wait-for.htm); `<a name=\"adding-a-validate-element-visualization-step\">` exists only on `validate-element-visualization.htm`. JA links to the page that holds the section, so without the patch the EN/JA link-path tokens differ (segment-missing + segment-extra + table-cell-token-mismatch).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-028",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-028C-steps-validate-viewport-visualization-href-miswire",
+      "slugs": [
+        "editing-tests/steps"
+      ],
+      "defectClass": "href-miswire",
+      "find": "<p class=\"tableBody\">Validate viewport visualization</p>\r\n                                                    </td>\r\n                                                    <td class=\"TableStyle-Table_new-BodyD-Column2-Body2\">\r\n                                                        <p class=\"tableBody\"><a href=\"../advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm#adding-a-validate-viewport-visualization-or-validate-full-page-visualization-step\"",
+      "replace": "<p class=\"tableBody\">Validate viewport visualization</p>\r\n                                                    </td>\r\n                                                    <td class=\"TableStyle-Table_new-BodyD-Column2-Body2\">\r\n                                                        <p class=\"tableBody\"><a href=\"../advanced-editing/validations/validate-viewport-visualization.htm#adding-a-validate-viewport-visualization-step\"",
+      "rationale": "Upstream href miswire in the step-reference table: the link text names a section that does not exist on the linked page (pixel-validation-and-pixel-wait-for.htm); `<a name=\"adding-a-validate-viewport-visualization-step\">` exists only on `validate-viewport-visualization.htm`. JA links to the page that holds the section, so without the patch the EN/JA link-path tokens differ (segment-missing + segment-extra + table-cell-token-mismatch). The viewport and full-page rows share one href and link text, so the find includes the row label (with the CRLF whitespace between the cells) to tell them apart.",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-028",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-028D-steps-validate-full-page-visualization-href-miswire",
+      "slugs": [
+        "editing-tests/steps"
+      ],
+      "defectClass": "href-miswire",
+      "find": "<p class=\"tableBody\">Validate full-page visualization</p>\r\n                                                    </td>\r\n                                                    <td class=\"TableStyle-Table_new-BodyD-Column2-Body1\">\r\n                                                        <p class=\"tableBody\"><a href=\"../advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm#adding-a-validate-viewport-visualization-or-validate-full-page-visualization-step\"",
+      "replace": "<p class=\"tableBody\">Validate full-page visualization</p>\r\n                                                    </td>\r\n                                                    <td class=\"TableStyle-Table_new-BodyD-Column2-Body1\">\r\n                                                        <p class=\"tableBody\"><a href=\"../advanced-editing/validations/validate-full-page-visualization.htm#adding-a-validate-full-page-visualization-step\"",
+      "rationale": "Upstream href miswire in the step-reference table: the link text names a section that does not exist on the linked page (pixel-validation-and-pixel-wait-for.htm); `<a name=\"adding-a-validate-full-page-visualization-step\">` exists only on `validate-full-page-visualization.htm`. JA links to the page that holds the section, so without the patch the EN/JA link-path tokens differ (segment-missing + segment-extra + table-cell-token-mismatch). Row-label context as in UD-028C.",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-028",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-028E-steps-wait-for-element-visualization-href-miswire",
+      "slugs": [
+        "editing-tests/steps"
+      ],
+      "defectClass": "href-miswire",
+      "find": "<a href=\"../advanced-editing/validations/pixel-validation-and-pixel-wait-for.htm#adding-a-wait-for-element-visualization-step\">",
+      "replace": "<a href=\"../advanced-editing/validations/wait-for-element-visualization.htm#adding-a-wait-for-element-visualization-step\">",
+      "rationale": "Upstream href miswire in the step-reference table: the link text names a section that does not exist on the linked page (pixel-validation-and-pixel-wait-for.htm); `<a name=\"adding-a-wait-for-element-visualization-step\">` exists only on `wait-for-element-visualization.htm`. JA links to the page that holds the section, so without the patch the EN/JA link-path tokens differ (segment-missing + segment-extra + table-cell-token-mismatch).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-028",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-029A-ddt-index-section-visual-editor",
+      "slugs": [
+        "advanced-editing/salesforce-apex-action-step",
+        "advanced-editing/salesforce-auto-login-step",
+        "advanced-editing/validations/validate-element-text"
+      ],
+      "defectClass": "madcap-artifact",
+      "find": "data-driven-testing/index.htm#section-configuring-a-data-driven-test-from-the-visual-editor\">",
+      "replace": "data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm\">",
+      "rationale": "Upstream MadCap cross-reference artifact, same pattern as UD-012: the link targets `data-driven-testing/index.htm#section-...`, a section that was split out of the Data-driven testing parent page into the child page `configuring-a-data-driven-test-from-the-visual-editor.htm`. JA links to the child page that holds the section, so without the patch the EN/JA link-path tokens differ. The find is the href tail so it matches both relative prefixes (`data-driven-testing/` and `../data-driven-testing/`).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-029",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-029B-ddt-index-section-config-file",
+      "slugs": [
+        "advanced-editing/salesforce-apex-action-step",
+        "advanced-editing/salesforce-auto-login-step",
+        "advanced-editing/validations/validate-element-text"
+      ],
+      "defectClass": "madcap-artifact",
+      "find": "data-driven-testing/index.htm#section-configuring-data-driven-tests-using-the-config-file\">",
+      "replace": "data-driven-testing/configuring-data-driven-tests-using-the-config-file.htm\">",
+      "rationale": "Upstream MadCap cross-reference artifact, same pattern as UD-012: the link targets `data-driven-testing/index.htm#section-...`, a section that was split out of the Data-driven testing parent page into the child page `configuring-data-driven-tests-using-the-config-file.htm`. JA links to the child page that holds the section, so without the patch the EN/JA link-path tokens differ. The find is the href tail so it matches both relative prefixes (`data-driven-testing/` and `../data-driven-testing/`).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-029",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-029C-ddt-index-section-csv-excel-upload",
+      "slugs": [
+        "advanced-editing/parameters/passing-parameters-from-excel-file"
+      ],
+      "defectClass": "madcap-artifact",
+      "find": "data-driven-testing/index.htm#section-adding-test-data-by-uploading-a-csv-excel-file\">",
+      "replace": "data-driven-testing/configuring-a-data-driven-test-from-the-visual-editor.htm#adding-test-data-by-uploading-a-csvexcel-file\">",
+      "rationale": "Upstream MadCap cross-reference artifact, same pattern as UD-012: the link targets `data-driven-testing/index.htm#section-...`, a section that was split out of the Data-driven testing parent page into the child page `configuring-a-data-driven-test-from-the-visual-editor.htm`. JA links to the child page that holds the section, so without the patch the EN/JA link-path tokens differ. The find is the href tail so it matches both relative prefixes (`data-driven-testing/` and `../data-driven-testing/`).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-029",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
+    },
+    {
+      "id": "UD-029D-ddt-index-section-external-source",
+      "slugs": [
+        "advanced-editing/parameters/passing-parameters-from-excel-file"
+      ],
+      "defectClass": "madcap-artifact",
+      "find": "data-driven-testing/index.htm#section-data-driven-tests-using-data-from-an-external-source\">",
+      "replace": "data-driven-testing/configuring-data-driven-tests-using-data-from-an-external-source.htm\">",
+      "rationale": "Upstream MadCap cross-reference artifact, same pattern as UD-012: the link targets `data-driven-testing/index.htm#section-...`, a section that was split out of the Data-driven testing parent page into the child page `configuring-data-driven-tests-using-data-from-an-external-source.htm`. JA links to the child page that holds the section, so without the patch the EN/JA link-path tokens differ. The find is the href tail so it matches both relative prefixes (`data-driven-testing/` and `../data-driven-testing/`).",
+      "linkedDefect": "docs/UPSTREAM_DEFECTS.md#UD-029",
+      "addedAt": "2026-11-16",
+      "reviewAfter": "2027-05-16"
     }
   ]
 }

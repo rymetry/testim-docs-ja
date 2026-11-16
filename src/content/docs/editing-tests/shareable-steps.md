@@ -48,7 +48,7 @@ keywords:
     Add CLI validation
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download">
+    <a href="/docs/advanced-editing/validations/add-cli-validations-and-actions#cli-ステップの追加">
      Adding a CLI step
     </a>
    </td>
@@ -125,7 +125,7 @@ keywords:
     Add CLI wait for
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download">
+    <a href="/docs/advanced-editing/validations/add-cli-validations-and-actions#cli-ステップの追加">
      Adding a CLI step
     </a>
    </td>
@@ -172,7 +172,7 @@ keywords:
     Add CLI action
    </td>
    <td style="text-align: left;">
-    <a href="/docs/advanced-editing/validations/validate-download">
+    <a href="/docs/advanced-editing/validations/add-cli-validations-and-actions#cli-ステップの追加">
      Adding a CLI step
     </a>
    </td>
