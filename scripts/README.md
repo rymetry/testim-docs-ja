@@ -150,7 +150,7 @@ uv run python -m testim_parity.detection.check_source_parity --slug=overview/tes
 
 **DOM 構造比較の数え方**: 構造 signal は `testim_parity.html_structure.compare_html_structure(en_html, ja_html, slug=...)` が EN (patched) HTML と JA の rendered HTML を DOM のまま比較して出す (両側同一の規則。詳細はモジュール docstring)。
 
-- section: H2-H4 (先頭の title `<h1>` は除外、以降の `<h1>` は h2 扱い)
+- section: H2-H4 (先頭の title `<h1>` は除外、以降の `<h1>` は h2 扱い)。最初の見出しより前も 1 つの節として数を比較する (見出しが両側に無いページは step 総数と code block 数のみ)
 - step / bullet: `table` の外の `ol > li` / `ul > li` (画像のみの item も数える。nested も数える)
 - 段落: `li` / `table` / `blockquote` / `details` / callout の外でテキストを持つ `<p>`、list item 内の継続段落、`.MCDropDownHead`、block 直下の bare text run
 - コードブロック: `table` の外の `<pre>`

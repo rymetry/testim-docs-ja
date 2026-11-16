@@ -399,3 +399,25 @@ def test_callout_nesting_without_ja_line_has_no_line():
     ja = '<ol><li>a<div class="callout-note"><p>x</p></div></li></ol>'
     nesting = [i for i in issues(en, ja) if i["type"] == "callout-nesting-mismatch"]
     assert [i["line"] for i in nesting] == [None]
+
+
+def test_content_before_the_first_heading_is_compared():
+    en = "<p>intro</p><p>more</p><h2>A</h2><p>x</p>"
+    ja = "<p>導入</p><h2>A</h2><p>x</p>"
+    found = issues(en, ja)
+    assert [i["type"] for i in found] == ["paragraph-count-mismatch"]
+    assert found[0]["detail"] == "冒頭 (最初の見出しより前): 段落数 EN=2, JA=1 (-1)"
+
+
+def test_content_before_the_first_heading_with_repeated_headings():
+    en = "<ul><li>a</li><li>b</li></ul><h2>Try it</h2><p>x</p><h2>Try it</h2><p>y</p>"
+    ja = "<ul><li>a</li></ul><h2>試す 1</h2><p>x</p><h2>試す 2</h2><p>y</p>"
+    found = issues(en, ja)
+    assert [i["type"] for i in found] == ["bullet-count-mismatch"]
+    assert found[0]["detail"] == "冒頭 (最初の見出しより前): 箇条書き数 EN=2, JA=1 (-1)"
+
+
+def test_equal_content_before_the_first_heading_raises_nothing():
+    en = "<p>intro</p><ul><li>a</li></ul><h2>A</h2><p>x</p>"
+    ja = "<p>導入</p><ul><li>あ</li></ul><h2>A</h2><p>x</p>"
+    assert types(en, ja) == []

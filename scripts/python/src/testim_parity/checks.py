@@ -202,32 +202,42 @@ def _compare_section_counts(
     issue_type: str,
     label: str,
 ) -> list[dict[str, Any]]:
-    """文書順に並んだ節別の集計を比較する。節の数が異なる場合は総数を比較する。"""
+    """文書順に並んだ節別の集計を比較する。節の数が異なる場合は総数を比較する。
+
+    最初の見出しより前 (key ``(0, "")``) も 1 つの節として比較する。見出しが両側に無いページは
+    比較しない (従来契約)。
+    """
     issues: list[dict[str, Any]] = []
-    en_sections = [(key, count) for key, count in en_map.items() if key[0]]
-    ja_sections = [(key, count) for key, count in ja_map.items() if key[0]]
+    top = (0, "")
+    en_sections = [(key, count) for key, count in en_map.items() if key != top]
+    ja_sections = [(key, count) for key, count in ja_map.items() if key != top]
 
     if en_sections and len(en_sections) == len(ja_sections):
-        for ((index, en_heading), en_count), (_, ja_count) in zip(
-            en_sections, ja_sections, strict=True
-        ):
+        pairs = [(top, en_map.get(top, 0), ja_map.get(top, 0))]
+        pairs += [
+            (key, en_count, ja_count)
+            for (key, en_count), (_, ja_count) in zip(en_sections, ja_sections, strict=True)
+        ]
+        for (index, en_heading), en_count, ja_count in pairs:
             diff = ja_count - en_count
             if diff:
+                where = "冒頭 (最初の見出しより前)"
+                if index:
+                    where = f'セクション #{index} "{en_heading}"'
                 sign = "+" if diff > 0 else ""
                 issues.append(
                     _with_severity(
                         {
                             "type": issue_type,
                             "detail": (
-                                f'セクション #{index} "{en_heading}": {label} '
-                                f"EN={en_count}, JA={ja_count} ({sign}{diff})"
+                                f"{where}: {label} EN={en_count}, JA={ja_count} ({sign}{diff})"
                             ),
                         }
                     )
                 )
         return issues
 
-    if len(en_sections) == 0 and len(ja_sections) == 0:
+    if not en_sections and not ja_sections:
         return issues
 
     en_total = sum(en_map.values())
