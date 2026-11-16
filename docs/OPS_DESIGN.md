@@ -198,7 +198,7 @@ sticky PR comment (`.github/workflows/ci.yml` の "Sticky PR comment — upstrea
 
 必須検証項目:
 
-1. `/docs/{folder}/{slug}` リンクの参照先ファイルが全件存在するか（HTML `<a href>` 含む）。`#fragment` アンカーがある場合は、対象ファイル内に該当する見出しが存在するかも確認する
+1. `/docs/{folder}/{slug}` リンクの参照先ファイルが全件存在するか（HTML `<a href>` 含む）。`#fragment` アンカーがある場合は、対象ファイル内に該当する見出しが存在するか、その見出しがリンク文言と英語原文の意図に合うかも確認する（`docs/WRITING_GUIDE.md` の内部リンクの補足を参照）
 2. callout 変換後に構文が壊れていないか（引用符の整合、タイトル長、タイプとタイトルの一致）
 3. 残存パターンがないか（`:fa-` マーカー、`> 📘` blockquote、外部 `docs.tricentis.com` リンク）
 4. `updated` フィールドが英語原文の日付のまま維持されているか

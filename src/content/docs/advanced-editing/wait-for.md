@@ -268,4 +268,4 @@ keywords:
 
 ## Wait For ステップでターゲット要素を再割り当て
 
-作成後でも、ターゲット要素やテキストを再割り当てできます。詳細は[ターゲット要素のプロパティ編集](/docs/editing-tests/editing-your-tests/editing-target-element-properties#ターゲット要素のハイライト) を参照してください。
+作成後でも、ターゲット要素やテキストを再割り当てできます。詳細は[ターゲット要素のプロパティ編集](/docs/editing-tests/editing-your-tests/editing-target-element-properties#ターゲット要素の再割り当て) を参照してください。

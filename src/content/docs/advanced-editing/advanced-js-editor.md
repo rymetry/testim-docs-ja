@@ -39,7 +39,7 @@ keywords:
 - [Download validation](/docs/advanced-editing/validations/validate-download)
 - [Email validation](/docs/advanced-editing/validations/email-validation)
 - [Network validation](/docs/advanced-editing/validations/add-network-validation)
-- [Custom wait for](/docs/advanced-editing/wait-for#要素の表示を待つモバイル)
+- [Custom wait for](/docs/advanced-editing/wait-for#カスタム待機web)
 - CLI の wait ステップ
 - ダウンロード完了待機ステップ
 

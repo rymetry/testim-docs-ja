@@ -1,17 +1,25 @@
 """lint_docs の unit test — WRITING_GUIDE 準拠ルールを function 単位で exercise する。
 
 Python 版 ``lint_content(content, file_path, *, all_slugs=None, headings_by_slug=None)`` と
-``to_kebab(text)`` の契約を pin する。
+``heading_slug(text)`` / ``heading_ids(body)`` の契約を pin する。
 """
 
 from __future__ import annotations
 
+import json
+import time
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from testim_parity.tools.lint_docs import lint_content, to_kebab
+from testim_parity.project import PROJECT_ROOT
+from testim_parity.tools.lint_docs import (
+    build_source_anchors,
+    heading_ids,
+    heading_slug,
+    lint_content,
+)
 
 _TEST_PATH = Path("src/content/docs/test.md")
 
@@ -466,7 +474,7 @@ class TestInternalLinkTargets:
         assert hit is not None
         assert hit["level"] == "error"
 
-    def test_path_based_link_with_bad_fragment_warning(self) -> None:
+    def test_path_based_link_with_bad_fragment_error(self) -> None:
         issues = lint_content(
             _make_doc(
                 body="See [section](/docs/overview/testim-overview#nonexistent-section) here.\n"
@@ -477,7 +485,7 @@ class TestInternalLinkTargets:
         )
         hit = next((i for i in issues if i["rule"] == "link-fragment-missing"), None)
         assert hit is not None
-        assert hit["level"] == "warning"
+        assert hit["level"] == "error"
 
     def test_path_based_link_with_valid_fragment_clean(self) -> None:
         issues = lint_content(
@@ -496,6 +504,168 @@ class TestInternalLinkTargets:
             headings_by_slug=_HEADINGS,
         )
         assert _rules(issues, "link-target-missing") == []
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("## Setup\n\nSee [below](#missing).\n", id="same-page-markdown"),
+            pytest.param('## Setup\n\nSee <a href="#missing">below</a>.\n', id="same-page-html"),
+            pytest.param(
+                'See <a\n  href="/docs/overview/testim-overview#missing"\n>overview</a>.\n',
+                id="html-href-on-later-line",
+            ),
+            pytest.param(
+                "See [section](/docs/overview/testim-overview/#missing).\n",
+                id="markdown-trailing-slash",
+            ),
+            pytest.param(
+                'See <a href="/docs/overview/testim-overview/#missing">overview</a>.\n',
+                id="html-trailing-slash",
+            ),
+            pytest.param("## Setup\n\nSee [below](#%E6%A6%82%E8%A6%81).\n", id="percent-encoded"),
+        ],
+    )
+    def test_previously_skipped_link_with_bad_fragment_error(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        hits = _rules(issues, "link-fragment-missing")
+        assert [hit["level"] for hit in hits] == ["error"]
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("## Setup\n\nSee [below](#setup).\n", id="same-page-markdown"),
+            pytest.param('## Setup\n\nSee <a href="#setup">below</a>.\n', id="same-page-html"),
+            pytest.param("## 概要\n\nSee [below](#%E6%A6%82%E8%A6%81).\n", id="percent-encoded"),
+            pytest.param('## Setup\n\n<a href="#">top</a> [top](#)\n', id="empty-fragment"),
+            pytest.param("## Setup\n\n[上へ](#top) [上へ](#TOP)\n", id="top-of-page"),
+            pytest.param(
+                "## Using `testim` CLI\n\nSee [below](#using-testim-cli).\n",
+                id="heading-with-code-span",
+            ),
+            pytest.param("## Setup\n\nSee [below]( #setup ).\n", id="spaces-around-target"),
+            pytest.param(
+                'See <a\n  href="/docs/overview/testim-overview#features"\n>overview</a>.\n',
+                id="html-href-on-later-line",
+            ),
+            pytest.param(
+                "See [section](/docs/overview/testim-overview/#features).\n",
+                id="markdown-trailing-slash",
+            ),
+            pytest.param(
+                "See [section](/docs/overview/testim-overview#%66eatures).\n",
+                id="cross-page-percent-encoded",
+            ),
+        ],
+    )
+    def test_previously_skipped_link_with_valid_fragment_clean(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        assert _rules(issues, "link-fragment-missing", "link-target-missing") == []
+
+    def test_cross_page_fragment_skipped_without_heading_index(self) -> None:
+        issues = lint_content(
+            _make_doc(body="See [section](/docs/overview/testim-overview#missing).\n"),
+            _TEST_PATH,
+            all_slugs=_SLUGS,
+        )
+        assert _rules(issues, "link-fragment-missing", "link-target-missing") == []
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("See [page](/docs/overview/nonexistent#).\n", id="markdown"),
+            pytest.param('See <a href="/docs/overview/nonexistent#">page</a>.\n', id="html"),
+        ],
+    )
+    def test_empty_fragment_link_to_missing_page_is_error(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        assert len(_rules(issues, "link-target-missing")) == 1
+
+    def test_issues_are_reported_in_document_order(self) -> None:
+        body = '## Setup\n\n<a href="#first">x</a> [y](#second)\n\n[z](#third)\n'
+        issues = _rules(lint_content(_make_doc(body=body), _TEST_PATH), "link-fragment-missing")
+        assert [i["message"].split('"')[1] for i in issues] == ["#first", "#second", "#third"]
+
+    def test_same_page_fragment_checked_without_slug_index(self) -> None:
+        issues = lint_content(_make_doc(body="## Setup\n\nSee [below](#missing).\n"), _TEST_PATH)
+        assert len(_rules(issues, "link-fragment-missing")) == 1
+
+    def test_trailing_slash_link_to_missing_page_is_error(self) -> None:
+        issues = lint_content(
+            _make_doc(body="See [page](/docs/overview/nonexistent/).\n"),
+            _TEST_PATH,
+            all_slugs=_SLUGS,
+            headings_by_slug=_HEADINGS,
+        )
+        assert len(_rules(issues, "link-target-missing")) == 1
+
+    def test_multiline_html_link_reports_line_of_tag(self) -> None:
+        body = 'line one\n\nSee <a\n  href="/docs/overview/testim-overview#missing"\n>x</a>.\n'
+        doc = _make_doc(body=body)
+        issues = lint_content(doc, _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS)
+        (hit,) = _rules(issues, "link-fragment-missing")
+        assert doc.split("\n")[hit["line"] - 1].startswith("See <a")
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            pytest.param("## Setup\n\n[s](#setup \"title\") [t](#setup 'title')\n", id="same-page"),
+            pytest.param(
+                'See [o](/docs/overview/testim-overview#features "title").\n', id="cross-page"
+            ),
+            pytest.param('See [o](/docs/overview/testim-overview "title").\n', id="no-fragment"),
+        ],
+    )
+    def test_link_with_title_is_checked_without_the_title(self, body: str) -> None:
+        issues = lint_content(
+            _make_doc(body=body), _TEST_PATH, all_slugs=_SLUGS, headings_by_slug=_HEADINGS
+        )
+        assert _rules(issues, "link-fragment-missing", "link-target-missing") == []
+
+    def test_link_with_title_and_bad_fragment_reports_the_fragment_only(self) -> None:
+        issues = lint_content(_make_doc(body='## Setup\n\n[s](#missing "title")\n'), _TEST_PATH)
+        (hit,) = _rules(issues, "link-fragment-missing")
+        assert hit["message"] == 'Fragment "#missing" not found in this page'
+
+    def test_other_attribute_ending_in_href_is_not_a_link(self) -> None:
+        body = '## Setup\n\n<a href="#setup" data-href="#missing">x</a>\n'
+        issues = lint_content(_make_doc(body=body), _TEST_PATH)
+        assert _rules(issues, "link-fragment-missing") == []
+
+    @pytest.mark.parametrize(
+        "code",
+        [
+            pytest.param("```js\nconst a = 1;\nconst b = 2;\n```", id="fenced-block"),
+            pytest.param("a `code\nspanning lines` b", id="multi-line-code-span"),
+        ],
+    )
+    def test_link_after_code_reports_its_own_line(self, code: str) -> None:
+        doc = _make_doc(body=f"## Setup\n\n{code}\n\nSee [below](#missing).\n")
+        (hit,) = _rules(lint_content(doc, _TEST_PATH), "link-fragment-missing")
+        assert doc.split("\n")[hit["line"] - 1] == "See [below](#missing)."
+
+    @pytest.mark.parametrize(
+        "unit",
+        [
+            pytest.param("<a ", id="unclosed-a"),
+            pytest.param('<a href="#x" ', id="unclosed-a-with-href"),
+            pytest.param('<a href="#x"\n', id="unclosed-a-with-href-per-line"),
+            pytest.param("](#", id="unclosed-same-page-link"),
+            pytest.param("](/docs/a#", id="unclosed-cross-page-link"),
+            pytest.param('](#a "', id="unclosed-link-title"),
+            pytest.param("[x](#setup)\n", id="many-valid-links"),
+        ],
+    )
+    def test_repeated_link_like_input_stays_linear(self, unit: str) -> None:
+        # body 全体に正規表現を当てるので、各開始位置から遠くまで走査する形は二次時間になる
+        started = time.perf_counter()
+        lint_content(_make_doc(body="## Setup\n\n" + unit * 100_000), _TEST_PATH, all_slugs=_SLUGS)
+        assert time.perf_counter() - started < 5
 
     def test_ambiguous_basename(self) -> None:
         ambiguous = {"folder-a/shared-name", "folder-b/shared-name"}
@@ -517,11 +687,11 @@ class TestInternalLinkTargets:
 
 
 # ---------------------------------------------------------------------------
-# I. to_kebab helper
+# I. heading_slug / heading_ids
 # ---------------------------------------------------------------------------
 
 
-class TestToKebab:
+class TestHeadingSlug:
     @pytest.mark.parametrize(
         ("raw", "expected"),
         [
@@ -531,16 +701,50 @@ class TestToKebab:
             ("**Bold** and *italic*", "bold-and-italic"),
             ("See [Testim](https://example.com)", "see-testim"),
             ("ルールの説明", "ルールの説明"),
-            ("要素の表示を待つ（web）", "要素の表示を待つ（web）"),
+            # サイト (github-slugger) は全角括弧・全角記号を落とす
+            ("要素の表示を待つ（web）", "要素の表示を待つweb"),
+            ("TTM for Jira とは？", "ttm-for-jira-とは"),
             ("DOM で最も大きい要素を選ぶ", "dom-で最も大きい要素を選ぶ"),
+            # 記号を消した跡の連続ハイフンは潰さない
             (
-                "Add Custom Validation / Add Custom Action ステップの追加",
-                "add-custom-validation-add-custom-action-ステップの追加",
+                "**Add custom validation** / **Add custom action** ステップの追加",
+                "add-custom-validation--add-custom-action-ステップの追加",
             ),
+            ("同期検証の成功/失敗例", "同期検証の成功失敗例"),
+            ("snake_case と kebab-case", "snake_case-と-kebab-case"),
+            # 全角スペースは区切りにならず消える (半角スペースだけが - になる)
+            ("前\u3000後", "前後"),
         ],
     )
     def test_conversion(self, raw: str, expected: str) -> None:
-        assert to_kebab(raw) == expected
+        assert heading_slug(raw) == expected
+
+
+# 同じ fixture をサイトの実パイプラインでも検証している
+# (scripts/__tests__/remark_heading_ids.test.mjs)。
+# linter の id 規則がサイトとずれると、どちらかのテストが落ちる。
+_HEADING_ID_CASES: list[dict[str, Any]] = json.loads(
+    (PROJECT_ROOT / "scripts/__tests__/fixtures/heading-ids.json").read_text(encoding="utf-8")
+)
+
+
+class TestHeadingIdsMatchSite:
+    @pytest.mark.parametrize("case", _HEADING_ID_CASES, ids=lambda case: case["name"])
+    def test_same_ids_as_site(self, case: dict[str, Any]) -> None:
+        assert heading_ids(case["markdown"]) == set(case["ids"])
+
+    def test_many_repeated_headings_stay_linear(self) -> None:
+        # 連番を毎回 -1 から探し直すと二次時間になる (2 万見出しで 20 秒超)
+        started = time.perf_counter()
+        ids = heading_ids("## a\n" * 20_000)
+        assert len(ids) == 20_000
+        assert time.perf_counter() - started < 5
+
+    def test_long_whitespace_run_stays_linear(self) -> None:
+        # 明示 id の正規表現を \s* で始めると空白の連続で二次時間になる (100KB で 10 秒超)
+        started = time.perf_counter()
+        assert heading_ids("## a" + " " * 100_000 + "b\n") == {"a" + "-" * 100_000 + "b"}
+        assert time.perf_counter() - started < 5
 
 
 # ---------------------------------------------------------------------------
@@ -670,3 +874,252 @@ class TestStructureSignature:
         )
         assert any(i["rule"] == "sourceUrl-format" for i in issues)
         assert _rules(issues, "structure-signature-mismatch") == []
+
+
+# ---------------------------------------------------------------------------
+# link-fragment-mismatch: アンカーが英語原文の意図と別のセクションを指す
+# ---------------------------------------------------------------------------
+
+
+def _en_url(slug: str) -> str:
+    return f"https://docs.tricentis.com/testim/content/{slug}.htm"
+
+
+_GUIDE_EN = (
+    "<h1>Guide</h1>"
+    '<h2><a name="first-section"></a>First section</h2><p>Body</p>'
+    '<h2><a name="second-section"></a>Second section</h2><p>Body</p>'
+    '<h2><a name="third-section"></a>Third section</h2><p>Body</p>'
+)
+_GUIDE_JA = "## 最初の節\n\n本文。\n\n## 次の節\n\n本文。\n\n## 最後の節\n\n本文。\n"
+
+
+def _fragment_issues(
+    ja_body: str,
+    en_links: str,
+    *,
+    guide_en: str = _GUIDE_EN,
+    guide_ja: str = _GUIDE_JA,
+) -> list[dict[str, Any]]:
+    """``guides/page`` から ``guides/guide`` へのリンクを lint する。
+
+    ``guides/page`` の EN は ``en_links`` を含む 1 段落。
+    """
+    page_en = f"<h1>Page</h1><p>{en_links}</p>"
+    pages = {
+        "guides/page": build_source_anchors(ja_body, page_en, _en_url("guides/page")),
+        "guides/guide": build_source_anchors(guide_ja, guide_en, _en_url("guides/guide")),
+    }
+    issues = lint_content(
+        _make_doc(fm={"sourceUrl": _en_url("guides/page")}, body=ja_body),
+        _TEST_PATH,
+        slug="guides/page",
+        source_anchors=pages,
+    )
+    return _rules(issues, "link-fragment-mismatch")
+
+
+class TestLinkFragmentMismatch:
+    def test_matching_pair_passes(self) -> None:
+        assert (
+            _fragment_issues(
+                "[次の節](/docs/guides/guide#次の節)を参照。\n",
+                '<a href="guide.htm#second-section">Second section</a>',
+            )
+            == []
+        )
+
+    def test_mismatch_warns_with_expected_anchor(self) -> None:
+        issues = _fragment_issues(
+            "段落。\n\n[次の節](/docs/guides/guide#最初の節)を参照。\n",
+            '<a href="guide.htm#second-section">Second section</a>',
+        )
+        assert len(issues) == 1
+        assert issues[0]["level"] == "warning"
+        assert issues[0]["line"] == 11  # body は 9 行目から始まり、リンクは body の 3 行目
+        assert "#最初の節" in issues[0]["message"]
+        assert "#次の節" in issues[0]["message"]  # 英語原文が意図する見出しの id
+
+    def test_broken_english_anchor_without_japanese_anchor_passes(self) -> None:
+        assert (
+            _fragment_issues(
+                "[ガイド](/docs/guides/guide)を参照。\n",
+                '<a href="guide.htm#renamed-upstream">Guide</a>',
+            )
+            == []
+        )
+
+    def test_broken_english_anchor_with_japanese_anchor_warns(self) -> None:
+        issues = _fragment_issues(
+            "[ガイド](/docs/guides/guide#最初の節)を参照。\n",
+            '<a href="guide.htm#renamed-upstream">Guide</a>',
+        )
+        assert len(issues) == 1
+        assert "#renamed-upstream" in issues[0]["message"]
+
+    def test_english_link_without_anchor_and_japanese_anchor_warns(self) -> None:
+        issues = _fragment_issues(
+            "[ガイド](/docs/guides/guide#最初の節)を参照。\n",
+            '<a href="guide.htm">Guide</a>',
+        )
+        assert len(issues) == 1
+
+    def test_japanese_link_without_anchor_is_not_reported(self) -> None:
+        # ページ先頭に着地するだけで、別のセクションには着地しない (このルールの対象外)
+        assert (
+            _fragment_issues(
+                "[ガイド](/docs/guides/guide)を参照。\n",
+                '<a href="guide.htm#second-section">Guide</a>',
+            )
+            == []
+        )
+
+    @pytest.mark.parametrize(
+        "en_fragment",
+        [
+            "section-second-section",  # ReadMe 由来の接頭辞
+            "second--section",  # 連続ハイフン
+            "second-amp-section",  # & を amp と綴った名前
+            "/#second-section",  # 二重の #
+        ],
+    )
+    def test_english_anchor_spelling_variants_resolve(self, en_fragment: str) -> None:
+        en_link = f'<a href="guide.htm#{en_fragment}">Second section</a>'
+        assert _fragment_issues("[次の節](/docs/guides/guide#次の節)\n", en_link) == []
+        assert len(_fragment_issues("[次の節](/docs/guides/guide#最後の節)\n", en_link)) == 1
+
+    def test_anchor_of_heading_split_by_suffix_accepts_each_part(self) -> None:
+        # 上流で "Sleep" が "Sleep (Web)" / "Sleep (Mobile)" に分かれ、古いアンカーが残った形
+        guide_en = (
+            "<h1>Wait</h1>"
+            '<h2><a name="intro"></a>Intro</h2>'
+            '<h2><a name="sleep-web"></a>Sleep (Web)</h2>'
+            '<h2><a name="sleep-mobile"></a>Sleep (Mobile)</h2>'
+        )
+        guide_ja = "## はじめに\n\n## スリープ（Web）\n\n## スリープ（モバイル）\n"
+        en_link = '<a href="guide.htm#sleep">Sleep</a>'
+
+        def run(fragment: str) -> list[dict[str, Any]]:
+            body = f"[スリープ](/docs/guides/guide#{fragment})\n"
+            return _fragment_issues(body, en_link, guide_en=guide_en, guide_ja=guide_ja)
+
+        assert run("スリープweb") == []
+        assert run("スリープモバイル") == []
+        assert len(run("はじめに")) == 1
+
+    def test_raw_html_link(self) -> None:
+        en_link = '<a href="guide.htm#second-section">Second section</a>'
+        assert _fragment_issues('<a href="/docs/guides/guide#次の節">次の節</a>\n', en_link) == []
+        issues = _fragment_issues('<a href="/docs/guides/guide#最初の節">次の節</a>\n', en_link)
+        assert len(issues) == 1
+
+    def test_percent_encoded_japanese_anchor(self) -> None:
+        assert (
+            _fragment_issues(
+                "[次の節](/docs/guides/guide#%E6%AC%A1%E3%81%AE%E7%AF%80)\n",
+                '<a href="guide.htm#second-section">Second section</a>',
+            )
+            == []
+        )
+
+    def test_same_page_link(self) -> None:
+        page_en = (
+            '<h1>Page</h1><p><a href="#second">Second</a></p>'
+            '<h2><a name="first"></a>First</h2><h2><a name="second"></a>Second</h2>'
+        )
+
+        def run(fragment: str) -> list[dict[str, Any]]:
+            body = f"[次](#{fragment})\n\n## 最初\n\n## 次\n"
+            pages = {"guides/page": build_source_anchors(body, page_en, _en_url("guides/page"))}
+            issues = lint_content(
+                _make_doc(fm={"sourceUrl": _en_url("guides/page")}, body=body),
+                _TEST_PATH,
+                slug="guides/page",
+                source_anchors=pages,
+            )
+            return _rules(issues, "link-fragment-mismatch")
+
+        assert run("次") == []
+        assert len(run("最初")) == 1
+
+    def test_links_are_paired_by_target_page_sequence(self) -> None:
+        # EN にだけ別ページへのリンクが挟まっていても、同じリンク先どうしを対応付ける
+        en_links = (
+            '<a href="guide.htm#first-section">First</a> '
+            '<a href="../other/page.htm#x">Other</a> '
+            '<a href="https://example.com/guide.htm#third-section">External</a> '
+            '<a href="guide.htm#third-section">Third</a>'
+        )
+        ok = "[最初](/docs/guides/guide#最初の節) と [最後](/docs/guides/guide#最後の節)\n"
+        assert _fragment_issues(ok, en_links) == []
+        swapped = "[最初](/docs/guides/guide#最後の節) と [最後](/docs/guides/guide#最初の節)\n"
+        assert len(_fragment_issues(swapped, en_links)) == 2
+
+    def test_japanese_link_without_english_partner_is_skipped(self) -> None:
+        assert _fragment_issues("[最初](/docs/guides/guide#最初の節)\n", "No links here.") == []
+
+    def test_anchor_missing_on_japanese_page_is_left_to_fragment_missing_rule(self) -> None:
+        assert (
+            _fragment_issues(
+                "[次の節](/docs/guides/guide#存在しない)\n",
+                '<a href="guide.htm#second-section">Second section</a>',
+            )
+            == []
+        )
+
+    def test_links_in_code_are_ignored(self) -> None:
+        body = "```md\n[次の節](/docs/guides/guide#最初の節)\n```\n"
+        assert _fragment_issues(body, '<a href="guide.htm#second-section">Second</a>') == []
+
+    def test_line_number_after_code_block(self) -> None:
+        body = "```js\nconst a = 1;\n```\n\n[次の節](/docs/guides/guide#最初の節)\n"
+        issues = _fragment_issues(body, '<a href="guide.htm#second-section">Second</a>')
+        assert [i["line"] for i in issues] == [13]  # body は 9 行目から。リンクは body の 5 行目
+
+    def test_differing_heading_counts_skip_comparison(self) -> None:
+        # 見出しの数が合わないページは順番で比較できない (構造の食い違いは structure lint の担当)
+        issues = _fragment_issues(
+            "[次の節](/docs/guides/guide#最初の節)\n",
+            '<a href="guide.htm#second-section">Second section</a>',
+            guide_ja="## 最初の節\n\n## 次の節\n",
+        )
+        assert issues == []
+
+
+class TestBuildSourceAnchors:
+    def test_title_h1_is_not_a_section_and_body_h1_is(self) -> None:
+        en_html = (
+            "<h1>Title</h1>"
+            '<h1><a name="body-h1"></a>Body h1</h1>'
+            '<a name="before-heading"></a><h2>Anchor before heading</h2>'
+            '<h3>Deep <a name="inside-heading"></a>heading</h3>'
+        )
+        anchors = build_source_anchors("## a\n\n## b\n", en_html, _en_url("guides/page"))
+        assert anchors.en_anchor_positions == {
+            "body-h1": 0,
+            "before-heading": 1,
+            "inside-heading": 2,
+        }
+        assert anchors.en_heading_count == 3
+        assert anchors.ja_heading_ids == ["a", "b"]
+
+    def test_english_links_resolve_relative_to_source_url(self) -> None:
+        en_html = (
+            "<h1>Title</h1><p>"
+            '<a href="sibling.htm#frag">a</a>'
+            '<a href="../other/index.htm">b</a>'
+            '<a href="#here">c</a>'
+            '<a href="https://docs.tricentis.com/testim/content/abs/page.htm#x">d</a>'
+            '<a href="javascript:void(0);">e</a>'
+            '<a href="https://example.com/x.htm#y">f</a>'
+            '<a name="no-href"></a>'
+            "</p>"
+        )
+        source_url = "https://docs.tricentis.com/testim/content/guides/page/index.htm"
+        anchors = build_source_anchors("", en_html, source_url)
+        assert anchors.en_links == [
+            ("guides/page/sibling", "frag"),
+            ("guides/other", None),
+            ("guides/page", "here"),
+            ("abs/page", "x"),
+        ]

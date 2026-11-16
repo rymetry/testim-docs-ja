@@ -192,7 +192,7 @@ HTML パラメーターや JavaScript パラメーターを条件内で定義し
 - 右側のペインで **+ PARAMS** ボタンをクリックします。
 - **JavaScript パラメーター:** ドロップダウンから **JS** を選択し、JavaScript パラメーターを入力します。
 - **HTML パラメーター:** ドロップダウンから **HTML** を選択します。ブラウザが開き、ステップに関連するウェブページが表示されます。次の手順を実行します:
-- AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-tests/editing-your-tests#ステップの追加削除)の手順に従ってください。
+- AUT ウィンドウで対象要素にマウスを合わせてクリックし、選択します。選択した要素は **Properties** ペインの **Target Element** ボックスに表示されます。要素の設定を確認・調整するには、[Properties パネルを使用したテストの変更](/docs/editing-tests/editing-your-tests)の手順に従ってください。
 
 ![パラメーター追加](/images/conditions/conditions/5eed156-custom2_r.png)
 

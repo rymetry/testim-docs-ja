@@ -198,7 +198,7 @@ keywords:
 ### CLI 実行
 
 - **失敗した Evaluating テスト**は、CLI 実行サマリーに FAILED-EVALUATING として表示されます。
-- **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/running-tests/the-command-line-cli#前提条件)をご覧ください。
+- **失敗した Evaluating テスト**は、実行 XML レポートに新しいステータス「failure-evaluating」として追加されます。CLI XML レポートの詳細については、[コマンドライン CLI](/docs/running-tests/the-command-line-cli#その他の一般的なパラメーター)をご覧ください。
 - **Quarantine テスト**は、実行 XML に「Skipped」フラグ付きで追加されます。
 
 :::note

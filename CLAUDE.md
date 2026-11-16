@@ -63,7 +63,7 @@ npm run lint:docs -- --path=src/content/docs/overview/testim-overview.md
 - **`docs/PARITY_GUIDE.md`** — パリティ維持: 2-mechanism suppression 設計、gate マトリクス、並列エージェント委譲。
 - **`docs/DOCS_DATE_TRACKING.md`** — スナップショットベース変更検出: HTML スナップショット形式、サイドバー JSON 構造、diff 分類、CI ワークフロー、翻訳同期プロセス。
 - **`docs/SIDEBAR_URLS.md`** — 全ドキュメント URL、カテゴリ、ページ順序のマスターリスト。ページの存在と構造の単一真実源。
-- **`docs/UPSTREAM_DEFECTS.md`** — アクティブな上流 EN 欠陥レジストリ（UD-001..UD-027）、割当プロトコル、除去 SOP。
+- **`docs/UPSTREAM_DEFECTS.md`** — アクティブな上流 EN 欠陥レジストリ（UD-001..UD-029）、割当プロトコル、除去 SOP。
 - **`scripts/README.md`** — 全スクリプト、コマンド、パリティチェック種別、npm スクリプトマッピングの完全リファレンス。
 
 ## コンテンツルール

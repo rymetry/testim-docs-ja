@@ -2,7 +2,7 @@
 
 # Upstream Defect Tracker
 
-- **Status**: Active（2026-11-16 更新、有効な補正25件）
+- **Status**: Active（2026-11-16 更新、有効な補正34件）
 - **Owner**: Testim JA Docs parity subsystem
 - **Related**: `scripts/python/src/testim_parity/_en_source_patches_data.json`, `docs/PARITY_GUIDE.md`
 
@@ -38,8 +38,12 @@ UD-NNN IDs are allocated **centrally** via updates to this table, not per-PR ad-
 | UD-025 | Local mobile test の補足アクションへの `index.htm#supported-mobile-actions` miswire | `href-miswire` | applied | 2026-11-13 登録 |
 | UD-026 | TestRail ドメイン URL の placeholder の二重エスケープ | `madcap-artifact` | applied | 2026-11-15 登録 |
 | UD-027 | Data-driven config file の空のコードスニペット | `madcap-artifact` | applied | 2026-11-15 登録 |
+| UD-028 | Steps 一覧表の手順リンクが別ページを指す | `href-miswire` | applied | 2026-11-16 登録 |
+| UD-029 | 子ページへ移った節を指すデータ駆動テスト index のセクション参照 | `madcap-artifact` | applied | 2026-11-16 登録 |
 
 UD-011 に対応する有効なレジストリ項目はない。今回の確認では、この ID の割当・再利用は行わない。
+
+UD-023～UD-027 は、未マージの `claude/parity-html-integration` / `claude/parity-html-path` ブランチで割当済みのため、衝突を避けて UD-028 以降を使用した（2026-11-16）。
 
 ### Allocation protocol
 
@@ -473,6 +477,46 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
 - **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
 
+### UD-028: Steps 一覧表の手順リンクが別ページを指す
+
+- **補正 ID**: `UD-028A-steps-cli-step-href-miswire`, `UD-028B-steps-validate-element-visualization-href-miswire`, `UD-028C-steps-validate-viewport-visualization-href-miswire`, `UD-028D-steps-validate-full-page-visualization-href-miswire`, `UD-028E-steps-wait-for-element-visualization-href-miswire`
+- **欠陥分類**: `href-miswire`
+- **登録日 / 確認期限**: 2026-11-16 / 2027-05-16
+- **対象 slug**:
+  - `editing-tests/steps`（UD-028A–E）
+  - `editing-tests/shareable-steps`（UD-028A のみ）
+- **欠陥 / 補正内容**: ステップ一覧表の「手順」列のリンクが、リンク文言の節を持たないページを指している。該当する `<a name>` は別ページにだけ存在する。補正では、その節を持つページを参照先にする（アンカーは実在するものに揃える）。
+  - UD-028A: `validate-download.htm#adding-a-cli-step` → `add-cli-validations-and-actions.htm#adding-a-cli-step`（各ページ3箇所）
+  - UD-028B: `pixel-validation-and-pixel-wait-for.htm#adding-a-validate-element-visualization-step` → `validate-element-visualization.htm#adding-a-validate-element-visualization-step`
+  - UD-028C: `pixel-validation-and-pixel-wait-for.htm#adding-a-validate-viewport-visualization-or-validate-full-page-visualization-step`（Validate viewport visualization の行）→ `validate-viewport-visualization.htm#adding-a-validate-viewport-visualization-step`
+  - UD-028D: 同じ href（Validate full-page visualization の行）→ `validate-full-page-visualization.htm#adding-a-validate-full-page-visualization-step`
+  - UD-028E: `pixel-validation-and-pixel-wait-for.htm#adding-a-wait-for-element-visualization-step` → `wait-for-element-visualization.htm#adding-a-wait-for-element-visualization-step`
+  - UD-028C と UD-028D は href とリンク文言が同一のため、`find` に行見出しのセル（CRLF を含むセル間の空白ごと）を含めて区別する。
+- **JA 側**: `src/content/docs/editing-tests/steps.md` と `shareable-steps.md` の該当リンクを、節を持つページの見出しアンカー付きパスに変更した。補正がないと EN と JA のリンク先パスが食い違い、`segment-missing` / `segment-extra` / `table-cell-token-mismatch` が出る。
+- **状態**: `applied`。2026-11-16 時点のコミット済みスナップショットで、対象範囲の全補正が一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。リンクが節を持つページを指すようになったことを確認する。旧 href の文字列が消えただけでは回復と判断しない。
+
+### UD-029: 子ページへ移った節を指すデータ駆動テスト index のセクション参照
+
+- **補正 ID**: `UD-029A-ddt-index-section-visual-editor`, `UD-029B-ddt-index-section-config-file`, `UD-029C-ddt-index-section-csv-excel-upload`, `UD-029D-ddt-index-section-external-source`
+- **欠陥分類**: `madcap-artifact`
+- **登録日 / 確認期限**: 2026-11-16 / 2027-05-16
+- **対象 slug**:
+  - `advanced-editing/salesforce-apex-action-step`（UD-029A, B）
+  - `advanced-editing/salesforce-auto-login-step`（UD-029A, B）
+  - `advanced-editing/validations/validate-element-text`（UD-029A, B）
+  - `advanced-editing/parameters/passing-parameters-from-excel-file`（UD-029C, D）
+- **欠陥 / 補正内容**: UD-012 と同じ型。リンクが `data-driven-testing/index.htm#section-...` を指しているが、その節は Data-driven testing の親ページにはなく、子ページへ分割されている。補正では、節を持つ子ページを参照先にする。`find` は href の末尾部分で、相対パスの接頭辞（`data-driven-testing/` と `../data-driven-testing/`）の両方に一致する。
+  - UD-029A: `index.htm#section-configuring-a-data-driven-test-from-the-visual-editor` → `configuring-a-data-driven-test-from-the-visual-editor.htm`
+  - UD-029B: `index.htm#section-configuring-data-driven-tests-using-the-config-file` → `configuring-data-driven-tests-using-the-config-file.htm`
+  - UD-029C: `index.htm#section-adding-test-data-by-uploading-a-csv-excel-file` → `configuring-a-data-driven-test-from-the-visual-editor.htm#adding-test-data-by-uploading-a-csvexcel-file`
+  - UD-029D: `index.htm#section-data-driven-tests-using-data-from-an-external-source` → `configuring-data-driven-tests-using-data-from-an-external-source.htm`
+- **JA 側**: 対象4ページの該当リンクを、節を持つ子ページのパスに変更した。
+- **状態**: `applied`。2026-11-16 時点のコミット済みスナップショットで、対象範囲の全補正が一致する。
+- **Tricentis への報告状況**: _pending_。チケット参照の記録なし。
+- **削除手順**: [共通の削除確認手順](#共通の削除確認手順)に従い、本文・トークン・リンク・画像を保持したまま上流の修正を確認する。
+
 ## 共通の削除確認手順
 
 1. `npm run check:snapshots:fetch -- --slug=<slug>` で対象の全 slug を再取得する。
@@ -504,6 +548,11 @@ JA 翻訳は原文構造準拠を崩さないため、JA markdown 側で workaro
 - Phase B 以降は `npm run check:upstream-recovery` と `upstream-recovery-status.json` が自動 probe を毎 run 実行し、`sourceSyncHealth` managed issue + sticky PR comment で stale / overdue を surface する (`docs/PARITY_GUIDE.md §許容機構` 参照)
 
 ## Registry triage log
+
+### 2026-11-16 — UD-028 / UD-029 の登録
+
+- PR #466 のフォローアップ。リンク文言が指す節が別ページにある内部リンク18件を付け替えるため、補正9件（UD-028A–E、UD-029A–D）を追加した。
+- 登録時点の `main` では補正の総数は41件（既存32件の内容と `reviewAfter` は変更していない）。HTML 比較経路の整理（下記）を合わせた有効な補正は 25 + 9 = 34 件。
 
 ### 2026-11-16 — DOM 比較経路が不要にした補正の整理
 

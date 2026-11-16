@@ -80,11 +80,11 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
    </td>
    <td>
     テスト設定の詳細は
-    <a href="/docs/test-management/shared-configuration">
+    <a href="/docs/test-management/shared-configuration#新しいテスト構成を作成する">
      Create a shared configuration
     </a>
     を参照。CLI の詳細は
-    <a href="/docs/running-tests/the-command-line-cli">
+    <a href="/docs/running-tests/the-command-line-cli#テスト構成">
      Command line interface: Test Config
     </a>
     を参照。Scheduler の詳細は
@@ -132,7 +132,7 @@ Testim 内で変更できるビジュアル検証パラメーターは 4 つあ�
 ![Configuration Library の+ Create New ボタン](/images/validations/pixel-validation-and-pixel-wait-for/3e415da-Testim_503a.png)
 
 3. [Configuration List](/docs/test-management/shared-configuration#構成ライブラリでテスト構成を作成および変更する) に記載されている基本設定を入力します。
-4. **Advanced** をクリックし、[Test Configuration](/docs/recording-tests/how-to-record-a-test) に説明されている詳細設定を入力します。
+4. **Advanced** をクリックし、[Test Configuration](/docs/recording-tests/how-to-record-a-test#テスト構成のパラメーター) に説明されている詳細設定を入力します。
 
 詳細設定が表示されます。
 

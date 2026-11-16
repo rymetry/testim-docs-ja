@@ -19,6 +19,7 @@ import pytest
 from testim_parity.artifact_registry import ARTIFACT_REGISTRY
 from testim_parity.en_source_patches import (
     EN_SOURCE_PATCHES,
+    apply_en_source_patches,
     create_en_source_patch_coverage,
 )
 from testim_parity.preprocess_en import preprocess_en_html
@@ -226,10 +227,10 @@ class TestStaleDetection:
         assert len(snap["byPatchIdStatus"]) == len(EN_SOURCE_PATCHES)
 
     def test_stale_scan_covers_expected_unique_slugs(self) -> None:
-        """slug-driven scan が 19 slug を覆うこと (回帰 guard)。"""
+        """slug-driven scan が 25 slug を覆うこと (回帰 guard)。"""
         unique_slugs = {s for p in EN_SOURCE_PATCHES for s in p["slugs"]}
-        assert len(unique_slugs) == 19, (
-            f"expected slug-driven scan to cover 19 unique slugs (got {len(unique_slugs)})"
+        assert len(unique_slugs) == 25, (
+            f"expected slug-driven scan to cover 25 unique slugs (got {len(unique_slugs)})"
         )
 
     def test_every_patch_has_valid_review_after(self) -> None:
@@ -251,6 +252,36 @@ class TestStaleDetection:
             assert isinstance(review_after, str) and RE.match(review_after), (
                 f"exclusion {slug} must have reviewAfter in YYYY-MM-DD format"
             )
+
+
+# ---------------------------------------------------------------------------
+# UD-028 / UD-029: cross-page link re-pointing against real snapshots
+# ---------------------------------------------------------------------------
+
+
+def test_ud028_ud029_link_patches_hit_every_slug_and_pick_the_right_row() -> None:
+    cov = create_en_source_patch_coverage()
+    patches = [p for p in EN_SOURCE_PATCHES if p["id"].startswith(("UD-028", "UD-029"))]
+    outputs: dict[str, str] = {}
+    for slug in sorted({slug for p in patches for slug in p["slugs"]}):
+        # read_bytes keeps CRLF; UD-028C/D finds span lines.
+        raw = (SNAPSHOTS_ROOT / f"{slug}.html").read_bytes().decode("utf-8")
+        outputs[slug] = apply_en_source_patches(raw, slug, cov)
+    snap = cov["snapshot"]()
+    assert snap["mismatches"] == []
+    assert all(snap["byPatchIdStatus"][p["id"]]["matched"] for p in patches)
+    assert snap["byPatchId"]["UD-028A-steps-cli-step-href-miswire"] == 6
+
+    # The viewport and full-page rows share one href upstream; each must get its own page.
+    steps = outputs["editing-tests/steps"]
+    order = [
+        steps.index(">Validate viewport visualization</p>"),
+        steps.index("validate-viewport-visualization.htm#adding-a-validate-viewport-"),
+        steps.index(">Validate full-page visualization</p>"),
+        steps.index("validate-full-page-visualization.htm#adding-a-validate-full-page-"),
+    ]
+    assert order == sorted(order)
+    assert "pixel-validation-and-pixel-wait-for.htm#adding-" not in steps
 
 
 # ---------------------------------------------------------------------------

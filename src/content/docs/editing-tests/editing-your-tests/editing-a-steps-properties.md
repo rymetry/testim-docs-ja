@@ -220,7 +220,7 @@ keywords:
     値にプレフィックス文字列を追加します。例えば、「User」を追加すると、すべての値が User で始まります：User47、User65、User32。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
+    <a href="/docs/editing-tests/generating-a-random-value">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -236,7 +236,7 @@ keywords:
     値にサフィックス文字列を追加します。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
+    <a href="/docs/editing-tests/generating-a-random-value">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -252,7 +252,7 @@ keywords:
     失敗した場合に API リクエストを再試行します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/api-testing#実行後の結果の確認">API 検証</a>
+    <a href="/docs/advanced-editing/api-testing#validate-api-ステップの追加">API 検証</a>
    </td>
   </tr>
   <tr>
@@ -332,7 +332,7 @@ keywords:
     これは、このステップの実行時に Testim が探している値です。この値は、ステップが作成されたときに最初に設定されました。値を変更するには、フィールド内をクリックして内容を編集します。注：Expected value フィールドでは、パラメーター、正規表現、JavaScript 式を使用できます。
    </td>
    <td>
-    <a href="/docs/advanced-editing/validations/validate-element-text#パラメーターを使った検証">高度なテキスト検証</a>
+    <a href="/docs/advanced-editing/validations/validate-element-text#advanced-text-validation">高度なテキスト検証</a>
    </td>
   </tr>
   <tr>
@@ -364,7 +364,7 @@ keywords:
     生成される値の長さを指定します。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
+    <a href="/docs/editing-tests/generating-a-random-value">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>
@@ -489,7 +489,7 @@ keywords:
     このプロパティは、次のステップに進む前にテストが待機する時間を設定します。デフォルトは 1 秒（1,000 ms）です。この値を変更するには、フィールド内をクリックして、新しいスリープ値（ms）を編集します。
    </td>
    <td>
-    <a href="/docs/advanced-editing/wait-for#要素の表示を待つ（モバイル）">待機（Wait for）</a>
+    <a href="/docs/advanced-editing/wait-for#スリープweb">待機（Wait for）</a>
    </td>
   </tr>
   <tr>
@@ -505,7 +505,7 @@ keywords:
     生成される文字列のタイプ。文字のみ、数字のみ、またはその両方の混合が含まれます。
    </td>
    <td>
-    <a href="/docs/editing-tests/generating-a-random-value#自分で試してみましょう">ランダム値の生成ステップ</a>
+    <a href="/docs/editing-tests/generating-a-random-value">ランダム値の生成ステップ</a>
    </td>
   </tr>
   <tr>

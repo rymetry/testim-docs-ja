@@ -86,6 +86,72 @@ class TestLintDocsMainSmoke:
         # 実装によって rule 名 / message 形式は異なるが、最低 1 error が console に出る
         assert "❌" in out or "error" in out.lower()
 
+    def _two_ok_docs_from_other_cwd(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+        """OK doc 2 本を作り、``npm run lint:docs`` と同じく cwd を ``scripts/python`` に移す。"""
+        docs_dir = tmp_path / "src" / "content" / "docs"
+        (docs_dir / "overview").mkdir(parents=True)
+        (docs_dir / "overview" / "a.md").write_text(_OK_DOC, encoding="utf-8")
+        (docs_dir / "overview" / "b.md").write_text(_OK_DOC, encoding="utf-8")
+        cwd = tmp_path / "scripts" / "python"
+        cwd.mkdir(parents=True)
+        monkeypatch.setattr(lint_docs, "DOCS_DIR", docs_dir)
+        monkeypatch.setattr(lint_docs, "PROJECT_ROOT", tmp_path)
+        monkeypatch.chdir(cwd)
+        return docs_dir
+
+    def test_path_relative_to_repo_root_from_other_cwd(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """cwd に無い相対 ``--path`` は repo root 基準で解決する (documented command)。"""
+        self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+
+        rc = lint_docs.main(["--path", "src/content/docs/overview/a.md"])
+        assert rc == 0
+        assert "in 1 file(s)" in capsys.readouterr().out
+
+    def test_path_glob_relative_to_repo_root(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """``--path`` の glob は一致した全 file を lint する。"""
+        self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+
+        rc = lint_docs.main(["--path", "src/content/docs/overview/*.md"])
+        assert rc == 0
+        assert "in 2 file(s)" in capsys.readouterr().out
+
+    def test_path_relative_to_cwd_still_works(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """cwd 基準で存在する相対 ``--path`` は従来どおり cwd 基準で解決する。"""
+        docs_dir = self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+        monkeypatch.chdir(docs_dir)
+
+        rc = lint_docs.main(["--path", "overview/a.md"])
+        assert rc == 0
+        assert "in 1 file(s)" in capsys.readouterr().out
+
+    def test_path_without_match_returns_one(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """どこにも一致しない ``--path`` は黙って 0 件成功にせず exit 1 にする。"""
+        self._two_ok_docs_from_other_cwd(tmp_path, monkeypatch)
+
+        rc = lint_docs.main(["--path", "src/content/docs/overview/missing-*.md"])
+        assert rc == 1
+        assert "Failed to lint" in capsys.readouterr().err
+
     def test_no_args_walks_all_docs(
         self,
         tmp_path: Path,
@@ -143,3 +209,89 @@ class TestLintDocsMainSmoke:
         assert rc == 1
         out = capsys.readouterr().out
         assert "Lint complete" in out
+
+
+_LINKING_DOC = """---
+title: リンク元
+description: アンカー付きリンクを持つページ
+category: overview
+updated: '2025-10-01'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/linking.htm'
+---
+
+[次の節](/docs/overview/target#最初の節)を参照。
+"""
+
+_TARGET_DOC = """---
+title: リンク先
+description: 見出しを 2 つ持つページ
+category: overview
+updated: '2025-10-01'
+sourceUrl: 'https://docs.tricentis.com/testim/content/overview/target.htm'
+---
+
+## 最初の節
+
+本文。
+
+## 次の節
+
+本文。
+"""
+
+_LINKING_EN = '<h1>Linking</h1><p>See <a href="target.htm#second-section">Second section</a>.</p>'
+_TARGET_EN = (
+    "<h1>Target</h1>"
+    '<h2><a name="first-section"></a>First section</h2><p>Body.</p>'
+    '<h2><a name="second-section"></a>Second section</h2><p>Body.</p>'
+)
+
+
+class TestLinkFragmentMismatchThroughMain:
+    def _setup(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        docs_dir = tmp_path / "src" / "content" / "docs" / "overview"
+        snapshots = tmp_path / "snapshots" / "en" / "content" / "overview"
+        docs_dir.mkdir(parents=True)
+        snapshots.mkdir(parents=True)
+        (docs_dir / "linking.md").write_text(_LINKING_DOC, encoding="utf-8")
+        (docs_dir / "target.md").write_text(_TARGET_DOC, encoding="utf-8")
+        (snapshots / "linking.html").write_text(_LINKING_EN, encoding="utf-8")
+        (snapshots / "target.html").write_text(_TARGET_EN, encoding="utf-8")
+        monkeypatch.setattr(lint_docs, "DOCS_DIR", docs_dir.parent)
+        monkeypatch.setattr(lint_docs, "PROJECT_ROOT", tmp_path)
+
+    def test_mismatch_is_a_warning_and_keeps_exit_zero(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        self._setup(tmp_path, monkeypatch)
+
+        rc = lint_docs.main([])
+
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "linking.md:9 [link-fragment-mismatch]" in out
+        assert "0 error(s), 1 warning(s) in 2 file(s)" in out
+
+    def test_english_source_patch_is_applied_before_comparing(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """EN は、他のチェックと同じく EN source patch 適用後の HTML と比較する。"""
+        self._setup(tmp_path, monkeypatch)
+        original = lint_docs.preprocess_en_html
+
+        def patched(html: str, slug: str | None = None) -> str:
+            fixed = html.replace("target.htm#second-section", "target.htm#first-section")
+            return original(fixed, slug=slug)
+
+        monkeypatch.setattr(lint_docs, "preprocess_en_html", patched)
+
+        rc = lint_docs.main([])
+
+        assert rc == 0
+        assert "0 error(s), 0 warning(s) in 2 file(s)" in capsys.readouterr().out
